@@ -26,5 +26,5 @@ urlpatterns = [
     # path('signup/', views.mockup_signup, name='signup'),
     path("", TemplateView.as_view(template_name="home.html"), name="home"),  
     path("menu/", views.menu, name="menu"),
-    path("profile/", views.profile, name="profile"),
+    path("edit_profile/", views.edit_profile, name="edit_profile"),
 ]
