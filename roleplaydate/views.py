@@ -1,6 +1,8 @@
 from django.http import HttpResponseRedirect
+from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse
 from django.shortcuts import render
+from accounts.forms import EditProfileForm
 
 def mockup_signup(request):
     print("Mockup signup view visited!")
@@ -9,5 +11,6 @@ def mockup_signup(request):
 def menu(request):
     return render(request,"menu.html")
 
-def profile(request):
-    return render(request,"profile.html")
+def edit_profile(request):
+    form = EditProfileForm()
+    return render(request, 'edit_profile.html', {'form': form})
