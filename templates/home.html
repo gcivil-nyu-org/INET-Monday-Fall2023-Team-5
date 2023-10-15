@@ -8,6 +8,7 @@
   <div class="content-container">
       {% if user.is_authenticated %}
       Hi {{ user.username }}!
+      <p><a href="{% url 'edit_profile' %}">Edit Profile</a></p>
       <p><a href="{% url 'logout' %}">Log Out</a></p>
       {% else %}
       <p>You are not logged in</p>
