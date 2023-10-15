@@ -27,8 +27,13 @@ def edit_profile(request):
             else:
                 profile.custom_pronoun = None
             profile.save()
-            return HttpResponseRedirect(reverse('profile_updated'))
-            # return redirect('profile_updated')
+            # return HttpResponseRedirect(reverse('profile_updated'))
+            updated_user = request.user
+            updated_pronoun_preference = profile.get_pronoun_preference_display() 
+            return render(request, 'profile_updated.html', {'user': updated_user, 'pronoun_preference': updated_pronoun_preference})
+            # return HttpResponseRedirect(reverse('profile_updated'))
+            # return render('profile_updated')
+            # return render(request, 'profile_updated', {'user': updated_user, 'pron': updated_pronoun_preference})
     else:
         form = EditProfileForm(instance=profile)
 
