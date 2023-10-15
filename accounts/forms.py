@@ -17,9 +17,9 @@ class EditProfileForm(forms.ModelForm):
           required=False,
           widget=forms.TextInput(attrs={'placeholder': 'Custom Pronoun'}),
      )
-     
+
      class Meta:
           model = Profile
-          fields = ('open_to_dating',)
+          fields = ('open_to_dating','pronoun_preference')
 
     

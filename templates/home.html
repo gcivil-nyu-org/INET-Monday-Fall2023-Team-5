@@ -8,6 +8,10 @@
   <div class="content-container">
       {% if user.is_authenticated %}
       Hi {{ user.username }}!
+      <p>Pronoun: {{ user.profile.get_pronoun_preference_display }}</p>
+      {% if user.profile.custom_pronoun %}
+      <p>Pronoun: {{ user.profile.custom_pronoun }}</p>
+      {% endif %}
       <p><a href="{% url 'edit_profile' %}">Edit Profile</a></p>
       <p><a href="{% url 'logout' %}">Log Out</a></p>
       {% else %}

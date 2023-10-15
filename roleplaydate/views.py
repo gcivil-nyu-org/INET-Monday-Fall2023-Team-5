@@ -14,3 +14,6 @@ def menu(request):
 def edit_profile(request):
     form = EditProfileForm()
     return render(request, 'edit_profile.html', {'form': form})
+
+def profile_updated(request):
+    return render(request, 'profile_updated.html')

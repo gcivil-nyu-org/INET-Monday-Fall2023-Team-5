@@ -1,7 +1,18 @@
 {% extends "base.html" %}
+
 {% block title %}Profile Updated{% endblock %}
 
 {% block content %}
-  <h2>Profile Updated</h2>
-  <p>Your profile has been successfully updated.</p>
+  <div class="profile-updated-container">
+    <h2>Profile Successfully Updated</h2>
+    <p>Your changes have been saved. <a href="{% url 'edit_profile' %}">Return to Edit Profile</a> or <a href="{% url 'home' %}">Go to Home</a></p>
+  </div>
+  
+  <style>
+    .profile-updated-container {
+      max-width: 400px;
+      margin: 0 auto;
+      text-align: center;
+    }
+  </style>
 {% endblock %}

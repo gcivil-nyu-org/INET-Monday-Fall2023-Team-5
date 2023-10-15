@@ -1,6 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
+from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import generic
 from django.shortcuts import render, redirect
 from .forms import EditProfileForm
@@ -12,23 +13,26 @@ class SignUpView(generic.CreateView):
 
 @login_required
 def edit_profile(request):
-    profile = request.user.profile  # refers to the currently authenticated user.
+    profile = request.user.profile  # refers to the currently authenticated user
 
     if request.method == 'POST':
         form = EditProfileForm(request.POST, instance=profile)
         if form.is_valid():
             # Update the user's profile data here based on the form data
             profile.open_to_dating = form.cleaned_data['open_to_dating']
+            profile.pronoun_preference = form.cleaned_data['pronoun_preference']
             pronoun_preference = form.cleaned_data['pronoun_preference']
             if pronoun_preference == 'other':
                 profile.custom_pronoun = form.cleaned_data['custom_pronoun']
             else:
                 profile.custom_pronoun = None
             profile.save()
-            return redirect('profile_updated')
-            # return render(request, 'profile_updated.html')
+            return HttpResponseRedirect(reverse('profile_updated'))
+            # return redirect('profile_updated')
     else:
         form = EditProfileForm(instance=profile)
 
-    # return render(request, 'profile_updated.html')
     return render(request, 'edit_profile.html', {'form': form})
+
+def profile_updated(request):
+    return render(request, 'profile_updated.html')
