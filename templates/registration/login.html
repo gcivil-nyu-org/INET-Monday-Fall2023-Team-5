@@ -7,6 +7,7 @@
 <div class="login-container">
     <h2 class="text-center">Log In</h2>
     <div style="height: 25px;"></div>
+
     <form method="post" novalidate>
         {% csrf_token %}
         {% for field in form %}
@@ -27,8 +28,15 @@
                 {% endif %}
             </div>
         {% endfor %}
+        <!-- Display non-field specific errors here -->
+        {% if form.non_field_errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ form.non_field_errors }}
+        </div>
+        {% endif %}
         <button type="submit" class="btn btn-primary btn-block">Log In</button>
     </form>
+    
     <div class="text-center mt-3">
         <small>Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></small>
     </div>
