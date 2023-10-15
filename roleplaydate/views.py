@@ -16,4 +16,4 @@ def edit_profile(request):
     return render(request, 'edit_profile.html', {'form': form})
 
 def profile_updated(request):
-    return render(request, 'profile_updated.html')
+    return render(request, 'profile_updated.html', {'user': request.user, 'pronoun_preference': request.user.profile.get_pronoun_preference_display()})
