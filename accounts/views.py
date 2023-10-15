@@ -1,4 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.views import generic
 from django.shortcuts import render, redirect
@@ -9,9 +10,9 @@ class SignUpView(generic.CreateView):
     success_url = reverse_lazy("login")
     template_name = "registration/signup.html"
 
-
+@login_required
 def edit_profile(request):
-    profile = request.user.profile  # Assuming your Profile model is related to the User model
+    profile = request.user.profile  # refers to the currently authenticated user.
 
     if request.method == 'POST':
         form = EditProfileForm(request.POST, instance=profile)
@@ -24,8 +25,10 @@ def edit_profile(request):
             else:
                 profile.custom_pronoun = None
             profile.save()
-            return redirect('profile')  # Redirect to the user's profile page
+            return redirect('profile_updated')
+            # return render(request, 'profile_updated.html')
     else:
         form = EditProfileForm(instance=profile)
 
+    # return render(request, 'profile_updated.html')
     return render(request, 'edit_profile.html', {'form': form})
