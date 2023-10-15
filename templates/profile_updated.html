@@ -4,13 +4,13 @@
 
 {% block content %}
   <div class="profile-updated-container">
-    <h2>Name: {{ user }} 
-    <p>Pronoun: {% if pronoun_preference %}
+    <h2>Name: {{ user }}</h2>
+    <p>Pronoun: {{ pronoun_preference }}</p>
+    <!-- <p>Pronoun: {% if pronoun_preference %}
       ({{ pronoun_preference }})
     {% else %}
       (Not specified)
-    {% endif %}</p>
-    </h2>
+    {% endif %}</p> -->
     <h3>Profile Successfully Updated</h3>
     <p>Your changes have been saved. <a href="{% url 'edit_profile' %}">Return to Edit Profile</a> or <a href="{% url 'home' %}">Go to Home</a></p>
   </div>
