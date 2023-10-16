@@ -27,4 +27,6 @@ urlpatterns = [
     path("", TemplateView.as_view(template_name="home.html"), name="home"),  
     path("menu/", views.menu, name="menu"),
     path("edit_profile/", views.edit_profile, name="edit_profile"),
+    # path("edit_profile/", include("accounts.urls")), 
+    path("profile_updated/", views.profile_updated, name="profile_updated"),
 ]

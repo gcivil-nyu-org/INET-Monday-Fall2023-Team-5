@@ -7,7 +7,20 @@
 <div class="container">
   <div class="content-container">
       {% if user.is_authenticated %}
+      <!-- Hi {{ user }}! -->
       Hi {{ user.username }}!
+      <p>Pronoun: 
+        {% if user.pronoun_preference %}
+          ({{ user.get_pronoun_preference_display }})
+        {% else %}
+          (Not specified)
+        {% endif %}
+      </p>
+      <!-- <p>Pronoun: {{ user.profile.get_pronoun_preference_display }}</p> -->
+      <!-- {% if user.profile.custom_pronoun %} -->
+      <!-- <p>Pronoun: {{ user.profile.custom_pronoun }}</p> -->
+      <!-- {% endif %} -->
+      <p><a href="{% url 'edit_profile' %}">Edit Profile</a></p>
       <p><a href="{% url 'logout' %}">Log Out</a></p>
       {% else %}
       <p>You are not logged in</p>
