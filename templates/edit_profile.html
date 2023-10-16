@@ -4,7 +4,7 @@
 {% block content %}
   <div class="profile-edit-container">
     <h2>Edit Profile</h2>
-    <form method="post" action="{% url 'profile_updated' %}">
+    <form method="post" action="{% url 'edit_profile' %}">
       {% csrf_token %}
 
       <!-- Open to Dating -->
@@ -29,16 +29,3 @@
     </form>
   </div>
 {% endblock %}
-
-
-
-{% comment %}
-{% block content %}
-  <h2>Edit Profile</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form }}
-    <button type="submit">Save</button>
-  </form>
-{% endblock %}
-{% endcomment %}

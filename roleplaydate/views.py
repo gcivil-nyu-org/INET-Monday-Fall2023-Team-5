@@ -10,10 +10,3 @@ def mockup_signup(request):
 
 def menu(request):
     return render(request,"menu.html")
-
-def edit_profile(request):
-    form = EditProfileForm()
-    return render(request, 'edit_profile.html', {'form': form})
-
-def profile_updated(request):
-    return render(request, 'profile_updated.html', {'user': request.user, 'pronoun_preference': request.user.profile.get_pronoun_preference_display()})
