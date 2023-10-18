@@ -4,6 +4,7 @@
 {% block content %}
   <div class="profile-edit-container">
     <h2>Edit Profile</h2>
+    <p>Please complete your profile to help us serve you better!</p>
     <form method="post" action="{% url 'edit_profile' %}">
       {% csrf_token %}
 
