@@ -13,6 +13,9 @@ class SignUpView(generic.CreateView):
     success_url = reverse_lazy("login")
     template_name = "registration/signup.html"
 
+def about(request):
+    return render(request, 'about.html', {'title': 'About'})
+
 @login_required
 def edit_profile(request):
     profile = request.user.profile  # refers to the currently authenticated user
