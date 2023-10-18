@@ -7,6 +7,8 @@ from django.views import generic
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import EditProfileForm
+from .models import Profile
+from django.core.paginator import Paginator
 
 
 class SignUpView(generic.CreateView):
@@ -62,3 +64,20 @@ def profile_updated(request):
     return render(request, 'profile_updated.html',
                   {'user': request.user, 'pronoun_preference': updated_pronoun_preference})
 
+
+@login_required
+def view_profile(request):
+    profile = request.user.profile
+    pronoun_preference = profile.get_pronoun_preference_display()
+
+    return render(request, 'view_profile.html', {'user': request.user, 'pronoun_preference': pronoun_preference})
+
+def browse_profiles(request):
+    profiles_list = Profile.objects.all()
+    
+    # Pagination: Show 10 profiles per page
+    paginator = Paginator(profiles_list, 10)
+    page = request.GET.get('page')
+    profiles = paginator.get_page(page)
+
+    return render(request, 'browse_profiles.html', {'profiles': profiles})
