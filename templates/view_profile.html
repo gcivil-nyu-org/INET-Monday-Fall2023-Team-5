@@ -11,6 +11,14 @@
       <strong>Name:</strong> {{ user }}
     </div>
 
+    <!-- Display User's Gender -->
+    <strong>Gender:</strong>
+    {% if profile.gender %}
+      {{ profile.gender }}
+    {% else %}
+      Not specified
+    {% endif %}
+
     <!-- Display User's Pronoun Preference -->
     <div class="profile-field">
       <strong>Pronoun Preference:</strong> 

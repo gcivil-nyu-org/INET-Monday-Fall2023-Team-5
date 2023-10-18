@@ -20,6 +20,6 @@ class EditProfileForm(forms.ModelForm):
 
      class Meta:
           model = Profile
-          fields = ('open_to_dating','pronoun_preference')
+          fields = ('gender','open_to_dating','pronoun_preference')
 
     

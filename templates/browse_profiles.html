@@ -9,6 +9,7 @@
     {% for profile in profiles %}
     <div class="profile-card">
       <h3>{{ profile.user.username }}</h3>
+      <p><strong>Gender:</strong> {{ profile.gender }}</p>
       <p><strong>Pronoun Preference:</strong> {{ profile.pronoun_preference }}</p>
     </div>
     {% empty %}
