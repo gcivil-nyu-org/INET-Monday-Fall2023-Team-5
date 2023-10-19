@@ -27,7 +27,7 @@
       </div>
 
       <!-- Custom Pronoun (only displayed when 'Other' is selected) -->
-      <div class="form-group" id="custom-pronoun">
+      <div class="form-group" id="custom-pronoun" style="display: none;">
         <label for="{{ form.custom_pronoun.id_for_label }}">Custom Pronoun:</label>
         {{ form.custom_pronoun }}
       </div>
@@ -35,4 +35,26 @@
       <button type="submit" class="btn btn-primary">Save</button>
     </form>
   </div>
+  
+  <!-- JavaScript to dynamically display the Custom Pronoun field -->
+  <script>
+    const pronounSelect = document.querySelector("{{ form.pronoun_preference.id_for_label }}");
+    const customPronounDiv = document.querySelector("#custom-pronoun");
+
+    function toggleCustomPronoun() {
+        if (pronounSelect.value === "other") {
+            customPronounDiv.style.display = "block";
+        } else {
+            customPronounDiv.style.display = "none";
+        }
+    }
+
+    pronounSelect.addEventListener("change", toggleCustomPronoun);
+
+    // Call the function on page load to set the initial state
+    window.addEventListener("DOMContentLoaded", (event) => {
+        toggleCustomPronoun();
+    });
+  </script>
+
 {% endblock %}
