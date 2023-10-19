@@ -112,6 +112,8 @@ def get_recommended_profiles(user):
 
     # Of those, which are open to dating someone of the user's gender
     recommended_profiles = matching_gender_profiles.filter(open_to_dating__gender__in=[user_gender])
+    
+    # Exclude the current user's profile from the recommended list
+    recommended_profiles = recommended_profiles.exclude(user=user)
 
     return recommended_profiles
-
