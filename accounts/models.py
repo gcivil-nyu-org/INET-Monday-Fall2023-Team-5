@@ -21,7 +21,7 @@ class DatingPreference(models.Model):
         return self.gender
     
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, default=1)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     open_to_dating = models.ManyToManyField(DatingPreference, blank=True)
     GENDER_CHOICES = [
         ('M', 'Male'),
