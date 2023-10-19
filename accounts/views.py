@@ -36,33 +36,29 @@ def edit_profile(request):
     if request.method == 'POST':
         form = EditProfileForm(request.POST, instance=profile)
         if form.is_valid():
-            # Get the data but do not save it immediately
-            profile_instance = form.save(commit=False)
-
-            pronoun_preference = form.cleaned_data['pronoun_preference']
-            if pronoun_preference == 'other':
-                profile_instance.pronoun_preference = form.cleaned_data['custom_pronoun']
-            else:
-                profile_instance.pronoun_preference = pronoun_preference
-
-            # Save the profile instance to make sure we can set many-to-many relationships
-            profile_instance.save()
-
-            # Handling the ManyToMany field
-            open_to_dating_choices = form.cleaned_data['open_to_dating']
-            profile_instance.open_to_dating.set(open_to_dating_choices)
-
-            updated_user = request.user
-            updated_pronoun_preference = profile_instance.get_pronoun_preference_display()
-            
+            _handle_form_valid(request, form)
             return HttpResponseRedirect(reverse('profile_updated'))
-            #return render(request, 'profile_updated.html', {'user': updated_user, 'pronoun_preference': updated_pronoun_preference})
+            #return render(request, 'profile_updated.html', {'user': request.user, 'pronoun_preference': request.user.profile.get_pronoun_preference_display()})
+    
+    # ... [your code to handle GET requests and render the form]
 
+def _handle_form_valid(request, form):
+    """Helper function to process a valid form submission."""
+    # Get the data but do not save it immediately
+    profile_instance = form.save(commit=False)
+
+    pronoun_preference = form.cleaned_data['pronoun_preference']
+    if pronoun_preference == 'other':
+        profile_instance.pronoun_preference = form.cleaned_data['custom_pronoun']
     else:
-        form = EditProfileForm(instance=profile)
+        profile_instance.pronoun_preference = pronoun_preference
 
-    pronoun_preference = profile.get_pronoun_preference_display()
-    return render(request, 'profile/edit_profile.html', {'form': form, 'user': request.user, 'pronoun_preference': pronoun_preference})
+    # Save the profile instance to make sure we can set many-to-many relationships
+    profile_instance.save()
+
+    # Handling the ManyToMany field
+    open_to_dating_choices = form.cleaned_data['open_to_dating']
+    profile_instance.open_to_dating.set(open_to_dating_choices)
 
 
 def profile_updated(request):
