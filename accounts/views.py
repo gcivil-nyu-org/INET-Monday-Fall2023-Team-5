@@ -16,7 +16,7 @@ class SignUpView(generic.CreateView):
     template_name = "registration/signup.html"
 
     def get_success_url(self):
-        return reverse('edit_profile')  # redirecting to edit_profile after successful registration
+        return reverse('profile/edit_profile')  # redirecting to edit_profile after successful registration
 
     def form_valid(self, form):
         response = super().form_valid(form)  # Call the parent class's form_valid method
@@ -62,14 +62,14 @@ def edit_profile(request):
         form = EditProfileForm(instance=profile)
 
     pronoun_preference = profile.get_pronoun_preference_display()
-    return render(request, 'edit_profile.html', {'form': form, 'user': request.user, 'pronoun_preference': pronoun_preference})
+    return render(request, 'profile/edit_profile.html', {'form': form, 'user': request.user, 'pronoun_preference': pronoun_preference})
 
 
 def profile_updated(request):
     profile = request.user.profile
     updated_pronoun_preference = profile.get_pronoun_preference_display()
 
-    return render(request, 'profile_updated.html',
+    return render(request, 'profile/profile_updated.html',
                   {'user': request.user, 'pronoun_preference': updated_pronoun_preference})
 
 
@@ -81,7 +81,7 @@ def view_profile(request):
     # Fetching dating preferences
     open_to_dating = profile.open_to_dating.all()
 
-    return render(request, 'view_profile.html', {
+    return render(request, 'profile/view_profile.html', {
         'user': request.user,
         'pronoun_preference': pronoun_preference,
         'open_to_dating': open_to_dating
@@ -95,5 +95,5 @@ def browse_profiles(request):
     page = request.GET.get('page')
     profiles = paginator.get_page(page)
 
-    return render(request, 'browse_profiles.html', {'profiles': profiles})
+    return render(request, 'profile/browse_profiles.html', {'profiles': profiles})
 
