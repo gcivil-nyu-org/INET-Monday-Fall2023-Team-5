@@ -89,7 +89,7 @@ def view_profile(request):
         'open_to_dating': open_to_dating
     })
 
-
+@login_required
 def browse_profiles(request):
     recommended_profiles = get_recommended_profiles(request.user)
     
