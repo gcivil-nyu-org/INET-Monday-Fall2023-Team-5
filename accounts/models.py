@@ -9,16 +9,25 @@ gender_choices_pref = (
 
 
 class DatingPreference(models.Model):
+    # Define gender_choices_pref at class-level
+    gender_choices_pref = [
+        ('M', 'Males'),
+        ('F', 'Females'),
+        ('N', 'Non-binary Individuals'),
+        ('NS', 'Not Specified')
+    ]
+    
     gender = models.CharField(max_length=25, choices=gender_choices_pref)
     
     @classmethod
     def create_defaults(cls):
-        default_preferences = ['Males', 'Females', 'Non-binary Individuals']
-        for preference in default_preferences:
-            cls.objects.get_or_create(gender=preference)
+        # Instead of hardcoded values, we reference gender_choices_pref
+        for gender_code, gender_label in cls.gender_choices_pref:
+            cls.objects.get_or_create(gender=gender_label)
 
     def __str__(self):
         return self.gender
+
     
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
