@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}View Profile{% endblock %}
+
+{% block content %}
+  <div class="profile-view-container">
+    <h2>Profile Details</h2>
+
+    <!-- Display User's Name -->
+    <div class="profile-field">
+      <strong>Name:</strong> {{ user }}
+    </div>
+
+    <!-- Display User's Gender -->
+    <div class="profile-field">
+      <strong>Gender:</strong>
+      {% if profile.gender %}
+        {{ profile.get_gender_display }}
+      {% else %}
+        Not specified
+      {% endif %}
+    </div>
+
+    <!-- Display User's Pronoun Preference -->
+    <div class="profile-field">
+      <strong>Pronoun Preference:</strong> 
+      {% if pronoun_preference %}
+        {{ pronoun_preference }}
+      {% else %}
+        Not specified
+      {% endif %}
+    </div>
+
+    <!-- Display User's Dating Preferences -->
+    
+    <div class="profile-field">
+      <strong>Open to Dating:</strong>
+      {% if open_to_dating %}
+        {% for preference in open_to_dating %}
+          {{ preference.gender }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+      {% else %}
+        Not specified
+      {% endif %}
+  
+
+
+
+    <!-- Add more fields as required -->
+
+    <hr>
+    <p><a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Profile</a></p>
+  </div>
+{% endblock %}
