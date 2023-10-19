@@ -6,45 +6,30 @@
   <div class="profile-view-container">
     <h2>Profile Details</h2>
 
-    <!-- Display User's Name -->
+    <!-- User's Name -->
     <div class="profile-field">
-      <strong>Name:</strong> {{ user }}
+      <strong>Name:</strong> {{ user.get_full_name|default:user.username }}
     </div>
 
-    <!-- Display User's Gender -->
+    <!-- User's Gender -->
     <div class="profile-field">
-      <strong>Gender:</strong>
-      {% if profile.gender %}
-        {{ profile.get_gender_display }}
-      {% else %}
-        Not specified
-      {% endif %}
+      <strong>Gender:</strong> {{ profile.get_gender_display|default:"Not specified" }}
     </div>
 
-    <!-- Display User's Pronoun Preference -->
+    <!-- User's Pronoun Preference -->
     <div class="profile-field">
-      <strong>Pronoun Preference:</strong> 
-      {% if pronoun_preference %}
-        {{ pronoun_preference }}
-      {% else %}
-        Not specified
-      {% endif %}
+      <strong>Pronoun Preference:</strong> {{ pronoun_preference|default:"Not specified" }}
     </div>
 
-    <!-- Display User's Dating Preferences -->
-    
+    <!-- User's Dating Preferences -->
     <div class="profile-field">
       <strong>Open to Dating:</strong>
       {% if open_to_dating %}
-        {% for preference in open_to_dating %}
-          {{ preference.gender }}{% if not forloop.last %}, {% endif %}
-        {% endfor %}
+        {{ open_to_dating|join:", " }}
       {% else %}
         Not specified
       {% endif %}
-  
-
-
+    </div>
 
     <!-- Add more fields as required -->
 
