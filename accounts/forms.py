@@ -2,12 +2,7 @@ from django import forms
 from .models import*
 
 class EditProfileForm(forms.ModelForm):
-    GENDER_CHOICES = [
-        ('M', 'Male'),
-        ('F', 'Female'),
-        ('N', 'Non-binary'),
-        ('NS', 'Not Specified')
-    ]
+    GENDER_CHOICES = Profile.GENDER_CHOICES  # Use the choices from the Profile model
 
     pronoun_preference = forms.ChoiceField(
         choices=[
@@ -36,6 +31,3 @@ class EditProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('gender', 'open_to_dating', 'pronoun_preference', 'custom_pronoun')  # Added 'custom_pronoun'
-
-
-    
