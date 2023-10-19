@@ -10,8 +10,8 @@
       <!-- Hi {{ user }}! -->
       Hi {{ user.username }}!
       <p>Pronoun: 
-        {% if user.pronoun_preference %}
-          ({{ user.get_pronoun_preference_display }})
+        {% if user.profile.pronoun_preference %}
+          ({{ user.profile.get_pronoun_preference_display }})
         {% else %}
           (Not specified)
         {% endif %}
