@@ -1,5 +1,5 @@
 from django import forms
-from .models import Profile
+from .models import*
 
 class EditProfileForm(forms.ModelForm):
      pronoun_preference = forms.ChoiceField(
@@ -10,6 +10,11 @@ class EditProfileForm(forms.ModelForm):
             ('other', 'Other'),
         ],
         widget=forms.RadioSelect,
+        required=False
+    )
+     open_to_dating = forms.ModelMultipleChoiceField(
+        queryset=DatingPreference.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
         required=False
     )
      custom_pronoun = forms.CharField(

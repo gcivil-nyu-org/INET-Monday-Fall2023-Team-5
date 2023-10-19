@@ -12,12 +12,14 @@
     </div>
 
     <!-- Display User's Gender -->
-    <strong>Gender:</strong>
-    {% if profile.gender %}
-      {{ profile.gender }}
-    {% else %}
-      Not specified
-    {% endif %}
+    <div class="profile-field">
+      <strong>Gender:</strong>
+      {% if profile.gender %}
+        {{ profile.get_gender_display }}
+      {% else %}
+        Not specified
+      {% endif %}
+    </div>
 
     <!-- Display User's Pronoun Preference -->
     <div class="profile-field">
@@ -28,6 +30,21 @@
         Not specified
       {% endif %}
     </div>
+
+    <!-- Display User's Dating Preferences -->
+    
+    <div class="profile-field">
+      <strong>Open to Dating:</strong>
+      {% if open_to_dating %}
+        {% for preference in open_to_dating %}
+          {{ preference.gender }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+      {% else %}
+        Not specified
+      {% endif %}
+  
+
+
 
     <!-- Add more fields as required -->
 

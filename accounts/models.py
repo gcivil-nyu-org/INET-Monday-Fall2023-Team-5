@@ -1,10 +1,28 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+gender_choices_pref = (
+    ('Males', 'Males'),
+    ('Females', 'Females'),
+    ('Non-binary Individuals', 'Non-binary Individuals')
+)
+
+
+class DatingPreference(models.Model):
+    gender = models.CharField(max_length=25, choices=gender_choices_pref)
+    
+    @classmethod
+    def create_defaults(cls):
+        default_preferences = ['Males', 'Females', 'Non-binary Individuals']
+        for preference in default_preferences:
+            cls.objects.get_or_create(gender=preference)
+
+    def __str__(self):
+        return self.gender
+    
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, default=1)
-    gender_choices_pref = (('Males', 'Males'),('Females', 'Females'), ('Non-binary Individuals', 'Non-binary Individuals'))
-    open_to_dating = models.CharField(max_length = 25, choices = gender_choices_pref, blank = False)
+    open_to_dating = models.ManyToManyField(DatingPreference, blank=True)
     GENDER_CHOICES = [
         ('M', 'Male'),
         ('F', 'Female'),

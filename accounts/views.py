@@ -36,25 +36,33 @@ def edit_profile(request):
     if request.method == 'POST':
         form = EditProfileForm(request.POST, instance=profile)
         if form.is_valid():
-            profile.open_to_dating = form.cleaned_data['open_to_dating']
-            profile.pronoun_preference = form.cleaned_data['pronoun_preference']
+            # Get the data but do not save it immediately
+            profile_instance = form.save(commit=False)
+
             pronoun_preference = form.cleaned_data['pronoun_preference']
             if pronoun_preference == 'other':
-                profile.pronoun_preference = form.cleaned_data['custom_pronoun']
+                profile_instance.pronoun_preference = form.cleaned_data['custom_pronoun']
             else:
-                profile.pronoun_preference = pronoun_preference
-            profile.save()
+                profile_instance.pronoun_preference = pronoun_preference
+
+            # Save the profile instance to make sure we can set many-to-many relationships
+            profile_instance.save()
+
+            # Handling the ManyToMany field
+            open_to_dating_choices = form.cleaned_data['open_to_dating']
+            profile_instance.open_to_dating.set(open_to_dating_choices)
+
             updated_user = request.user
-            updated_pronoun_preference = profile.get_pronoun_preference_display()
+            updated_pronoun_preference = profile_instance.get_pronoun_preference_display()
+            
             return HttpResponseRedirect(reverse('profile_updated'))
             #return render(request, 'profile_updated.html', {'user': updated_user, 'pronoun_preference': updated_pronoun_preference})
 
     else:
         form = EditProfileForm(instance=profile)
-        return render(request, 'edit_profile.html', {'form': form})
 
     pronoun_preference = profile.get_pronoun_preference_display()
-    return render(request, 'home.html', {'user': request.user, 'pronoun_preference': pronoun_preference, 'form': form})
+    return render(request, 'edit_profile.html', {'form': form, 'user': request.user, 'pronoun_preference': pronoun_preference})
 
 
 def profile_updated(request):
@@ -70,7 +78,14 @@ def view_profile(request):
     profile = request.user.profile
     pronoun_preference = profile.get_pronoun_preference_display()
 
-    return render(request, 'view_profile.html', {'user': request.user, 'pronoun_preference': pronoun_preference})
+    # Fetching dating preferences
+    open_to_dating = profile.open_to_dating.all()
+
+    return render(request, 'view_profile.html', {
+        'user': request.user,
+        'pronoun_preference': pronoun_preference,
+        'open_to_dating': open_to_dating
+    })
 
 def browse_profiles(request):
     profiles_list = Profile.objects.all()
@@ -81,3 +96,4 @@ def browse_profiles(request):
     profiles = paginator.get_page(page)
 
     return render(request, 'browse_profiles.html', {'profiles': profiles})
+
