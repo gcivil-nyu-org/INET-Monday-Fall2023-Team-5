@@ -2,9 +2,9 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse
 from django.views import generic
-from django.shortcuts import render, redirect
+from django.shortcuts import render, reverse
 from django.contrib import messages
 from .forms import EditProfileForm
 from .models import Profile
@@ -16,7 +16,7 @@ class SignUpView(generic.CreateView):
     template_name = "registration/signup.html"
 
     def get_success_url(self):
-        return reverse('profile/edit_profile')  # redirecting to edit_profile after successful registration
+        return reverse('edit_profile')  # redirecting to edit_profile after successful registration
 
     def form_valid(self, form):
         response = super().form_valid(form)  # Call the parent class's form_valid method
