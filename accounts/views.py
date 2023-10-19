@@ -83,9 +83,11 @@ def view_profile(request):
 
     return render(request, 'profile/view_profile.html', {
         'user': request.user,
+        'profile': profile,  # Add this line to pass the profile object to the template
         'pronoun_preference': pronoun_preference,
         'open_to_dating': open_to_dating
     })
+
 
 def browse_profiles(request):
     profiles_list = Profile.objects.all()
