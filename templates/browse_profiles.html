@@ -9,8 +9,20 @@
     {% for profile in profiles %}
     <div class="profile-card">
       <h3>{{ profile.user.username }}</h3>
-      <p><strong>Gender:</strong> {{ profile.gender }}</p>
-      <p><strong>Pronoun Preference:</strong> {{ profile.pronoun_preference }}</p>
+      <p><strong>Gender:</strong> {{ profile.get_gender_display }}</p>
+      <p><strong>Pronoun Preference:</strong> {{ profile.get_pronoun_preference_display }}</p>
+      
+      <!-- Display Open to Dating preferences -->
+      <p>
+          <strong>Open to Dating:</strong>
+          {% if profile.open_to_dating.all %}
+              {% for preference in profile.open_to_dating.all %}
+                  {{ preference.gender }}{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+          {% else %}
+              Not specified
+          {% endif %}
+      </p>
     </div>
     {% empty %}
     <p>No profiles available.</p>
