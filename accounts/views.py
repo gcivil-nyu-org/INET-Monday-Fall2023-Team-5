@@ -91,12 +91,27 @@ def view_profile(request):
 
 
 def browse_profiles(request):
-    profiles_list = Profile.objects.all()
+    recommended_profiles = get_recommended_profiles(request.user)
     
     # Pagination: Show 10 profiles per page
-    paginator = Paginator(profiles_list, 10)
+    paginator = Paginator(recommended_profiles, 10)
     page = request.GET.get('page')
     profiles = paginator.get_page(page)
 
     return render(request, 'profile/browse_profiles.html', {'profiles': profiles})
+
+
+
+def get_recommended_profiles(user):
+    user_profile = user.profile
+    user_gender = user_profile.gender
+    user_open_to_dating = user_profile.open_to_dating.values_list('gender', flat=True)
+    
+    # Profiles that match the user's dating preferences
+    matching_gender_profiles = Profile.objects.filter(gender__in=user_open_to_dating)
+
+    # Of those, which are open to dating someone of the user's gender
+    recommended_profiles = matching_gender_profiles.filter(open_to_dating__gender__in=[user_gender])
+
+    return recommended_profiles
 

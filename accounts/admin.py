@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile
+from .models import*
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
@@ -11,3 +11,5 @@ class ProfileAdmin(admin.ModelAdmin):
 
     # Provide a short description for the column header
     display_open_to_dating.short_description = "Open to Dating"
+
+admin.site.register(DatingPreference)

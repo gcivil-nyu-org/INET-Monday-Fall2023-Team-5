@@ -1,13 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-gender_choices_pref = (
-    ('Males', 'Males'),
-    ('Females', 'Females'),
-    ('Non-binary Individuals', 'Non-binary Individuals')
-)
-
-
 class DatingPreference(models.Model):
     # Define gender_choices_pref at class-level
     gender_choices_pref = [
@@ -17,18 +10,17 @@ class DatingPreference(models.Model):
         ('NS', 'Not Specified')
     ]
     
-    gender = models.CharField(max_length=25, choices=gender_choices_pref)
+    gender = models.CharField(max_length=2, choices=gender_choices_pref)
     
     @classmethod
     def create_defaults(cls):
         # Instead of hardcoded values, we reference gender_choices_pref
         for gender_code, gender_label in cls.gender_choices_pref:
-            cls.objects.get_or_create(gender=gender_label)
+            cls.objects.get_or_create(gender=gender_code) # Changed from gender_label to gender_code
 
     def __str__(self):
-        return self.gender
+        return self.get_gender_display()  # Using get_gender_display for better representation
 
-    
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     open_to_dating = models.ManyToManyField(DatingPreference, blank=True)
@@ -36,9 +28,10 @@ class Profile(models.Model):
         ('M', 'Male'),
         ('F', 'Female'),
         ('N', 'Non-binary'),
+        ('NS', 'Not Specified')  # added this for completeness
     ]
 
-    gender = models.CharField(max_length=20, choices=GENDER_CHOICES, default="Not Specified")
+    gender = models.CharField(max_length=2, choices=GENDER_CHOICES, default="NS") # Changed default value
     pronoun_preference = models.CharField(
         max_length=20,
         choices=[
