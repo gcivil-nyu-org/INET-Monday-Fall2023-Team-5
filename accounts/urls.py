@@ -8,5 +8,5 @@ urlpatterns = [
     path("edit_profile/", edit_profile, name="edit_profile"),
     path("profile_updated/", profile_updated, name="profile_updated"),
     path("profile/", view_profile, name="view_profile"),
-    path('browse/', browse_profiles, name='browse_profiles'),
+    path("browse/", browse_profiles, name="browse_profiles"),
 ]
