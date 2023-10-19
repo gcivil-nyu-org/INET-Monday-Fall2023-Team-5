@@ -38,9 +38,14 @@ def edit_profile(request):
         if form.is_valid():
             _handle_form_valid(request, form)
             return HttpResponseRedirect(reverse('profile_updated'))
-            #return render(request, 'profile_updated.html', {'user': request.user, 'pronoun_preference': request.user.profile.get_pronoun_preference_display()})
-    
-    # ... [your code to handle GET requests and render the form]
+            # return render(request, 'profile_updated.html', {'user': request.user, 'pronoun_preference': request.user.profile.get_pronoun_preference_display()})
+        else:
+            messages.error(request, 'There was an error in the form. Please check your inputs.')
+    else:
+        form = EditProfileForm(instance=profile)
+
+    return render(request, 'profile/edit_profile.html', {'form': form})
+
 
 def _handle_form_valid(request, form):
     """Helper function to process a valid form submission."""
