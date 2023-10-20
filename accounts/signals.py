@@ -1,7 +1,7 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_migrate
 from django.contrib.auth.models import User
 from django.dispatch import receiver
-from .models import Profile
+from .models import*
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -11,3 +11,7 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
+
+@receiver(post_migrate)
+def add_default_dating_preferences(sender, **kwargs):
+    DatingPreference.create_defaults()

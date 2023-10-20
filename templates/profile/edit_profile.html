@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+  <div class="profile-edit-container">
+    <h2>Edit Profile</h2>
+    <p>Please complete your profile to help us serve you better!</p>
+    <form method="post" action="{% url 'edit_profile' %}">
+      {% csrf_token %}
+      <!-- Gender field -->
+      <div class="form-group">
+        <label>Gender:</label>
+        {{ form.gender }}
+      </div>
+
+      <!-- Open to Dating -->
+      <div class="form-group">
+        <label>Open to Dating:</label>
+        {{ form.open_to_dating }}
+      </div>
+
+      <!-- Pronoun Preferences -->
+      <div class="form-group">
+        <label>Pronoun Preference:</label>
+        {% for choice in form.pronoun_preference %}
+            <div class="radio-option">
+                <label>
+                    {{ choice.tag }}
+                    {{ choice.choice_label }}
+                </label>
+            </div>
+        {% endfor %}
+    </div>
+
+      <!-- Custom Pronoun (only displayed when 'Other' is selected) -->
+      <div class="form-group" id="custom-pronoun" style="display: none;">
+        <label for="{{ form.custom_pronoun.id_for_label }}">Custom Pronoun:</label>
+        {{ form.custom_pronoun }}
+      </div>
+
+      <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+  </div>
+
+  <!-- JavaScript to dynamically display the Custom Pronoun field -->
+  <script>
+    const pronounRadioButtons = document.querySelectorAll("input[name='{{ form.pronoun_preference.name }}']");
+    const customPronounDiv = document.querySelector("#custom-pronoun");
+
+    function toggleCustomPronoun() {
+        if (document.querySelector("input[name='{{ form.pronoun_preference.name }}']:checked").value === "other") {
+            customPronounDiv.style.display = "block";
+        } else {
+            customPronounDiv.style.display = "none";
+        }
+    }
+
+    pronounRadioButtons.forEach(button => {
+        button.addEventListener("change", toggleCustomPronoun);
+    });
+
+    // Call the function on page load to set the initial state
+    window.addEventListener("DOMContentLoaded", (event) => {
+        toggleCustomPronoun();
+    });
+  </script>
+{% endblock %}
+
