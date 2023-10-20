@@ -9,21 +9,28 @@
       {% csrf_token %}
       <!-- Gender field -->
       <div class="form-group">
-        <label for="{{ form.gender.id_for_label }}">Gender:</label>
+        <label>Gender:</label>
         {{ form.gender }}
       </div>
 
       <!-- Open to Dating -->
       <div class="form-group">
-        <label for="{{ form.open_to_dating.id_for_label }}">Open to Dating:</label>
+        <label>Open to Dating:</label>
         {{ form.open_to_dating }}
       </div>
 
       <!-- Pronoun Preferences -->
       <div class="form-group">
-        <label for="{{ form.pronoun_preference.id_for_label }}">Pronoun Preference:</label>
-        {{ form.pronoun_preference }}
-      </div>
+        <label>Pronoun Preference:</label>
+        {% for choice in form.pronoun_preference %}
+            <div class="radio-option">
+                <label>
+                    {{ choice.tag }}
+                    {{ choice.choice_label }}
+                </label>
+            </div>
+        {% endfor %}
+    </div>
 
       <!-- Custom Pronoun (only displayed when 'Other' is selected) -->
       <div class="form-group" id="custom-pronoun" style="display: none;">
@@ -34,21 +41,23 @@
       <button type="submit" class="btn btn-primary">Save</button>
     </form>
   </div>
-  
+
   <!-- JavaScript to dynamically display the Custom Pronoun field -->
   <script>
-    const pronounSelect = document.querySelector("#{{ form.pronoun_preference.id_for_label }}");
+    const pronounRadioButtons = document.querySelectorAll("input[name='{{ form.pronoun_preference.name }}']");
     const customPronounDiv = document.querySelector("#custom-pronoun");
 
     function toggleCustomPronoun() {
-        if (pronounSelect.value === "other") {
+        if (document.querySelector("input[name='{{ form.pronoun_preference.name }}']:checked").value === "other") {
             customPronounDiv.style.display = "block";
         } else {
             customPronounDiv.style.display = "none";
         }
     }
 
-    pronounSelect.addEventListener("change", toggleCustomPronoun);
+    pronounRadioButtons.forEach(button => {
+        button.addEventListener("change", toggleCustomPronoun);
+    });
 
     // Call the function on page load to set the initial state
     window.addEventListener("DOMContentLoaded", (event) => {
@@ -56,3 +65,4 @@
     });
   </script>
 {% endblock %}
+

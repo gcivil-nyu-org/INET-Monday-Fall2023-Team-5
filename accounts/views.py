@@ -66,6 +66,7 @@ def _handle_form_valid(request, form):
     profile_instance.open_to_dating.set(open_to_dating_choices)
 
 
+
 def profile_updated(request):
     profile = request.user.profile
     updated_pronoun_preference = profile.get_pronoun_preference_display()
