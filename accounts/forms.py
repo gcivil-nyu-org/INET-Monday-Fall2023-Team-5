@@ -24,6 +24,27 @@ class CustomUserCreationForm(UserCreationForm):
         if not email.endswith("@nyu.edu"):
             raise ValidationError("Please use your NYU email.")
         return email
+    
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.is_active = False  # Set user to inactive until email confirmation
+        if commit:
+            user.save()
+            
+            # Generate a token for email confirmation
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            confirmation_link = f'http://127.0.0.1:8000/accounts/confirm/{uid}/{token}/'
+
+            # Send an email
+            send_mail(
+                'Confirm your registration',
+                f'Click the link to confirm: {confirmation_link}',
+                'from@example.com',
+                [user.email],
+                fail_silently=False,
+            )
+        return user
 
     
 # This is the form that will be used to edit a user's profile
