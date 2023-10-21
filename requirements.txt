@@ -5,3 +5,4 @@ django-crispy-forms==2.1
 Pillow==10.1.0
 pytz==2023.3.post1
 sqlparse==0.4.4
+environ~=1.0

@@ -2,6 +2,7 @@ from django.urls import path
 from .views import *
 from django.views.generic.base import TemplateView
 
+
 urlpatterns = [
     path("about/", about, name="about"),
     path("signup/", SignUpView.as_view(), name="signup"),

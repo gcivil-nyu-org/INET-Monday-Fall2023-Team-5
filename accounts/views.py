@@ -10,7 +10,6 @@ from .forms import EditProfileForm
 from .models import Profile
 from django.core.paginator import Paginator
 
-
 class SignUpView(generic.CreateView):
     form_class = UserCreationForm
     template_name = "registration/signup.html"
