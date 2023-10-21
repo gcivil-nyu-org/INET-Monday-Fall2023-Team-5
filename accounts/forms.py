@@ -28,6 +28,12 @@ class EditProfileForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'placeholder': 'Custom Pronoun'}),
     )
 
+    profile_picture = forms.ImageField(
+        required=False,
+        widget=forms.ClearableFileInput(attrs={'accept': 'image/*'}),
+    )
+
     class Meta:
         model = Profile
-        fields = ('gender', 'open_to_dating', 'pronoun_preference', 'custom_pronoun')  # Added 'custom_pronoun'
+        fields = ('gender', 'open_to_dating', 'pronoun_preference', 'custom_pronoun', 'profile_picture')
+

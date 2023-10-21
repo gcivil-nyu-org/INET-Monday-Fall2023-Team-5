@@ -12,6 +12,15 @@
       <p><strong>Gender:</strong> {{ profile.get_gender_display }}</p>
       <p><strong>Pronoun Preference:</strong> {{ profile.get_pronoun_preference_display }}</p>
       
+      <!-- Display Profile Picture -->
+      <div class="profile-picture">
+        {% if profile.profile_picture %}
+          <img src="{{ profile.profile_picture.url }}" alt="{{ profile.user.username }}'s Profile Picture" class="profile-img" style="max-width: 200px; max-height: 200px;">
+        {% else %}
+          No profile picture available
+        {% endif %}
+      </div>
+
       <!-- Display Open to Dating preferences -->
       <p>
           <strong>Open to Dating:</strong>

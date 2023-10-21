@@ -21,6 +21,7 @@ class DatingPreference(models.Model):
     def __str__(self):
         return self.get_gender_display()  # Using get_gender_display for better representation
 
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     open_to_dating = models.ManyToManyField(DatingPreference, blank=True)
@@ -30,8 +31,7 @@ class Profile(models.Model):
         ('N', 'Non-binary'),
         ('NS', 'Not Specified')  # added this for completeness
     ]
-
-    gender = models.CharField(max_length=2, choices=GENDER_CHOICES, default="NS") # Changed default value
+    gender = models.CharField(max_length=2, choices=GENDER_CHOICES, default="NS")
     pronoun_preference = models.CharField(
         max_length=20,
         choices=[
@@ -43,6 +43,8 @@ class Profile(models.Model):
         ],
         default='not_specified',
     )
+    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
 
     def __str__(self):
         return self.user.username
+

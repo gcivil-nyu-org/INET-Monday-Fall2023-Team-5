@@ -58,6 +58,10 @@ def _handle_form_valid(request, form):
     else:
         profile_instance.pronoun_preference = pronoun_preference
 
+    # Handle profile picture upload
+    if 'profile_picture' in request.FILES:
+        profile_instance.profile_picture = request.FILES['profile_picture']
+
     # Save the profile instance to make sure we can set many-to-many relationships
     profile_instance.save()
 
@@ -85,7 +89,7 @@ def view_profile(request):
 
     return render(request, 'profile/view_profile.html', {
         'user': request.user,
-        'profile': profile,  # Add this line to pass the profile object to the template
+        'profile': profile,
         'pronoun_preference': pronoun_preference,
         'open_to_dating': open_to_dating
     })

@@ -120,3 +120,9 @@ a:hover {
     color: #fff; /* White color for the active link */
 }
 
+.profile-img {
+    max-width: 150px; /* Adjust the desired maximum width */
+    max-height: 150px; /* Adjust the desired maximum height */
+    width: auto;
+    height: auto;
+  }
