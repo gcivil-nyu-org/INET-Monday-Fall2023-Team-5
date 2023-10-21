@@ -31,6 +31,16 @@
       {% endif %}
     </div>
 
+    <!-- Display Profile Picture -->
+    <div class="profile-field">
+      <strong>Profile Picture:</strong>
+      {% if profile.profile_picture %}
+        <img src="{{ profile.profile_picture.url }}" alt="{{ user.username }}'s Profile Picture" style="max-width: 400px; max-height: 400px;">
+      {% else %}
+        No profile picture available
+      {% endif %}
+    </div>
+
     <!-- Add more fields as required -->
 
     <hr>

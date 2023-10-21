@@ -5,7 +5,7 @@
   <div class="profile-edit-container">
     <h2>Edit Profile</h2>
     <p>Please complete your profile to help us serve you better!</p>
-    <form method="post" action="{% url 'edit_profile' %}">
+    <form method="post" action="{% url 'edit_profile' %}" enctype="multipart/form-data">
       {% csrf_token %}
       <!-- Gender field -->
       <div class="form-group">
@@ -30,12 +30,18 @@
                 </label>
             </div>
         {% endfor %}
-    </div>
+      </div>
 
       <!-- Custom Pronoun (only displayed when 'Other' is selected) -->
       <div class="form-group" id="custom-pronoun" style="display: none;">
         <label for="{{ form.custom_pronoun.id_for_label }}">Custom Pronoun:</label>
         {{ form.custom_pronoun }}
+      </div>
+
+      <!-- Profile Picture -->
+      <div class="form-group">
+        <label for="{{ form.profile_picture.id_for_label }}">Profile Picture:</label>
+        {{ form.profile_picture }}
       </div>
 
       <button type="submit" class="btn btn-primary">Save</button>
@@ -48,21 +54,20 @@
     const customPronounDiv = document.querySelector("#custom-pronoun");
 
     function toggleCustomPronoun() {
-        if (document.querySelector("input[name='{{ form.pronoun_preference.name }}']:checked").value === "other") {
-            customPronounDiv.style.display = "block";
-        } else {
-            customPronounDiv.style.display = "none";
-        }
+      if (document.querySelector("input[name='{{ form.pronoun_preference.name }}']:checked").value === "other") {
+        customPronounDiv.style.display = "block";
+      } else {
+        customPronounDiv.style.display = "none";
+      }
     }
 
     pronounRadioButtons.forEach(button => {
-        button.addEventListener("change", toggleCustomPronoun);
+      button.addEventListener("change", toggleCustomPronoun);
     });
 
     // Call the function on page load to set the initial state
     window.addEventListener("DOMContentLoaded", (event) => {
-        toggleCustomPronoun();
+      toggleCustomPronoun();
     });
   </script>
 {% endblock %}
-
