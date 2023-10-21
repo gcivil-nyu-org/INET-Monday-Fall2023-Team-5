@@ -2,7 +2,8 @@ asgiref==3.7.2
 crispy-bootstrap4==2022.1
 Django==4.2
 django-crispy-forms==2.1
+django-environ==0.11.2
+environ==1.0
 Pillow==10.1.0
 pytz==2023.3.post1
 sqlparse==0.4.4
-environ~=1.0
