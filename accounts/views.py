@@ -8,7 +8,7 @@ from django.shortcuts import render, reverse
 from django.contrib import messages
 from .forms import EditProfileForm
 from .models import Profile
-from django.core.paginator import Paginatorfrom
+from django.core.paginator import Paginator
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
@@ -18,6 +18,9 @@ from django.contrib.auth.models import User
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
+from django.urls import reverse_lazy
+from django.shortcuts import redirect
+
 
 
 class SignUpView(generic.CreateView):
@@ -26,28 +29,11 @@ class SignUpView(generic.CreateView):
     success_url = reverse_lazy("confirmation_required")
 
     def form_valid(self, form):
-        # Save the user but set it to inactive
-        user = form.save(commit=False)
-        user.is_active = False
-        user.save()
-
-        # Generate token and uid for confirmation email
-        token = default_token_generator.make_token(user)
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-        confirmation_link = f'http://127.0.0.1:8000/accounts/confirm/{uid}/{token}/'
-
-        # Send the confirmation email
-        send_mail(
-            'Confirm your registration',
-            f'Click the link to confirm: {confirmation_link}',
-            'from@example.com',
-            [user.email],
-            fail_silently=False,
-        )
-
         messages.success(self.request, "Please confirm your email to complete the registration.")
         return super().form_valid(form)
-
+    
+def about(request):
+    return render(request, 'about.html', {'title': 'About'})
 
 @login_required
 def edit_profile(request):

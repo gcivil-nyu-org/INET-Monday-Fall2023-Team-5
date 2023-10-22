@@ -9,6 +9,15 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.core.mail import send_mail
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import get_user_model
+from django.utils.crypto import get_random_string
+from django.core.mail import send_mail
+from django.urls import reverse
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.sites.shortcuts import get_current_site
 
 
 # This is the form that will be used to create a new user, and check for valid email
@@ -21,6 +30,9 @@ class CustomUserCreationForm(UserCreationForm):
 
     def clean_email(self):
         email = self.cleaned_data.get("email")
+
+        if User.objects.filter(email=email).exists():
+            raise ValidationError("Email already in use.")
         if not email.endswith("@nyu.edu"):
             raise ValidationError("Please use your NYU email.")
         return email
@@ -83,4 +95,3 @@ class EditProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('gender', 'open_to_dating', 'pronoun_preference', 'custom_pronoun', 'profile_picture')
-
