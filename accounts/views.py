@@ -9,22 +9,29 @@ from django.contrib import messages
 from .forms import EditProfileForm
 from .models import Profile
 from django.core.paginator import Paginator
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.core.mail import send_mail
+from .forms import CustomUserCreationForm
+from django.contrib.auth.models import User
+from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.sites.shortcuts import get_current_site
+from django.urls import reverse_lazy
+from django.shortcuts import redirect
+
+
 
 class SignUpView(generic.CreateView):
-    form_class = UserCreationForm
+    form_class = CustomUserCreationForm
     template_name = "registration/signup.html"
-
-    def get_success_url(self):
-        return reverse('edit_profile')  # redirecting to edit_profile after successful registration
+    success_url = reverse_lazy("confirmation_required")
 
     def form_valid(self, form):
-        response = super().form_valid(form)  # Call the parent class's form_valid method
-        # Automatically log the user in
-        new_user = authenticate(username=form.cleaned_data['username'],
-                                password=form.cleaned_data['password1'])
-        login(self.request, new_user)
-        return response
-
+        messages.success(self.request, "Please confirm your email to complete the registration.")
+        return super().form_valid(form)
+    
 def about(request):
     return render(request, 'about.html', {'title': 'About'})
 
@@ -121,3 +128,23 @@ def get_recommended_profiles(user):
     recommended_profiles = recommended_profiles.exclude(user=user)
 
     return recommended_profiles
+
+def activate_account(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user and default_token_generator.check_token(user, token):
+        user.is_active = True
+        user.profile.is_confirmed = True  # Set the profile confirmed attribute to True
+        user.save()
+        messages.success(request, "Your account has been activated. You can now login.")
+        return redirect('login')
+    else:
+        messages.error(request, 'Activation link is invalid!')
+        return redirect('home')
+
+def confirmation_required(request):
+    return render(request, 'registration/confirmation_required.html')
