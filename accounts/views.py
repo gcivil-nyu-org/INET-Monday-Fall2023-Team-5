@@ -1,11 +1,14 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse_lazy, reverse
+from django.contrib.auth import authenticate, login
+from django.urls import reverse
 from django.views import generic
-from django.shortcuts import render, redirect
+from django.shortcuts import render, reverse
 from django.contrib import messages
 from .forms import EditProfileForm
+from .models import Profile
+from django.core.paginator import Paginatorfrom
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
@@ -19,9 +22,8 @@ from django.contrib.sites.shortcuts import get_current_site
 
 class SignUpView(generic.CreateView):
     form_class = CustomUserCreationForm
-    # success_url = reverse_lazy("profile-create")
-    success_url = reverse_lazy("confirmation_required")
     template_name = "registration/signup.html"
+    success_url = reverse_lazy("confirmation_required")
 
     def form_valid(self, form):
         # Save the user but set it to inactive
@@ -32,8 +34,7 @@ class SignUpView(generic.CreateView):
         # Generate token and uid for confirmation email
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
-        confirmation_link  = f'http://127.0.0.1:8000/accounts/confirm/{uid}/{token}/'
-
+        confirmation_link = f'http://127.0.0.1:8000/accounts/confirm/{uid}/{token}/'
 
         # Send the confirmation email
         send_mail(
@@ -46,7 +47,8 @@ class SignUpView(generic.CreateView):
 
         messages.success(self.request, "Please confirm your email to complete the registration.")
         return super().form_valid(form)
-    
+
+
 @login_required
 def edit_profile(request):
     profile = request.user.profile  # refers to the currently authenticated user
@@ -54,34 +56,92 @@ def edit_profile(request):
     if request.method == 'POST':
         form = EditProfileForm(request.POST, instance=profile)
         if form.is_valid():
-            profile.open_to_dating = form.cleaned_data['open_to_dating']
-            profile.pronoun_preference = form.cleaned_data['pronoun_preference']
-            pronoun_preference = form.cleaned_data['pronoun_preference']
-            if pronoun_preference == 'other':
-                profile.pronoun_preference = form.cleaned_data['custom_pronoun']
-            else:
-                profile.pronoun_preference = pronoun_preference
-            profile.save()
-            updated_user = request.user
-            updated_pronoun_preference = profile.get_pronoun_preference_display()
+            _handle_form_valid(request, form)
             return HttpResponseRedirect(reverse('profile_updated'))
-            #return render(request, 'profile_updated.html', {'user': updated_user, 'pronoun_preference': updated_pronoun_preference})
-
+            # return render(request, 'profile_updated.html', {'user': request.user, 'pronoun_preference': request.user.profile.get_pronoun_preference_display()})
+        else:
+            messages.error(request, 'There was an error in the form. Please check your inputs.')
     else:
         form = EditProfileForm(instance=profile)
-        return render(request, 'edit_profile.html', {'form': form})
 
-    pronoun_preference = profile.get_pronoun_preference_display()
-    return render(request, 'home.html', {'user': request.user, 'pronoun_preference': pronoun_preference, 'form': form})
+    return render(request, 'profile/edit_profile.html', {'form': form})
+
+
+def _handle_form_valid(request, form):
+    """Helper function to process a valid form submission."""
+    # Get the data but do not save it immediately
+    profile_instance = form.save(commit=False)
+
+    pronoun_preference = form.cleaned_data['pronoun_preference']
+    if pronoun_preference == 'other':
+        profile_instance.pronoun_preference = form.cleaned_data['custom_pronoun']
+    else:
+        profile_instance.pronoun_preference = pronoun_preference
+
+    # Handle profile picture upload
+    if 'profile_picture' in request.FILES:
+        profile_instance.profile_picture = request.FILES['profile_picture']
+
+    # Save the profile instance to make sure we can set many-to-many relationships
+    profile_instance.save()
+
+    # Handling the ManyToMany field
+    open_to_dating_choices = form.cleaned_data['open_to_dating']
+    profile_instance.open_to_dating.set(open_to_dating_choices)
+
 
 
 def profile_updated(request):
     profile = request.user.profile
     updated_pronoun_preference = profile.get_pronoun_preference_display()
 
-    return render(request, 'profile_updated.html',
+    return render(request, 'profile/profile_updated.html',
                   {'user': request.user, 'pronoun_preference': updated_pronoun_preference})
 
+
+@login_required
+def view_profile(request):
+    profile = request.user.profile
+    pronoun_preference = profile.get_pronoun_preference_display()
+
+    # Fetching dating preferences
+    open_to_dating = profile.open_to_dating.all()
+
+    return render(request, 'profile/view_profile.html', {
+        'user': request.user,
+        'profile': profile,
+        'pronoun_preference': pronoun_preference,
+        'open_to_dating': open_to_dating
+    })
+
+@login_required
+def browse_profiles(request):
+    recommended_profiles = get_recommended_profiles(request.user)
+    
+    # Pagination: Show 10 profiles per page
+    paginator = Paginator(recommended_profiles, 10)
+    page = request.GET.get('page')
+    profiles = paginator.get_page(page)
+
+    return render(request, 'profile/browse_profiles.html', {'profiles': profiles})
+
+
+
+def get_recommended_profiles(user):
+    user_profile = user.profile
+    user_gender = user_profile.gender
+    user_open_to_dating = user_profile.open_to_dating.values_list('gender', flat=True)
+    
+    # Profiles that match the user's dating preferences
+    matching_gender_profiles = Profile.objects.filter(gender__in=user_open_to_dating)
+
+    # Of those, which are open to dating someone of the user's gender
+    recommended_profiles = matching_gender_profiles.filter(open_to_dating__gender__in=[user_gender])
+    
+    # Exclude the current user's profile from the recommended list
+    recommended_profiles = recommended_profiles.exclude(user=user)
+
+    return recommended_profiles
 
 def activate_account(request, uidb64, token):
     try:

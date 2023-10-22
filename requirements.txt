@@ -1,4 +1,5 @@
 asgiref==3.7.2
+crispy-bootstrap4==2022.1
 awsebcli==3.20.10
 blessed==1.20.0
 botocore==1.31.63
@@ -7,6 +8,8 @@ certifi==2023.7.22
 charset-normalizer==3.3.0
 colorama==0.4.3
 Django==4.2
+django-crispy-forms==2.1
+Pillow==10.1.0
 idna==3.4
 jmespath==1.0.1
 pathspec==0.10.1
@@ -17,7 +20,7 @@ requests==2.31.0
 semantic-version==2.8.5
 six==1.16.0
 sqlparse==0.4.4
-termcolor==1.1.0
+environ~=1.0termcolor==1.1.0
 typing_extensions==4.8.0
 urllib3==1.26.17
 wcwidth==0.1.9

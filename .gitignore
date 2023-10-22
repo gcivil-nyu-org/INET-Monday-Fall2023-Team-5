@@ -5,3 +5,7 @@
 !.elasticbeanstalk/*.global.yml
 *.pyc
 __pycache__/
+.DS_Store
+.env
+.idea/*
+.venv/*
