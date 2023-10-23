@@ -27,7 +27,12 @@ class SignUpView(generic.CreateView):
     form_class = CustomUserCreationForm
     template_name = "registration/signup.html"
     success_url = reverse_lazy("confirmation_required")
-
+    def get_form_kwargs(self):
+        # This method provides arguments for form instantiation.
+        # We'll override it to include the domain.
+        kwargs = super(SignUpView, self).get_form_kwargs()
+        kwargs['domain'] = self.request.get_host()
+        return kwargs
     def form_valid(self, form):
         messages.success(self.request, "Please confirm your email to complete the registration.")
         return super().form_valid(form)

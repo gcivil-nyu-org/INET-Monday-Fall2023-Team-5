@@ -28,6 +28,10 @@ class CustomUserCreationForm(UserCreationForm):
         model = User
         fields = ("username", "email", "password1", "password2")
 
+    def __init__(self, *args, **kwargs):
+        self.domain = kwargs.pop('domain', None)  # Extract domain if passed, else default to None
+        super(CustomUserCreationForm, self).__init__(*args, **kwargs)
+
     def clean_email(self):
         email = self.cleaned_data.get("email")
 
@@ -36,17 +40,17 @@ class CustomUserCreationForm(UserCreationForm):
         if not email.endswith("@nyu.edu"):
             raise ValidationError("Please use your NYU email.")
         return email
-    
+
     def save(self, commit=True):
         user = super().save(commit=False)
         user.is_active = False  # Set user to inactive until email confirmation
         if commit:
             user.save()
-            
+
             # Generate a token for email confirmation
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            confirmation_link = f'http://127.0.0.1:8000/accounts/confirm/{uid}/{token}/'
+            confirmation_link = f'http://{self.domain}/accounts/confirm/{uid}/{token}/'
 
             # Send an email
             send_mail(
