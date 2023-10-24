@@ -35,8 +35,8 @@ class CustomUserCreationForm(UserCreationForm):
     def clean_email(self):
         email = self.cleaned_data.get("email")
 
-        #if User.objects.filter(email=email).exists():
-        #    raise ValidationError("Email already in use.")
+        if User.objects.filter(email=email).exists():
+            raise ValidationError("Email already in use.")
         if not email.endswith("@nyu.edu"):
             raise ValidationError("Please use your NYU email.")
         return email
