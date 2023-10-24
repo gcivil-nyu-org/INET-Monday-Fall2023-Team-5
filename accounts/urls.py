@@ -10,4 +10,5 @@ urlpatterns = [
     path("confirmation_required/", confirmation_required, name="confirmation_required"),
     path("profile/", view_profile, name="view_profile"),
     path("browse/", browse_profiles, name="browse_profiles"),
+    path('account/', account, name='account'),
 ]
