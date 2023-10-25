@@ -158,8 +158,9 @@ def confirmation_required(request):
 
 @login_required
 def account(request):
-    if request.method == "POST":
-        # Change username
+    password_form = PasswordChangeForm(request.user, request.POST or None)
+    
+    if 'username' in request.POST:  # This indicates a username change attempt
         new_username = request.POST.get('username')
         if new_username:
             if User.objects.filter(username=new_username).exclude(pk=request.user.pk).exists():
@@ -168,9 +169,8 @@ def account(request):
                 request.user.username = new_username
                 request.user.save()
                 messages.success(request, 'Username updated successfully')
-        
-        # Change password
-        password_form = PasswordChangeForm(request.user, request.POST)
+                
+    elif 'old_password' in request.POST:  # This indicates a password change attempt
         if password_form.is_valid():
             user = password_form.save()
             update_session_auth_hash(request, user)  # Important, to update the session and keep the user logged in
@@ -178,9 +178,7 @@ def account(request):
         else:
             messages.error(request, 'Please correct the errors below.')
 
-    else:
-        password_form = PasswordChangeForm(request.user)
-
     return render(request, 'account.html', {
         'password_form': password_form,
     })
+
