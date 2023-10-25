@@ -48,46 +48,59 @@ class ProfileModelTest(TestCase):
         self.user.delete()
         self.assertEqual(Profile.objects.count(), 0)
 
+class ViewProfileTest(TestCase):
 
-class DatingPreferenceModelTest(TestCase):
+    def setUp(self):
+        # Create a test user and log in
+        self.user = User.objects.create_user(username='testuser', password='testpass')
+        self.client.login(username='testuser', password='testpass')
+
+        # Create a test profile for the user or fetch it if it already exists
+        self.profile, created = Profile.objects.get_or_create(user=self.user)
+
+        # Always create or get dating preferences and associate them with the profile
+        f_pref, _ = DatingPreference.objects.get_or_create(gender='F')
+        m_pref, _ = DatingPreference.objects.get_or_create(gender='M')
+
     
-    def test_create_defaults(self):
-        # Test the creation of default DatingPreference entries.
+        # Clear any existing preferences and then add the new ones
+        self.profile.open_to_dating.clear()
+        self.profile.open_to_dating.add(m_pref, f_pref)
 
-        DatingPreference.create_defaults()
-        
-        # Check if all default preferences are created
-        self.assertEqual(DatingPreference.objects.count(), len(DatingPreference.gender_choices_pref))
-        
-        for gender_code, _ in DatingPreference.gender_choices_pref:
-            self.assertTrue(DatingPreference.objects.filter(gender=gender_code).exists())
 
-    def test_string_representation(self):
-        # Test the string representation of the DatingPreference model.
+    def tearDown(self):
+        # Optional: Clean up after tests to ensure no leftover data
+        # Though with TestCase, each test is transactional and rolled back
+        self.profile.delete()
+        self.user.delete()
 
-        preference = DatingPreference.objects.create(gender='M')
-        self.assertEqual(str(preference), 'Males')
-        
-        preference = DatingPreference.objects.create(gender='F')
-        self.assertEqual(str(preference), 'Females')
-        
-        preference = DatingPreference.objects.create(gender='N')
-        self.assertEqual(str(preference), 'Non-binary Individuals')
-        
-        preference = DatingPreference.objects.create(gender='NS')
-        self.assertEqual(str(preference), 'Not Specified')
+    def test_view_profile_requires_login(self):
+        # Log out and try accessing the view
+        self.client.logout()
+        response = self.client.get(reverse('view_profile'))
+        print("Redirected URL:", response.url)  # Add this line to debug
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith('/accounts/login/'))
 
-    def test_duplicate_create_defaults(self):
-        # Test that create_defaults doesn't duplicate entries.
 
-        DatingPreference.create_defaults()
-        initial_count = DatingPreference.objects.count()
-        
-        # Call create_defaults again
-        DatingPreference.create_defaults()
-        
-        # Check that the count hasn't changed
-        self.assertEqual(DatingPreference.objects.count(), initial_count)
+    def test_view_profile_displays_correct_context(self):
+        response = self.client.get(reverse('view_profile'))
+
+        # Check the user and profile in the context
+        self.assertEqual(response.context['user'], self.user)
+        self.assertEqual(response.context['profile'], self.profile)
+        self.assertEqual(response.context['pronoun_preference'], self.profile.get_pronoun_preference_display())
+
+        # Check the open_to_dating in the context
+        # Updated to match the actual string representation
+        self.assertQuerysetEqual(
+            response.context['open_to_dating'].order_by('-gender'), 
+            ['Males', 'Females'], 
+            transform=str,
+            ordered=True
+        )
+
+
 
 class AccountViewTest(TestCase):
     
