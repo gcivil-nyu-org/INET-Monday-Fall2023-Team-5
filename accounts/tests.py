@@ -49,6 +49,46 @@ class ProfileModelTest(TestCase):
         self.assertEqual(Profile.objects.count(), 0)
 
 
+class DatingPreferenceModelTest(TestCase):
+    
+    def test_create_defaults(self):
+        # Test the creation of default DatingPreference entries.
+
+        DatingPreference.create_defaults()
+        
+        # Check if all default preferences are created
+        self.assertEqual(DatingPreference.objects.count(), len(DatingPreference.gender_choices_pref))
+        
+        for gender_code, _ in DatingPreference.gender_choices_pref:
+            self.assertTrue(DatingPreference.objects.filter(gender=gender_code).exists())
+
+    def test_string_representation(self):
+        # Test the string representation of the DatingPreference model.
+
+        preference = DatingPreference.objects.create(gender='M')
+        self.assertEqual(str(preference), 'Males')
+        
+        preference = DatingPreference.objects.create(gender='F')
+        self.assertEqual(str(preference), 'Females')
+        
+        preference = DatingPreference.objects.create(gender='N')
+        self.assertEqual(str(preference), 'Non-binary Individuals')
+        
+        preference = DatingPreference.objects.create(gender='NS')
+        self.assertEqual(str(preference), 'Not Specified')
+
+    def test_duplicate_create_defaults(self):
+        # Test that create_defaults doesn't duplicate entries.
+
+        DatingPreference.create_defaults()
+        initial_count = DatingPreference.objects.count()
+        
+        # Call create_defaults again
+        DatingPreference.create_defaults()
+        
+        # Check that the count hasn't changed
+        self.assertEqual(DatingPreference.objects.count(), initial_count)
+
 class AccountViewTest(TestCase):
     
     def setUp(self):
