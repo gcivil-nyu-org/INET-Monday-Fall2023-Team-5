@@ -249,5 +249,14 @@ class EditProfileTest(TestCase):
         # Cleanup the uploaded test image at the end
         self.profile.profile_picture.delete()
 
+    def test_initial_data_matches_user_profile(self):
+        self.profile.gender = 'M'
+        self.profile.pronoun_preference = 'he_him'
+        self.profile.save()
+        response = self.client.get(self.edit_profile_url)
+        self.assertEqual(response.context['form'].initial['gender'], 'M')
+        self.assertEqual(response.context['form'].initial['pronoun_preference'], 'he_him')
+
+    
    
     
