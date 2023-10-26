@@ -29,9 +29,7 @@ class CustomUserCreationForm(UserCreationForm):
         fields = ("username", "email", "password1", "password2")
 
     def __init__(self, *args, **kwargs):
-        self.domain = kwargs.pop(
-            "domain", None
-        )  # Extract domain if passed, else default to None
+        self.domain = kwargs.pop('domain', None)  # Extract domain if passed, else default to None
         super(CustomUserCreationForm, self).__init__(*args, **kwargs)
 
     def clean_email(self):
@@ -52,55 +50,54 @@ class CustomUserCreationForm(UserCreationForm):
             # Generate a token for email confirmation
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            confirmation_link = f"http://{self.domain}/accounts/confirm/{uid}/{token}/"
+            confirmation_link = f'http://{self.domain}/accounts/confirm/{uid}/{token}/'
 
             # Send an email
             send_mail(
-                "Confirm your registration",
-                f"Click the link to confirm: {confirmation_link}",
-                "from@example.com",
+                'Confirm your registration',
+                f'Click the link to confirm: {confirmation_link}',
+                'from@example.com',
                 [user.email],
                 fail_silently=False,
             )
         return user
 
-
+    
 # This is the form that will be used to edit a user's profile
 class EditProfileForm(forms.ModelForm):
     GENDER_CHOICES = Profile.GENDER_CHOICES  # Use the choices from the Profile model
 
     pronoun_preference = forms.ChoiceField(
         choices=[
-            ("he_him", "He/Him"),
-            ("she_her", "She/Her"),
-            ("they_them", "They/Them"),
-            ("other", "Other"),
-            ("not_specified", "Not Specified"),  # Added this choice
+            ('he_him', 'He/Him'),
+            ('she_her', 'She/Her'),
+            ('they_them', 'They/Them'),
+            ('other', 'Other'),
+            ('not_specified', 'Not Specified'),  # Added this choice
         ],
         widget=forms.RadioSelect,
-        required=False,
+        required=False
     )
 
     open_to_dating = forms.ModelMultipleChoiceField(
         queryset=DatingPreference.objects.all(),
         widget=forms.CheckboxSelectMultiple,
-        required=False,
+        required=False
     )
 
     custom_pronoun = forms.CharField(
         max_length=255,
         required=False,
-        widget=forms.TextInput(attrs={"placeholder": "Custom Pronoun"}),
+        widget=forms.TextInput(attrs={'placeholder': 'Custom Pronoun'}),
     )
 
     profile_picture = forms.ImageField(
         required=False,
-        widget=forms.ClearableFileInput(attrs={"accept": "image/*"}),
+        widget=forms.ClearableFileInput(attrs={'accept': 'image/*'}),
     )
 
     class Meta:
         model = Profile
-<<<<<<< Updated upstream
         fields = ('gender', 'open_to_dating', 'pronoun_preference', 'custom_pronoun', 'profile_picture')
 
     def clean(self):
@@ -113,12 +110,3 @@ class EditProfileForm(forms.ModelForm):
             self.add_error('custom_pronoun', 'You must provide a custom pronoun when selecting "Other".')
 
         return cleaned_data
-=======
-        fields = (
-            "gender",
-            "open_to_dating",
-            "pronoun_preference",
-            "custom_pronoun",
-            "profile_picture",
-        )
->>>>>>> Stashed changes
