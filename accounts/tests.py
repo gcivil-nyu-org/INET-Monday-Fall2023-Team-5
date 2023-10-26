@@ -1,12 +1,16 @@
-from django.test import TestCase, Client
+from django.test import TestCase, Client, override_settings
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.messages import get_messages
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.contrib.auth.forms import PasswordChangeForm
 from .models import *
-import os
+import tempfile
 from django.core.files import File 
+from .forms import EditProfileForm
+from django.core.files.uploadedfile import SimpleUploadedFile
+from PIL import Image
+from io import BytesIO
 
 class ProfileModelTest(TestCase):
     
@@ -71,7 +75,7 @@ class ViewProfileViewTest(TestCase):
 
 
     def tearDown(self):
-        # Optional: Clean up after tests to ensure no leftover data
+        # Clean up after tests to ensure no leftover data
         # Though with TestCase, each test is transactional and rolled back
         self.profile.delete()
         self.user.delete()
@@ -163,182 +167,215 @@ class AccountViewTest(TestCase):
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), 'Password updated successfully')
 
+
+@override_settings(MEDIA_ROOT=tempfile.mkdtemp())  # Create a temporary media directory for testing
 class EditProfileViewTest(TestCase):
 
     def setUp(self):
-        self.user = User.objects.create_user(username='testuser', password='testpass')
-        self.client.login(username='testuser', password='testpass')
-        self.edit_profile_url = reverse('edit_profile')
-        self.profile = Profile.objects.get(user=self.user)
+        self.client = Client()
+        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.edit_profile_url = reverse('edit_profile')  # Assuming the URL name for the view is 'edit_profile'
 
-    def test_get_edit_profile_unauthenticated(self):
-        self.client.logout()
+    def test_logged_out_user_redirected_to_login(self):
         response = self.client.get(self.edit_profile_url)
-        self.assertEqual(response.status_code, 302)
-        self.assertTrue(response.url.startswith('/accounts/login/'))
+        expected_redirect_url = f'/accounts/login/?next={self.edit_profile_url}'
+        self.assertRedirects(response, expected_redirect_url)
 
-    def test_get_edit_profile_authenticated(self):
+
+    def test_logged_in_user_accesses_view(self):
+        self.client.login(username='testuser', password='testpassword')
         response = self.client.get(self.edit_profile_url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'profile/edit_profile.html')
+    
 
-    def test_post_edit_profile_valid_data(self):
-        data = {
-            'gender': 'M',
+    def test_get_request_logged_in_user(self):
+        # Log the user in
+        self.client.login(username='testuser', password='testpassword')
+        
+        # Send a GET request
+        response = self.client.get(self.edit_profile_url)
+        
+        # Check the response's status code and used template
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'profile/edit_profile.html')
+
+        # Check the context data
+        form_in_context = response.context['form']
+        self.assertIsInstance(form_in_context, EditProfileForm)
+        
+        # Ensure the form instance is related to the authenticated user's profile
+        self.assertEqual(form_in_context.instance, self.user.profile)
+
+    def test_valid_post_request_updates_profile(self):
+        # Log the user in
+        self.client.login(username='testuser', password='testpassword')
+        
+        # Prepare valid POST data
+        post_data = {
+            'gender': 'M',  # Male
             'pronoun_preference': 'he_him',
-            'open_to_dating': [],  # Empty for this test. Fill with valid data if necessary.
+            # Add other required fields if needed
         }
-        response = self.client.post(self.edit_profile_url, data)
-        self.profile.refresh_from_db()
-        self.assertEqual(self.profile.gender, 'M')
-        self.assertEqual(self.profile.pronoun_preference, 'he_him')
+        
+        # Send a POST request
+        response = self.client.post(self.edit_profile_url, post_data)
+        
+        # Check the response for redirection
+        profile_updated_url = reverse('profile_updated')  # Assuming the URL name for the success view is 'profile_updated'
+        self.assertRedirects(response, profile_updated_url)
+        
+        # Check the updated profile data
+        self.user.refresh_from_db()  # Refresh the user instance to get updated related data
+        self.assertEqual(self.user.profile.gender, 'M')  # Check gender was updated
+        self.assertEqual(self.user.profile.pronoun_preference, 'he_him')  # Check pronoun preference was updated
+        
+        # Add other assertions as needed to ensure all provided data was saved correctly
 
-    def test_post_edit_profile_invalid_data(self):
-        data = {
-            'gender': 'INVALID',
-        }
-        response = self.client.post(self.edit_profile_url, data)
-        self.assertContains(response, 'There was an error in the form. Please check your inputs.')
+    def create_mock_image(self, filename="test_image_1.jpg", format="JPEG"):
+        """Generate a mock image for testing."""
+        image = Image.new('RGB', (100, 100))
+        buffered = BytesIO()
+        image.save(buffered, format=format)
+        return SimpleUploadedFile(name=filename, content=buffered.getvalue(), content_type=f"image/{format.lower()}")
 
-    def test_custom_pronoun(self):
-        profile, created = Profile.objects.get_or_create(user=self.user, defaults={'gender': 'M'})
-        if not created:
-            profile.gender = "M"
-            profile.save()
-
-        data = {
+    def test_upload_profile_picture(self):
+        # Log the user in
+        self.client.login(username='testuser', password='testpassword')
+        
+        # Create a mock image for upload
+        uploaded_image = self.create_mock_image()
+        
+        # Send a POST request with the mock image
+        post_data = {
             'gender': 'M',
+            'profile_picture': uploaded_image,
+            # Add other required fields if needed
+        }
+        response = self.client.post(self.edit_profile_url, post_data)
+
+        
+        # Check that the profile picture is saved
+        self.user.profile.refresh_from_db()
+        self.assertTrue(self.user.profile.profile_picture)  # This ensures the ImageField has some value
+        self.assertIn("test_image_1.jpg", self.user.profile.profile_picture.name) 
+
+    def test_clear_profile_picture(self):
+        # Ensure the profile has a picture first
+        uploaded_image = self.create_mock_image()
+        self.user.profile.profile_picture.save("test_image_2.jpg", uploaded_image)
+        self.user.profile.save()
+        
+        # Log the user in
+        self.client.login(username='testuser', password='testpassword')
+        
+        # Send a POST request to clear the profile picture
+        post_data = {
+            'gender': 'M',
+            'profile_picture-clear': 'on',  # Django expects the value 'on' for a checked checkbox
+            # Add other required fields if needed
+        }
+        response = self.client.post(self.edit_profile_url, post_data)
+        
+        # Check that the profile picture has been cleared
+        self.user.profile.refresh_from_db()
+        self.assertFalse(self.user.profile.profile_picture.name)  # We expect the ImageField name attribute to be falsy if cleared
+    
+    
+    def test_custom_pronoun_validation(self):
+        # Log the user in
+        self.client.login(username='testuser', password='testpassword')
+
+        # Prepare POST data with "other" pronoun preference and a custom pronoun
+        post_data = {
+            'gender': 'M',  # Assuming 'M' for Male
             'pronoun_preference': 'other',
             'custom_pronoun': 'ze/zir',
+            # Add other required fields if needed
         }
 
-        response = self.client.post(self.edit_profile_url, data)
+        # Send a POST request
+        response = self.client.post(self.edit_profile_url, post_data)
 
-        self.profile.refresh_from_db()
-        self.assertEqual(self.profile.pronoun_preference, 'ze/zir')
+        # Check that the response is a redirect (if that's the expected behavior)
+        self.assertEqual(response.status_code, 302)  # 302 is a common status code for redirects
+
+        # Refresh the user's profile data from the database
+        self.user.profile.refresh_from_db()
+
+        # Check that the custom pronoun was saved correctly
+        self.assertEqual(self.user.profile.pronoun_preference, 'ze/zir')
 
     def test_custom_pronoun_without_providing_one(self):
-        profile, created = Profile.objects.get_or_create(user=self.user, defaults={'gender': 'M'})
-        if not created:
-            profile.gender = "M"
-            profile.save()
+        # Log the user in
+        self.client.login(username='testuser', password='testpassword')
 
-        data = {
+        # Prepare data with 'pronoun_preference' set to 'other' and no 'custom_pronoun'
+        post_data = {
             'gender': 'M',
             'pronoun_preference': 'other',
         }
-        # Ensure that the pronoun_preference is set to 'other' and custom_pronoun is not set
-        self.assertEqual(data['pronoun_preference'], 'other')
-        self.assertNotIn('custom_pronoun', data)
 
-        response = self.client.post(self.edit_profile_url, data)
+        # Send a POST request
+        response = self.client.post(self.edit_profile_url, post_data)
 
-        self.assertContains(response, 'You must provide a custom pronoun when selecting &quot;Other&quot;.')
-
+        # Check that the response contains part of the error message
+        self.assertContains(response, 'You must provide a custom pronoun when selecting "Other".', html=True)
 
 
-    def test_profile_picture_upload(self):
-        with open('test_files/test_image.jpg', 'rb') as pic:
-            data = {
-                'profile_picture': pic,
-                'gender': 'M',
-                'pronoun_preference': 'he_him',
-            }
-            response = self.client.post(self.edit_profile_url, data)
-        self.profile.refresh_from_db()
-        self.assertTrue(self.profile.profile_picture.name.startswith('profile_pictures/'))
+        # Check that the response status code is 200 (indicating a form submission with validation errors)
+        self.assertEqual(response.status_code, 200)
 
-        # Cleanup the uploaded test image at the end
-        self.profile.profile_picture.delete()
+        # Check that the form instance in the response context is invalid
+        form = response.context['form']
+        self.assertFalse(form.is_valid())
 
-    def test_initial_data_matches_user_profile(self):
-        self.profile.gender = 'M'
-        self.profile.pronoun_preference = 'he_him'
-        self.profile.save()
-        response = self.client.get(self.edit_profile_url)
-        self.assertEqual(response.context['form'].initial['gender'], 'M')
-        self.assertEqual(response.context['form'].initial['pronoun_preference'], 'he_him')
+        # Optionally, you can check that the 'custom_pronoun' field in the form has errors
+        self.assertTrue('custom_pronoun' in form.errors)
 
-    def test_no_changes_to_profile(self):
-        # Setup: Define the initial state
-        self.profile.gender = 'M'
-        self.profile.pronoun_preference = 'he_him'
-        self.profile.save()
-
-        # Action: Submit the form without any updates
-        initial_data = {
-            'gender': 'M',
-            'pronoun_preference': 'he_him',
-            'open_to_dating': [],  # Assuming this was empty initially
-        }
-        response = self.client.post(self.edit_profile_url, initial_data)
-
-        # Refresh the profile from the database
-        self.profile.refresh_from_db()
-
-        # Assert: Check that the profile attributes remain unchanged
-        self.assertEqual(self.profile.gender, 'M')
-        self.assertEqual(self.profile.pronoun_preference, 'he_him')
     
-
-
-    def test_profile_picture_removal(self):
-        # Setup: Upload a profile picture to start with
-        with open('test_files/test_image.jpg', 'rb') as pic:
-            self.profile.profile_picture.save('test_image.jpg', File(pic))
-            self.profile.save()
-
-        # Ensure the profile picture was saved
-        self.assertTrue(self.profile.profile_picture)
-
-        # Action: Submit the form for profile picture removal
-        data = {
-            'profile_picture-clear': True,  # Set to True to clear the image
-            'gender': 'M',  # include other necessary fields
+    def test_select_multiple_dating_preferences(self):
+        # Create a list of valid preference values
+        preference_values = ['M', 'F']
+        
+        # Create a list of preference IDs to be used in the form
+        preference_ids = [str(DatingPreference.objects.get(gender=value).id) for value in preference_values]
+        
+        # Login as the user
+        self.client.login(username='testuser', password='testpassword')
+        
+        # Simulate a POST request to the Edit Profile view with selected preferences
+        response = self.client.post('/accounts/edit_profile/', {
+            'gender': 'M',
+            'open_to_dating': preference_ids,  # List of preference IDs
             'pronoun_preference': 'he_him',
-            'open_to_dating': [],
-        }
-        response = self.client.post(self.edit_profile_url, data)
+            'custom_pronoun': 'His pronoun',
+        })
+        
+        # Check if the response is a successful redirect
+        self.assertEqual(response.status_code, 302)
+        
+        # Get the user's profile and fetch the selected dating preferences
+        user_profile = Profile.objects.get(user=self.user)
+        selected_preferences = [preference.gender for preference in user_profile.open_to_dating.all()]
+        
+        # Assert that the selected preferences match the expected values
+        self.assertEqual(selected_preferences, preference_values)
 
-        # Refresh the profile from the database
-        self.profile.refresh_from_db()
+class DatingPreferenceModelTest(TestCase):
 
-        # Assert: Check that the profile picture has been removed
-        self.assertFalse(self.profile.profile_picture) # Check if the profile picture is None
-
-        # Cleanup: If the file still exists, remove it
-        if self.profile.profile_picture and os.path.exists(self.profile.profile_picture.path):
-            os.remove(self.profile.profile_picture.path)
-
-    def test_updating_dating_preferences(self):
-        # Setup: Create default dating preferences
+    def test_create_defaults(self):
+        # Call the create_defaults method
         DatingPreference.create_defaults()
 
-        # Fetch the dating preferences to use for testing
-        male_pref = DatingPreference.objects.get(gender='M')
-        nb_pref = DatingPreference.objects.get(gender='N')
+        # Verify that the default objects have been created
+        male_preference = DatingPreference.objects.get(gender='M')
+        female_preference = DatingPreference.objects.get(gender='F')
+        nb_preference = DatingPreference.objects.get(gender='N')
+        ns_preference = DatingPreference.objects.get(gender='NS')
 
-        # Action: Update the profile with selected dating preferences
-        data = {
-            'gender': 'M',
-            'pronoun_preference': 'he_him',
-            'open_to_dating': [male_pref.id, nb_pref.id],  # Using the IDs of the DatingPreference objects
-        }
-        response = self.client.post(self.edit_profile_url, data)
-
-        # Refresh the profile from the database
-        self.profile.refresh_from_db()
-
-        # Assertion: Check that the profile's dating preferences have been updated
-        self.assertIn(male_pref, self.profile.open_to_dating.all())
-        self.assertIn(nb_pref, self.profile.open_to_dating.all())
-
-        # Optionally, you can also check the response to make sure there are no errors and perhaps it redirects to the right place
-        self.assertEqual(response.status_code, 302)  # assuming you're redirecting after a successful post
-
-
-
-
-    
-    
-    
+        # Assert that the objects exist
+        self.assertIsNotNone(male_preference)
+        self.assertIsNotNone(female_preference)
+        self.assertIsNotNone(nb_preference)
+        self.assertIsNotNone(ns_preference)
