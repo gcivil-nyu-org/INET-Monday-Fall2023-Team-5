@@ -5,7 +5,7 @@ python:
   - "3.11"
   
 install:
-  - pip install -r mysite/requirements.txt
+  - pip install -r requirements.txt
   - pip install coveralls
   - mkdir ./tools
   - curl -L https://coveralls.io/coveralls-linux.tar.gz | tar -xz -C ./tools
@@ -20,7 +20,6 @@ script:
   - coverage run mysite/manage.py test
   - coverage xml
   - ./tools/coveralls report --repo-token=$COVERALLS_REPO_TOKEN ./coverage.xml
-
-
+  
 after_script:
   - coveralls
