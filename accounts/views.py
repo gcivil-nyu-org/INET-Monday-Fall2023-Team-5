@@ -47,13 +47,6 @@ def edit_profile(request):
 
     if request.method == 'POST':
         form = EditProfileForm(request.POST, request.FILES, instance=profile)
-        
-        # Check for custom pronoun requirement
-        if form.is_bound:
-            pronoun_preference = request.POST.get('pronoun_preference')
-            custom_pronoun = request.POST.get('custom_pronoun')
-            if pronoun_preference == 'other' and (not custom_pronoun or custom_pronoun.strip() == ''):
-                form.add_error('custom_pronoun', 'You must provide a custom pronoun when selecting "Other".')
 
         if form.is_valid():
             _handle_form_valid(request, form)
