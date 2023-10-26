@@ -11,13 +11,13 @@ install:
   - curl -L https://coveralls.io/coveralls-linux.tar.gz | tar -xz -C ./tools
 
 before_script:
-  - python mysite/manage.py makemigrations 
-  - python mysite/manage.py migrate
+  - python manage.py makemigrations 
+  - python manage.py migrate
   
 script:
   - black --check .
   - flake8 .
-  - coverage run mysite/manage.py test
+  - coverage run manage.py test
   - coverage xml
   - ./tools/coveralls report --repo-token=$COVERALLS_REPO_TOKEN ./coverage.xml
   
