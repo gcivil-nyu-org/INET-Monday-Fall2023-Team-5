@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm 
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
@@ -23,17 +23,18 @@ from django.shortcuts import redirect
 from django.contrib.auth import update_session_auth_hash
 
 
-
 class SignUpView(generic.CreateView):
     form_class = CustomUserCreationForm
     template_name = "accounts/registration/signup.html"
     success_url = reverse_lazy("confirmation_required")
+
     def get_form_kwargs(self):
         # This method provides arguments for form instantiation.
         # We'll override it to include the domain.
         kwargs = super(SignUpView, self).get_form_kwargs()
         kwargs["domain"] = self.request.get_host()
         return kwargs
+
     def form_valid(self, form):
         messages.success(
             self.request, "Please confirm your email to complete the registration."
@@ -49,7 +50,7 @@ def about(request):
 def edit_profile(request):
     profile = request.user.profile  # refers to the currently authenticated user
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = EditProfileForm(request.POST, request.FILES, instance=profile)
 
         if form.is_valid():
@@ -71,26 +72,30 @@ def _handle_form_valid(request, form):
     # Get the data but do not save it immediately
     profile_instance = form.save(commit=False)
 
-    pronoun_preference = form.cleaned_data['pronoun_preference']
-    custom_pronoun = form.cleaned_data.get('custom_pronoun')
+    pronoun_preference = form.cleaned_data["pronoun_preference"]
+    custom_pronoun = form.cleaned_data.get("custom_pronoun")
 
-    if pronoun_preference == 'other' and custom_pronoun:
+    if pronoun_preference == "other" and custom_pronoun:
         profile_instance.pronoun_preference = custom_pronoun
         profile_instance.custom_pronoun = custom_pronoun
     else:
         profile_instance.pronoun_preference = pronoun_preference
 
     # Handle profile picture: clear it if the 'clear' checkbox is selected; otherwise, check for an uploaded image
-    if form.cleaned_data.get('profile_picture-clear'):  # Note the change in the field name to match Django's default
+    if form.cleaned_data.get(
+        "profile_picture-clear"
+    ):  # Note the change in the field name to match Django's default
         profile_instance.profile_picture = ""
-    elif request.FILES.get('profile_picture'):  # More Pythonic way to handle file uploads
-        profile_instance.profile_picture = request.FILES['profile_picture']
+    elif request.FILES.get(
+        "profile_picture"
+    ):  # More Pythonic way to handle file uploads
+        profile_instance.profile_picture = request.FILES["profile_picture"]
 
     # Save the profile instance now
     profile_instance.save()
 
     # Handling the ManyToMany field
-    open_to_dating_choices = form.cleaned_data.get('open_to_dating')
+    open_to_dating_choices = form.cleaned_data.get("open_to_dating")
     if open_to_dating_choices:
         profile_instance.open_to_dating.set(open_to_dating_choices)
 
