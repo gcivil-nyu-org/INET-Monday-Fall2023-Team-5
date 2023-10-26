@@ -6,4 +6,5 @@ class AccountsConfig(AppConfig):
     name = "accounts"
 
     def ready(self):
-        import accounts.signals  # This loads the signals on app initialization
+        import accounts.signals  # noqa: F401
+        # This loads the signals on app initialization
