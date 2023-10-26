@@ -41,6 +41,7 @@ class SignUpView(generic.CreateView):
 def about(request):
     return render(request, 'about.html', {'title': 'About'})
 
+
 @login_required
 def edit_profile(request):
     profile = request.user.profile  # refers to the currently authenticated user
@@ -49,10 +50,6 @@ def edit_profile(request):
         form = EditProfileForm(request.POST, request.FILES, instance=profile)
 
         if form.is_valid():
-            # Check if the 'profile_picture-clear' field is True, and if so, clear the profile picture
-            if 'profile_picture_clear' in request.POST and request.POST['profile_picture_clear'] == 'on':
-                profile.profile_picture = None
-
             _handle_form_valid(request, form)
             return HttpResponseRedirect(reverse('profile_updated'))
         else:
@@ -63,15 +60,13 @@ def edit_profile(request):
     return render(request, 'profile/edit_profile.html', {'form': form})
 
 
-
-
 def _handle_form_valid(request, form):
     """Helper function to process a valid form submission."""
     # Get the data but do not save it immediately
     profile_instance = form.save(commit=False)
 
     pronoun_preference = form.cleaned_data['pronoun_preference']
-    custom_pronoun = form.cleaned_data['custom_pronoun']
+    custom_pronoun = form.cleaned_data.get('custom_pronoun')
 
     if pronoun_preference == 'other' and custom_pronoun:
         profile_instance.pronoun_preference = custom_pronoun
@@ -79,20 +74,22 @@ def _handle_form_valid(request, form):
     else:
         profile_instance.pronoun_preference = pronoun_preference
 
-    # Check if the 'profile_picture-clear' field is True, and if so, clear the profile picture
-    if 'profile_picture-clear' in form.cleaned_data and form.cleaned_data['profile_picture-clear']:
-        profile_instance.profile_picture = None
-
-    # Handle profile picture upload
-    if 'profile_picture' in request.FILES:
+    # Handle profile picture: clear it if the 'clear' checkbox is selected; otherwise, check for an uploaded image
+    if form.cleaned_data.get('profile_picture-clear'):  # Note the change in the field name to match Django's default
+        profile_instance.profile_picture = ""
+    elif request.FILES.get('profile_picture'):  # More Pythonic way to handle file uploads
         profile_instance.profile_picture = request.FILES['profile_picture']
 
     # Save the profile instance now
     profile_instance.save()
 
     # Handling the ManyToMany field
-    open_to_dating_choices = form.cleaned_data['open_to_dating']
-    profile_instance.open_to_dating.set(open_to_dating_choices)
+    open_to_dating_choices = form.cleaned_data.get('open_to_dating')
+    if open_to_dating_choices:
+        profile_instance.open_to_dating.set(open_to_dating_choices)
+
+
+
 
 
 
