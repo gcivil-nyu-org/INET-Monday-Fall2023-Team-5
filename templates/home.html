@@ -3,8 +3,38 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+<style>
+  html {
+    height: 100%;
+    width: 100%;
+  }
 
-<div class="container">
+  .center-screen {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      /* top: 150px;  Viewport Height */
+      /* flex-direction: column;  Stack the items vertically */
+      height: 100%;
+  }
+  .content-container {
+      justify-content: center;
+      align-items: center;
+      /* width: 300vh; */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 317px;
+      margin: 20px auto;
+      padding: 20px;
+      border: 1px solid #8763a7;
+      border-radius: 5px;
+      background-color: rgba(44, 24, 74, 0.8);
+      text-align: center;
+      height: 160px;
+      width: 300px;
+}
+</style>
+
+<div class="center-screen">
   <div class="content-container">
       {% if user.is_authenticated %}
       <!-- Hi {{ user }}! -->
