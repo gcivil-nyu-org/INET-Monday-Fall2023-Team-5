@@ -1,3 +1,10 @@
+<style>
+    html {
+    height: 100%;
+    width: 100%;
+}
+</style>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,55 +12,135 @@
     <!-- Required meta tags -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>{% block title %}Django Auth Tutorial{% endblock %}</title>
+    <title>Roleplay and then Date</title>
     
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
     
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    <style>
+        .custom-sidebar {
+            background-color: #ffffff;
+        }
+
+        .navbar {
+            display: flex;
+            background-color: #ffffff;
+            height: 90px;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid #c882b6;
+        }
+
+        .navbar-brand {
+            color: #c882b6 !important;
+            font-family: Gelion-Bold;
+            font-weight: bolder;
+            font-size: 25px;
+            margin-left: 0px;
+            padding-left: 0px;
+        }
+
+        
+        .container
+        {
+            margin-left: 0;
+            margin-right: 0;
+            max-width:1500px;
+            height: 100%;
+            width: 100%;
+        }
+
+
+        .nav-item.nav-link:hover {
+            transform: scale(1.05); /* This makes the button slightly bigger when hovered */
+            transition: 0.3s;
+        }
+
+        .navbar-collapse {
+            justify-content: space-between;
+            margin-right: 0px;
+            position: relative;
+        }
+
+        .nav-item.a {
+            color: #7030a0;
+            font-weight: bold;
+            text-align: center;
+            height: 20vp;
+        }
+        
+        
+    </style>
+
 </head>
 <body>
     <header class="site-header">
         <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+          <a class="navbar-brand mr-4" href="/">Roleplay then Date</a>
           <div class="container">
-            <a class="navbar-brand mr-4" href="/">Roleplay and then Date</a>
+            <!-- <a class="navbar-brand mr-4" href="/">Roleplay then Date</a> -->
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarToggle">
               <div class="navbar-nav mr-auto">
-                <a class="nav-item nav-link" href="{% url 'home' %}">Home</a>
-                <a class="nav-item nav-link" href="{% url 'about' %}">About</a>
+                <a class="nav-item nav-link" href="{% url 'home' %}" style="font-size:20px; font-weight:bolder; color: #7030a0;font-family:Luminari; ">Home</a>
+                <a class="nav-item nav-link" href="{% url 'about' %}" style="font-size:20px; font-weight:bolder; color: #7030a0;font-family:Luminari; ">About</a>
               </div>
               <!-- Navbar Right Side -->
-              <div class="navbar-nav">
+              <div class="navbar-nav" style="font-size: 20px; color:dimgray">
+
                 {% if user.is_authenticated %}
+                
                     Hello {{ request.user }}! <span class="mr-4"></span>    
-                    <a href="{% url 'logout' %}">Logout</a>
+                    <a href="{% url 'logout' %}" style="font-size:20px; font-weight:bolder; color: #7030a0;font-family:Luminari; ">Logout</a>
+                    
                 {% else %}
-                    <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
-                    <a class="nav-item nav-link" href="{% url 'signup' %}">Signup</a>
+                    <a class="nav-item nav-link" href="{% url 'login' %}" style="font-size:20px; font-weight:bolder; color: #7030a0;font-family:Luminari; ">Login</a>
+                    <a class="nav-item nav-link" href="{% url 'signup' %}" style="font-size:20px; font-weight:bolder; color: #7030a0;font-family:Luminari; ">Signup</a>
                 {% endif %}
-            </div>
+              </div>
             </div>
           </div>
         </nav>
       </header>
-      <main role="main" class="container">
+
+    <main role="main" class="container" style="margin: 0px; padding: 0px;">
         <div class="row">
     
             {% if user.is_authenticated %}  <!-- START of the authentication check -->
         
             <!-- Vertical Navigation Bar -->
-            <div class="col-md-4">
-                <div class="card mt-4 shadow custom-sidebar">
-                    <div class="card-header">
+            <div class="col-md-4" style="color:#7030a0; font-size: 30px;font-family: Gelion-Bold; font-weight: bolder; text-align: center; height: 100%; padding: 0px; max-width: 300px;">
+                <div class="card mt-4 shadow custom-sidebar" style="padding: 0px; margin: 0px; margin-top: 0px; width: 300px;">
+                    <ul class="navbar-nav" style="display: flex; flex-direction: column; justify-content: center; width:300px; text-align: center;">
+                        <li class="nav-item" style="height:20vb; text-align: center; display: flex; flex-direction: column; justify-content: center;">
+                            <a class="nav-item nav-link" href="{% url 'view_profile' %} " style="color:#7030a0; height: 20vb;">View Profile</a>
+                        </li>
+                        <li class="nav-item" style="height:20vb;">
+                            <a class="nav-item nav-link" href="{% url 'browse_profiles' %}" style="color:#7030a0">Browse Profile</a>
+                        </li>
+                        <li class="nav-item" style="height:20vb;">
+                            <a class="nav-link" href="#" style="color:#7030a0">Playground</a>
+                        </li>
+                        <li class="nav-item" style="height:20vb;">
+                            <a class="nav-item nav-link" href="{% url 'edit_profile' %}" style="color:#7030a0">Edit Profile</a>
+                        </li>
+                    </ul>
+                    <div class="ml-auto">
+                        <form class="form-inline" style="color: aliceblue;">
+                            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" style="color: aliceblue;">
+                            <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">>> More</button>
+                        </form>
+                    </div>
+                    <!-- <div class="card-header">
                         <h3>Menu</h3>
                     </div>
                     <div class="card-body">
                         <a href="{% url 'view_profile' %}" class="nav-item nav-link">View Profile</a>
                         <a href="{% url 'browse_profiles' %}" class="nav-item nav-link">Browse Profiles</a>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
@@ -72,7 +159,7 @@
             </div>
     
         </div>
-    </main>
+      </main>
     
     <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
