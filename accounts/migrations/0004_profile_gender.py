@@ -4,15 +4,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('accounts', '0003_alter_profile_user'),
+        ("accounts", "0003_alter_profile_user"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='profile',
-            name='gender',
-            field=models.CharField(choices=[('M', 'Male'), ('F', 'Female'), ('N', 'Non-binary')], default='Not Specified', max_length=20),
+            model_name="profile",
+            name="gender",
+            field=models.CharField(
+                choices=[("M", "Male"), ("F", "Female"), ("N", "Non-binary")],
+                default="Not Specified",
+                max_length=20,
+            ),
         ),
     ]

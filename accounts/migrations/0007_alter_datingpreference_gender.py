@@ -4,15 +4,22 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('accounts', '0006_alter_profile_user'),
+        ("accounts", "0006_alter_profile_user"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='datingpreference',
-            name='gender',
-            field=models.CharField(choices=[('M', 'Males'), ('F', 'Females'), ('N', 'Non-binary Individuals'), ('NS', 'Not Specified')], max_length=25),
+            model_name="datingpreference",
+            name="gender",
+            field=models.CharField(
+                choices=[
+                    ("M", "Males"),
+                    ("F", "Females"),
+                    ("N", "Non-binary Individuals"),
+                    ("NS", "Not Specified"),
+                ],
+                max_length=25,
+            ),
         ),
     ]
