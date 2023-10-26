@@ -43,6 +43,7 @@ class Profile(models.Model):
         ],
         default='not_specified',
     )
+    custom_pronoun = models.CharField(max_length=255, blank=True, null=True)
     profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
 
     def __str__(self):

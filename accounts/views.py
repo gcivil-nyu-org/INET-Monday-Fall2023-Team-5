@@ -41,16 +41,17 @@ class SignUpView(generic.CreateView):
 def about(request):
     return render(request, 'about.html', {'title': 'About'})
 
+
 @login_required
 def edit_profile(request):
     profile = request.user.profile  # refers to the currently authenticated user
 
     if request.method == 'POST':
-        form = EditProfileForm(request.POST, instance=profile)
+        form = EditProfileForm(request.POST, request.FILES, instance=profile)
+
         if form.is_valid():
             _handle_form_valid(request, form)
             return HttpResponseRedirect(reverse('profile_updated'))
-            # return render(request, 'profile_updated.html', {'user': request.user, 'pronoun_preference': request.user.profile.get_pronoun_preference_display()})
         else:
             messages.error(request, 'There was an error in the form. Please check your inputs.')
     else:
@@ -65,22 +66,32 @@ def _handle_form_valid(request, form):
     profile_instance = form.save(commit=False)
 
     pronoun_preference = form.cleaned_data['pronoun_preference']
-    if pronoun_preference == 'other':
-        profile_instance.pronoun_preference = form.cleaned_data['custom_pronoun']
+    custom_pronoun = form.cleaned_data.get('custom_pronoun')
+
+    if pronoun_preference == 'other' and custom_pronoun:
+        profile_instance.pronoun_preference = custom_pronoun
+        profile_instance.custom_pronoun = custom_pronoun
     else:
         profile_instance.pronoun_preference = pronoun_preference
 
-    # Handle profile picture upload
-    if 'profile_picture' in request.FILES:
+    # Handle profile picture: clear it if the 'clear' checkbox is selected; otherwise, check for an uploaded image
+    if form.cleaned_data.get('profile_picture-clear'):  # Note the change in the field name to match Django's default
+        profile_instance.profile_picture = ""
+    elif request.FILES.get('profile_picture'):  # More Pythonic way to handle file uploads
         profile_instance.profile_picture = request.FILES['profile_picture']
 
-    # Save the profile instance to make sure we can set many-to-many relationships
+    # Save the profile instance now
     profile_instance.save()
 
     # Handling the ManyToMany field
-    open_to_dating_choices = form.cleaned_data['open_to_dating']
-    profile_instance.open_to_dating.set(open_to_dating_choices)
-    
+    open_to_dating_choices = form.cleaned_data.get('open_to_dating')
+    if open_to_dating_choices:
+        profile_instance.open_to_dating.set(open_to_dating_choices)
+
+
+
+
+
 
 
 

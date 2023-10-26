@@ -99,3 +99,14 @@ class EditProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('gender', 'open_to_dating', 'pronoun_preference', 'custom_pronoun', 'profile_picture')
+
+    def clean(self):
+        cleaned_data = super().clean()
+        pronoun_preference = cleaned_data.get('pronoun_preference')
+        custom_pronoun = cleaned_data.get('custom_pronoun')
+
+
+        if pronoun_preference == 'other' and (not custom_pronoun or custom_pronoun.strip() == ''):
+            self.add_error('custom_pronoun', 'You must provide a custom pronoun when selecting "Other".')
+
+        return cleaned_data
