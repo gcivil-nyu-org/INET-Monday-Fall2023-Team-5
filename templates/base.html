@@ -1,37 +1,25 @@
-<style>
-    html {
-    height: 100%;
-    width: 100%;
-}
-</style>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     {% load static %}
-    <!-- Required meta tags -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roleplay and then Date</title>
-    
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
     
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
     <style>
-        .custom-sidebar {
-            background-color: #ffffff;
-        }
 
         .navbar {
-            display: flex;
+            background-color: #0E6655;
+            border-bottom: 3px solid #196F3D;
+            /* display: flex; */
             background-color: #ffffff;
-            height: 90px;
-            justify-content: center;
-            align-items: center;
-            border: 2px solid #c882b6;
+            height: 100px;
+            /* justify-content: center; */
+            /* align-items: center; */
+            border-bottom: 3px solid #c882b6;
         }
-
         .navbar-brand {
             color: #c882b6 !important;
             font-family: Gelion-Bold;
@@ -40,109 +28,93 @@
             margin-left: 0px;
             padding-left: 0px;
         }
-
-        
-        .container
-        {
-            margin-left: 0;
-            margin-right: 0;
-            max-width:1500px;
-            height: 100%;
-            width: 100%;
+        .sidebar {
+            background-color: #ffffff;
+            height: 100vh;
+            padding-top: 50px;
+            border-right: 3px solid #c882b6;
         }
-
-
-        .nav-item.nav-link:hover {
-            transform: scale(1.05); /* This makes the button slightly bigger when hovered */
-            transition: 0.3s;
-        }
-
-        .navbar-collapse {
-            justify-content: space-between;
-            margin-right: 0px;
-            position: relative;
-        }
-
-        .nav-item.a {
+        .sidebar a {
+            font-size: 30px;
+            font-family: Gelion-Bold;
             color: #7030a0;
-            font-weight: bold;
+            padding: 20px;
+            display: block;
+            text-decoration: none;
             text-align: center;
-            height: 20vp;
+            font-weight: bold ;
         }
-        
-        
+        .sidebar a:hover {
+            background-color: #f0d9f0ff;
+            color: #ffffff;
+        }
+        .search-container {
+            padding: 20px;
+            color: wheat;
+        }
+        .search-button {
+            border-radius: 0;
+            color: whitesmoke;
+            background-color: #612383;
+        }
     </style>
-
 </head>
 <body>
-    <header class="site-header">
-        <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
-          <a class="navbar-brand mr-4" href="/">Roleplay then Date</a>
-          <div class="container">
-            <!-- <a class="navbar-brand mr-4" href="/">Roleplay then Date</a> -->
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarToggle">
-              <div class="navbar-nav mr-auto">
-                <a class="nav-item nav-link" href="{% url 'home' %}" style="font-size:20px; font-weight:bolder; color: #7030a0;font-family:Luminari; ">Home</a>
-                <a class="nav-item nav-link" href="{% url 'about' %}" style="font-size:20px; font-weight:bolder; color: #7030a0;font-family:Luminari; ">About</a>
-              </div>
-              <!-- Navbar Right Side -->
-              <div class="navbar-nav" style="font-size: 20px; color:dimgray">
 
-                {% if user.is_authenticated %}
-                
-                    Hello {{ request.user }}! <span class="mr-4"></span>    
-                    <a href="{% url 'logout' %}" style="font-size:20px; font-weight:bolder; color: #7030a0;font-family:Luminari; ">Logout</a>
-                    
-                {% else %}
-                    <a class="nav-item nav-link" href="{% url 'login' %}" style="font-size:20px; font-weight:bolder; color: #7030a0;font-family:Luminari; ">Login</a>
-                    <a class="nav-item nav-link" href="{% url 'signup' %}" style="font-size:20px; font-weight:bolder; color: #7030a0;font-family:Luminari; ">Signup</a>
-                {% endif %}
-              </div>
-            </div>
-          </div>
-        </nav>
-      </header>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+    <a class="navbar-brand mr-4" href="/">Roleplay then Date</a>
+    <div class="container">
+      <!-- <a class="navbar-brand mr-4" href="/">Roleplay then Date</a> -->
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarToggle">
+        <div class="navbar-nav mr-auto">
+          <a class="nav-item nav-link" href="{% url 'home' %}" style="font-size:20px; font-weight:bolder; color: #7030a0;font-family:Luminari; ">Home</a>
+          <a class="nav-item nav-link" href="{% url 'about' %}" style="font-size:20px; font-weight:bolder; color: #7030a0;font-family:Luminari; ">About</a>
+        </div>
+        <!-- Navbar Right Side -->
+        <div class="navbar-nav" style="font-size: 20px; color:dimgray">
 
-    <main role="main" class="container" style="margin: 0px; padding: 0px;">
-        <div class="row">
-    
-            {% if user.is_authenticated %}  <!-- START of the authentication check -->
-        
-            <!-- Vertical Navigation Bar -->
-            <div class="col-md-4" style="color:#7030a0; font-size: 30px;font-family: Gelion-Bold; font-weight: bolder; text-align: center; height: 100%; padding: 0px; max-width: 300px;">
-                <div class="card mt-4 shadow custom-sidebar" style="padding: 0px; margin: 0px; margin-top: 0px; width: 300px;">
-                    <ul class="navbar-nav" style="display: flex; flex-direction: column; justify-content: center; width:300px; text-align: center;">
-                        <li class="nav-item" style="height:20vb; text-align: center; display: flex; flex-direction: column; justify-content: center;">
-                            <a class="nav-item nav-link" href="{% url 'view_profile' %} " style="color:#7030a0; height: 20vb;">View Profile</a>
-                        </li>
-                        <li class="nav-item" style="height:20vb;">
-                            <a class="nav-item nav-link" href="{% url 'browse_profiles' %}" style="color:#7030a0">Browse Profile</a>
-                        </li>
-                        <li class="nav-item" style="height:20vb;">
-                            <a class="nav-link" href="#" style="color:#7030a0">Playground</a>
-                        </li>
-                        <li class="nav-item" style="height:20vb;">
-                            <a class="nav-item nav-link" href="{% url 'account' %}" style="color:#7030a0">Account</a>
-                        </li>
-                    </ul>
-                    <div class="ml-auto">
-                        <form class="form-inline" style="color: aliceblue;">
-                            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" style="color: aliceblue;">
-                            <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">>> More</button>
-                        </form>
+          {% if user.is_authenticated %}
+          
+              Hello {{ request.user }}! <span class="mr-4"></span>    
+              <a href="{% url 'logout' %}" style="font-size:20px; font-weight:bolder; color: #7030a0;font-family:Luminari; ">Logout</a>
+              
+          {% else %}
+              <a class="nav-item nav-link" href="{% url 'login' %}" style="font-size:20px; font-weight:bolder; color: #7030a0;font-family:Luminari; ">Login</a>
+              <a class="nav-item nav-link" href="{% url 'signup' %}" style="font-size:20px; font-weight:bolder; color: #7030a0;font-family:Luminari; ">Signup</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>
+
+<!-- Main content area -->
+<main role="main" class="container-fluid">
+    <div class="row">
+        {% if user.is_authenticated %} 
+        <!-- Sidebar -->
+        <div class="col-md-3 sidebar">
+            <a href="{% url 'view_profile' %}">View Profile</a>
+            <a href="{% url 'browse_profiles' %}">Browse Profile</a>
+            <a href="#">Playground</a>
+            <a href="{% url 'account' %}">Account</a>
+            <a href="#">Settings</a>
+            <div class="search-container mt-5">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search">
+                    <div class="input-group-append">
+                        <button class="btn search-button" type="button">>> More</button>
                     </div>
-
-
                 </div>
             </div>
-
-        {% endif %}  <!-- END of the authentication check -->
-    
-            <!-- Main Content -->
-            <div class="{% if user.is_authenticated %}col-md-8{% else %}col-md-12{% endif %}">
+        </div>
+        {% endif %}
+        <!-- Main content -->
+        <div class="col-md-9">
+            <div class="{% if user.is_authenticated %}center-screen{% else %}col-md-12{% endif %}">
                 {% if messages %}
                     {% for message in messages %}
                         <div class="alert alert-{{ message.tags }}">
@@ -152,11 +124,10 @@
                 {% endif %}
                 {% block content %}{% endblock %}
             </div>
-    
         </div>
-      </main>
-    
-    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+    </div>
+</main>
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 </body>
