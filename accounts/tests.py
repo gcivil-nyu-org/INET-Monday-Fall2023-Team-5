@@ -310,6 +310,33 @@ class EditProfileTest(TestCase):
         if self.profile.profile_picture and os.path.exists(self.profile.profile_picture.path):
             os.remove(self.profile.profile_picture.path)
 
+    def test_updating_dating_preferences(self):
+        # Setup: Create default dating preferences
+        DatingPreference.create_defaults()
+
+        # Fetch the dating preferences to use for testing
+        male_pref = DatingPreference.objects.get(gender='M')
+        nb_pref = DatingPreference.objects.get(gender='N')
+
+        # Action: Update the profile with selected dating preferences
+        data = {
+            'gender': 'M',
+            'pronoun_preference': 'he_him',
+            'open_to_dating': [male_pref.id, nb_pref.id],  # Using the IDs of the DatingPreference objects
+        }
+        response = self.client.post(self.edit_profile_url, data)
+
+        # Refresh the profile from the database
+        self.profile.refresh_from_db()
+
+        # Assertion: Check that the profile's dating preferences have been updated
+        self.assertIn(male_pref, self.profile.open_to_dating.all())
+        self.assertIn(nb_pref, self.profile.open_to_dating.all())
+
+        # Optionally, you can also check the response to make sure there are no errors and perhaps it redirects to the right place
+        self.assertEqual(response.status_code, 302)  # assuming you're redirecting after a successful post
+
+
 
 
     
