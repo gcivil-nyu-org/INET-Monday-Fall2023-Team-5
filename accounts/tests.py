@@ -330,7 +330,7 @@ class EditProfileViewTest(TestCase):
         form = response.context['form']
         self.assertFalse(form.is_valid())
 
-        # Optionally, you can check that the 'custom_pronoun' field in the form has errors
+        # Check that the 'custom_pronoun' field in the form has errors
         self.assertTrue('custom_pronoun' in form.errors)
 
     
