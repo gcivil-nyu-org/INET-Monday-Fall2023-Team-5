@@ -67,7 +67,7 @@ a:hover {
     color: #fff; /* White color on hover for better contrast */
 }
 
-.content-container {
+/* .content-container {
     max-width: 400px;
     margin: 0 auto;
     padding: 20px;
@@ -75,7 +75,7 @@ a:hover {
     border-radius: 5px;
     background-color: rgba(44, 24, 74, 0.8);
     text-align: center;
-}
+} */
 
 .bg-steel .nav-link {
     color: rgba(255, 255, 255, 0.5); /* Adjust this value as needed */
