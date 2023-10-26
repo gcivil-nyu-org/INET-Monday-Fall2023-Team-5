@@ -50,7 +50,7 @@ class ProfileModelTest(TestCase):
         self.user.delete()
         self.assertEqual(Profile.objects.count(), 0)
 
-class ViewProfileTest(TestCase):
+class ViewProfileViewTest(TestCase):
 
     def setUp(self):
         # Create a test user and log in
@@ -163,7 +163,7 @@ class AccountViewTest(TestCase):
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), 'Password updated successfully')
 
-class EditProfileTest(TestCase):
+class EditProfileViewTest(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='testpass')
