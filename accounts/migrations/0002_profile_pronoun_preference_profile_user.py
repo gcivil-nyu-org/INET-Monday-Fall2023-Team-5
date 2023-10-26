@@ -6,21 +6,34 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('accounts', '0001_initial'),
+        ("accounts", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='profile',
-            name='pronoun_preference',
-            field=models.CharField(choices=[('not_specified', 'Not specified'), ('he_him', 'He/Him'), ('she_her', 'She/Her'), ('they_them', 'They/Them'), ('other', 'Other')], default='not_specified', max_length=20),
+            model_name="profile",
+            name="pronoun_preference",
+            field=models.CharField(
+                choices=[
+                    ("not_specified", "Not specified"),
+                    ("he_him", "He/Him"),
+                    ("she_her", "She/Her"),
+                    ("they_them", "They/Them"),
+                    ("other", "Other"),
+                ],
+                default="not_specified",
+                max_length=20,
+            ),
         ),
         migrations.AddField(
-            model_name='profile',
-            name='user',
-            field=models.OneToOneField(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="profile",
+            name="user",
+            field=models.OneToOneField(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

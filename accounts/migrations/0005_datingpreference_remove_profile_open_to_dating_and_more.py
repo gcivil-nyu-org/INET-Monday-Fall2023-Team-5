@@ -4,26 +4,43 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('accounts', '0004_profile_gender'),
+        ("accounts", "0004_profile_gender"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='DatingPreference',
+            name="DatingPreference",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('gender', models.CharField(choices=[('Males', 'Males'), ('Females', 'Females'), ('Non-binary Individuals', 'Non-binary Individuals')], max_length=25)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "gender",
+                    models.CharField(
+                        choices=[
+                            ("Males", "Males"),
+                            ("Females", "Females"),
+                            ("Non-binary Individuals", "Non-binary Individuals"),
+                        ],
+                        max_length=25,
+                    ),
+                ),
             ],
         ),
         migrations.RemoveField(
-            model_name='profile',
-            name='open_to_dating',
+            model_name="profile",
+            name="open_to_dating",
         ),
         migrations.AddField(
-            model_name='profile',
-            name='open_to_dating',
-            field=models.ManyToManyField(blank=True, to='accounts.datingpreference'),
+            model_name="profile",
+            name="open_to_dating",
+            field=models.ManyToManyField(blank=True, to="accounts.datingpreference"),
         ),
     ]

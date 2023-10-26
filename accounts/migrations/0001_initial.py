@@ -4,18 +4,34 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Profile',
+            name="Profile",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('open_to_dating', models.CharField(choices=[('Males', 'Males'), ('Females', 'Females'), ('Non-binary Individuals', 'Non-binary Individuals')], max_length=25)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "open_to_dating",
+                    models.CharField(
+                        choices=[
+                            ("Males", "Males"),
+                            ("Females", "Females"),
+                            ("Non-binary Individuals", "Non-binary Individuals"),
+                        ],
+                        max_length=25,
+                    ),
+                ),
             ],
         ),
     ]
