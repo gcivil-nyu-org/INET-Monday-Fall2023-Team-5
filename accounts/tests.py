@@ -5,6 +5,8 @@ from django.contrib.messages import get_messages
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.contrib.auth.forms import PasswordChangeForm
 from .models import *
+import os
+from django.core.files import File 
 
 class ProfileModelTest(TestCase):
     
@@ -277,4 +279,39 @@ class EditProfileTest(TestCase):
         # Assert: Check that the profile attributes remain unchanged
         self.assertEqual(self.profile.gender, 'M')
         self.assertEqual(self.profile.pronoun_preference, 'he_him')
+    
+
+
+    def test_profile_picture_removal(self):
+        # Setup: Upload a profile picture to start with
+        with open('test_files/test_image.jpg', 'rb') as pic:
+            self.profile.profile_picture.save('test_image.jpg', File(pic))
+            self.profile.save()
+
+        # Ensure the profile picture was saved
+        self.assertTrue(self.profile.profile_picture)
+
+        # Action: Submit the form for profile picture removal
+        data = {
+            'profile_picture-clear': True,  # Set to True to clear the image
+            'gender': 'M',  # include other necessary fields
+            'pronoun_preference': 'he_him',
+            'open_to_dating': [],
+        }
+        response = self.client.post(self.edit_profile_url, data)
+
+        # Refresh the profile from the database
+        self.profile.refresh_from_db()
+
+        # Assert: Check that the profile picture has been removed
+        self.assertFalse(self.profile.profile_picture) # Check if the profile picture is None
+
+        # Cleanup: If the file still exists, remove it
+        if self.profile.profile_picture and os.path.exists(self.profile.profile_picture.path):
+            os.remove(self.profile.profile_picture.path)
+
+
+
+    
+    
     

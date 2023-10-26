@@ -49,6 +49,10 @@ def edit_profile(request):
         form = EditProfileForm(request.POST, request.FILES, instance=profile)
 
         if form.is_valid():
+            # Check if the 'profile_picture-clear' field is True, and if so, clear the profile picture
+            if 'profile_picture_clear' in request.POST and request.POST['profile_picture_clear'] == 'on':
+                profile.profile_picture = None
+
             _handle_form_valid(request, form)
             return HttpResponseRedirect(reverse('profile_updated'))
         else:
@@ -57,6 +61,8 @@ def edit_profile(request):
         form = EditProfileForm(instance=profile)
 
     return render(request, 'profile/edit_profile.html', {'form': form})
+
+
 
 
 def _handle_form_valid(request, form):
@@ -73,6 +79,10 @@ def _handle_form_valid(request, form):
     else:
         profile_instance.pronoun_preference = pronoun_preference
 
+    # Check if the 'profile_picture-clear' field is True, and if so, clear the profile picture
+    if 'profile_picture-clear' in form.cleaned_data and form.cleaned_data['profile_picture-clear']:
+        profile_instance.profile_picture = None
+
     # Handle profile picture upload
     if 'profile_picture' in request.FILES:
         profile_instance.profile_picture = request.FILES['profile_picture']
@@ -83,6 +93,7 @@ def _handle_form_valid(request, form):
     # Handling the ManyToMany field
     open_to_dating_choices = form.cleaned_data['open_to_dating']
     profile_instance.open_to_dating.set(open_to_dating_choices)
+
 
 
 

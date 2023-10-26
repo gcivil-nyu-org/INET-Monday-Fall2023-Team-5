@@ -110,11 +110,3 @@ class EditProfileForm(forms.ModelForm):
             self.add_error('custom_pronoun', 'You must provide a custom pronoun when selecting "Other".')
 
         return cleaned_data
-
-    def test_initial_data_matches_user_profile(self):
-        self.profile.gender = 'M'
-        self.profile.pronoun_preference = 'he_him'
-        self.profile.save()
-        response = self.client.get(self.edit_profile_url)
-        self.assertEqual(response.context['form'].initial['gender'], 'M')
-        self.assertEqual(response.context['form'].initial['pronoun_preference'], 'he_him')
