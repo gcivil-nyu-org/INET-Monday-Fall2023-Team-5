@@ -160,3 +160,94 @@ class AccountViewTest(TestCase):
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), 'Password updated successfully')
+
+class EditProfileTest(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpass')
+        self.client.login(username='testuser', password='testpass')
+        self.edit_profile_url = reverse('edit_profile')
+        self.profile = Profile.objects.get(user=self.user)
+
+    def test_get_edit_profile_unauthenticated(self):
+        self.client.logout()
+        response = self.client.get(self.edit_profile_url)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith('/accounts/login/'))
+
+    def test_get_edit_profile_authenticated(self):
+        response = self.client.get(self.edit_profile_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'profile/edit_profile.html')
+
+    def test_post_edit_profile_valid_data(self):
+        data = {
+            'gender': 'M',
+            'pronoun_preference': 'he_him',
+            'open_to_dating': [],  # Empty for this test. Fill with valid data if necessary.
+        }
+        response = self.client.post(self.edit_profile_url, data)
+        self.profile.refresh_from_db()
+        self.assertEqual(self.profile.gender, 'M')
+        self.assertEqual(self.profile.pronoun_preference, 'he_him')
+
+    def test_post_edit_profile_invalid_data(self):
+        data = {
+            'gender': 'INVALID',
+        }
+        response = self.client.post(self.edit_profile_url, data)
+        self.assertContains(response, 'There was an error in the form. Please check your inputs.')
+
+    def test_custom_pronoun(self):
+        profile, created = Profile.objects.get_or_create(user=self.user, defaults={'gender': 'M'})
+        if not created:
+            profile.gender = "M"
+            profile.save()
+
+        data = {
+            'gender': 'M',
+            'pronoun_preference': 'other',
+            'custom_pronoun': 'ze/zir',
+        }
+
+        response = self.client.post(self.edit_profile_url, data)
+
+        self.profile.refresh_from_db()
+        self.assertEqual(self.profile.pronoun_preference, 'ze/zir')
+
+    def test_custom_pronoun_without_providing_one(self):
+        profile, created = Profile.objects.get_or_create(user=self.user, defaults={'gender': 'M'})
+        if not created:
+            profile.gender = "M"
+            profile.save()
+
+        data = {
+            'gender': 'M',
+            'pronoun_preference': 'other',
+        }
+        # Ensure that the pronoun_preference is set to 'other' and custom_pronoun is not set
+        self.assertEqual(data['pronoun_preference'], 'other')
+        self.assertNotIn('custom_pronoun', data)
+
+        response = self.client.post(self.edit_profile_url, data)
+
+        self.assertContains(response, 'You must provide a custom pronoun when selecting &quot;Other&quot;.')
+
+
+
+    def test_profile_picture_upload(self):
+        with open('test_files/test_image.jpg', 'rb') as pic:
+            data = {
+                'profile_picture': pic,
+                'gender': 'M',
+                'pronoun_preference': 'he_him',
+            }
+            response = self.client.post(self.edit_profile_url, data)
+        self.profile.refresh_from_db()
+        self.assertTrue(self.profile.profile_picture.name.startswith('profile_pictures/'))
+
+        # Cleanup the uploaded test image at the end
+        self.profile.profile_picture.delete()
+
+   
+    

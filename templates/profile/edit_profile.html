@@ -33,9 +33,14 @@
       </div>
 
       <!-- Custom Pronoun (only displayed when 'Other' is selected) -->
-      <div class="form-group" id="custom-pronoun" style="display: none;">
+      <div class="form-group" id="custom-pronoun" {% if form.custom_pronoun.errors %}style="display: block;"{% else %}style="display: none;"{% endif %}>
         <label for="{{ form.custom_pronoun.id_for_label }}">Custom Pronoun:</label>
         {{ form.custom_pronoun }}
+        {% if form.custom_pronoun.errors %}
+          <div class="error">
+            {{ form.custom_pronoun.errors }}
+          </div>
+        {% endif %}
       </div>
 
       <!-- Profile Picture -->

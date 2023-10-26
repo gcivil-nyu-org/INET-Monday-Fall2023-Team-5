@@ -46,11 +46,18 @@ def edit_profile(request):
     profile = request.user.profile  # refers to the currently authenticated user
 
     if request.method == 'POST':
-        form = EditProfileForm(request.POST, instance=profile)
+        form = EditProfileForm(request.POST, request.FILES, instance=profile)
+        
+        # Check for custom pronoun requirement
+        if form.is_bound:
+            pronoun_preference = request.POST.get('pronoun_preference')
+            custom_pronoun = request.POST.get('custom_pronoun')
+            if pronoun_preference == 'other' and (not custom_pronoun or custom_pronoun.strip() == ''):
+                form.add_error('custom_pronoun', 'You must provide a custom pronoun when selecting "Other".')
+
         if form.is_valid():
             _handle_form_valid(request, form)
             return HttpResponseRedirect(reverse('profile_updated'))
-            # return render(request, 'profile_updated.html', {'user': request.user, 'pronoun_preference': request.user.profile.get_pronoun_preference_display()})
         else:
             messages.error(request, 'There was an error in the form. Please check your inputs.')
     else:
@@ -65,8 +72,11 @@ def _handle_form_valid(request, form):
     profile_instance = form.save(commit=False)
 
     pronoun_preference = form.cleaned_data['pronoun_preference']
-    if pronoun_preference == 'other':
-        profile_instance.pronoun_preference = form.cleaned_data['custom_pronoun']
+    custom_pronoun = form.cleaned_data['custom_pronoun']
+
+    if pronoun_preference == 'other' and custom_pronoun:
+        profile_instance.pronoun_preference = custom_pronoun
+        profile_instance.custom_pronoun = custom_pronoun
     else:
         profile_instance.pronoun_preference = pronoun_preference
 
@@ -74,13 +84,13 @@ def _handle_form_valid(request, form):
     if 'profile_picture' in request.FILES:
         profile_instance.profile_picture = request.FILES['profile_picture']
 
-    # Save the profile instance to make sure we can set many-to-many relationships
+    # Save the profile instance now
     profile_instance.save()
 
     # Handling the ManyToMany field
     open_to_dating_choices = form.cleaned_data['open_to_dating']
     profile_instance.open_to_dating.set(open_to_dating_choices)
-    
+
 
 
 
