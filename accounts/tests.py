@@ -257,6 +257,24 @@ class EditProfileTest(TestCase):
         self.assertEqual(response.context['form'].initial['gender'], 'M')
         self.assertEqual(response.context['form'].initial['pronoun_preference'], 'he_him')
 
-    
-   
+    def test_no_changes_to_profile(self):
+        # Setup: Define the initial state
+        self.profile.gender = 'M'
+        self.profile.pronoun_preference = 'he_him'
+        self.profile.save()
+
+        # Action: Submit the form without any updates
+        initial_data = {
+            'gender': 'M',
+            'pronoun_preference': 'he_him',
+            'open_to_dating': [],  # Assuming this was empty initially
+        }
+        response = self.client.post(self.edit_profile_url, initial_data)
+
+        # Refresh the profile from the database
+        self.profile.refresh_from_db()
+
+        # Assert: Check that the profile attributes remain unchanged
+        self.assertEqual(self.profile.gender, 'M')
+        self.assertEqual(self.profile.pronoun_preference, 'he_him')
     
