@@ -131,7 +131,7 @@ class AccountViewTest(TestCase):
         self.client.login(username="testuser", password="testpassword123")
         response = self.client.get(self.account_url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "account.html")
+        self.assertTemplatesUsed(response, ["accounts/account.html", "base.html"])
 
     def test_change_username_successfully(self):
         # Test checks if a logged-in user can successfully change
@@ -195,7 +195,7 @@ class EditProfileViewTest(TestCase):
         self.client.login(username="testuser", password="testpassword")
         response = self.client.get(self.edit_profile_url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "profile/edit_profile.html")
+        self.assertTemplateUsed(response, "accounts/profile/edit_profile.html")
 
     def test_get_request_logged_in_user(self):
         # Log the user in
@@ -206,7 +206,7 @@ class EditProfileViewTest(TestCase):
 
         # Check the response's status code and used template
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "profile/edit_profile.html")
+        self.assertTemplateUsed(response, "accounts/profile/edit_profile.html")
 
         # Check the context data
         form_in_context = response.context["form"]
