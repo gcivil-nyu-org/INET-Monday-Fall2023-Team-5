@@ -1,4 +1,3 @@
-'''
 from django.test import TestCase, Client, override_settings
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -418,4 +417,4 @@ class DatingPreferenceModelTest(TestCase):
         self.assertIsNotNone(male_preference)
         self.assertIsNotNone(female_preference)
         self.assertIsNotNone(nb_preference)
-        self.assertIsNotNone(ns_preference)'''
+        self.assertIsNotNone(ns_preference)
