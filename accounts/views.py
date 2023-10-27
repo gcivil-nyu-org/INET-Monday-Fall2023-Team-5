@@ -78,7 +78,6 @@ def _handle_form_valid(request, form):
     else:
         profile_instance.pronoun_preference = pronoun_preference
 
-
     # Handle profile picture: clear it if the 'clear' checkbox is selected;
     # otherwise, check for an uploaded image
 
