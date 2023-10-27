@@ -34,4 +34,5 @@ deploy:
   bucket_name: "$S3_BUCKET_NAME"
   on:
     branch: travis-setup
+    branch: develop
 
