@@ -1,10 +1,11 @@
-from django.db import migrations, models
+from django.db import migrations
 
 
 def update_gender_descriptions_to_codes(apps, schema_editor):
     Profile = apps.get_model("accounts", "Profile")
 
-    # Update Profile model (this part assumes there are no profiles set to "Not Specified" yet)
+    # Update Profile model
+    # (this part assumes there are no profiles set to "Not Specified" yet)
     profile_gender_mapping = {
         "Male": "M",
         "Female": "F",
