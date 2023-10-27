@@ -131,7 +131,7 @@ class AccountViewTest(TestCase):
         self.client.login(username="testuser", password="testpassword123")
         response = self.client.get(self.account_url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplatesUsed(response, ["accounts/account.html", "base.html"])
+        self.assertTemplateUsed(response, "accounts/account.html")
 
     def test_change_username_successfully(self):
         # Test checks if a logged-in user can successfully change
