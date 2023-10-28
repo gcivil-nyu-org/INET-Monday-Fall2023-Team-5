@@ -1,23 +1,17 @@
-from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
+from django.contrib.auth.forms import PasswordChangeForm
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login
 from django.urls import reverse
 from django.views import generic
-from django.shortcuts import render, reverse
+from django.shortcuts import render
 from django.contrib import messages
 from .forms import EditProfileForm
 from .models import Profile
 from django.core.paginator import Paginator
 from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
-from django.core.mail import send_mail
 from .forms import CustomUserCreationForm
 from django.contrib.auth.models import User
 from django.utils.http import urlsafe_base64_decode
-from django.contrib.auth.tokens import default_token_generator
-from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
 from django.contrib.auth import update_session_auth_hash
@@ -60,7 +54,6 @@ def edit_profile(request):
         if form.is_valid():
             _handle_form_valid(request, form)
             return HttpResponseRedirect(reverse("profile_updated"))
-            # return render(request, 'profile_updated.html', {'user': request.user, 'pronoun_preference': request.user.profile.get_pronoun_preference_display()})
         else:
             messages.error(
                 request, "There was an error in the form. Please check your inputs."
@@ -85,7 +78,9 @@ def _handle_form_valid(request, form):
     else:
         profile_instance.pronoun_preference = pronoun_preference
 
-    # Handle profile picture: clear it if the 'clear' checkbox is selected; otherwise, check for an uploaded image
+    # Handle profile picture: clear it if the 'clear' checkbox is selected;
+    # otherwise, check for an uploaded image
+
     if form.cleaned_data.get(
         "profile_picture-clear"
     ):  # Note the change in the field name to match Django's default
@@ -122,7 +117,6 @@ def view_profile(request):
 
     # Fetching dating preferences
     open_to_dating = profile.open_to_dating.all()
-
     return render(
         request,
         "accounts/profile/view_profile.html",

@@ -1,8 +1,19 @@
 from django.urls import path
-from .views import *
-from django.contrib.auth.views import LoginView  # override the default login view
-from django.contrib.auth.views import LogoutView
+from .views import (
+    about,
+    SignUpView,
+    edit_profile,
+    profile_updated,
+    activate_account,
+    confirmation_required,
+    view_profile,
+    browse_profiles,
+    account,
+)
+
 from django.contrib.auth.views import (
+    LoginView,
+    LogoutView,
     PasswordResetView,
     PasswordResetDoneView,
     PasswordResetConfirmView,

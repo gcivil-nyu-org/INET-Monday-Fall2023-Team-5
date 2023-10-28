@@ -1,5 +1,5 @@
 from django import forms
-from .models import *
+from .models import Profile, DatingPreference
 from django.contrib.auth.models import User
 
 from django.contrib.auth.forms import UserCreationForm
@@ -9,15 +9,6 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.core.mail import send_mail
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import get_user_model
-from django.utils.crypto import get_random_string
-from django.core.mail import send_mail
-from django.urls import reverse
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
-from django.contrib.auth.tokens import default_token_generator
-from django.contrib.sites.shortcuts import get_current_site
 
 
 # This is the form that will be used to create a new user, and check for valid email
