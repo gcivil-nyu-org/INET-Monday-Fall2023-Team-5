@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Profile of {{ profile.user.username }}{% endblock %}
+
+{% block content %}
+<div class="single-profile-container">
+    <h2>Profile of {{ profile.user.username }}</h2>
+
+    <!-- Display Profile Picture -->
+    <div class="profile-picture">
+        {% if profile.profile_picture %}
+            <img src="{{ profile.profile_picture.url }}" alt="{{ profile.user.username }}'s Profile Picture" class="profile-img" style="max-width: 200px; max-height: 200px;">
+        {% else %}
+            No profile picture available
+        {% endif %}
+    </div>
+
+    <!-- Display Gender -->
+    <div class="profile-detail">
+        <strong>Gender:</strong> {{ profile.get_gender_display }}
+    </div>
+
+    <!-- Display Pronoun Preference -->
+    <div class="profile-detail">
+        <strong>Pronoun Preference:</strong> {{ profile.get_pronoun_preference_display }}
+    </div>
+
+    <!-- Display Open to Dating Preferences -->
+    <div class="profile-detail">
+        <strong>Open to Dating:</strong>
+        {% if profile.open_to_dating.all %}
+            {% for preference in profile.open_to_dating.all %}
+                {{ preference.gender }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        {% else %}
+            Not specified
+        {% endif %}
+    </div>
+
+    <!-- Add more fields as needed -->
+
+    <div class="navigation-buttons">
+        <a href="{% url 'browse_profiles' %}" class="btn btn-primary">Back to Browse</a>
+    </div>
+</div>
+{% endblock %}
