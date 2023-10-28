@@ -33,6 +33,5 @@ deploy:
   env: "roleplaydate-dev2"
   bucket_name: "$S3_BUCKET_NAME"
   on:
-    branch: travis-setup
     branch: develop
 
