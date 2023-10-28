@@ -35,6 +35,7 @@
       <!-- Custom Pronoun (only displayed when 'Other' is selected) -->
       <div class="form-group" id="custom-pronoun" style="display: none;">
         <label for="{{ form.custom_pronoun.id_for_label }}">Custom Pronoun:</label>
+        {{ form.custom_pronoun.errors }}
         {{ form.custom_pronoun }}
       </div>
 
