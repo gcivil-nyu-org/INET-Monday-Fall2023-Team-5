@@ -11,6 +11,10 @@ from .forms import EditProfileForm
 from django.core.files.uploadedfile import SimpleUploadedFile
 from PIL import Image
 from io import BytesIO
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_str
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
 
 
 class ProfileModelTest(TestCase):
@@ -409,3 +413,62 @@ class DatingPreferenceModelTest(TestCase):
         self.assertIsNotNone(female_preference)
         self.assertIsNotNone(nb_preference)
         self.assertIsNotNone(ns_preference)
+
+class SignUpViewTest(TestCase):
+    
+    def setUp(self):
+        self.signup_url = reverse('signup')  # assuming 'signup' is the URL name for the SignUpView
+        self.user_data = {
+            'username': 'newuser',
+            'password1': 'testpassword123',
+            'password2': 'testpassword123',
+            'email': 'newuser@example.com'
+        }
+
+    def test_signup_view_uses_correct_template(self):
+        response = self.client.get(self.signup_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'accounts/registration/signup.html')
+
+    def test_signup_success(self):
+        signup_data = {
+            'username': 'testuser',
+            'email': 'testuser@nyu.edu',
+            'password1': 'securepassword123',
+            'password2': 'securepassword123',
+        }
+        response = self.client.post(reverse('signup'), signup_data)
+        print(response.content)  # This will output the response content to see if there's any error message
+        self.assertRedirects(response, reverse('confirmation_required'))
+
+
+class ViewSingleProfileTest(TestCase):
+
+    def setUp(self):
+        # Create a test user and an associated profile
+        self.user = User.objects.create_user(username='testuser', password='testpassword123')
+        self.profile = self.user.profile
+        self.single_profile_url = reverse('view_single_profile', args=[self.profile.pk])
+
+    def test_view_single_profile(self):
+        response = self.client.get(self.single_profile_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'accounts/profile/single_profile.html')
+        self.assertEqual(response.context['profile'], self.profile)
+
+
+class ActivateAccountTest(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpassword123', is_active=False)
+        self.uid = urlsafe_base64_encode(force_bytes(self.user.pk))
+        self.token = default_token_generator.make_token(self.user)
+        self.activation_url = reverse('activate_account', args=[self.uid, self.token])
+
+    def test_activate_account(self):
+        response = self.client.get(self.activation_url)
+        self.user.refresh_from_db()  # Refresh the user instance to get updated data
+
+        # Ensure the user is now active
+        self.assertTrue(self.user.is_active)
+        self.assertRedirects(response, reverse('login'))

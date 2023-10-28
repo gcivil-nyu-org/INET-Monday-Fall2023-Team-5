@@ -8,7 +8,7 @@
 
     {% for profile in profiles %}
     <div class="profile-card">
-      <h3>{{ profile.user.username }}</h3>
+      <h3><a href="{% url 'view_single_profile' profile.user.id %}">{{ profile.user.username }}</a></h3>
       <p><strong>Gender:</strong> {{ profile.get_gender_display }}</p>
       <p><strong>Pronoun Preference:</strong> {{ profile.get_pronoun_preference_display }}</p>
       
@@ -32,6 +32,8 @@
               Not specified
           {% endif %}
       </p>
+
+      <a href="{% url 'view_single_profile' profile.user.id %}" class="btn btn-primary">View Profile</a>
     </div>
     {% empty %}
     <p>No profiles available.</p>

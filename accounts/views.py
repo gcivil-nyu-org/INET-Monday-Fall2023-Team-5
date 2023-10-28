@@ -143,6 +143,11 @@ def browse_profiles(request):
     )
 
 
+def view_single_profile(request, profile_id):
+    profile = Profile.objects.get(pk=profile_id)
+    return render(request, "accounts/profile/single_profile.html", {"profile": profile})
+
+
 def get_recommended_profiles(user):
     user_profile = user.profile
     user_gender = user_profile.gender
