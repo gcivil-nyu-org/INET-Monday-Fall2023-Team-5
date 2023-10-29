@@ -18,6 +18,8 @@ from django.contrib.auth.tokens import default_token_generator
 from accounts.views import get_recommended_profiles
 from accounts.admin import ProfileAdmin
 from django.contrib.admin.sites import AdminSite
+from importlib import import_module
+from django.apps import apps
 
 
 class ProfileModelTest(TestCase):
@@ -676,3 +678,70 @@ class DisplayOpenToDatingTest(TestCase):
 
         # Test that the results are comma-separated
         self.assertEqual(display_result, "M, F")
+
+
+class TestMigration(TestCase):
+    migration = import_module("accounts.migrations.0009_auto_20231019_1046")
+
+    def setUp(self):
+        self.DatingPreference = apps.get_model("accounts", "DatingPreference")
+
+        genders = ["Males", "Females", "Non-binary Individuals"]
+        # Creating test data
+        for gender in genders:
+            self.DatingPreference.objects.create(gender=gender)
+
+    def test_update_gender_codes(self):
+        # Apply the migration
+        self.migration.update_gender_codes(apps, None)
+
+        # Check the conversion, there should be two of each (the ones in the model already, and the newly created)
+        self.assertEqual(self.DatingPreference.objects.filter(gender="M").count(), 2)
+        self.assertEqual(self.DatingPreference.objects.filter(gender="F").count(), 2)
+        self.assertEqual(self.DatingPreference.objects.filter(gender="N").count(), 2)
+
+
+class TestProfileGenderMapping(TestCase):
+    def setUp(self):
+        # Create sample profiles
+        self.user1 = User.objects.create_user(username="user1", password="password")
+        self.user2 = User.objects.create_user(username="user2", password="password")
+        self.user3 = User.objects.create_user(username="user3", password="password")
+
+        # Assuming profiles are auto-created for these users:
+        self.profile1 = self.user1.profile
+        self.profile2 = self.user2.profile
+        self.profile3 = self.user3.profile
+
+        # Set initial gender values
+        self.profile1.gender = "OldGender1"
+        self.profile1.save()
+
+        self.profile2.gender = "OldGender2"
+        self.profile2.save()
+
+        self.profile3.gender = "UnchangedGender"
+        self.profile3.save()
+
+        self.profile_gender_mapping = {
+            "OldGender1": "NewGender1",
+            "OldGender2": "NewGender2",
+        }
+
+    def test_gender_mapping(self):
+        # Run the code being tested
+        for profile in Profile.objects.all():
+            profile.gender = self.profile_gender_mapping.get(
+                profile.gender, profile.gender
+            )
+            profile.save()
+
+        # Refresh the profiles from the database
+        self.profile1.refresh_from_db()
+        self.profile2.refresh_from_db()
+        self.profile3.refresh_from_db()
+
+        # Verify that the genders are updated (or unchanged) correctly
+        self.assertEqual(self.profile1.gender, "NewGender1")
+        self.assertEqual(self.profile2.gender, "NewGender2")
+        self.assertEqual(self.profile3.gender, "UnchangedGender")
