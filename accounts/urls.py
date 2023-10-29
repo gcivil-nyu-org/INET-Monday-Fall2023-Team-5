@@ -7,6 +7,7 @@ from .views import (
     activate_account,
     confirmation_required,
     view_profile,
+    view_single_profile,
     browse_profiles,
     account,
 )
