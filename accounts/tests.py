@@ -450,6 +450,37 @@ class SignUpViewTest(TestCase):
         )  # This will output the response content to see if there's any error message
         self.assertRedirects(response, reverse("confirmation_required"))
 
+    def test_signup_email_already_in_use(self):
+        # First, create a user with the desired email
+        User.objects.create_user(
+            username="existinguser",
+            email="testuser@nyu.edu",
+            password="testpassword123",
+        )
+
+        signup_data = {
+            "username": "newuser",
+            "email": "testuser@nyu.edu",  # This email already exists now
+            "password1": "securepassword123",
+            "password2": "securepassword123",
+        }
+        response = self.client.post(reverse("signup"), signup_data)
+
+        # Check if the response contains the expected error message
+        self.assertContains(response, "Email already in use.")
+
+    def test_signup_non_nyu_email(self):
+        signup_data = {
+            "username": "newuser",
+            "email": "testuser@gmail.com",  # This is a non-NYU email
+            "password1": "securepassword123",
+            "password2": "securepassword123",
+        }
+        response = self.client.post(reverse("signup"), signup_data)
+
+        # Check if the response contains the expected error message
+        self.assertContains(response, "Please use your NYU email.")
+
 
 class ViewSingleProfileTest(TestCase):
     def setUp(self):
