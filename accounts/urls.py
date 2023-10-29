@@ -1,7 +1,6 @@
 from django.urls import path
 from .views import (
     about,
-    home,
     SignUpView,
     edit_profile,
     profile_updated,
