@@ -15,6 +15,11 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_str
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
+from accounts.views import get_recommended_profiles
+from accounts.admin import ProfileAdmin
+from django.contrib.admin.sites import AdminSite
+from importlib import import_module
+from django.apps import apps
 
 
 class ProfileModelTest(TestCase):
@@ -175,6 +180,20 @@ class AccountViewTest(TestCase):
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), "Password updated successfully")
+
+    def test_change_password_with_invalid_data(self):
+        # Test checks if the error message is shown when a user tries to change
+        # their password with invalid data (e.g. mismatched new passwords)
+        self.client.login(username="testuser", password="testpassword123")
+        data = {
+            "old_password": "testpassword123",
+            "new_password1": "newtestpassword123",
+            "new_password2": "differentnewtestpassword123",  # Mismatched password
+        }
+        response = self.client.post(self.account_url, data)
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Please correct the errors below.")
 
 
 @override_settings(
@@ -414,56 +433,93 @@ class DatingPreferenceModelTest(TestCase):
         self.assertIsNotNone(nb_preference)
         self.assertIsNotNone(ns_preference)
 
+
 class SignUpViewTest(TestCase):
-    
     def setUp(self):
-        self.signup_url = reverse('signup')  # assuming 'signup' is the URL name for the SignUpView
+        self.signup_url = reverse(
+            "signup"
+        )  # assuming 'signup' is the URL name for the SignUpView
         self.user_data = {
-            'username': 'newuser',
-            'password1': 'testpassword123',
-            'password2': 'testpassword123',
-            'email': 'newuser@example.com'
+            "username": "newuser",
+            "password1": "testpassword123",
+            "password2": "testpassword123",
+            "email": "newuser@example.com",
         }
 
     def test_signup_view_uses_correct_template(self):
         response = self.client.get(self.signup_url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'accounts/registration/signup.html')
+        self.assertTemplateUsed(response, "accounts/registration/signup.html")
 
     def test_signup_success(self):
         signup_data = {
-            'username': 'testuser',
-            'email': 'testuser@nyu.edu',
-            'password1': 'securepassword123',
-            'password2': 'securepassword123',
+            "username": "testuser",
+            "email": "testuser@nyu.edu",
+            "password1": "securepassword123",
+            "password2": "securepassword123",
         }
-        response = self.client.post(reverse('signup'), signup_data)
-        print(response.content)  # This will output the response content to see if there's any error message
-        self.assertRedirects(response, reverse('confirmation_required'))
+        response = self.client.post(reverse("signup"), signup_data)
+        print(
+            response.content
+        )  # This will output the response content to see if there's any error message
+        self.assertRedirects(response, reverse("confirmation_required"))
+
+    def test_signup_email_already_in_use(self):
+        # First, create a user with the desired email
+        User.objects.create_user(
+            username="existinguser",
+            email="testuser@nyu.edu",
+            password="testpassword123",
+        )
+
+        signup_data = {
+            "username": "newuser",
+            "email": "testuser@nyu.edu",  # This email already exists now
+            "password1": "securepassword123",
+            "password2": "securepassword123",
+        }
+        response = self.client.post(reverse("signup"), signup_data)
+
+        # Check if the response contains the expected error message
+        self.assertContains(response, "Email already in use.")
+
+    def test_signup_non_nyu_email(self):
+        signup_data = {
+            "username": "newuser",
+            "email": "testuser@gmail.com",  # This is a non-NYU email
+            "password1": "securepassword123",
+            "password2": "securepassword123",
+        }
+        response = self.client.post(reverse("signup"), signup_data)
+
+        # Check if the response contains the expected error message
+        self.assertContains(response, "Please use your NYU email.")
 
 
 class ViewSingleProfileTest(TestCase):
-
     def setUp(self):
         # Create a test user and an associated profile
-        self.user = User.objects.create_user(username='testuser', password='testpassword123')
+        self.user = User.objects.create_user(
+            username="testuser", password="testpassword123"
+        )
         self.profile = self.user.profile
-        self.single_profile_url = reverse('view_single_profile', args=[self.profile.pk])
+        self.single_profile_url = reverse("view_single_profile", args=[self.profile.pk])
 
     def test_view_single_profile(self):
         response = self.client.get(self.single_profile_url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'accounts/profile/single_profile.html')
-        self.assertEqual(response.context['profile'], self.profile)
+        self.assertTemplateUsed(response, "accounts/profile/single_profile.html")
+        self.assertEqual(response.context["profile"], self.profile)
 
 
 class ActivateAccountTest(TestCase):
-
     def setUp(self):
-        self.user = User.objects.create_user(username='testuser', password='testpassword123', is_active=False)
+        self.user = User.objects.create_user(
+            username="testuser", password="testpassword123", is_active=False
+        )
         self.uid = urlsafe_base64_encode(force_bytes(self.user.pk))
         self.token = default_token_generator.make_token(self.user)
-        self.activation_url = reverse('activate_account', args=[self.uid, self.token])
+        self.activation_url = reverse("activate_account", args=[self.uid, self.token])
 
     def test_activate_account(self):
         response = self.client.get(self.activation_url)
@@ -471,4 +527,320 @@ class ActivateAccountTest(TestCase):
 
         # Ensure the user is now active
         self.assertTrue(self.user.is_active)
-        self.assertRedirects(response, reverse('login'))
+        self.assertRedirects(response, reverse("login"))
+
+    def test_activate_account_invalid_uid(self):
+        invalid_uid = urlsafe_base64_encode(
+            force_bytes(999999)
+        )  # Assuming no user has this ID
+        activation_url = reverse("activate_account", args=[invalid_uid, self.token])
+        response = self.client.get(activation_url)
+
+        # Expecting a redirect to 'home'
+        self.assertRedirects(response, reverse("home"))
+
+        # Check if the expected error message is in messages
+        messages_list = list(get_messages(response.wsgi_request))
+        self.assertIn(
+            "Activation link is invalid!", [msg.message for msg in messages_list]
+        )
+
+    def test_activate_account_invalid_token(self):
+        invalid_token = "invalid_token"
+        activation_url = reverse("activate_account", args=[self.uid, invalid_token])
+        response = self.client.get(activation_url)
+
+        # Expecting a redirect to 'home'
+        self.assertRedirects(response, reverse("home"))
+
+        # Check if the expected error message is in messages
+        messages_list = list(get_messages(response.wsgi_request))
+        self.assertIn(
+            "Activation link is invalid!", [msg.message for msg in messages_list]
+        )
+
+
+class BrowseProfilesTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        # Create DatingPreferences
+        DatingPreference.objects.all().delete()
+        DatingPreference.create_defaults()
+
+    def setUp(self):
+        # Create multiple users and profiles to simulate a user pool
+        User.objects.all().delete()
+        Profile.objects.all().delete()
+        self.users = [
+            User.objects.create(username=f"user{i}", password="testpass")
+            for i in range(10)
+        ]
+
+        # Create profiles with varying genders, pronouns, and dating preferences
+        for index, user in enumerate(self.users):
+            if hasattr(user, "profile"):
+                profile = user.profile
+
+            else:
+                profile = Profile.objects.create(
+                    user=user,
+                    gender=Profile.GENDER_CHOICES[index % len(Profile.GENDER_CHOICES)][
+                        0
+                    ],
+                    # Cycles through gender choices
+                    pronoun_preference=Profile._meta.get_field(
+                        "pronoun_preference"
+                    ).choices[
+                        index
+                        % len(Profile._meta.get_field("pronoun_preference").choices)
+                    ][
+                        0
+                    ],
+                    # Cycles through pronoun choices
+                )
+            # Add varying dating preferences to each profile
+            dating_pref = DatingPreference.objects.get(
+                gender=Profile.GENDER_CHOICES[
+                    (index + 1) % len(Profile.GENDER_CHOICES)
+                ][0]
+            )
+            profile.open_to_dating.add(dating_pref)
+
+    def test_browse_profiles(self):
+        # Simulate a user logged in and browsing other user profiles
+        logged_in_user = self.users[0]
+        self.client.force_login(logged_in_user)
+
+        response = self.client.get(reverse("browse_profiles"))
+
+        # Assuming your view places the profiles in the context with the name "profiles"
+        context_profiles = response.context["profiles"]
+
+        # Fetch the logged-in user's profile and his dating preferences
+        current_profile = logged_in_user.profile
+        desired_gender_codes = [
+            dp.gender for dp in current_profile.open_to_dating.all()
+        ]
+
+        # Check if the fetched profiles from the view match the logged-in user's preferences
+        for profile in context_profiles:
+            self.assertIn(profile.gender, desired_gender_codes)
+            self.assertNotEqual(profile.user, logged_in_user)
+
+        # If you render profiles directly within a template, you might want to check
+        # if each profile is present in the rendered HTML too.
+        for profile in context_profiles:
+            self.assertContains(
+                response, profile.user.username
+            )  # or any other unique string related to the profile
+
+
+class GetRecommendedProfilesTest(TestCase):
+    def setUp(self):
+        # Clear all profiles and users before starting
+        Profile.objects.all().delete()
+        User.objects.all().delete()
+
+        # Create dating preferences
+        DatingPreference.create_defaults()
+
+        # Create test users and profiles
+        self.users = [
+            User.objects.create_user(username=f"user{i}", password="123456")
+            for i in range(4)
+        ]
+
+        # Assuming every user gets a profile automatically, we fetch the profile and update it.
+
+        # Profile 0: Male open to dating Females
+        profile0 = self.users[0].profile
+        profile0.gender = "M"
+        profile0.open_to_dating.add(DatingPreference.objects.get(gender="F"))
+        profile0.save()
+
+        # Profile 1: Female open to dating Males
+        profile1 = self.users[1].profile
+        profile1.gender = "F"
+        profile1.open_to_dating.add(DatingPreference.objects.get(gender="M"))
+        profile1.save()
+
+        # Profile 2: Female open to dating Non-binary
+        profile2 = self.users[2].profile
+        profile2.gender = "F"
+        profile2.open_to_dating.add(DatingPreference.objects.get(gender="N"))
+        profile2.save()
+
+        # Profile 3: Non-binary open to dating Males and Females
+        profile3 = self.users[3].profile
+        profile3.gender = "N"
+        profile3.open_to_dating.add(DatingPreference.objects.get(gender="M"))
+        profile3.open_to_dating.add(DatingPreference.objects.get(gender="F"))
+        profile3.save()
+
+    def test_recommendation_logic(self):
+        # Test for User 0 (Male open to dating Females)
+        # Expected match: Profile 1 (Female open to dating Males)
+        recommended_profiles = get_recommended_profiles(self.users[0])
+        self.assertIn(self.users[1].profile, recommended_profiles)
+        self.assertNotIn(
+            self.users[2].profile, recommended_profiles
+        )  # Different preferences
+        self.assertNotIn(
+            self.users[3].profile, recommended_profiles
+        )  # Different preferences
+
+        # Test for User 1 (Female open to dating Males)
+        # Expected match: Profile 0 (Male open to dating Females)
+        recommended_profiles = get_recommended_profiles(self.users[1])
+        self.assertIn(self.users[0].profile, recommended_profiles)
+        self.assertNotIn(
+            self.users[2].profile, recommended_profiles
+        )  # Same gender but different preferences
+        self.assertNotIn(
+            self.users[3].profile, recommended_profiles
+        )  # Different preferences
+
+        # Test for User 2 (Female open to dating Non-binary)
+        # Expected match: Profile 3 based on current profiles
+        recommended_profiles = get_recommended_profiles(self.users[2])
+        self.assertIn(self.users[3].profile, recommended_profiles)
+        self.assertNotIn(self.users[0].profile, recommended_profiles)
+        self.assertNotIn(self.users[1].profile, recommended_profiles)
+
+        # Test for User 3 (Non-binary open to dating Males and Females)
+        # Expected match: Profile 2
+        recommended_profiles = get_recommended_profiles(self.users[3])
+        self.assertIn(self.users[2].profile, recommended_profiles)
+        self.assertNotIn(self.users[0].profile, recommended_profiles)
+        self.assertNotIn(self.users[1].profile, recommended_profiles)
+
+    def test_excluding_own_profile(self):
+        # For each user, ensure they don't get their own profile as a recommendation
+        for user in self.users:
+            recommendations = get_recommended_profiles(user)
+            self.assertFalse(user.profile in recommendations)
+
+
+class DisplayOpenToDatingTest(TestCase):
+    def setUp(self):
+        # Clean slate
+        User.objects.all().delete()
+        Profile.objects.all().delete()
+        DatingPreference.objects.all().delete()
+
+        # Create DatingPreferences
+        DatingPreference.create_defaults()
+        male_pref = DatingPreference.objects.get(gender="M")
+        female_pref = DatingPreference.objects.get(gender="F")
+
+        # Create a test user and a profile for them
+        self.user = User.objects.create(username="testuser", password="testpass")
+        self.profile, created = Profile.objects.get_or_create(user=self.user)
+
+        # Add multiple dating preferences for the test user
+        self.profile.open_to_dating.add(male_pref, female_pref)
+
+        # Create an instance of the ProfileAdmin to test the method
+        self.profile_admin = ProfileAdmin(model=Profile, admin_site=AdminSite())
+
+    def test_display_open_to_dating(self):
+        # Call the display_open_to_dating method with the profile
+        display_result = self.profile_admin.display_open_to_dating(self.profile)
+
+        # Test that the display shows both male and female preferences
+        self.assertIn("M", display_result)
+        self.assertIn("F", display_result)
+
+        # Test that the results are comma-separated
+        self.assertEqual(display_result, "M, F")
+
+
+class TestMigration(TestCase):
+    migration = import_module("accounts.migrations.0009_auto_20231019_1046")
+
+    def setUp(self):
+        self.DatingPreference = apps.get_model("accounts", "DatingPreference")
+
+        genders = ["Males", "Females", "Non-binary Individuals"]
+        # Creating test data
+        for gender in genders:
+            self.DatingPreference.objects.create(gender=gender)
+
+    def test_update_gender_codes(self):
+        # Apply the migration
+        self.migration.update_gender_codes(apps, None)
+
+        # Check the conversion, there should be two of each (the ones in the model already, and the newly created)
+        self.assertEqual(self.DatingPreference.objects.filter(gender="M").count(), 2)
+        self.assertEqual(self.DatingPreference.objects.filter(gender="F").count(), 2)
+        self.assertEqual(self.DatingPreference.objects.filter(gender="N").count(), 2)
+
+
+class TestProfileGenderMapping(TestCase):
+    def setUp(self):
+        # Create sample profiles
+        self.user1 = User.objects.create_user(username="user1", password="password")
+        self.user2 = User.objects.create_user(username="user2", password="password")
+        self.user3 = User.objects.create_user(username="user3", password="password")
+
+        # Assuming profiles are auto-created for these users:
+        self.profile1 = self.user1.profile
+        self.profile2 = self.user2.profile
+        self.profile3 = self.user3.profile
+
+        # Set initial gender values
+        self.profile1.gender = "OldGender1"
+        self.profile1.save()
+
+        self.profile2.gender = "OldGender2"
+        self.profile2.save()
+
+        self.profile3.gender = "UnchangedGender"
+        self.profile3.save()
+
+        self.profile_gender_mapping = {
+            "OldGender1": "NewGender1",
+            "OldGender2": "NewGender2",
+        }
+
+    def test_gender_mapping(self):
+        # Run the code being tested
+        for profile in Profile.objects.all():
+            profile.gender = self.profile_gender_mapping.get(
+                profile.gender, profile.gender
+            )
+            profile.save()
+
+        # Refresh the profiles from the database
+        self.profile1.refresh_from_db()
+        self.profile2.refresh_from_db()
+        self.profile3.refresh_from_db()
+
+        # Verify that the genders are updated (or unchanged) correctly
+        self.assertEqual(self.profile1.gender, "NewGender1")
+        self.assertEqual(self.profile2.gender, "NewGender2")
+        self.assertEqual(self.profile3.gender, "UnchangedGender")
+
+
+class TestViews(TestCase):
+    def test_home_view(self):
+        # Get the response for the home view
+        response = self.client.get(reverse("home"))
+        # Check that the response has a status code of 200 (OK)
+        self.assertEqual(response.status_code, 200)
+
+        # Check that the correct template was used
+        self.assertTemplateUsed(response, "home.html")
+
+    def test_about_view(self):
+        # Get the response for the about view
+        response = self.client.get(reverse("about"))
+
+        # Check that the response has a status code of 200 (OK)
+        self.assertEqual(response.status_code, 200)
+
+        # Check that the correct template was used
+        self.assertTemplateUsed(response, "accounts/about.html")
+
+        # Check that the context data contains the title
+        self.assertEqual(response.context["title"], "About")

@@ -131,7 +131,7 @@ def view_profile(request):
 
 @login_required
 def browse_profiles(request):
-    recommended_profiles = get_recommended_profiles(request.user)
+    recommended_profiles = get_recommended_profiles(request.user).order_by("user_id")
 
     # Pagination: Show 10 profiles per page
     paginator = Paginator(recommended_profiles, 10)

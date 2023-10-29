@@ -7,6 +7,7 @@ from .views import (
     activate_account,
     confirmation_required,
     view_profile,
+    view_single_profile,
     browse_profiles,
     account,
 )
@@ -67,6 +68,5 @@ urlpatterns = [
         ),
         name="password_reset_complete",
     ),
-    path('profile/<int:profile_id>/', view_single_profile, name='view_single_profile'),
-
+    path("profile/<int:profile_id>/", view_single_profile, name="view_single_profile"),
 ]
