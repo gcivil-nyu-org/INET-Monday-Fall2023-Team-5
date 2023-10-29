@@ -17,13 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import TemplateView
+from accounts.views import home
 from django.conf import settings  # Import settings
 from django.conf.urls.static import static  # Import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
-    path("", TemplateView.as_view(template_name="home.html"), name="home"),
+    path("", home, name="home"),
 ]
 
 # Add the following line to serve media files during development
