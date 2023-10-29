@@ -16,6 +16,8 @@ from django.utils.encoding import force_str
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from accounts.views import get_recommended_profiles
+from accounts.admin import ProfileAdmin
+from django.contrib.admin.sites import AdminSite
 
 
 class ProfileModelTest(TestCase):
@@ -532,21 +534,28 @@ class BrowseProfilesTestCase(TestCase):
         logged_in_user = self.users[0]
         self.client.force_login(logged_in_user)
 
-        # Let's fetch the logged-in user's profile
-        current_profile = logged_in_user.profile
+        response = self.client.get(reverse("browse_profiles"))
 
-        # Fetch the profiles this user would be interested in based on dating preferences
+        # Assuming your view places the profiles in the context with the name "profiles"
+        context_profiles = response.context["profiles"]
+
+        # Fetch the logged-in user's profile and his dating preferences
+        current_profile = logged_in_user.profile
         desired_gender_codes = [
             dp.gender for dp in current_profile.open_to_dating.all()
         ]
-        potential_matches = Profile.objects.filter(
-            gender__in=desired_gender_codes
-        ).exclude(user=logged_in_user)
 
-        # Now, we check if the fetched profiles match the logged-in user's preferences
-        for potential_match in potential_matches:
-            self.assertIn(potential_match.gender, desired_gender_codes)
-            self.assertNotEqual(potential_match.user, logged_in_user)
+        # Check if the fetched profiles from the view match the logged-in user's preferences
+        for profile in context_profiles:
+            self.assertIn(profile.gender, desired_gender_codes)
+            self.assertNotEqual(profile.user, logged_in_user)
+
+        # If you render profiles directly within a template, you might want to check
+        # if each profile is present in the rendered HTML too.
+        for profile in context_profiles:
+            self.assertContains(
+                response, profile.user.username
+            )  # or any other unique string related to the profile
 
 
 class GetRecommendedProfilesTest(TestCase):
@@ -633,3 +642,37 @@ class GetRecommendedProfilesTest(TestCase):
         for user in self.users:
             recommendations = get_recommended_profiles(user)
             self.assertFalse(user.profile in recommendations)
+
+
+class DisplayOpenToDatingTest(TestCase):
+    def setUp(self):
+        # Clean slate
+        User.objects.all().delete()
+        Profile.objects.all().delete()
+        DatingPreference.objects.all().delete()
+
+        # Create DatingPreferences
+        DatingPreference.create_defaults()
+        male_pref = DatingPreference.objects.get(gender="M")
+        female_pref = DatingPreference.objects.get(gender="F")
+
+        # Create a test user and a profile for them
+        self.user = User.objects.create(username="testuser", password="testpass")
+        self.profile, created = Profile.objects.get_or_create(user=self.user)
+
+        # Add multiple dating preferences for the test user
+        self.profile.open_to_dating.add(male_pref, female_pref)
+
+        # Create an instance of the ProfileAdmin to test the method
+        self.profile_admin = ProfileAdmin(model=Profile, admin_site=AdminSite())
+
+    def test_display_open_to_dating(self):
+        # Call the display_open_to_dating method with the profile
+        display_result = self.profile_admin.display_open_to_dating(self.profile)
+
+        # Test that the display shows both male and female preferences
+        self.assertIn("M", display_result)
+        self.assertIn("F", display_result)
+
+        # Test that the results are comma-separated
+        self.assertEqual(display_result, "M, F")
