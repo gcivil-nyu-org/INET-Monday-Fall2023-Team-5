@@ -15,6 +15,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_str
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
+from accounts.views import get_recommended_profiles
 
 
 class ProfileModelTest(TestCase):
@@ -478,3 +479,157 @@ class ActivateAccountTest(TestCase):
         # Ensure the user is now active
         self.assertTrue(self.user.is_active)
         self.assertRedirects(response, reverse("login"))
+
+
+class BrowseProfilesTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        # Create DatingPreferences
+        DatingPreference.objects.all().delete()
+        DatingPreference.create_defaults()
+
+    def setUp(self):
+        # Create multiple users and profiles to simulate a user pool
+        User.objects.all().delete()
+        Profile.objects.all().delete()
+        self.users = [
+            User.objects.create(username=f"user{i}", password="testpass")
+            for i in range(10)
+        ]
+
+        # Create profiles with varying genders, pronouns, and dating preferences
+        for index, user in enumerate(self.users):
+            if hasattr(user, "profile"):
+                profile = user.profile
+
+            else:
+                profile = Profile.objects.create(
+                    user=user,
+                    gender=Profile.GENDER_CHOICES[index % len(Profile.GENDER_CHOICES)][
+                        0
+                    ],
+                    # Cycles through gender choices
+                    pronoun_preference=Profile._meta.get_field(
+                        "pronoun_preference"
+                    ).choices[
+                        index
+                        % len(Profile._meta.get_field("pronoun_preference").choices)
+                    ][
+                        0
+                    ],
+                    # Cycles through pronoun choices
+                )
+            # Add varying dating preferences to each profile
+            dating_pref = DatingPreference.objects.get(
+                gender=Profile.GENDER_CHOICES[
+                    (index + 1) % len(Profile.GENDER_CHOICES)
+                ][0]
+            )
+            profile.open_to_dating.add(dating_pref)
+
+    def test_browse_profiles(self):
+        # Simulate a user logged in and browsing other user profiles
+        logged_in_user = self.users[0]
+        self.client.force_login(logged_in_user)
+
+        # Let's fetch the logged-in user's profile
+        current_profile = logged_in_user.profile
+
+        # Fetch the profiles this user would be interested in based on dating preferences
+        desired_gender_codes = [
+            dp.gender for dp in current_profile.open_to_dating.all()
+        ]
+        potential_matches = Profile.objects.filter(
+            gender__in=desired_gender_codes
+        ).exclude(user=logged_in_user)
+
+        # Now, we check if the fetched profiles match the logged-in user's preferences
+        for potential_match in potential_matches:
+            self.assertIn(potential_match.gender, desired_gender_codes)
+            self.assertNotEqual(potential_match.user, logged_in_user)
+
+
+class GetRecommendedProfilesTest(TestCase):
+    def setUp(self):
+        # Clear all profiles and users before starting
+        Profile.objects.all().delete()
+        User.objects.all().delete()
+
+        # Create dating preferences
+        DatingPreference.create_defaults()
+
+        # Create test users and profiles
+        self.users = [
+            User.objects.create_user(username=f"user{i}", password="123456")
+            for i in range(4)
+        ]
+
+        # Assuming every user gets a profile automatically, we fetch the profile and update it.
+
+        # Profile 0: Male open to dating Females
+        profile0 = self.users[0].profile
+        profile0.gender = "M"
+        profile0.open_to_dating.add(DatingPreference.objects.get(gender="F"))
+        profile0.save()
+
+        # Profile 1: Female open to dating Males
+        profile1 = self.users[1].profile
+        profile1.gender = "F"
+        profile1.open_to_dating.add(DatingPreference.objects.get(gender="M"))
+        profile1.save()
+
+        # Profile 2: Female open to dating Non-binary
+        profile2 = self.users[2].profile
+        profile2.gender = "F"
+        profile2.open_to_dating.add(DatingPreference.objects.get(gender="N"))
+        profile2.save()
+
+        # Profile 3: Non-binary open to dating Males and Females
+        profile3 = self.users[3].profile
+        profile3.gender = "N"
+        profile3.open_to_dating.add(DatingPreference.objects.get(gender="M"))
+        profile3.open_to_dating.add(DatingPreference.objects.get(gender="F"))
+        profile3.save()
+
+    def test_recommendation_logic(self):
+        # Test for User 0 (Male open to dating Females)
+        # Expected match: Profile 1 (Female open to dating Males)
+        recommended_profiles = get_recommended_profiles(self.users[0])
+        self.assertIn(self.users[1].profile, recommended_profiles)
+        self.assertNotIn(
+            self.users[2].profile, recommended_profiles
+        )  # Different preferences
+        self.assertNotIn(
+            self.users[3].profile, recommended_profiles
+        )  # Different preferences
+
+        # Test for User 1 (Female open to dating Males)
+        # Expected match: Profile 0 (Male open to dating Females)
+        recommended_profiles = get_recommended_profiles(self.users[1])
+        self.assertIn(self.users[0].profile, recommended_profiles)
+        self.assertNotIn(
+            self.users[2].profile, recommended_profiles
+        )  # Same gender but different preferences
+        self.assertNotIn(
+            self.users[3].profile, recommended_profiles
+        )  # Different preferences
+
+        # Test for User 2 (Female open to dating Non-binary)
+        # Expected match: Profile 3 based on current profiles
+        recommended_profiles = get_recommended_profiles(self.users[2])
+        self.assertIn(self.users[3].profile, recommended_profiles)
+        self.assertNotIn(self.users[0].profile, recommended_profiles)
+        self.assertNotIn(self.users[1].profile, recommended_profiles)
+
+        # Test for User 3 (Non-binary open to dating Males and Females)
+        # Expected match: Profile 2
+        recommended_profiles = get_recommended_profiles(self.users[3])
+        self.assertIn(self.users[2].profile, recommended_profiles)
+        self.assertNotIn(self.users[0].profile, recommended_profiles)
+        self.assertNotIn(self.users[1].profile, recommended_profiles)
+
+    def test_excluding_own_profile(self):
+        # For each user, ensure they don't get their own profile as a recommendation
+        for user in self.users:
+            recommendations = get_recommended_profiles(user)
+            self.assertFalse(user.profile in recommendations)
