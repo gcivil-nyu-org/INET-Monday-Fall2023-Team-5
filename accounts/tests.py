@@ -114,6 +114,7 @@ class ViewProfileViewTest(TestCase):
             ordered=True,
         )
 
+
 class AccountViewTest(TestCase):
     def setUp(self):
         # Create a test user for authentication and testing purposes
@@ -179,6 +180,7 @@ class AccountViewTest(TestCase):
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), "Password updated successfully")
+
     def test_change_password_with_invalid_data(self):
         # Test checks if the error message is shown when a user tries to change
         # their password with invalid data (e.g. mismatched new passwords)
@@ -819,27 +821,31 @@ class TestProfileGenderMapping(TestCase):
         self.assertEqual(self.profile2.gender, "NewGender2")
         self.assertEqual(self.profile3.gender, "UnchangedGender")
 
-class TestViews(TestCase):
 
+class TestViews(TestCase):
     def test_home_view(self):
         # Get the response for the home view
-        response = self.client.get(reverse('home'))  # Assuming 'home' is the name of the URL pattern for the home view
+        response = self.client.get(
+            reverse("home")
+        )  # Assuming 'home' is the name of the URL pattern for the home view
 
         # Check that the response has a status code of 200 (OK)
         self.assertEqual(response.status_code, 200)
 
         # Check that the correct template was used
-        self.assertTemplateUsed(response, 'home.html')
+        self.assertTemplateUsed(response, "home.html")
 
     def test_about_view(self):
         # Get the response for the about view
-        response = self.client.get(reverse('about'))  # Assuming 'about' is the name of the URL pattern for the about view
+        response = self.client.get(
+            reverse("about")
+        )  # Assuming 'about' is the name of the URL pattern for the about view
 
         # Check that the response has a status code of 200 (OK)
         self.assertEqual(response.status_code, 200)
 
         # Check that the correct template was used
-        self.assertTemplateUsed(response, 'accounts/about.html')
+        self.assertTemplateUsed(response, "accounts/about.html")
 
         # Check that the context data contains the title
-        self.assertEqual(response.context['title'], 'About')
+        self.assertEqual(response.context["title"], "About")
