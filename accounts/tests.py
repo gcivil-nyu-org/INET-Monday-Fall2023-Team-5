@@ -484,6 +484,36 @@ class ActivateAccountTest(TestCase):
         self.assertTrue(self.user.is_active)
         self.assertRedirects(response, reverse("login"))
 
+    def test_activate_account_invalid_uid(self):
+        invalid_uid = urlsafe_base64_encode(
+            force_bytes(999999)
+        )  # Assuming no user has this ID
+        activation_url = reverse("activate_account", args=[invalid_uid, self.token])
+        response = self.client.get(activation_url)
+
+        # Expecting a redirect to 'home'
+        self.assertRedirects(response, reverse("home"))
+
+        # Check if the expected error message is in messages
+        messages_list = list(get_messages(response.wsgi_request))
+        self.assertIn(
+            "Activation link is invalid!", [msg.message for msg in messages_list]
+        )
+
+    def test_activate_account_invalid_token(self):
+        invalid_token = "invalid_token"
+        activation_url = reverse("activate_account", args=[self.uid, invalid_token])
+        response = self.client.get(activation_url)
+
+        # Expecting a redirect to 'home'
+        self.assertRedirects(response, reverse("home"))
+
+        # Check if the expected error message is in messages
+        messages_list = list(get_messages(response.wsgi_request))
+        self.assertIn(
+            "Activation link is invalid!", [msg.message for msg in messages_list]
+        )
+
 
 class BrowseProfilesTestCase(TestCase):
     @classmethod
