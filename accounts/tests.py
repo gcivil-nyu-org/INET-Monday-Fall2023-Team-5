@@ -825,10 +825,7 @@ class TestProfileGenderMapping(TestCase):
 class TestViews(TestCase):
     def test_home_view(self):
         # Get the response for the home view
-        response = self.client.get(
-            reverse("home")
-        )  # Assuming 'home' is the name of the URL pattern for the home view
-
+        response = self.client.get(reverse("home"))
         # Check that the response has a status code of 200 (OK)
         self.assertEqual(response.status_code, 200)
 
@@ -837,9 +834,7 @@ class TestViews(TestCase):
 
     def test_about_view(self):
         # Get the response for the about view
-        response = self.client.get(
-            reverse("about")
-        )  # Assuming 'about' is the name of the URL pattern for the about view
+        response = self.client.get(reverse("about"))
 
         # Check that the response has a status code of 200 (OK)
         self.assertEqual(response.status_code, 200)
