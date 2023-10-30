@@ -759,8 +759,8 @@ class DisplayOpenToDatingTest(TestCase):
         # Test that the results are comma-separated
         self.assertEqual(display_result, "M, F")
 
-
-""" class TestMigration(TestCase):
+    """
+    class TestMigration(TestCase):
     migration = import_module("accounts.migrations.0009_auto_20231019_1046")
 
     def setUp(self):
@@ -769,7 +769,8 @@ class DisplayOpenToDatingTest(TestCase):
         genders = ["Males", "Females", "Non-binary Individuals"]
         # Creating test data
         for gender in genders:
-            self.DatingPreference.objects.create(gender=gender) """
+            self.DatingPreference.objects.create(gender=gender) 
+    """
 
     def test_update_gender_codes(self):
         # Apply the migration
