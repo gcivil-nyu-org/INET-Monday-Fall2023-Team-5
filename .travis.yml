@@ -13,7 +13,7 @@ install:
 before_script:
   - python manage.py makemigrations 
   - python manage.py migrate
-  - chmod 777 db.sqlite3
+  - sudo chmod 666 /var/app/current/db.sqlite3
   # - python manage.py collectstatic --noinput
   
 script:
