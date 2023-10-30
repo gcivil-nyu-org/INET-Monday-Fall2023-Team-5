@@ -6,6 +6,12 @@
   <div class="browse-profiles-container">
     <h2>Browse Profiles</h2>
 
+    <!-- Countdown Timer -->
+    <div class="countdown">
+        Time until next match: 
+        <span id="hours">00</span>:<span id="minutes">00</span>:<span id="seconds">00</span>
+    </div>
+
     {% for profile in profiles %}
     <div class="profile-card">
       <h3><a href="{% url 'view_single_profile' profile.user.id %}">{{ profile.user.username }}</a></h3>
@@ -57,4 +63,32 @@
       </span>
     </div>
   </div>
+
+  <!-- Countdown Functionality Script -->
+  <script>
+      function getTimeUntilMidnight() {
+          const now = new Date();
+          const midnight = new Date(now);
+          midnight.setHours(24, 0, 0, 0); // Set the time to next midnight
+          const timeDiff = midnight - now;
+          return {
+              hours: Math.floor(timeDiff / (1000 * 60 * 60)),
+              minutes: Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60)),
+              seconds: Math.floor((timeDiff % (1000 * 60)) / 1000)
+          };
+      }
+
+      function updateCountdownDisplay() {
+          const { hours, minutes, seconds } = getTimeUntilMidnight();
+          document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+          document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+          document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+      }
+
+      // Immediately update the countdown display when the page loads
+      updateCountdownDisplay();
+      // Then update the countdown display every second
+      setInterval(updateCountdownDisplay, 1000);
+  </script>
 {% endblock %}
+

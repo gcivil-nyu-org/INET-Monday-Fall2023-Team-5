@@ -1,10 +1,19 @@
 {% extends "base.html" %}
 
-{% block title %}Profile of {{ profile.user.username }}{% endblock %}
+{% load static %}
+
+{% block title %}
+Profile of {{ profile.user.username }}
+{% endblock %}
 
 {% block content %}
 <div class="single-profile-container">
     <h2>Profile of {{ profile.user.username }}</h2>
+
+    <!-- Countdown Timer -->
+    <div class="countdown-container">
+        <strong>Countdown until next match:</strong> <span id="countdown">Calculating...</span>
+    </div>
 
     <!-- Display Profile Picture -->
     <div class="profile-picture">
@@ -37,10 +46,64 @@
         {% endif %}
     </div>
 
-    <!-- Add more fields as needed -->
+    <!-- Display Like/Unlike Button with Basic Styling -->
+    <div class="like-section">
+        {% if has_liked %}
+            <button class="btn btn-like" data-user-id="{{ profile.user.id }}" data-action="unlike" style="background-color: red; color: white;">Unlike</button>
+        {% else %}
+            <button class="btn btn-like" data-user-id="{{ profile.user.id }}" data-action="like" style="background-color: red; color: white;">Like</button>
+        {% endif %}
+        <span>Likes Remaining: <span id="likes-count">{{ user.profile.likes_remaining }}</span></span>
+    </div>
 
     <div class="navigation-buttons">
         <a href="{% url 'browse_profiles' %}" class="btn btn-primary">Back to Browse</a>
     </div>
+
+    <!-- Add a script to handle the like and unlike actions -->
+    <script>
+        document.querySelector('.btn-like').addEventListener('click', function() {
+            const userId = this.getAttribute('data-user-id');
+            const action = this.getAttribute('data-action');
+            fetch(`/accounts/like-profile/${userId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    'action': action
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    if(data.action === 'liked') {
+                        this.innerText = 'Unlike';  // Change button text to "Unlike"
+                        this.setAttribute('data-action', 'unlike');
+                    } else if(data.action === 'unliked') {
+                        this.innerText = 'Like';  // Change button text back to "Like"
+                        this.setAttribute('data-action', 'like');
+                    }
+                    document.getElementById('likes-count').innerText = data.likes_remaining;
+                } else {
+                    alert(data.error);
+                }
+            });
+        });
+        // Countdown to Midnight Script
+        function updateCountdown() {
+            const now = new Date();
+            const midnight = new Date(now);
+            midnight.setHours(24, 0, 0, 0);
+            const timeDifference = midnight - now;
+            const hours = Math.floor(timeDifference / (1000 * 60 * 60));
+            const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+            document.getElementById('countdown').innerText = `${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        // Update the countdown every second
+        setInterval(updateCountdown, 1000);
+    </script>
 </div>
 {% endblock %}
