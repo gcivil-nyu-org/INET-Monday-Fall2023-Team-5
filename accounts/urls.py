@@ -10,6 +10,7 @@ from .views import (
     view_single_profile,
     browse_profiles,
     account,
+    like_profile,
 )
 
 from django.contrib.auth.views import (
@@ -69,4 +70,5 @@ urlpatterns = [
         name="password_reset_complete",
     ),
     path("profile/<int:profile_id>/", view_single_profile, name="view_single_profile"),
+    path("like-profile/<int:user_id>/", like_profile, name="like_profile"),
 ]
