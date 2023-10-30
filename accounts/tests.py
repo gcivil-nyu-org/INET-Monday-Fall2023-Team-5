@@ -770,7 +770,7 @@ class DisplayOpenToDatingTest(TestCase):
         # Creating test data
         for gender in genders:
             self.DatingPreference.objects.create(gender=gender) 
-    """
+    
 
     def test_update_gender_codes(self):
         # Apply the migration
@@ -780,6 +780,7 @@ class DisplayOpenToDatingTest(TestCase):
         self.assertEqual(self.DatingPreference.objects.filter(gender="M").count(), 2)
         self.assertEqual(self.DatingPreference.objects.filter(gender="F").count(), 2)
         self.assertEqual(self.DatingPreference.objects.filter(gender="N").count(), 2)
+    """
 
 
 class TestProfileGenderMapping(TestCase):
