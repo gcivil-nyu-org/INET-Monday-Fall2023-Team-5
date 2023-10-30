@@ -1,0 +1,141 @@
+body {
+    padding-top: 100px;
+    background-image: url('../roleplaydate/images/background.png');
+    background-size: cover;
+    background-attachment: fixed;
+    color: #eee;
+    height: 100%;
+    width: 100%;
+}
+
+
+/* .navbar { 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    border: 2px solid black; 
+}  */
+
+.login-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #8763a7; /* Purple border */
+    border-radius: 5px;
+    background-color: rgba(44, 24, 74, 0.8); /* Semi-transparent purple background */
+}
+
+.left-aligned-container {
+    width: auto;
+    max-width: 800px;
+    margin-left: 10px;
+    padding: 10px;
+    background-color: rgba(44, 24, 74, 0.4); /* Semi-transparent purple background */
+}
+
+.profile-edit-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #8763a7; /* Purple border */
+    border-radius: 5px;
+    background-color: rgba(44, 24, 74, 0.8); /* Semi-transparent purple background */
+}
+
+.profile-updated-container {
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #8763a7; /* Purple border */
+    border-radius: 5px;
+    background-color: rgba(44, 24, 74, 0.8); /* Semi-transparent purple background */
+}
+.form-group {
+margin-bottom: 20px;
+}
+
+.form-control {
+    margin-bottom: 10px;
+    background-color: rgba(0,0,0,0.6);
+    border-color: #8763a7; /* Purple border */
+    color: #eee;
+}
+.btn-primary {
+    background-color: #8763a7; /* Purple button */
+    border-color: #7652a1; /* Slightly darker purple border for the button */
+}
+.alert-danger {
+    background-color: #a83e6c; /* Darker shade of purple for error messages */
+    color: #eee;
+    padding: 2px;
+}
+
+a {
+    color: #dcb5ff; /* Lighter shade of purple for links */
+}
+a:hover {
+    color: #fff; /* White color on hover for better contrast */
+}
+
+.content-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #8763a7;
+    border-radius: 5px;
+    background-color: rgba(44, 24, 74, 0.8);
+    text-align: center;
+    height: 100%;
+    width: 100%;
+}
+
+.bg-steel .nav-link {
+    color: rgba(255, 255, 255, 0.5); /* Adjust this value as needed */
+}
+
+.bg-steel .nav-link:hover {
+    color: rgba(255, 255, 255, 0.75); /* Adjust this value for the hover state */
+}
+
+/* Custom Vertical Sidebar Styling */
+.custom-sidebar {
+    background-color: rgba(44, 24, 74, 0.8); /* Semi-transparent purple background */
+    border: 1px solid #8763a7; /* Purple border */
+    margin-top: 20px; /* Added margin to give some space from the top */
+}
+
+.custom-sidebar .card-header {
+    background-color: rgba(44, 24, 74, 0.9); /* Slightly less transparent purple for the header */
+    color: #eee; /* Changed text color to light for consistency */
+    font-weight: bold; /* Make the header text bold */
+    border: none; /* Remove any default borders */
+    text-align: center; /* Center align the header text */
+}
+
+.custom-sidebar .card-body {
+    padding: 0; /* Remove default padding */
+}
+
+.custom-sidebar .card-body .nav-link {
+    display: block; /* Make links block elements */
+    color: #dcb5ff; /* Lighter shade of purple for links */
+    padding: 10px 15px; /* Add some padding around links */
+}
+
+.custom-sidebar .card-body .nav-link:hover {
+    background-color: rgba(44, 24, 74, 0.7); /* Slightly transparent purple on hover */
+    color: #fff; /* White color on hover for better contrast */
+}
+
+.custom-sidebar .card-body .nav-link.active {
+    background-color: #8763a7; /* Purple background for the active link */
+    color: #fff; /* White color for the active link */
+}
+
+.profile-img {
+    max-width: 150px; /* Adjust the desired maximum width */
+    max-height: 150px; /* Adjust the desired maximum height */
+    width: auto;
+    height: auto;
+  }

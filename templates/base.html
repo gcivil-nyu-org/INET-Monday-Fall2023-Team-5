@@ -4,72 +4,131 @@
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Django Auth Tutorial{% endblock %}</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Roleplay and then Date</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
     <style>
-        body {
-            padding-top: 100px;
-            background-image: url('{% static "roleplaydate/images/background.png" %}');
-            background-size: cover;
-            background-attachment: fixed;
-            color: #eee; /* Light text color */
+
+        .navbar {
+            background-color: #0E6655;
+            border-bottom: 3px solid #196F3D;
+            /* display: flex; */
+            background-color: #ffffff;
+            height: 100px;
+            /* justify-content: center; */
+            /* align-items: center; */
+            border-bottom: 3px solid #c882b6;
         }
-        .login-container {
-            max-width: 400px;
-            margin: 0 auto;
+        .navbar-brand {
+            color: #c882b6 !important;
+            font-family: Gelion-Bold;
+            font-weight: bolder;
+            font-size: 25px;
+            margin-left: 0px;
+            padding-left: 0px;
+        }
+        .sidebar {
+            background-color: #ffffff;
+            height: 100vh;
+            padding-top: 50px;
+            border-right: 3px solid #c882b6;
+        }
+        .sidebar a {
+            font-size: 30px;
+            font-family: Gelion-Bold;
+            color: #7030a0;
             padding: 20px;
-            border: 1px solid #8763a7; /* Purple border */
-            border-radius: 5px;
-            background-color: rgba(44, 24, 74, 0.8); /* Semi-transparent purple background */
-        }
-
-        .left-aligned-container {
-            width: auto;
-            max-width: 800px;
-            margin-left: 10px;
-            padding: 10px;
-            background-color: rgba(44, 24, 74, 0.4); /* Semi-transparent purple background */
-        }
-
-        .form-control {
-            margin-bottom: 10px;
-            background-color: rgba(0,0,0,0.6);
-            border-color: #8763a7; /* Purple border */
-            color: #eee;
-        }
-        .btn-primary {
-            background-color: #8763a7; /* Purple button */
-            border-color: #7652a1; /* Slightly darker purple border for the button */
-        }
-        .alert-danger {
-            background-color: #a83e6c; /* Darker shade of purple for error messages */
-            color: #eee;
-            padding: 2px;
-        }
-
-        a {
-            color: #dcb5ff; /* Lighter shade of purple for links */
-        }
-        a:hover {
-            color: #fff; /* White color on hover for better contrast */
-        }
-
-        .content-container {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #8763a7;
-            border-radius: 5px;
-            background-color: rgba(44, 24, 74, 0.8);
+            display: block;
+            text-decoration: none;
             text-align: center;
+            font-weight: bold ;
         }
-
-    </style>
+        .sidebar a:hover {
+            background-color: #f0d9f0ff;
+            color: #ffffff;
+        }
+        .search-container {
+            padding: 20px;
+            color: wheat;
+        }
+        .search-button {
+            border-radius: 0;
+            color: whitesmoke;
+            background-color: #612383;
+        }
     </style>
 </head>
 <body>
-    {% block content %}
-    {% endblock %}
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+    <a class="navbar-brand mr-4" href="/">Roleplay then Date</a>
+    <div class="container">
+      <!-- <a class="navbar-brand mr-4" href="/">Roleplay then Date</a> -->
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarToggle">
+        <div class="navbar-nav mr-auto">
+          <a class="nav-item nav-link" href="{% url 'home' %}" style="font-size:20px; font-weight:bolder; color: #7030a0;font-family:Luminari; ">Home</a>
+          <a class="nav-item nav-link" href="{% url 'about' %}" style="font-size:20px; font-weight:bolder; color: #7030a0;font-family:Luminari; ">About</a>
+        </div>
+        <!-- Navbar Right Side -->
+        <div class="navbar-nav" style="font-size: 20px; color:dimgray">
+
+          {% if user.is_authenticated %}
+          
+              Hello {{ request.user }}! <span class="mr-4"></span>    
+              <a href="{% url 'logout' %}" style="font-size:20px; font-weight:bolder; color: #7030a0;font-family:Luminari; ">Logout</a>
+              
+          {% else %}
+              <a class="nav-item nav-link" href="{% url 'login' %}" style="font-size:20px; font-weight:bolder; color: #7030a0;font-family:Luminari; ">Login</a>
+              <a class="nav-item nav-link" href="{% url 'signup' %}" style="font-size:20px; font-weight:bolder; color: #7030a0;font-family:Luminari; ">Signup</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>
+
+<!-- Main content area -->
+<main role="main" class="container-fluid">
+    <div class="row">
+        {% if user.is_authenticated %} 
+        <!-- Sidebar -->
+        <div class="col-md-3 sidebar">
+            <a href="{% url 'view_profile' %}">View Profile</a>
+            <a href="{% url 'browse_profiles' %}">Browse Profile</a>
+            <a href="#">Playground</a>
+            <a href="{% url 'account' %}">Account</a>
+            <a href="#">Settings</a>
+            <!-- <div class="search-container mt-5">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search">
+                    <div class="input-group-append">
+                        <button class="btn search-button" type="button">>> More</button>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+        {% endif %}
+        <!-- Main content -->
+        <div class="col-md-9">
+            <div class="{% if user.is_authenticated %}center-screen{% else %}col-md-12{% endif %}">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</main>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Browse Profiles{% endblock %}
+
+{% block content %}
+  <div class="browse-profiles-container">
+    <h2>Browse Profiles</h2>
+
+    {% for profile in profiles %}
+    <div class="profile-card">
+      <h3><a href="{% url 'view_single_profile' profile.user.id %}">{{ profile.user.username }}</a></h3>
+      <p><strong>Gender:</strong> {{ profile.get_gender_display }}</p>
+      <p><strong>Pronoun Preference:</strong> {{ profile.get_pronoun_preference_display }}</p>
+      
+      <!-- Display Profile Picture -->
+      <div class="profile-picture">
+        {% if profile.profile_picture %}
+          <img src="{{ profile.profile_picture.url }}" alt="{{ profile.user.username }}'s Profile Picture" class="profile-img" style="max-width: 200px; max-height: 200px;">
+        {% else %}
+          No profile picture available
+        {% endif %}
+      </div>
+
+      <!-- Display Open to Dating preferences -->
+      <p>
+          <strong>Open to Dating:</strong>
+          {% if profile.open_to_dating.all %}
+              {% for preference in profile.open_to_dating.all %}
+                  {{ preference.gender }}{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+          {% else %}
+              Not specified
+          {% endif %}
+      </p>
+
+      <a href="{% url 'view_single_profile' profile.user.id %}" class="btn btn-primary">View Profile</a>
+    </div>
+    {% empty %}
+    <p>No profiles available.</p>
+    {% endfor %}
+    
+    <div class="pagination">
+      <span class="step-links">
+          {% if profiles.has_previous %}
+              <a href="?page=1">&laquo; first</a>
+              <a href="?page={{ profiles.previous_page_number }}">previous</a>
+          {% endif %}
+
+          <span class="current">
+              Page {{ profiles.number }} of {{ profiles.paginator.num_pages }}.
+          </span>
+
+          {% if profiles.has_next %}
+              <a href="?page={{ profiles.next_page_number }}">next</a>
+              <a href="?page={{ profiles.paginator.num_pages }}">last &raquo;</a>
+          {% endif %}
+      </span>
+    </div>
+  </div>
+{% endblock %}

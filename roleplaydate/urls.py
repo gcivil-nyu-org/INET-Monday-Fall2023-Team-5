@@ -16,15 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic.base import TemplateView
-from . import views
+from accounts.views import home
+from django.conf import settings  # Import settings
+from django.conf.urls.static import static  # Import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
-    path("accounts/", include("django.contrib.auth.urls")),
-    # path('signup/', views.mockup_signup, name='signup'),
-    path("", TemplateView.as_view(template_name="home.html"), name="home"),  
-    path("menu/", views.menu, name="menu"),
-    path("edit_profile/", views.edit_profile, name="edit_profile"),
+    path("", home, name="home"),
 ]
+
+# Add the following line to serve media files during development
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
