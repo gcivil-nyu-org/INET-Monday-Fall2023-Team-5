@@ -6,15 +6,16 @@ from django.views import generic
 from django.shortcuts import render
 from django.contrib import messages
 from .forms import EditProfileForm
-from .models import Profile
+from .models import*
 from django.core.paginator import Paginator
 from django.contrib.auth.tokens import default_token_generator
 from .forms import CustomUserCreationForm
 from django.contrib.auth.models import User
 from django.utils.http import urlsafe_base64_decode
 from django.urls import reverse_lazy
-from django.shortcuts import redirect
+from django.shortcuts import redirect,get_object_or_404
 from django.contrib.auth import update_session_auth_hash
+from django.http import JsonResponse
 
 
 class SignUpView(generic.CreateView):
@@ -144,8 +145,20 @@ def browse_profiles(request):
 
 
 def view_single_profile(request, profile_id):
-    profile = Profile.objects.get(pk=profile_id)
-    return render(request, "accounts/profile/single_profile.html", {"profile": profile})
+    profile = get_object_or_404(Profile, pk=profile_id)
+    
+    # Check if the current user has already liked this profile.
+    has_liked = Like.objects.filter(from_user=request.user, to_user=profile.user).exists()
+
+
+    # Prepare context data for template
+    context = {
+        'profile': profile,
+        'has_liked': has_liked,
+    }
+
+    return render(request, "accounts/profile/single_profile.html", context)
+
 
 
 def get_recommended_profiles(user):
@@ -226,3 +239,36 @@ def account(request):
             "password_form": password_form,
         },
     )
+
+@login_required
+def like_profile(request, user_id):
+    if request.method == 'POST':
+        receiving_user = get_object_or_404(User, pk=user_id)
+        current_user_profile = request.user.profile
+
+        # Check if the user has already liked this profile
+        existing_like = Like.objects.filter(from_user=request.user, to_user=receiving_user).first()
+
+        if existing_like:
+            # Unlike the profile
+            existing_like.delete()
+            # Increment the likes_remaining.
+            current_user_profile.likes_remaining += 1
+            current_user_profile.save()
+
+            return JsonResponse({'success': True, 'likes_remaining': current_user_profile.likes_remaining, 'action': 'unliked'})
+
+        # Check if the current user has likes remaining.
+        elif current_user_profile.likes_remaining > 0:
+            # Create a like.
+            Like.objects.create(from_user=request.user, to_user=receiving_user)
+            # Decrement the likes_remaining.
+            current_user_profile.likes_remaining -= 1
+            current_user_profile.save()
+
+            return JsonResponse({'success': True, 'likes_remaining': current_user_profile.likes_remaining, 'action': 'liked'})
+
+        return JsonResponse({'success': False, 'error': 'No likes remaining.'})
+
+    return JsonResponse({'success': False, 'error': 'Invalid method.'})
+
