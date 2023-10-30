@@ -6,7 +6,7 @@ from django.views import generic
 from django.shortcuts import render
 from django.contrib import messages
 from .forms import EditProfileForm
-from .models import *
+from .models import Like, Profile
 from django.core.paginator import Paginator
 from django.contrib.auth.tokens import default_token_generator
 from .forms import CustomUserCreationForm
