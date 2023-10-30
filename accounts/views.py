@@ -144,13 +144,16 @@ def browse_profiles(request):
     )
 
 
+@login_required
 def view_single_profile(request, profile_id):
     profile = get_object_or_404(Profile, pk=profile_id)
 
     # Check if the current user has already liked this profile.
-    has_liked = Like.objects.filter(
-        from_user=request.user, to_user=profile.user
-    ).exists()
+    has_liked = False
+    if request.user.is_authenticated:
+        has_liked = Like.objects.filter(
+            from_user=request.user, to_user=profile.user
+        ).exists()
 
     # Prepare context data for template
     context = {
