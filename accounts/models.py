@@ -53,12 +53,17 @@ class Profile(models.Model):
         upload_to="profile_pictures/", blank=True, null=True
     )
 
-    likes_remaining = models.PositiveIntegerField(default=3) 
+    likes_remaining = models.PositiveIntegerField(default=3)
 
     def __str__(self):
         return self.user.username
 
+
 class Like(models.Model):
-    from_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes_given')
-    to_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes_received')
+    from_user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="likes_given"
+    )
+    to_user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="likes_received"
+    )
     created_at = models.DateTimeField(auto_now_add=True)

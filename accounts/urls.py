@@ -71,5 +71,4 @@ urlpatterns = [
     ),
     path("profile/<int:profile_id>/", view_single_profile, name="view_single_profile"),
     path("like-profile/<int:user_id>/", like_profile, name="like_profile"),
-
 ]
