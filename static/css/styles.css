@@ -1,21 +1,10 @@
 body {
     padding-top: 100px;
-    background-image: url('../roleplaydate/images/background.png');
+    background-image: url('../images/background.png');
     background-size: cover;
     background-attachment: fixed;
-    color: #eee;
-    height: 100%;
-    width: 100%;
+    color: #eee; /* Light text color */
 }
-
-
-/* .navbar { 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    border: 2px solid black; 
-}  */
-
 .login-container {
     max-width: 400px;
     margin: 0 auto;
@@ -78,7 +67,7 @@ a:hover {
     color: #fff; /* White color on hover for better contrast */
 }
 
-.content-container {
+/* .content-container {
     max-width: 400px;
     margin: 0 auto;
     padding: 20px;
@@ -86,9 +75,7 @@ a:hover {
     border-radius: 5px;
     background-color: rgba(44, 24, 74, 0.8);
     text-align: center;
-    height: 100%;
-    width: 100%;
-}
+} */
 
 .bg-steel .nav-link {
     color: rgba(255, 255, 255, 0.5); /* Adjust this value as needed */
