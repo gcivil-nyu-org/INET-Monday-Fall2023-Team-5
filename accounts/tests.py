@@ -507,6 +507,9 @@ class ViewSingleProfileTest(TestCase):
         self.single_profile_url = reverse("view_single_profile", args=[self.profile.pk])
 
     def test_view_single_profile(self):
+        # Authenticate the test client
+        self.client.login(username="testuser", password="testpassword123")
+
         response = self.client.get(self.single_profile_url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "accounts/profile/single_profile.html")
