@@ -78,11 +78,22 @@ WSGI_APPLICATION = "roleplaydate.wsgi.application"
 
 DATABASES = {
     "default": {
+<<<<<<< HEAD
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
+=======
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ["RDS_DB_NAME"],
+        "USER": os.environ["RDS_USERNAME"],
+        "PASSWORD": os.environ["RDS_PASSWORD"],
+        "HOST": os.environ["RDS_HOSTNAME"],
+        "PORT": os.environ["RDS_PORT"],
+        "OPTIONS": {
+            "sslmode": "require",
+        },
+>>>>>>> 5eccff8 (Hid environment variables)
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
