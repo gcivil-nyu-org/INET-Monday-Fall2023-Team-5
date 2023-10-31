@@ -9,11 +9,6 @@ install:
   - pip install coveralls
   - mkdir ./tools
   - curl -L https://coveralls.io/coveralls-linux.tar.gz | tar -xz -C ./tools
-
-before_script:
-  - python manage.py makemigrations 
-  - python manage.py migrate
-  # - python manage.py collectstatic --noinput
   
 script:
   - black --check .
