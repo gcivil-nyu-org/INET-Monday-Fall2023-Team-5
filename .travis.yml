@@ -10,10 +10,13 @@ install:
   - mkdir ./tools
   - curl -L https://coveralls.io/coveralls-linux.tar.gz | tar -xz -C ./tools
   
+before_script:
+  - python manage.py migrate --settings=roleplaydate.test_settings
+
 script:
   - black --check .
   - flake8 .
-  - coverage run manage.py test
+  - coverage run manage.py test --settings=roleplaydate.test_settings
   - coverage xml
   - ./tools/coveralls report --repo-token=$COVERALLS_REPO_TOKEN ./coverage.xml
   
