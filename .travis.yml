@@ -42,7 +42,7 @@ deploy:
   region: "us-east-1"
   app: "roleplaydate"
   env: "roleplaythendatemaster"
-  bucket_name: "$S3_BUCKET_NAME2”
+  bucket_name: "$S3_BUCKET_NAME2"
   on:
     branch: master
 
