@@ -9,16 +9,14 @@ install:
   - pip install coveralls
   - mkdir ./tools
   - curl -L https://coveralls.io/coveralls-linux.tar.gz | tar -xz -C ./tools
-
-before_script:
-  - python manage.py makemigrations 
-  - python manage.py migrate
-  # - python manage.py collectstatic --noinput
   
+before_script:
+  - python manage.py migrate --settings=roleplaydate.test_settings
+
 script:
   - black --check .
   - flake8 .
-  - coverage run manage.py test
+  - coverage run manage.py test --settings=roleplaydate.test_settings
   - coverage xml
   - ./tools/coveralls report --repo-token=$COVERALLS_REPO_TOKEN ./coverage.xml
   
@@ -37,12 +35,12 @@ deploy:
     branch: develop
 
   provider: elasticbeanstalk
-  access_key_id: "$AWS_ACCESS_KEY_ID2”
-  secret_access_key: "$AWS_SECRET_ACCESS_KEY2”
+  access_key_id: "$AWS_ACCESS_KEY_ID2"
+  secret_access_key: "$AWS_SECRET_ACCESS_KEY2"
   region: "us-east-1"
   app: "roleplaydate"
   env: "roleplaythendatemaster"
-  bucket_name: "$S3_BUCKET_NAME2”
+  bucket_name: "$S3_BUCKET_NAME2"
   on:
     branch: master
 
