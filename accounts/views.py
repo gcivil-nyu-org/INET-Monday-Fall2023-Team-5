@@ -244,6 +244,7 @@ def account(request):
     )
 
 
+
 @login_required
 def like_profile(request, user_id):
     if request.method == "POST":
@@ -256,20 +257,8 @@ def like_profile(request, user_id):
         ).first()
 
         if existing_like:
+            # Logic for existing like, possibly to 'unlike' the profile
             pass
-            # # Unlike the profile
-            # existing_like.delete()
-            # # Increment the likes_remaining.
-            # current_user_profile.likes_remaining += 1
-            # current_user_profile.save()
-
-            # return JsonResponse(
-            #     {
-            #         "success": True,
-            #         "likes_remaining": current_user_profile.likes_remaining,
-            #         "action": "unliked",
-            #     }
-            # )
 
         # Check if the current user has likes remaining.
         elif current_user_profile.likes_remaining > 0:
@@ -279,14 +268,31 @@ def like_profile(request, user_id):
             current_user_profile.likes_remaining -= 1
             current_user_profile.save()
 
-            return JsonResponse(
-                {
-                    "success": True,
-                    "likes_remaining": current_user_profile.likes_remaining,
-                    "action": "liked",
-                }
-            )
+            return JsonResponse({
+                "success": True,
+                "likes_remaining": current_user_profile.likes_remaining,
+                "action": "liked",
+            })
 
-        return JsonResponse({"success": False, "error": "No likes remaining."})
+        # Check if the likes have been reset to 3.
+        # This is a static check and may not reflect the actual reset action.
+        elif current_user_profile.likes_remaining == 3:
+            return JsonResponse({
+                "success": True,
+                "likes_remaining": current_user_profile.likes_remaining,
+                "message": "Your likes have been reset.",
+            })
 
-    return JsonResponse({"success": False, "error": "Invalid method."})
+        else:
+            # User has no likes remaining and has not been reset to 3
+            return JsonResponse({
+                "success": False,
+                "error": "No likes remaining."
+            })
+
+    else:
+        # Method is not POST
+        return JsonResponse({
+            "success": False,
+            "error": "Invalid method."
+        })
