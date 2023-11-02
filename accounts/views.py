@@ -287,6 +287,6 @@ def like_profile(request, user_id):
                 }
             )
 
-        return JsonResponse({"success": False, "error": "No likes remaining."})
+        return JsonResponse({"success": False, "error": "User has already been liked."})
 
     return JsonResponse({"success": False, "error": "Invalid method."})
