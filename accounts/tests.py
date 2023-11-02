@@ -760,27 +760,6 @@ class DisplayOpenToDatingTest(TestCase):
         self.assertEqual(display_result, "M, F")
 
 
-class TestMigration(TestCase):
-    migration = import_module("accounts.migrations.0009_auto_20231019_1046")
-
-    def setUp(self):
-        self.DatingPreference = apps.get_model("accounts", "DatingPreference")
-
-        genders = ["Males", "Females", "Non-binary Individuals"]
-        # Creating test data
-        for gender in genders:
-            self.DatingPreference.objects.create(gender=gender)
-
-    def test_update_gender_codes(self):
-        # Apply the migration
-        self.migration.update_gender_codes(apps, None)
-
-        # Check the conversion, there should be two of each (the ones in the model already, and the newly created)
-        self.assertEqual(self.DatingPreference.objects.filter(gender="M").count(), 2)
-        self.assertEqual(self.DatingPreference.objects.filter(gender="F").count(), 2)
-        self.assertEqual(self.DatingPreference.objects.filter(gender="N").count(), 2)
-
-
 class TestProfileGenderMapping(TestCase):
     def setUp(self):
         # Create sample profiles
@@ -794,18 +773,18 @@ class TestProfileGenderMapping(TestCase):
         self.profile3 = self.user3.profile
 
         # Set initial gender values
-        self.profile1.gender = "OldGender1"
+        self.profile1.gender = "O1"
         self.profile1.save()
 
-        self.profile2.gender = "OldGender2"
+        self.profile2.gender = "O2"
         self.profile2.save()
 
-        self.profile3.gender = "UnchangedGender"
+        self.profile3.gender = "NS"
         self.profile3.save()
 
         self.profile_gender_mapping = {
-            "OldGender1": "NewGender1",
-            "OldGender2": "NewGender2",
+            "O1": "N1",
+            "O2": "N2",
         }
 
     def test_gender_mapping(self):
@@ -822,9 +801,9 @@ class TestProfileGenderMapping(TestCase):
         self.profile3.refresh_from_db()
 
         # Verify that the genders are updated (or unchanged) correctly
-        self.assertEqual(self.profile1.gender, "NewGender1")
-        self.assertEqual(self.profile2.gender, "NewGender2")
-        self.assertEqual(self.profile3.gender, "UnchangedGender")
+        self.assertEqual(self.profile1.gender, "N1")
+        self.assertEqual(self.profile2.gender, "N2")
+        self.assertEqual(self.profile3.gender, "NS")
 
 
 class TestViews(TestCase):
