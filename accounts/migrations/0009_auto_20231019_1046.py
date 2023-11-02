@@ -4,9 +4,9 @@ from django.db import migrations
 
 
 def update_gender_codes(apps, schema_editor):
-    # We have kept this migration for historical reasons.
-    # It used to be the case that users had long form gender names, but no user
-    # Exists with that requirement since gender is now a max 2 chars field
+    # This migration is retained for historical reference.
+    # Previously, users had extended gender names, but
+    # current specifications limit gender to a maximum of 2 characters.
     """
     DatingPreference = apps.get_model("accounts", "DatingPreference")
 
