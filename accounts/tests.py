@@ -761,11 +761,18 @@ class DisplayOpenToDatingTest(TestCase):
 
 
 class TestMigration(TestCase):
+    # We have kept this test for historical reasons. It used to be the case that users could create
+    # genders longer than 2 chars.
     migration = import_module("accounts.migrations.0009_auto_20231019_1046")
 
     def setUp(self):
-        self.DatingPreference = apps.get_model("accounts", "DatingPreference")
-        self.DatingPreference.gender = models.CharField(max_length=40)
+        # We create a test dating preference that inherits all fields but replaces gender
+        # with one that allows for the testing of the migration.
+        class TestDatingPreference(DatingPreference):
+            gender = models.CharField(max_length=255)
+
+        # Use this subclass in the test
+        self.DatingPreference = TestDatingPreference
         genders = ["Males", "Females", "Non-binary Individuals"]
         # Creating test data
         for gender in genders:
