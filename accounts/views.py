@@ -256,19 +256,20 @@ def like_profile(request, user_id):
         ).first()
 
         if existing_like:
-            # Unlike the profile
-            existing_like.delete()
-            # Increment the likes_remaining.
-            current_user_profile.likes_remaining += 1
-            current_user_profile.save()
+            pass
+            # # Unlike the profile
+            # existing_like.delete()
+            # # Increment the likes_remaining.
+            # current_user_profile.likes_remaining += 1
+            # current_user_profile.save()
 
-            return JsonResponse(
-                {
-                    "success": True,
-                    "likes_remaining": current_user_profile.likes_remaining,
-                    "action": "unliked",
-                }
-            )
+            # return JsonResponse(
+            #     {
+            #         "success": True,
+            #         "likes_remaining": current_user_profile.likes_remaining,
+            #         "action": "unliked",
+            #     }
+            # )
 
         # Check if the current user has likes remaining.
         elif current_user_profile.likes_remaining > 0:
