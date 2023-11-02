@@ -765,7 +765,7 @@ class TestMigration(TestCase):
 
     def setUp(self):
         self.DatingPreference = apps.get_model("accounts", "DatingPreference")
-
+        self.gender = models.CharField(max_length=40)
         genders = ["Males", "Females", "Non-binary Individuals"]
         # Creating test data
         for gender in genders:
