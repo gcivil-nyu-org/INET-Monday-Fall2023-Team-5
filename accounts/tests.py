@@ -760,34 +760,6 @@ class DisplayOpenToDatingTest(TestCase):
         self.assertEqual(display_result, "M, F")
 
 
-class TestMigration(TestCase):
-    # We have kept this test for historical reasons. It used to be the case that users could create
-    # genders longer than 2 chars.
-    migration = import_module("accounts.migrations.0009_auto_20231019_1046")
-
-    def setUp(self):
-        # We create a test dating preference that inherits all fields but replaces gender
-        # with one that allows for the testing of the migration.
-        class TestDatingPreference(DatingPreference):
-            gender = models.CharField(max_length=255)
-
-        # Use this subclass in the test
-        self.DatingPreference = TestDatingPreference
-        genders = ["Males", "Females", "Non-binary Individuals"]
-        # Creating test data
-        for gender in genders:
-            self.DatingPreference.objects.create(gender=gender)
-
-    def test_update_gender_codes(self):
-        # Apply the migration
-        self.migration.update_gender_codes(apps, None)
-
-        # Check the conversion, there should be two of each (the ones in the model already, and the newly created)
-        self.assertEqual(self.DatingPreference.objects.filter(gender="M").count(), 2)
-        self.assertEqual(self.DatingPreference.objects.filter(gender="F").count(), 2)
-        self.assertEqual(self.DatingPreference.objects.filter(gender="N").count(), 2)
-
-
 class TestProfileGenderMapping(TestCase):
     def setUp(self):
         # Create sample profiles

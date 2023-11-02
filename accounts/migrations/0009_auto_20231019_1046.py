@@ -4,6 +4,10 @@ from django.db import migrations
 
 
 def update_gender_codes(apps, schema_editor):
+    # We have kept this migration for historical reasons.
+    # It used to be the case that users had long form gender names, but no user
+    # Exists with that requirement since gender is now a max 2 chars field
+    """
     DatingPreference = apps.get_model("accounts", "DatingPreference")
 
     mapping = {"Males": "M", "Females": "F", "Non-binary Individuals": "N"}
@@ -12,6 +16,7 @@ def update_gender_codes(apps, schema_editor):
         if pref.gender in mapping:
             pref.gender = mapping[pref.gender]
             pref.save()
+    """
 
 
 class Migration(migrations.Migration):
