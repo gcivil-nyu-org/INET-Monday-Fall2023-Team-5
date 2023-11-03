@@ -1,2 +1,2 @@
-# .platform/cronjobs/mycronjob (filename, not a directory path)
-52 13 * * * root /bin/bash -c 'source /opt/elasticbeanstalk/deployment/envvars.json && /var/app/venv/staging-LQM1lest/bin/python /var/app/current/manage.py reset_likes' >> /var/log/reset_likes.log 2>&1
+# .platform/cronjobs/mycronjob 
+06 14 * * * root /bin/bash -c 'while read -r var value; do export "$var=$value"; done < <(jq -r "to_entries|map(\"\(.key)=\(.value|tostring)\")|.[]" /opt/elasticbeanstalk/deployment/envvars.json) && /var/app/venv/staging-LQM1lest/bin/python /var/app/current/manage.py reset_likes' >> /var/log/reset_likes.log 2>&1
