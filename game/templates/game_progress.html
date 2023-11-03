@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+
+        <h2>Game Progress for Game ID: {{ game_session.game_id }}</h2>
+        <!-- Progress Steps -->
+        <ul class="nav nav-pills mb-3">
+            <li class="nav-item">
+                <a class="nav-link {% if current_turn.child_step.step == 'p1_select_question' or current_turn.child_step.step == 'p2_select_question' %}active{% endif %}" href="#">Select Question</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if current_turn.child_step.step == 'p1_answer_question' or current_turn.child_step.step == 'p2_answer_question' %}active{% endif %}" href="#">Answer Question</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if current_turn.child_step.step == 'p1_react_emoji' or current_turn.child_step.step == 'p2_react_emoji' %}active{% endif %}" href="#">React with Emoji</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if current_turn.child_step.step == 'awaiting_narrative_choices' %}active{% endif %}" href="#">Select Narrative</a>
+            </li>
+        </ul>
+
+        <p>Current Turn: {{ current_turn.turn_number }}</p>
+        <!-- Display game chat -->
+        <div class="chat-box">
+            {% for message in chat_messages %}
+                <div class="message">
+                    <strong>{{ message.sender }}:</strong> {{ message.text }}
+                    <small class="timestamp">{{ message.timestamp|date:"F j, Y, g:i a" }}</small>
+                    {% if message.reaction %}
+                        <span class="emoji">{{ message.reaction }}</span>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Display actions based on the game phase -->
+        {% if current_turn.child_step.step == 'awaiting_narrative_choices' %}
+            {% if not user_has_made_choice %}
+                <form action="{% url 'game_progress' game_session.game_id %}" method="post">
+                    {% csrf_token %}
+                    <h3>Select a Narrative Choice</h3>
+                    {{ narrative_form.narrative.label_tag }}
+                    {{ narrative_form.narrative }}
+                    <input type="submit" value="Submit">
+                </form>
+            {% else %}
+                <p>You've already made your narrative choice for this turn. Please wait for the other player.</p>
+            {% endif %}
+        {% elif is_active_player %}
+            {% if moon_phase %}
+            <h3>Moon Sign Phase: {{ moon_phase }}</h3>
+                <p>The Moon is currently in its {{ moon_phase }} phase. Share your personal meaning of the moon:</p>
+
+                <form method="post" action="{% url 'game_progress' game_session.game_id %}">
+                    {% csrf_token %}
+                    <textarea name="moon_meaning" rows="4" cols="50" placeholder="Share your personal meaning..."></textarea><br>
+                    <button type="submit">Share</button>
+                </form>
+                <!-- You can add any additional Moon Sign Phases related content or actions here. -->
+            {% else %}
+            <form action="{% url 'game_progress' game_session.game_id %}" method="post">
+                {% csrf_token %}
+                {% if current_turn.child_step.step == 'p1_select_question' or current_turn.child_step.step == 'p2_select_question' %}
+                    <h3>Select a Question</h3>
+                    {{ question_form.question.label_tag }}
+                    {{ question_form.question }}
+                    <input type="submit" value="Submit">
+                {% elif current_turn.child_step.step == 'p1_answer_question' or current_turn.child_step.step == 'p2_answer_question' %}
+                    <h3>Answer the Question</h3>
+                    {{ answer_form.answer.label_tag }}
+                    {{ answer_form.answer }}
+                    <input type="submit" value="Submit">
+                {% elif current_turn.child_step.step == 'p1_react_emoji' or current_turn.child_step.step == 'p2_react_emoji' %}
+                    <h3>React with an Emoji</h3>
+                    {{ emoji_form.emoji.label_tag }}
+                    {{ emoji_form.emoji }}
+                    <input type="submit" value="Submit">
+                {% endif %}
+            </form>
+            {% endif %}
+        {% else %}
+            <p>You are not the active player. Please wait for your turn.</p>
+        {% endif %}
+
+        <form action="{% url 'end_game_session' game_session.game_id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">End Game Session</button>
+        </form>
+    </div>
+{% endblock %}
+
+

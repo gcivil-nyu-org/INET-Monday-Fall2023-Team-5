@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="chat-container">
+        <h1>Game Session {{ game_session.id }}</h1>
+
+        <div class="chat-history">
+            <!-- Loop through all the previous turns and steps to display the chat history -->
+            {% for turn in game_session.turns.all %}
+                {% for step in turn.turn_steps.all %}
+                    <div class="chat-message {% if step.player == request.user %}sent{% else %}received{% endif %}">
+                        <p>{{ step.message_content }}</p> <!-- This assumes each step has a 'message_content' attribute -->
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+
+        <div class="chat-actions">
+            {% if current_turn and current_step and current_player == request.user %}
+                <!-- If it's the current user's turn, show the interactivity based on the current step -->
+                {% if current_step.step == current_step.P1_SELECT_QUESTION %}
+                    <!-- Display form or action for Player 1 to select a question -->
+                {% elif current_step.step == current_step.P2_ANSWER_QUESTION %}
+                    <!-- Display form or action for Player 2 to answer the question -->
+                {% elif current_step.step == current_step.P1_REACT_EMOJI %}
+                    <!-- Display form or action for Player 1 to react with an emoji -->
+                {% elif current_step.step == current_step.P2_SELECT_QUESTION %}
+                    <!-- Display form or action for Player 2 to select a question -->
+                {% elif current_step.step == current_step.AWAITING_NARRATIVE_CHOICES %}
+                    <!-- Display narrative choices for players -->
+                {% endif %}
+            {% else %}
+                <p class="waiting-message">Awaiting for the other player...</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
