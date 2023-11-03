@@ -17,7 +17,6 @@ from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth import update_session_auth_hash
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.admin.views.decorators import staff_member_required
 
 
 class SignUpView(generic.CreateView):
@@ -295,7 +294,6 @@ def like_profile(request, user_id):
 
 
 @csrf_exempt
-@staff_member_required
 def reset_likes_view(request):
     if request.method == "POST":
         # Call your management command here
