@@ -2,4 +2,4 @@ version: 1
 cron:
   - name: "resetlikes"
     url: "/api/reset-likes/"
-    schedule: "0 6 * * *"
+    schedule: "10 10 * * *"
