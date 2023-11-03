@@ -41,7 +41,7 @@ class LikeAdmin(admin.ModelAdmin):
 
 
 # Register the Like model with the admin site
-admin.site.register(Like, LikeAdmin)
+#admin.site.register(Like, LikeAdmin)
 
 @admin.register(Match)
 class MatchAdmin(admin.ModelAdmin):
