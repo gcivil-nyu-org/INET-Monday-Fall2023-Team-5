@@ -1,2 +1,2 @@
 # .platform/cronjobs/mycronjob (this is a filename, not a directory path)
-03 13 * * * root /var/app/venv/staging-LQM1lest/bin/python /var/app/current/manage.py reset_likes >> /var/log/reset_likes.log 2>&1
+04 13 * * * root /var/app/venv/staging-LQM1lest/bin/python /var/app/current/manage.py reset_likes >> /var/log/reset_likes.log 2>&1
