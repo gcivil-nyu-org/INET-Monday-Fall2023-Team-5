@@ -16,6 +16,8 @@ from django.urls import reverse_lazy
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth import update_session_auth_hash
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.admin.views.decorators import staff_member_required
 
 
 class SignUpView(generic.CreateView):
@@ -290,3 +292,16 @@ def like_profile(request, user_id):
         return JsonResponse({"success": False, "error": "User has already been liked."})
 
     return JsonResponse({"success": False, "error": "Invalid method."})
+
+
+@csrf_exempt
+@staff_member_required
+def reset_likes_view(request):
+    if request.method == "POST":
+        # Call your management command here
+        from django.core.management import call_command
+        call_command('resetlikes')
+        return HttpResponse("Likes reset and cleared.", status=200)
+    else:
+        return HttpResponse("Invalid method", status=400)
+
