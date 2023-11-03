@@ -1,1 +1,1 @@
-0 17 * * * root /bin/bash -c 'source /opt/elasticbeanstalk/deployment/envvars.json && echo "RDS_DB_NAME set to: $RDS_DB_NAME" >> /var/log/reset_likes.log && /var/app/venv/staging-LQM1lest/bin/python /var/app/current/manage.py reset_likes' >> /var/log/reset_likes.log 2>&1
+05 17 * * * root /bin/bash -c 'source /opt/elasticbeanstalk/deployment/envvars.json && echo "RDS_DB_NAME=$RDS_DB_NAME" >> /var/log/reset_likes.log && /var/app/venv/staging-LQM1lest/bin/python /var/app/current/manage.py reset_likes' >> /var/log/reset_likes.log 2>&1
