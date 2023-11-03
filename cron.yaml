@@ -1,5 +1,0 @@
-version: 1
-cron:
-  - name: "resetlikes"
-    url: "/api/reset-likes/"
-    schedule: "10 10 * * *"
