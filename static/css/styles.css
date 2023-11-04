@@ -125,29 +125,28 @@ a:hover {
     max-height: 150px; /* Adjust the desired maximum height */
     width: auto;
     height: auto;
-}
-
-#word-array {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 10px; /* adjust as needed */
-    padding: 10px; /* adjust as needed */
-}
+  }
 
 .draggable {
     cursor: pointer;
-    padding: 8px 12px; /* adjust as needed */
-    border: 1px solid #aaa; /* adjust as needed */
-    border-radius: 4px; /* adjust as needed */
+    border: 1px solid #ccc;
+    margin: 5px;
+    padding: 5px;
+    display: inline-block;
+    background-color: #ffc0cb; /* This sets the background to a light pink color */
+    color: #333; /* This sets the text color to a dark grey for contrast */
+    border-radius: 8px; /* This adds rounded corners to the divs */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* This adds a subtle shadow for a 3D effect */
+    transition: transform 0.2s; /* Smooth transition for clicking and dragging */
 }
 
-#sentence-container {
-    margin-top: 20px; /* adjust as needed */
+.draggable:hover {
+    transform: translateY(-2px); /* Slight raise effect when hovered */
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15); /* Increased shadow when hovered for a lifting effect */
 }
 
 #current-sentence {
-    border: 1px dashed #aaa; /* adjust as needed */
-    padding: 8px 12px; /* adjust as needed */
-    min-height: 50px; /* adjust as needed */
+    border: 1px dashed #ccc;
+    min-height: 40px;
+    padding: 10px;
 }
