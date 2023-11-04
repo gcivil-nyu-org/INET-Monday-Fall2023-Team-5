@@ -10,12 +10,10 @@ from .models import User, Like, Profile, Match
 from django.core.paginator import Paginator
 from django.contrib.auth.tokens import default_token_generator
 from .forms import CustomUserCreationForm
-from django.contrib.auth.models import User
 from django.utils.http import urlsafe_base64_decode
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth import update_session_auth_hash
-from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 
@@ -246,16 +244,19 @@ def account(request):
     )
 
 
-
 @login_required
 def like_profile(request, user_id):
     if request.method == "POST":
         receiving_user = get_object_or_404(User, pk=user_id)
         current_user_profile = request.user.profile
-        existing_like = Like.objects.filter(from_user=request.user, to_user=receiving_user).first()
+        existing_like = Like.objects.filter(
+            from_user=request.user, to_user=receiving_user
+        ).first()
 
         if existing_like:
-            return JsonResponse({"success": False, "error": "You have already liked this user."})
+            return JsonResponse(
+                {"success": False, "error": "You have already liked this user."}
+            )
 
         if current_user_profile.likes_remaining > 0:
             Like.objects.create(from_user=request.user, to_user=receiving_user)
@@ -263,11 +264,15 @@ def like_profile(request, user_id):
             current_user_profile.save()
 
             # Check for mutual like
-            mutual_like = Like.objects.filter(from_user=receiving_user, to_user=request.user).exists()
+            mutual_like = Like.objects.filter(
+                from_user=receiving_user, to_user=request.user
+            ).exists()
             # Check if either user is already matched
             user_already_matched = Match.objects.filter(
-                Q(user1=request.user) | Q(user2=request.user) |
-                Q(user1=receiving_user) | Q(user2=receiving_user)
+                Q(user1=request.user)
+                | Q(user2=request.user)
+                | Q(user1=receiving_user)
+                | Q(user2=receiving_user)
             ).exists()
 
             if mutual_like and not user_already_matched:
@@ -275,15 +280,16 @@ def like_profile(request, user_id):
                 Match.objects.create(user1=request.user, user2=receiving_user)
                 # You can add any notification logic here if needed
 
-            return JsonResponse({
-                "success": True,
-                "likes_remaining": current_user_profile.likes_remaining,
-                "action": "liked",
-                "match_created": mutual_like and not user_already_matched
-            })
+            return JsonResponse(
+                {
+                    "success": True,
+                    "likes_remaining": current_user_profile.likes_remaining,
+                    "action": "liked",
+                    "match_created": mutual_like and not user_already_matched,
+                }
+            )
 
     return JsonResponse({"success": False, "error": "Invalid request method."})
-
 
 
 @csrf_exempt
@@ -291,8 +297,8 @@ def reset_likes_view(request):
     if request.method == "POST":
         # Call your management command here
         from django.core.management import call_command
-        call_command('resetlikes')
+
+        call_command("resetlikes")
         return HttpResponse("Likes reset and cleared.", status=200)
     else:
         return HttpResponse("Invalid method", status=400)
-
