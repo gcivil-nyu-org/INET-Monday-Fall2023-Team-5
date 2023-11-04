@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 
 class DatingPreference(models.Model):
@@ -74,9 +75,14 @@ class Like(models.Model):
             from_user=self.to_user, to_user=self.from_user
         ).exists()
 
+
 class Match(models.Model):
-    user1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="matches_user1")
-    user2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="matches_user2")
+    user1 = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="matches_user1"
+    )
+    user2 = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="matches_user2"
+    )
     matched_at = models.DateTimeField(auto_now_add=True)
 
     @classmethod
