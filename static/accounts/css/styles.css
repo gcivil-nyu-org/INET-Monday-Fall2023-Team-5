@@ -1,6 +1,6 @@
 body {
     padding-top: 100px;
-    background-image: url('../images/background.png');
+    background-image: url('../roleplaydate/images/background.png');
     background-size: cover;
     background-attachment: fixed;
     color: #eee; /* Light text color */
@@ -126,17 +126,3 @@ a:hover {
     width: auto;
     height: auto;
   }
-
-.draggable {
-    cursor: pointer;
-    border: 1px solid #ccc;
-    margin: 5px;
-    padding: 5px;
-    display: inline-block;
-}
-
-#current-sentence {
-    border: 1px dashed #ccc;
-    min-height: 40px;
-    padding: 10px;
-}
