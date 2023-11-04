@@ -28,8 +28,8 @@ def initiate_game_session(request):
         player2 = Player.objects.create(user=user2, game_session=game_session)
 
         # Creating game session
-        game_session.player1 = player1
-        game_session.player2 = player2
+        game_session.playerA = player1
+        game_session.playerB = player2
         game_session.save()
 
         # Redirecting to GameProgressView
@@ -51,7 +51,7 @@ class GameProgressView(View):
             return redirect("end_game_session", game_id=game_id)
 
         current_turn = game_session.current_game_turn
-        is_active_player = request.user == current_turn.current_player.user
+        is_active_player = request.user == current_turn.active_player.user
         chat_messages_for_session = ChatMessage.objects.filter(
             game_session=game_session
         )
@@ -158,7 +158,7 @@ class GameProgressView(View):
 
         ChatMessage.objects.create(
             game_session=current_turn.parent_game,
-            sender=str(current_turn.current_player.user),
+            sender=str(current_turn.active_player.user),
             text=str(selected_question),
         )
         current_turn.child_step.advance_step()
@@ -178,7 +178,7 @@ class GameProgressView(View):
         # Store the player's answer as a message
         ChatMessage.objects.create(
             game_session=current_turn.parent_game,
-            sender=str(current_turn.current_player.user),
+            sender=str(current_turn.active_player.user),
             text=player_answer,
         )
 
@@ -279,7 +279,7 @@ def end_game_session(request, game_id):
     try:
         game_session = GameSession.objects.get(game_id=game_id)
         if (
-            request.user not in [game_session.player1.user, game_session.player2.user]
+            request.user not in [game_session.playerA.user, game_session.playerB.user]
             and not request.user.is_staff
         ):
             # You can return an error message or redirect to another page if the user is not authorized
