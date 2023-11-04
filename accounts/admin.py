@@ -23,27 +23,30 @@ admin.site.register(DatingPreference)
 
 @admin.register(Like)
 class LikeAdmin(admin.ModelAdmin):
-    list_display = ('from_user', 'to_user', 'created_at', 'is_mutual')
-    list_filter = ('from_user', 'to_user')
-    search_fields = ('from_user__username', 'to_user__username')
-    actions = ['make_mutual']
+    list_display = ("from_user", "to_user", "created_at", "is_mutual")
+    list_filter = ("from_user", "to_user")
+    search_fields = ("from_user__username", "to_user__username")
+    actions = ["make_mutual"]
 
     def make_mutual(self, request, queryset):
         for like in queryset:
             # Here you would implement the logic to check and create a mutual like
             pass
+
     make_mutual.short_description = "Mark selected likes as mutual"
 
     def is_mutual(self, obj):
         return obj.is_mutual()
+
     is_mutual.boolean = True
-    is_mutual.short_description = 'Mutual Like'
+    is_mutual.short_description = "Mutual Like"
 
 
 # Register the Like model with the admin site
-#admin.site.register(Like, LikeAdmin)
+# admin.site.register(Like, LikeAdmin)
+
 
 @admin.register(Match)
 class MatchAdmin(admin.ModelAdmin):
-    list_display = ('user1', 'user2', 'matched_at')
-    search_fields = ('user1__username', 'user2__username')
+    list_display = ("user1", "user2", "matched_at")
+    search_fields = ("user1__username", "user2__username")
