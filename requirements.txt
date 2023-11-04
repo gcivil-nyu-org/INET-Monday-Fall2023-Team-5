@@ -7,7 +7,7 @@ cement==2.8.2
 certifi==2023.7.22
 charset-normalizer==3.3.0
 colorama==0.4.3
-coverage==7.3.2
+coverage==6.5.0
 crispy-bootstrap4==2022.1
 Django==4.2
 django-crispy-forms==2.1

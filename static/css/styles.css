@@ -125,4 +125,29 @@ a:hover {
     max-height: 150px; /* Adjust the desired maximum height */
     width: auto;
     height: auto;
-  }
+}
+
+#word-array {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px; /* adjust as needed */
+    padding: 10px; /* adjust as needed */
+}
+
+.draggable {
+    cursor: pointer;
+    padding: 8px 12px; /* adjust as needed */
+    border: 1px solid #aaa; /* adjust as needed */
+    border-radius: 4px; /* adjust as needed */
+}
+
+#sentence-container {
+    margin-top: 20px; /* adjust as needed */
+}
+
+#current-sentence {
+    border: 1px dashed #aaa; /* adjust as needed */
+    padding: 8px 12px; /* adjust as needed */
+    min-height: 50px; /* adjust as needed */
+}
