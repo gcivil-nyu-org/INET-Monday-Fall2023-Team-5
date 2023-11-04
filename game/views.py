@@ -29,6 +29,7 @@ def initiate_game_session(request):
         game_session.save()
 
         # Redirecting to GameProgressView
+        print(game_session.state)
         game_session.initialize_game()
         return redirect("game_progress", game_id=game_session.game_id)
 
@@ -46,82 +47,111 @@ class GameProgressView(View):
             messages.error(request, "Game session not found.")
             return redirect("end_game_session", game_id=game_id)
 
+        player = request.user.player
         # Check if the user is a participant of the game session
-        if request.user not in [game_session.playerA.user, game_session.playerB.user]:
+        if player not in [game_session.playerA, game_session.playerB]:
             messages.error(request, "You are not a participant of this game session.")
             return redirect("home")
 
-        chat_messages_for_session = game_session.current_game_turn.chat_messages.all()
+        chat_messages_for_session = game_session.chat_messages.all()
 
         # Context that is common to all states
         context = {
             "game_session": game_session,
             "chat_messages": chat_messages_for_session,
-            "active_player": game_session.get_active_player(),
+            "active_player": game_session.current_game_turn.get_active_player(),
         }
 
         # Add state-specific context
-        if game_session.current_game_turn.state == GameTurn.SELECT_QUESTION:
+
+        turn = game_session.current_game_turn
+
+        if turn.state == GameTurn.SELECT_QUESTION:
             context.update(
                 {
                     "question_form": QuestionSelectForm(),
                 }
             )
-        elif game_session.current_game_turn.state == GameTurn.ANSWER_QUESTION:
+        elif turn.state == GameTurn.ANSWER_QUESTION:
             context.update(
                 {
                     "answer_form": AnswerForm(),
                 }
             )
-        elif game_session.current_game_turn.state == GameTurn.REACT_EMOJI:
+        elif turn.state == GameTurn.REACT_EMOJI:
             context.update(
                 {
                     "emoji_form": EmojiReactForm(),
                 }
             )
-        elif game_session.current_game_turn.state == GameTurn.NARRATIVE_CHOICES:
+        elif turn.state == GameTurn.NARRATIVE_CHOICES:
+            choice_made = False
+            if (
+                player == game_session.playerA
+                and turn.player_a_narrative_choice_made is True
+            ):
+                choice_made = True
+            elif (
+                player == game_session.playerB
+                and turn.player_b_narrative_choice_made is True
+            ):
+                choice_made = True
+
             context.update(
                 {
                     "narrative_form": NarrativeChoiceForm(),
+                    "choice_made": choice_made,
                 }
             )
         elif game_session.current_game_turn.state == GameTurn.MOON_PHASE:
+            turn = game_session.current_game_turn
             context.update(
                 {
-                    "moon_phase": game_session.get_moon_phase(),
+                    "moon_phase": turn.get_moon_phase(),
                 }
             )
-
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         game_id = kwargs["game_id"]
+        player = request.user.player
         try:
             game_session = GameSession.objects.get(game_id=game_id)
         except GameSession.DoesNotExist:
             return redirect("end_game_session", game_id=game_id)
 
+        current_game_turn = game_session.current_game_turn
         # Get the data from the POST request
         data = request.POST
 
         # Call the appropriate method on the FSM based on the current state
-        if game_session.current_game_turn.state == GameTurn.SELECT_QUESTION:
-            game_session.select_question(data.get("question"))
+        try:
+            if current_game_turn.state == GameTurn.SELECT_QUESTION:
+                current_game_turn.select_question(data.get("question"), player)
+                current_game_turn.save()
 
-        elif game_session.current_game_turn.state == GameTurn.ANSWER_QUESTION:
-            game_session.answer_question(data.get("answer"))
+            elif current_game_turn.state == GameTurn.ANSWER_QUESTION:
+                current_game_turn.answer_question(data.get("answer"), player)
+                current_game_turn.save()
 
-        elif game_session.current_game_turn.state == GameTurn.REACT_EMOJI:
-            game_session.react_emoji(data.get("emoji"))
+            elif current_game_turn.state == GameTurn.REACT_EMOJI:
+                current_game_turn.react_with_emoji(data.get("emoji"), player)
+                current_game_turn.save()
 
-        elif game_session.current_game_turn.state == GameTurn.NARRATIVE_CHOICES:
-            game_session.make_narrative_choice(data.get("narrative"))
+            elif current_game_turn.state == GameTurn.NARRATIVE_CHOICES:
+                current_game_turn.make_narrative_choice(data.get("narrative"), player)
+                current_game_turn.save()
 
-        elif game_session.current_game_turn.state == GameTurn.MOON_PHASE:
-            game_session.moon_phase(data.get("moon_phase"))
-
-        # Save the changes
-        game_session.save()
+            elif current_game_turn.state == GameTurn.MOON_PHASE:
+                current_game_turn.write_message_about_moon_phase(
+                    data.get("moon_meaning"), player
+                )
+                current_game_turn.save()
+        except Exception as e:
+            # Handle any other exceptions that might occur.
+            # Update players or send a message to inform them of the error.
+            messages.error(request, str(e))
+            return redirect("game_progress", game_id=game_id)
 
         return redirect("game_progress", game_id=game_id)
 

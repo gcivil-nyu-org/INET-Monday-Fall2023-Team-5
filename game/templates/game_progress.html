@@ -6,16 +6,19 @@
         <!-- Progress Steps -->
         <ul class="nav nav-pills mb-3">
             <li class="nav-item">
-                <a class="nav-link {% if game_session.current_game_turn.state == 'SELECT_QUESTION' %}active{% endif %}" href="#">Select Question</a>
+                <a class="nav-link {% if game_session.current_game_turn.state == 'select_question' %}active{% endif %}" href="#">Select Question</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {% if game_session.current_game_turn.state == 'ANSWER_QUESTION' %}active{% endif %}" href="#">Answer Question</a>
+                <a class="nav-link {% if game_session.current_game_turn.state == 'answer_question' %}active{% endif %}" href="#">Answer Question</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {% if game_session.current_game_turn.state == 'REACT_EMOJI' %}active{% endif %}" href="#">React with Emoji</a>
+                <a class="nav-link {% if game_session.current_game_turn.state == 'react_emoji' %}active{% endif %}" href="#">React with Emoji</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {% if game_session.current_game_turn.state == 'NARRATIVE_CHOICES' %}active{% endif %}" href="#">Select Narrative</a>
+                <a class="nav-link {% if game_session.current_game_turn.state == 'narrative_choices' %}active{% endif %}" href="#">Select Narrative</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if game_session.current_game_turn.state == 'moon_phase' %}active{% endif %}" href="#">Special Moon Sign Phase</a>
             </li>
         </ul>
 
@@ -34,39 +37,43 @@
         </div>
 
         <!-- Display actions based on the game phase -->
-        {% if game_session.current_game_turn.state == 'NARRATIVE_CHOICES' %}
-            <form action="{% url 'game_progress' game_session.game_id %}" method="post">
-                {% csrf_token %}
-                <h3>Select a Narrative Choice</h3>
-                {{ narrative_form.narrative.label_tag }}
-                {{ narrative_form.narrative }}
-                <input type="submit" value="Submit">
-            </form>
+        {% if game_session.current_game_turn.state == 'narrative_choices' %}
+            {% if choice_made == False%}
+                <form action="{% url 'game_progress' game_session.game_id %}" method="post">
+                    {% csrf_token %}
+                    <h3>Select a Narrative Choice</h3>
+                    {{ narrative_form.narrative.label_tag }}
+                    {{ narrative_form.narrative }}
+                    <input type="submit" value="Submit">
+                </form>
+            {% else %}
+                <p>You have already made a narrative choice. Please wait for the other players to make their choices.</p>
+            {% endif %}
         {% elif active_player == request.user.player %}
-            {% if game_session.current_game_turn.state == 'MOON_PHASE' %}
+            {% if game_session.current_game_turn.state == 'moon_phase' %}
                 <h3>Moon Sign Phase: {{ moon_phase }}</h3>
-                <p>The Moon is currently in its {{ moon_phase }} phase. Share your personal meaning of the moon:</p>
+                <p>The Moon is currently in its {{ moon_phase }} phase. Share your personal meaning of the moon phase:</p>
 
                 <form method="post" action="{% url 'game_progress' game_session.game_id %}">
                     {% csrf_token %}
-                    <textarea name="moon_meaning" rows="4" cols="50" placeholder="Share your personal meaning..."></textarea><br>
+                    <textarea name="moon_meaning" rows="1" cols="50" placeholder="Share your personal meaning..."></textarea><br>
                     <button type="submit">Share</button>
                 </form>
                 <!-- You can add any additional Moon Sign Phases related content or actions here. -->
             {% else %}
                 <form action="{% url 'game_progress' game_session.game_id %}" method="post">
                     {% csrf_token %}
-                    {% if game_session.current_game_turn.state == 'SELECT_QUESTION' %}
+                    {% if game_session.current_game_turn.state == 'select_question' %}
                         <h3>Select a Question</h3>
                         {{ question_form.question.label_tag }}
                         {{ question_form.question }}
                         <input type="submit" value="Submit">
-                    {% elif game_session.current_game_turn.state == 'ANSWER_QUESTION' %}
+                    {% elif game_session.current_game_turn.state == 'answer_question' %}
                         <h3>Answer the Question</h3>
                         {{ answer_form.answer.label_tag }}
                         {{ answer_form.answer }}
                         <input type="submit" value="Submit">
-                    {% elif game_session.current_game_turn.state == 'REACT_EMOJI' %}
+                    {% elif game_session.current_game_turn.state == 'react_emoji' %}
                         <h3>React with an Emoji</h3>
                         {{ emoji_form.emoji.label_tag }}
                         {{ emoji_form.emoji }}

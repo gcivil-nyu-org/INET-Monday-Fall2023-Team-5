@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 import uuid
 
-from django_fsm import FSMField, transition
+from django_fsm import FSMField, transition, GET_STATE
 
 
 class Player(models.Model):
@@ -66,7 +66,7 @@ class GameSession(models.Model):
     ]
 
     state = FSMField(default=INITIALIZING, choices=STATE_CHOICES)
-    game_id = models.CharField(max_length=255, unique=True)
+    game_id = models.CharField(default=generate_game_id(), max_length=255, unique=True)
     playerA = models.ForeignKey(
         "Player",
         on_delete=models.SET_NULL,
@@ -93,7 +93,7 @@ class GameSession(models.Model):
 
     chat_messages = models.ManyToManyField("ChatMessage", blank=True)
 
-    @transition(field=state, source="INITIALIZING", target="REGULAR_TURN")
+    @transition(field=state, source=INITIALIZING, target=REGULAR_TURN)
     def initialize_game(self):
         # Check if both players are set
         if not self.playerA or not self.playerB:
@@ -102,7 +102,6 @@ class GameSession(models.Model):
         # Update the current game turn's active player
         self.current_game_turn.active_player = self.playerA
         self.current_game_turn.save()
-
         # Transition to the REGULAR_TURN state
         # This will change later when we add the character creation step
         return True, "Game initialized successfully."
@@ -116,7 +115,6 @@ class GameSession(models.Model):
     def end_session(self):
         self.playerA.delete()
         self.playerB.delete()
-        self.current_game_turn.child_step.delete()
         self.current_game_turn.delete()
         self.chat_messages.all().delete()
         self.delete()
@@ -124,11 +122,9 @@ class GameSession(models.Model):
     def save(self, *args, **kwargs):
         # Check if it's a new instance
         is_new = not self.pk
-
         # Generate a unique game_id if not already set
         if not self.game_id:
             self.game_id = generate_unique_game_id()
-
         # If it's a new instance, create an initial GameTurn
         if is_new:
             self.current_game_turn = GameTurn.objects.create()
@@ -137,11 +133,13 @@ class GameSession(models.Model):
 
 
 class GameTurn(models.Model):
-    game_session = models.ForeignKey(GameSession, on_delete=models.CASCADE)
     active_player = models.ForeignKey(
         "Player", on_delete=models.SET_NULL, null=True, blank=True
     )
     turn_number = models.IntegerField(default=1)
+
+    player_a_completed_cycle = models.BooleanField(default=False)
+    player_b_completed_cycle = models.BooleanField(default=False)
 
     player_a_narrative_choice_made = models.BooleanField(default=False)
     player_b_narrative_choice_made = models.BooleanField(default=False)
@@ -177,77 +175,92 @@ class GameTurn(models.Model):
             self.active_player = self.parent_game.playerA
         self.save()
 
-    @transition(field=state, source="SELECT_QUESTION", target="ANSWER_QUESTION")
-    def select_question(self, selected_question_id, user):
+    @transition(field=state, source=SELECT_QUESTION, target=ANSWER_QUESTION)
+    def select_question(self, selected_question_id, player):
         # Check if the current user is the active player
-        if user != self.active_player.user:
-            return False, "You are not the active player. Please wait for your turn."
+        if player != self.active_player:
+            raise ValueError("It's not your turn.")
 
         # Get the selected question
         selected_question = Question.objects.get(id=selected_question_id)
         if not selected_question:
-            return False, "Please select a question."
+            raise ValueError("No question selected.")
 
         # Create a chat message
-        ChatMessage.objects.create(
-            game_session=self.game_session,
-            sender=str(user),
+        chat_message = ChatMessage.objects.create(
+            game_session=self.parent_game,
+            sender=str(player),
             text=str(selected_question),
         )
 
-        return True, "Question selected successfully."
+        # Add the chat message to the GameSession's chat_messages ManyToManyField
+        self.parent_game.chat_messages.add(chat_message)
+        self.switch_active_player()
 
     @transition(field=state, source=ANSWER_QUESTION, target=REACT_EMOJI)
-    def answer_question(self, answer, user):
+    def answer_question(self, answer, player):
         # Check if the current user is the active player
-        if user != self.active_player.user:
-            return False, "You are not the active player. Please wait for your turn."
-
+        if player != self.active_player:
+            raise ValueError("It's not your turn.")
         # Create a chat message
-        ChatMessage.objects.create(
-            game_session=self.game_session,
-            sender=str(user),
+        chat_message = ChatMessage.objects.create(
+            game_session=self.parent_game,
+            sender=str(player),
             text=str(answer),
         )
+        # Add the chat message to the GameSession's chat_messages ManyToManyField
+        self.parent_game.chat_messages.add(chat_message)
+        self.switch_active_player()
 
-        return True, "Answer submitted successfully."
-
-    @transition(field=state, source="REACT_EMOJI", target="AWAITING_NARRATIVE_CHOICES")
-    def react_with_emoji(self, emoji, user):
+    @transition(field=state, source=REACT_EMOJI, target=None)
+    def react_with_emoji(self, emoji, player):
         # Ensure emoji is selected
         if not emoji:
             raise ValueError("Please select an emoji to react with.")
 
         # Check if the current user is the active player
-        if user != self.active_player.user:
+        if player != self.active_player:
             raise ValueError("It's not your turn.")
 
+        if player == self.parent_game.playerA:
+            self.player_a_completed_cycle = True
+        elif player == self.parent_game.playerB:
+            self.player_b_completed_cycle = True
+        else:
+            raise ValueError("Invalid player.")
+
         # Fetch the latest message for the current game session to add the reaction
-        latest_message = ChatMessage.objects.filter(
-            game_session=self.game_session
-        ).last()
+        latest_message = self.parent_game.chat_messages.last()
 
         if latest_message:
             latest_message.reaction = emoji
             latest_message.save()
 
-        return True, "Emoji reaction submitted successfully."
+        self.switch_active_player()
+
+        if self.player_a_completed_cycle and self.player_b_completed_cycle:
+            # Reset the flags for the next turn
+            self.player_a_completed_cycle = False
+            self.player_b_completed_cycle = False
+            # Set the state to the determined next state
+            self.state = self.NARRATIVE_CHOICES
+            self.save()
+        else:
+            self.state = self.SELECT_QUESTION
+            self.save()
 
     @transition(
         field=state,
-        source="NARRATIVE_CHOICES",
-        target=None,  # Keep the same state if conditions are not met
-        custom=dict(
-            target="get_next_state"
-        ),  # Use get_next_state to determine the target
+        source=NARRATIVE_CHOICES,
+        target=None,
     )
-    def make_narrative_choice(self, player, narrative_choice):
+    def make_narrative_choice(self, narrative_choice, player):
         # Update the narrative choice for the player
         if player == self.parent_game.playerA:
-            self.player_a_choice_made = True
+            self.player_a_narrative_choice_made = True
             # Update Player A's word pool here
         elif player == self.parent_game.playerB:
-            self.player_b_choice_made = True
+            self.player_b_narrative_choice_made = True
             # Update Player B's word pool here
         else:
             raise ValueError("Invalid player.")
@@ -256,26 +269,26 @@ class GameTurn(models.Model):
         # adding the associated words to the player's word pool
 
         # Check if both players have made their choices
-        if self.player_a_choice_made and self.player_b_choice_made:
+        if self.player_a_narrative_choice_made and self.player_b_narrative_choice_made:
             # Reset the flags for the next turn
-            self.player_a_choice_made = False
-            self.player_b_choice_made = False
+            self.player_a_narrative_choice_made = False
+            self.player_b_narrative_choice_made = False
             # Transition to the SELECT_QUESTION state and add 1 to the turn number
             self.turn_number += 1
-            return True, "Both players have made their choices."
-        # If not both players have made their choice, stay in the current state
-        return False, "Waiting for the other player to make their choice."
+            # Dynamically determine the next state
+            next_state = self.regular_or_special_moon_next()
+            # Set the state to the determined next state
+            self.switch_active_player()
+            self.state = next_state
+            self.save()
 
-    @staticmethod
-    def get_next_state(self):
-        # Your conditional check goes here
-        if self.turn_number == self.get_moon_phase(self.turn_number):
-            return "MOON_PHASE"
+    def regular_or_special_moon_next(self):
+        if self.get_moon_phase():
+            return self.MOON_PHASE
         else:
-            return "SELECT_QUESTION"
+            return self.SELECT_QUESTION
 
-    @staticmethod
-    def get_moon_phase(turn_number):
+    def get_moon_phase(self):
         # If you decide to add more phases or adjust the turn for each phase, modify this dictionary.
         moon_phases = {
             3: "new moon",
@@ -283,24 +296,46 @@ class GameTurn(models.Model):
             11: "full",
             15: "last quarter",
         }
-        return moon_phases.get(turn_number)
+        return moon_phases.get(self.turn_number)
 
-    @transition(field=state, source="MOON_PHASE", target="SELECT_QUESTION")
-    def write_message_about_moon_phase(self):
-        # validate that both players have written their messages
+    @transition(field=state, source=MOON_PHASE, target=SELECT_QUESTION)
+    def write_message_about_moon_phase(self, message, player):
+        # Update the moon message for the player
+        if player == self.parent_game.playerA:
+            self.player_a_moon_phase_message_written = True
+        elif player == self.parent_game.playerB:
+            self.player_b_moon_phase_message_written = True
+        else:
+            raise ValueError("Invalid player.")
+        self.save()
+        # Create a chat message
+        chat_message = ChatMessage.objects.create(
+            game_session=self.parent_game,
+            sender=str(player),
+            text=str(message),
+        )
+        # Add the chat message to the GameSession's chat_messages ManyToManyField
+        self.parent_game.chat_messages.add(chat_message)
+        self.switch_active_player()
+        # Check if both players have written their messages
         if (
-            not self.player_a_moon_phase_message_written
-            or not self.player_b_moon_phase_message_written
+            self.player_a_moon_phase_message_written
+            and self.player_b_moon_phase_message_written
         ):
-            raise ValueError(
-                "Both players must write their messages before ending the turn."
-            )
-        # reset the flags
-        self.player_a_moon_phase_message_written = False
-        self.player_b_moon_phase_message_written = False
-        # transition to the next state
-        self.turn_number += 1
-        return True, "Both players have written their messages."
+            # Reset the flags for the next turn
+            self.player_a_moon_phase_message_written = False
+            self.player_b_moon_phase_message_written = False
+            # Transition to the SELECT_QUESTION state and add 1 to the turn number
+            self.turn_number += 1
+        else:
+            raise ValueError("Not both players have written their messages.")
+
+    def save(self, *args, **kwargs):
+        # Check if it's a new instance
+        is_new = not self.pk
+        # If it's a new instance, create an initial GameTurn
+        # Save the GameSession instance
+        super(GameTurn, self).save(*args, **kwargs)
 
 
 class Question(models.Model):
