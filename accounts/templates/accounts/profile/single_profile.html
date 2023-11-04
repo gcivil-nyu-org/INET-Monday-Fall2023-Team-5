@@ -48,11 +48,12 @@ Profile of {{ profile.user.username }}
 
     <!-- Display Like/Unlike Button with Basic Styling -->
     <div class="like-section">
-        {% if has_liked %}
+        <!-- {% if has_liked %}
             <button class="btn btn-like" data-user-id="{{ profile.user.id }}" data-action="unlike" style="background-color: red; color: white;">Unlike</button>
         {% else %}
             <button class="btn btn-like" data-user-id="{{ profile.user.id }}" data-action="like" style="background-color: red; color: white;">Like</button>
-        {% endif %}
+        {% endif %} -->
+        <button class="like-button {% if has_liked %}active{% endif %}" data-user-id="{{ profile.user.id }}" data-action="like">Like</button>
         <span>Likes Remaining: <span id="likes-count">{{ user.profile.likes_remaining }}</span></span>
     </div>
 
@@ -77,13 +78,13 @@ Profile of {{ profile.user.username }}
             .then(response => response.json())
             .then(data => {
                 if(data.success) {
-                    if(data.action === 'liked') {
-                        this.innerText = 'Unlike';  // Change button text to "Unlike"
-                        this.setAttribute('data-action', 'unlike');
-                    } else if(data.action === 'unliked') {
-                        this.innerText = 'Like';  // Change button text back to "Like"
-                        this.setAttribute('data-action', 'like');
-                    }
+                    // if(data.action === 'liked') {
+                    //     this.innerText = 'Unlike';  // Change button text to "Unlike"
+                    //     this.setAttribute('data-action', 'unlike');
+                    // } else if(data.action === 'unliked') {
+                    //     this.innerText = 'Like';  // Change button text back to "Like"
+                    //     this.setAttribute('data-action', 'like');
+                    // }
                     document.getElementById('likes-count').innerText = data.likes_remaining;
                 } else {
                     alert(data.error);
@@ -105,5 +106,6 @@ Profile of {{ profile.user.username }}
         // Update the countdown every second
         setInterval(updateCountdown, 1000);
     </script>
+    <script src="{% static 'accounts/js/likeButton.js' %}"></script>
 </div>
 {% endblock %}
