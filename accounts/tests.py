@@ -836,10 +836,11 @@ class TestViews(TestCase):
         # Check that the context data contains the title
         self.assertEqual(response.context["title"], "About")
 
+
 class LikeModelTestCase(TestCase):
     def setUp(self):
-        self.user1 = User.objects.create_user(username='user1', password='password')
-        self.user2 = User.objects.create_user(username='user2', password='password')
+        self.user1 = User.objects.create_user(username="user1", password="password")
+        self.user2 = User.objects.create_user(username="user2", password="password")
         self.like1 = Like.objects.create(from_user=self.user1, to_user=self.user2)
 
     def test_is_mutual_false(self):
