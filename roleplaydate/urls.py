@@ -19,12 +19,22 @@ from django.urls import path, include
 from accounts.views import home
 from django.conf import settings  # Import settings
 from django.conf.urls.static import static  # Import static
+from django.http import HttpResponse
+from django.core.management import call_command
+
+
+def reset_likes(request):
+    call_command("reset_likes")
+    return HttpResponse("Likes have been reset.")
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
     path("game/", include("game.urls")),
     path("", home, name="home"),
+    path("api/reset-likes/", reset_likes),
+    path("tags/", include("tags.urls")),
 ]
 
 # Add the following line to serve media files during development

@@ -1,6 +1,6 @@
 body {
     padding-top: 100px;
-    background-image: url('../images/background.png');
+    background-image: url('../roleplaydate/images/background.png');
     background-size: cover;
     background-attachment: fixed;
     color: #eee; /* Light text color */
@@ -126,27 +126,3 @@ a:hover {
     width: auto;
     height: auto;
   }
-
-.draggable {
-    cursor: pointer;
-    border: 1px solid #ccc;
-    margin: 5px;
-    padding: 5px;
-    display: inline-block;
-    background-color: #ffc0cb; /* This sets the background to a light pink color */
-    color: #333; /* This sets the text color to a dark grey for contrast */
-    border-radius: 8px; /* This adds rounded corners to the divs */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* This adds a subtle shadow for a 3D effect */
-    transition: transform 0.2s; /* Smooth transition for clicking and dragging */
-}
-
-.draggable:hover {
-    transform: translateY(-2px); /* Slight raise effect when hovered */
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15); /* Increased shadow when hovered for a lifting effect */
-}
-
-#current-sentence {
-    border: 1px dashed #ccc;
-    min-height: 40px;
-    padding: 10px;
-}

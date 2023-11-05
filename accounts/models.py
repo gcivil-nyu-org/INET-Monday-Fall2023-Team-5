@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 
 class DatingPreference(models.Model):
@@ -67,3 +68,32 @@ class Like(models.Model):
         User, on_delete=models.CASCADE, related_name="likes_received"
     )
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_mutual(self):
+        """Check if there is a mutual like between two users."""
+        return Like.objects.filter(
+            from_user=self.to_user, to_user=self.from_user
+        ).exists()
+
+
+class Match(models.Model):
+    user1 = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="matches_user1"
+    )
+    user2 = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="matches_user2"
+    )
+    matched_at = models.DateTimeField(auto_now_add=True)
+
+    @classmethod
+    def create_match(cls, user1, user2):
+        # Check if there's already a match between the two users
+        existing_match = cls.objects.filter(
+            (Q(user1=user1) & Q(user2=user2)) | (Q(user1=user2) & Q(user2=user1))
+        ).exists()
+        if not existing_match:
+            # Create a new match if not already matched
+            match = cls(user1=user1, user2=user2)
+            match.save()
+            return match
+        return None
