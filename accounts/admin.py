@@ -48,7 +48,13 @@ class LikeAdmin(admin.ModelAdmin):
 
 @admin.register(Match)
 class MatchAdmin(admin.ModelAdmin):
-    list_display = ("user1", "user2", "matched_at", "notification_sent")  # Add notification_sent
+    list_display = (
+        "user1",
+        "user2",
+        "matched_at",
+        "notification_sent",
+    )  # Add notification_sent
     search_fields = ("user1__username", "user2__username")
-    list_filter = ("notification_sent",)  # Optional: to filter matches by notification status
-
+    list_filter = (
+        "notification_sent",
+    )  # Optional: to filter matches by notification status
