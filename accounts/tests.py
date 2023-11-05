@@ -2,22 +2,26 @@ from django.test import TestCase, Client, override_settings
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.messages import get_messages
+
 # from django.contrib.sessions.middleware import SessionMiddleware
 # from django.contrib.auth.forms import PasswordChangeForm
 from .models import DatingPreference, Profile  # , Like, Match
 import tempfile
+
 # from django.core.files import File
 from .forms import EditProfileForm
 from django.core.files.uploadedfile import SimpleUploadedFile
 from PIL import Image
 from io import BytesIO
 from django.utils.http import urlsafe_base64_encode
+
 # from django.utils.encoding import force_str
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from accounts.views import get_recommended_profiles
 from accounts.admin import ProfileAdmin
 from django.contrib.admin.sites import AdminSite
+
 # from importlib import import_module
 # from django.apps import apps
 
