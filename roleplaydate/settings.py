@@ -147,22 +147,3 @@ EMAIL_HOST_PASSWORD = os.environ.get("RPTHENDATE_EMAIL_HOST_PASSWORD")
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = "Roleplay then Date roleplayanddate@gmail.com"
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'logs/django.log',
-        },
-    },
-    'loggers': {
-        '': {  # This will catch logs of any level and send them to the file handler
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    },
-}
