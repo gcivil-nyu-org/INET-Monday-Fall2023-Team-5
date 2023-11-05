@@ -74,7 +74,7 @@ class Like(models.Model):
         return Like.objects.filter(
             from_user=self.to_user, to_user=self.from_user
         ).exists()
-
+    
 
 class Match(models.Model):
     user1 = models.ForeignKey(
@@ -84,6 +84,7 @@ class Match(models.Model):
         User, on_delete=models.CASCADE, related_name="matches_user2"
     )
     matched_at = models.DateTimeField(auto_now_add=True)
+    notification_sent = models.BooleanField(default=False)  # New field to track notification status
 
     @classmethod
     def create_match(cls, user1, user2):
@@ -97,3 +98,4 @@ class Match(models.Model):
             match.save()
             return match
         return None
+
