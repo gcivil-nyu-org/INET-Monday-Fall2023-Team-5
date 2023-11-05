@@ -252,11 +252,27 @@ def like_profile(request, user_id):
         existing_like = Like.objects.filter(
             from_user=request.user, to_user=receiving_user
         ).first()
+        existing_like = Like.objects.filter(
+            from_user=request.user, to_user=receiving_user
+        ).first()
 
         if existing_like:
             return JsonResponse(
                 {"success": False, "error": "You have already liked this user."}
             )
+            # # Unlike the profile
+            # # existing_like.delete()
+            # # Increment the likes_remaining.
+            # current_user_profile.likes_remaining += 1
+            # current_user_profile.save()
+
+            # return JsonResponse(
+            #     {
+            #         "success": True,
+            #         "likes_remaining": current_user_profile.likes_remaining,
+            #         "action": "unliked",
+            #     }
+            # )
 
         if current_user_profile.likes_remaining > 0:
             Like.objects.create(from_user=request.user, to_user=receiving_user)
