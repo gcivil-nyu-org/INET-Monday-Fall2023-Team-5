@@ -21,10 +21,21 @@ class Command(BaseCommand):
 
         for match in new_matches:
             try:
+                user1_msg = (
+                    f"Hello {match.user1.username},\n\n"
+                    "You have been matched with someone on our platform. "
+                    "Please log in to see more details about your match."
+                )
+                user2_msg = (
+                    f"Hello {match.user2.username},\n\n"
+                    "You have been matched with someone on our platform. "
+                    "Please log in to see more details about your match."
+                )
+
                 # Send notification to user1
                 send_mail(
                     subject="You have a new match!",
-                    message=f"Hello {match.user1.username},\n\nYou have been matched with someone on our platform. Please log in to see more details about your match.",
+                    message=user1_msg,
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     recipient_list=[match.user1.email],
                     fail_silently=False,
@@ -32,7 +43,7 @@ class Command(BaseCommand):
                 # Send notification to user2
                 send_mail(
                     subject="You have a new match!",
-                    message=f"Hello {match.user2.username},\n\nYou have been matched with someone on our platform. Please log in to see more details about your match.",
+                    message=user2_msg,
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     recipient_list=[match.user2.email],
                     fail_silently=False,
@@ -42,18 +53,16 @@ class Command(BaseCommand):
                 match.notification_sent = True
                 match.save()
 
-                self.stdout.write(
-                    self.style.SUCCESS(
-                        f"Notification sent for match between {match.user1.username} and {match.user2.username}"
-                    )
+                success_message = (
+                    f"Notification sent for match between "
+                    f"{match.user1.username} and {match.user2.username}"
                 )
+                self.stdout.write(self.style.SUCCESS(success_message))
 
             except Exception as e:
-                logger.error(
-                    f"Failed to send notification for match between {match.user1.username} and {match.user2.username}: {e}"
+                error_message = (
+                    f"Failed to send notification for match between "
+                    f"{match.user1.username} and {match.user2.username}: {e}"
                 )
-                self.stderr.write(
-                    self.style.ERROR(
-                        f"Error sending notification for match between {match.user1.username} and {match.user2.username}: {e}"
-                    )
-                )
+                logger.error(error_message)
+                self.stderr.write(self.style.ERROR(error_message))
