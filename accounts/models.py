@@ -60,7 +60,6 @@ class Profile(models.Model):
         return self.user.username
 
 
-
 class Like(models.Model):
     from_user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="likes_given"

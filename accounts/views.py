@@ -10,13 +10,11 @@ from .models import User, Like, Profile, Match
 from django.core.paginator import Paginator
 from django.contrib.auth.tokens import default_token_generator
 from .forms import CustomUserCreationForm
-from .models import User, Like, Profile, Match
 from django.utils.http import urlsafe_base64_decode
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth import update_session_auth_hash
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Q
 from django.db.models import Q
 
 
@@ -254,10 +252,14 @@ def like_profile(request, user_id):
         existing_like = Like.objects.filter(
             from_user=request.user, to_user=receiving_user
         ).first()
-        existing_like = Like.objects.filter(from_user=request.user, to_user=receiving_user).first()
+        existing_like = Like.objects.filter(
+            from_user=request.user, to_user=receiving_user
+        ).first()
 
         if existing_like:
-            return JsonResponse({"success": False, "error": "You have already liked this user."})
+            return JsonResponse(
+                {"success": False, "error": "You have already liked this user."}
+            )
             # # Unlike the profile
             # # existing_like.delete()
             # # Increment the likes_remaining.
