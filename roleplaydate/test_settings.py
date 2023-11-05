@@ -1,4 +1,5 @@
 import os
+
 # from .settings import * # noqa: F403
 
 DATABASES = {
