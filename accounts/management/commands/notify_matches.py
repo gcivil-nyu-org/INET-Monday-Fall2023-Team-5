@@ -20,18 +20,18 @@ class Command(BaseCommand):
             try:
                 # Send notification to user1
                 send_mail(
-                    'You have a new match!',
-                    'You have been matched with someone on our platform. Please log in to see more details.',
-                    settings.DEFAULT_FROM_EMAIL,
-                    [match.user1.email],
+                    subject='You have a new match!',
+                    message=f'Hello {match.user1.username},\n\nYou have been matched with someone on our platform. Please log in to see more details about your match.',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[match.user1.email],
                     fail_silently=False,
                 )
                 # Send notification to user2
                 send_mail(
-                    'You have a new match!',
-                    'You have been matched with someone on our platform. Please log in to see more details.',
-                    settings.DEFAULT_FROM_EMAIL,
-                    [match.user2.email],
+                    subject='You have a new match!',
+                    message=f'Hello {match.user2.username},\n\nYou have been matched with someone on our platform. Please log in to see more details about your match.',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[match.user2.email],
                     fail_silently=False,
                 )
 
