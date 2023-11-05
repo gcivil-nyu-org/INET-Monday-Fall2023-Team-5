@@ -299,11 +299,9 @@ def like_profile(request, user_id):
                     "success": True,
                     "likes_remaining": current_user_profile.likes_remaining,
                     "action": "liked",
-                    "match_created": mutual_like and not user_already_matched
                     "match_created": mutual_like and not user_already_matched,
                 }
-        else:
-                )
+            )
 
     return JsonResponse({"success": False, "error": "Invalid request method."})
 
