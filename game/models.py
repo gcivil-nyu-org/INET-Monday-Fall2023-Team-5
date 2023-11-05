@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 import uuid
 
-from django_fsm import FSMField, transition, GET_STATE
+from django_fsm import FSMField, transition
 
 
 class Player(models.Model):
@@ -289,7 +289,6 @@ class GameTurn(models.Model):
             return self.SELECT_QUESTION
 
     def get_moon_phase(self):
-        # If you decide to add more phases or adjust the turn for each phase, modify this dictionary.
         moon_phases = {
             3: "new moon",
             7: "first quarter",
@@ -329,13 +328,6 @@ class GameTurn(models.Model):
             self.turn_number += 1
         else:
             raise ValueError("Not both players have written their messages.")
-
-    def save(self, *args, **kwargs):
-        # Check if it's a new instance
-        is_new = not self.pk
-        # If it's a new instance, create an initial GameTurn
-        # Save the GameSession instance
-        super(GameTurn, self).save(*args, **kwargs)
 
 
 class Question(models.Model):

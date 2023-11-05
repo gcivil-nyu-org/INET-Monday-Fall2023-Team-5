@@ -163,7 +163,6 @@ def end_game_session(request, game_id):
             request.user not in [game_session.playerA.user, game_session.playerB.user]
             and not request.user.is_staff
         ):
-            # Return an error message or redirect to another page if the user is not authorized
             messages.error(request, "You are not a participant of this game session.")
             return redirect(
                 "home"
