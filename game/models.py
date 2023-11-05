@@ -10,6 +10,8 @@ class Player(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE
     )  # if the user is deleted, the 'Player' is deleted.
+
+    character_name = models.CharField(max_length=255, blank=True)
     word_pool = models.ManyToManyField("Word", blank=True)
     question_pool = models.ManyToManyField("Question", blank=True)
 
@@ -22,6 +24,9 @@ class Player(models.Model):
             raise ValidationError(
                 "A player must be associated with a GameSession before saving."
             )
+        if not self.character_name and self.user_id:
+            # Set the nickname based on the related User instance
+            self.character_name = "Character of " + self.user.get_username()
         super(Player, self).save(*args, **kwargs)
 
         # Update current_game_turn's current_player if it's None
@@ -66,7 +71,10 @@ class GameSession(models.Model):
     ]
 
     state = FSMField(default=INITIALIZING, choices=STATE_CHOICES)
-    game_id = models.CharField(default=generate_game_id(), max_length=255, unique=True)
+    game_id = models.CharField(
+        max_length=255,
+        unique=True,
+    )
     playerA = models.ForeignKey(
         "Player",
         on_delete=models.SET_NULL,
@@ -92,6 +100,11 @@ class GameSession(models.Model):
     )
 
     chat_messages = models.ManyToManyField("ChatMessage", blank=True)
+
+    def __init__(self, *args, **kwargs):
+        super(GameSession, self).__init__(*args, **kwargs)
+        if not self.game_id:
+            self.game_id = generate_unique_game_id()
 
     @transition(field=state, source=INITIALIZING, target=REGULAR_TURN)
     def initialize_game(self):
@@ -189,7 +202,7 @@ class GameTurn(models.Model):
         # Create a chat message
         chat_message = ChatMessage.objects.create(
             game_session=self.parent_game,
-            sender=str(player),
+            sender=str(player.character_name),
             text=str(selected_question),
         )
 
@@ -205,7 +218,7 @@ class GameTurn(models.Model):
         # Create a chat message
         chat_message = ChatMessage.objects.create(
             game_session=self.parent_game,
-            sender=str(player),
+            sender=str(player.character_name),
             text=str(answer),
         )
         # Add the chat message to the GameSession's chat_messages ManyToManyField
@@ -310,7 +323,7 @@ class GameTurn(models.Model):
         # Create a chat message
         chat_message = ChatMessage.objects.create(
             game_session=self.parent_game,
-            sender=str(player),
+            sender=str(player.character_name),
             text=str(message),
         )
         # Add the chat message to the GameSession's chat_messages ManyToManyField
