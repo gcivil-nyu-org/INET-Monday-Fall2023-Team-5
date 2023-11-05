@@ -5,7 +5,7 @@ from django.contrib.messages import get_messages
 
 # from django.contrib.sessions.middleware import SessionMiddleware
 # from django.contrib.auth.forms import PasswordChangeForm
-from .models import DatingPreference, Profile  # , Like, Match
+from .models import DatingPreference, Profile, Like  # , Match
 import tempfile
 
 # from django.core.files import File
@@ -835,3 +835,38 @@ class TestViews(TestCase):
 
         # Check that the context data contains the title
         self.assertEqual(response.context["title"], "About")
+
+
+class LikeProfileTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user1 = User.objects.create_user(username="user1", password="password")
+        self.user2 = User.objects.create_user(username="user2", password="password")
+        self.profile1 = Profile.objects.create(user=self.user1, likes_remaining=5)
+        self.profile2 = Profile.objects.create(user=self.user2, likes_remaining=5)
+
+    def test_like_profile(self):
+        # User1 likes User2's profile
+        self.client.login(username="user1", password="password")
+        response = self.client.post(reverse("like_profile", args=[self.user2.pk]))
+        # Check response and like count decrement
+        self.assertEqual(response.status_code, 200)
+        self.profile1.refresh_from_db()
+        self.assertEqual(self.profile1.likes_remaining, 4)
+        # Check if like instance was created
+        self.assertTrue(
+            Like.objects.filter(from_user=self.user1, to_user=self.user2).exists()
+        )
+
+    def test_like_profile_no_likes_remaining(self):
+        # Set likes_remaining to 0 and attempt to like
+        self.profile1.likes_remaining = 0
+        self.profile1.save()
+        self.client.login(username="user1", password="password")
+        response = self.client.post(reverse("like_profile", args=[self.user2.pk]))
+        # Expect failure response due to no likes remaining
+        self.assertEqual(response.status_code, 200)
+        response_data = response.json()
+        self.assertFalse(response_data["success"])
+        self.assertIn("error", response_data)
+        self.assertEqual(response_data["error"], "No likes remaining.")
