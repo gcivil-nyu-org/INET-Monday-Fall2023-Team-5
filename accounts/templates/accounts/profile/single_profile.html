@@ -46,7 +46,7 @@ Profile of {{ profile.user.username }}
         {% endif %}
     </div>
 
-    <!-- Display Like/Unlike Button with Basic Styling -->
+    <!-- Display Like Button with Basic Styling -->
     <div class="like-section">
         <!-- {% if has_liked %}
             <button class="btn btn-like" data-user-id="{{ profile.user.id }}" data-action="unlike" style="background-color: red; color: white;">Unlike</button>
@@ -61,18 +61,17 @@ Profile of {{ profile.user.username }}
         <a href="{% url 'browse_profiles' %}" class="btn btn-primary">Back to Browse</a>
     </div>
 
-    <!-- Add a script to handle the like and unlike actions -->
+    <!-- Add a script to handle the like actions -->
     <script>
         document.querySelector('.btn-like').addEventListener('click', function() {
             const userId = this.getAttribute('data-user-id');
-            const action = this.getAttribute('data-action');
             fetch(`/accounts/like-profile/${userId}/`, {
                 method: 'POST',
                 headers: {
                     'X-CSRFToken': '{{ csrf_token }}'
                 },
                 body: JSON.stringify({
-                    'action': action
+                    'action': 'like'
                 })
             })
             .then(response => response.json())

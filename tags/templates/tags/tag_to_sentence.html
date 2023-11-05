@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tagging Interface</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <!-- You will need to include jQuery UI for drag-and-drop functionality -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="{% static 'js/tagging.js' %}"></script>
+</head>
+<body>
+    <!-- Based on your mockup, the main container -->
+    <div id="main-container">
+
+        <!-- The main content area -->
+        <div id="content-area">
+            <div id="header">
+                <h1>Your words:</h1>
+                <h2>Day 4</h2>
+                <img src="{% static '/images/new-moon-cancer-2023-removebg-preview.png' %}" alt="Moon" id="moon-image" width="100">
+                <span>Hi, user!</span>
+            </div>
+            
+            <!-- Word array -->
+            <div id="word-array">
+                {% for word in words %}
+                    <div class="draggable" id="word-{{ forloop.counter }}">{{ word }}</div>
+                {% endfor %}
+            </div>
+            
+            <!-- Current sentence formation -->
+            <div id="sentence-container">
+                <p>Current sentence:</p>
+                <div id="current-sentence" class="droppable">
+                    <!-- Draggable words will be appended here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock content %}
