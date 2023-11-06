@@ -84,6 +84,9 @@ class Match(models.Model):
         User, on_delete=models.CASCADE, related_name="matches_user2"
     )
     matched_at = models.DateTimeField(auto_now_add=True)
+    notification_sent = models.BooleanField(
+        default=False
+    )  # New field to track notification status
 
     @classmethod
     def create_match(cls, user1, user2):
