@@ -875,25 +875,28 @@ class ResetLikesCommandTest(TestCase):
 
 
 class NotifyMatchesCommandTest(TestCase):
-
     @classmethod
     def setUpTestData(cls):
         # Create test users
-        cls.user1 = User.objects.create_user(username='user1', email='user1@example.com')
-        cls.user2 = User.objects.create_user(username='user2', email='user2@example.com')
+        cls.user1 = User.objects.create_user(
+            username="user1", email="user1@example.com"
+        )
+        cls.user2 = User.objects.create_user(
+            username="user2", email="user2@example.com"
+        )
 
         # Create a match that happened yesterday
         cls.match = Match.objects.create(
             user1=cls.user1,
             user2=cls.user2,
             matched_at=timezone.now() - timezone.timedelta(days=1),
-            notification_sent=False
+            notification_sent=False,
         )
 
-    @patch('accounts.management.commands.notify_matches.send_mail')
+    @patch("accounts.management.commands.notify_matches.send_mail")
     def test_sending_notifications(self, mock_send_mail):
         # Call the management command
-        call_command('notify_matches')
+        call_command("notify_matches")
 
         # Assert send_mail was called twice
         self.assertEqual(mock_send_mail.call_count, 2)
@@ -905,21 +908,22 @@ class NotifyMatchesCommandTest(TestCase):
         # Check the calls to send_mail and their arguments
         user1_call = mock_send_mail.call_args_list[0]
         user2_call = mock_send_mail.call_args_list[1]
-        
-        self.assertEqual(user1_call[1]['recipient_list'], [self.user1.email])
-        self.assertEqual(user2_call[1]['recipient_list'], [self.user2.email])
+
+        self.assertEqual(user1_call[1]["recipient_list"], [self.user1.email])
+        self.assertEqual(user2_call[1]["recipient_list"], [self.user2.email])
 
     from django.core.management.base import CommandError
 
-@patch('accounts.management.commands.notify_matches.send_mail')
+
+@patch("accounts.management.commands.notify_matches.send_mail")
 def test_handling_send_mail_exceptions(self, mock_send_mail):
     # Simulate an exception on sending email
-    mock_send_mail.side_effect = [Exception('Boom!'), Exception('Boom!')]
-    
+    mock_send_mail.side_effect = [Exception("Boom!"), Exception("Boom!")]
+
     # Run the management command within a context manager to prevent the test from failing
     # due to the raised exceptions within the command.
     with self.assertRaises(CommandError):
-        call_command('notify_matches')
+        call_command("notify_matches")
 
     # Assert send_mail was attempted twice
     self.assertEqual(mock_send_mail.call_count, 2)
@@ -927,4 +931,3 @@ def test_handling_send_mail_exceptions(self, mock_send_mail):
     # Assert the notification_sent flag is still False for both users
     self.match.refresh_from_db()
     self.assertFalse(self.match.notification_sent)
-
