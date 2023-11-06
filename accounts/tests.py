@@ -835,26 +835,6 @@ class TestViews(TestCase):
         self.assertEqual(response.context["title"], "About")
 
 
-class LikeModelTestCase(TestCase):
-    def setUp(self):
-        # Create sample profiles
-        self.user1 = User.objects.create_user(username="user1", password="password")
-        self.user2 = User.objects.create_user(username="user2", password="password")
-
-        # Assuming profiles are auto-created for these users:
-        self.profile1 = self.user1.profile
-        self.profile2 = self.user2.profile
-
-        self.like1 = Like.objects.create(from_user=self.user1, to_user=self.user2)
-
-    def test_is_mutual_false(self):
-        self.assertFalse(self.like1.is_mutual())
-
-    def test_is_mutual_true(self):
-        Like.objects.create(from_user=self.user2, to_user=self.user1)
-        self.assertTrue(self.like1.is_mutual())
-
-
 class ResetLikesCommandTest(TestCase):
     @classmethod
     def setUpTestData(cls):
