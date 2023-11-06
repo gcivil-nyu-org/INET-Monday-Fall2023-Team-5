@@ -12,6 +12,7 @@ crispy-bootstrap4==2022.1
 Django==4.2
 django-crispy-forms==2.1
 django-environ==0.11.2
+django-fsm==2.8.1
 environ==1.0
 flake8==6.1.0
 gunicorn==21.2.0
