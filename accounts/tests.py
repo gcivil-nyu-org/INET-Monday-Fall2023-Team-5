@@ -2,28 +2,24 @@ from django.test import TestCase, Client, override_settings
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.messages import get_messages
-
-# from django.contrib.sessions.middleware import SessionMiddleware
-# from django.contrib.auth.forms import PasswordChangeForm
-from .models import DatingPreference, Profile, Like  # , Match
+from django.contrib.sessions.middleware import SessionMiddleware
+from django.contrib.auth.forms import PasswordChangeForm
+from .models import *
 import tempfile
-
-# from django.core.files import File
+from django.core.files import File
 from .forms import EditProfileForm
 from django.core.files.uploadedfile import SimpleUploadedFile
 from PIL import Image
 from io import BytesIO
 from django.utils.http import urlsafe_base64_encode
-
-# from django.utils.encoding import force_str
+from django.utils.encoding import force_str
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from accounts.views import get_recommended_profiles
 from accounts.admin import ProfileAdmin
 from django.contrib.admin.sites import AdminSite
-
-# from importlib import import_module
-# from django.apps import apps
+from importlib import import_module
+from django.apps import apps
 
 
 class ProfileModelTest(TestCase):
@@ -263,7 +259,7 @@ class EditProfileViewTest(TestCase):
         self.assertRedirects(response, profile_updated_url)
 
         # Check the updated profile data
-        self.user.refresh_from_db()  # Refresh user instance to get updated data
+        self.user.refresh_from_db()  # Refresh the user instance to get updated related data
         self.assertEqual(self.user.profile.gender, "M")  # Check gender was updated
         self.assertEqual(
             self.user.profile.pronoun_preference, "he_him"
@@ -295,7 +291,7 @@ class EditProfileViewTest(TestCase):
             "profile_picture": uploaded_image,
             # Add other required fields if needed
         }
-        response = self.client.post(self.edit_profile_url, post_data)  # noqa: F841
+        response = self.client.post(self.edit_profile_url, post_data)
 
         # Check that the profile picture is saved
         self.user.profile.refresh_from_db()
@@ -316,10 +312,10 @@ class EditProfileViewTest(TestCase):
         # Send a POST request to clear the profile picture
         post_data = {
             "gender": "M",
-            "profile_picture-clear": "on",  # 'on' is for a checked checkbox
+            "profile_picture-clear": "on",  # Django expects the value 'on' for a checked checkbox
             # Add other required fields if needed
         }
-        response = self.client.post(self.edit_profile_url, post_data)  # noqa: F841
+        response = self.client.post(self.edit_profile_url, post_data)
 
         # Check that the profile picture has been cleared
         self.user.profile.refresh_from_db()
@@ -373,8 +369,7 @@ class EditProfileViewTest(TestCase):
             html=True,
         )
 
-        # Check that the response status code is 200 (indicating a form submission
-        # with validation errors)
+        # Check that the response status code is 200 (indicating a form submission with validation errors)
         self.assertEqual(response.status_code, 200)
 
         # Check that the form instance in the response context is invalid
@@ -632,8 +627,7 @@ class BrowseProfilesTestCase(TestCase):
             dp.gender for dp in current_profile.open_to_dating.all()
         ]
 
-        # Check if the fetched profiles from the view match the logged-in user's
-        # preferences
+        # Check if the fetched profiles from the view match the logged-in user's preferences
         for profile in context_profiles:
             self.assertIn(profile.gender, desired_gender_codes)
             self.assertNotEqual(profile.user, logged_in_user)
@@ -661,8 +655,7 @@ class GetRecommendedProfilesTest(TestCase):
             for i in range(4)
         ]
 
-        # Assuming every user gets a profile automatically, we fetch the profile
-        # and update it.
+        # Assuming every user gets a profile automatically, we fetch the profile and update it.
 
         # Profile 0: Male open to dating Females
         profile0 = self.users[0].profile
@@ -835,6 +828,7 @@ class TestViews(TestCase):
 
         # Check that the context data contains the title
         self.assertEqual(response.context["title"], "About")
+
 
 
 class LikeModelTestCase(TestCase):
