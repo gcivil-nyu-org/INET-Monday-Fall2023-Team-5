@@ -29,7 +29,7 @@ deploy:
     secret_access_key: "$AWS_SECRET_ACCESS_KEY"
     region: "us-east-1"
     app: "roleplaydate"
-    env: "roleplaydate-dev-3"
+    env: "roleplaydate-dev3"
     bucket_name: "$S3_BUCKET_NAME"
     on:
       branch: develop
@@ -45,5 +45,6 @@ deploy:
     on:
       branch: master
     verbose: true
+    
 
 
