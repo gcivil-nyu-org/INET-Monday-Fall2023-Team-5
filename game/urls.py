@@ -3,8 +3,11 @@ from . import views
 from .views import GameProgressView
 
 urlpatterns = [
-    # path("game-session/<int:game_session_id>/", views.game_view, name="game_view"),
-    path("initiate_game/", views.initiate_game_session, name="initiate_game"),
+    path(
+        "initiate_game_session/",
+        views.initiate_game_session,
+        name="initiate_game_session",
+    ),
     path(
         "game_progress/<uuid:game_id>/",
         GameProgressView.as_view(),
