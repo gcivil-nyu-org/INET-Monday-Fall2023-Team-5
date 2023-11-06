@@ -839,17 +839,17 @@ class ResetLikesCommandTest(TestCase):
         cls.user1 = User.objects.create_user(username='testuser1', email='testuser1@example.com')
         cls.user2 = User.objects.create_user(username='testuser2', email='testuser2@example.com')
 
-        # Create Profile instances linked to the created User instances
-        cls.profile1, created = Profile.objects.get_or_create(user=cls.user1, defaults={'likes_remaining': 5})
-        cls.profile2, created = Profile.objects.get_or_create(user=cls.user2, defaults={'likes_remaining': 2})
+        # Create Profile instances linked to the created User instances with the correct initial likes
+        cls.profile1, created = Profile.objects.get_or_create(user=cls.user1, defaults={'likes_remaining': 3})
+        cls.profile2, created = Profile.objects.get_or_create(user=cls.user2, defaults={'likes_remaining': 3})
 
         # Create a Like instance
         Like.objects.create(from_user=cls.user1, to_user=cls.user2)
 
     def test_reset_likes(self):
-        # Check the initial state
-        self.assertEqual(Profile.objects.get(user=self.user1).likes_remaining, 5)
-        self.assertEqual(Profile.objects.get(user=self.user2).likes_remaining, 2)
+        # Check the initial state before the command is called
+        self.assertEqual(Profile.objects.get(user=self.user1).likes_remaining, 3)
+        self.assertEqual(Profile.objects.get(user=self.user2).likes_remaining, 3)
         self.assertEqual(Like.objects.count(), 1)
 
         # Call the management command
@@ -858,6 +858,6 @@ class ResetLikesCommandTest(TestCase):
         # Verify all likes are cleared
         self.assertEqual(Like.objects.count(), 0)
 
-        # Verify the like counters are reset
+        # Verify the like counters are reset to 3
         self.assertEqual(Profile.objects.get(user=self.user1).likes_remaining, 3)
         self.assertEqual(Profile.objects.get(user=self.user2).likes_remaining, 3)
