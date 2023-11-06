@@ -20,6 +20,7 @@ from accounts.admin import ProfileAdmin
 from django.contrib.admin.sites import AdminSite
 from importlib import import_module
 from django.apps import apps
+from django.core.management import call_command
 
 
 class ProfileModelTest(TestCase):
@@ -828,3 +829,41 @@ class TestViews(TestCase):
 
         # Check that the context data contains the title
         self.assertEqual(response.context["title"], "About")
+
+
+class ResetLikesCommandTest(TestCase):
+    
+    def setUp(self):
+        # Create unique User instances
+        self.user1 = User.objects.create_user(username='testuser1', email='testuser1@example.com')
+        self.user2 = User.objects.create_user(username='testuser2', email='testuser2@example.com')
+
+        # Create Profile instances linked to the created User instances
+        self.profile1 = Profile.objects.create(user=self.user1, likes_remaining=5)
+        self.profile2 = Profile.objects.create(user=self.user2, likes_remaining=2)
+
+        # Create a Like instance
+        Like.objects.create(from_user=self.user1, to_user=self.user2)
+
+    def tearDown(self):
+        # Clean up after each test method
+        Like.objects.all().delete()
+        Profile.objects.all().delete()
+        User.objects.all().delete()
+
+    def test_reset_likes(self):
+        # Check the initial state
+        self.assertEqual(Profile.objects.get(user=self.user1).likes_remaining, 5)
+        self.assertEqual(Profile.objects.get(user=self.user2).likes_remaining, 2)
+        self.assertEqual(Like.objects.count(), 1)
+
+        # Call the management command
+        call_command('reset_likes')
+
+        # Verify all likes are cleared
+        self.assertEqual(Like.objects.count(), 0)
+
+        # Verify the like counters are reset
+        self.assertEqual(Profile.objects.get(user=self.user1).likes_remaining, 3)
+        self.assertEqual(Profile.objects.get(user=self.user2).likes_remaining, 3)
+
