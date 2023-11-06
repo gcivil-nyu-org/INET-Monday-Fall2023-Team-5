@@ -853,7 +853,8 @@ class LikeModelTestCase(TestCase):
     def test_is_mutual_true(self):
         Like.objects.create(from_user=self.user2, to_user=self.user1)
         self.assertTrue(self.like1.is_mutual())
-        
+
+
 class ResetLikesCommandTest(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -950,4 +951,3 @@ def test_handling_send_mail_exceptions(self, mock_send_mail):
     # Assert the notification_sent flag is still False for both users
     self.match.refresh_from_db()
     self.assertFalse(self.match.notification_sent)
-
