@@ -6,7 +6,6 @@ from .models import (
     GameSession,
     GameTurn,
 )
-
 from django.shortcuts import redirect, render
 from django.views import View
 
@@ -29,11 +28,10 @@ def initiate_game_session(request):
         game_session.save()
 
         # Redirecting to GameProgressView
-        print(game_session.state)
         game_session.initialize_game()
         return redirect("game_progress", game_id=game_session.game_id)
 
-    return render(request, "initiate_game.html")
+    return render(request, "initiate_game_session.html")
 
 
 class GameProgressView(View):
@@ -171,4 +169,4 @@ def end_game_session(request, game_id):
         messages.success(request, "Game session ended successfully.")
     except GameSession.DoesNotExist:
         messages.error(request, "Game session not found.")
-    return redirect("initiate_game")
+    return redirect("initiate_game_session")
