@@ -20,6 +20,11 @@ from accounts.admin import ProfileAdmin
 from django.contrib.admin.sites import AdminSite
 from importlib import import_module
 from django.apps import apps
+from django.core.management import call_command
+from django.core import mail
+from django.utils import timezone
+from unittest.mock import patch
+from django.core.management.base import CommandError
 
 
 class ProfileModelTest(TestCase):
@@ -828,3 +833,101 @@ class TestViews(TestCase):
 
         # Check that the context data contains the title
         self.assertEqual(response.context["title"], "About")
+
+
+class ResetLikesCommandTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        # Create unique User instances
+        cls.user1 = User.objects.create_user(
+            username="testuser1", email="testuser1@example.com"
+        )
+        cls.user2 = User.objects.create_user(
+            username="testuser2", email="testuser2@example.com"
+        )
+
+        # Create Profile instances linked to the created User instances with the correct initial likes
+        cls.profile1, created = Profile.objects.get_or_create(
+            user=cls.user1, defaults={"likes_remaining": 3}
+        )
+        cls.profile2, created = Profile.objects.get_or_create(
+            user=cls.user2, defaults={"likes_remaining": 3}
+        )
+
+        # Create a Like instance
+        Like.objects.create(from_user=cls.user1, to_user=cls.user2)
+
+    def test_reset_likes(self):
+        # Check the initial state before the command is called
+        self.assertEqual(Profile.objects.get(user=self.user1).likes_remaining, 3)
+        self.assertEqual(Profile.objects.get(user=self.user2).likes_remaining, 3)
+        self.assertEqual(Like.objects.count(), 1)
+
+        # Call the management command
+        call_command("reset_likes")
+
+        # Verify all likes are cleared
+        self.assertEqual(Like.objects.count(), 0)
+
+        # Verify the like counters are reset to 3
+        self.assertEqual(Profile.objects.get(user=self.user1).likes_remaining, 3)
+        self.assertEqual(Profile.objects.get(user=self.user2).likes_remaining, 3)
+
+
+class NotifyMatchesCommandTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        # Create test users
+        cls.user1 = User.objects.create_user(
+            username="user1", email="user1@example.com"
+        )
+        cls.user2 = User.objects.create_user(
+            username="user2", email="user2@example.com"
+        )
+
+        # Create a match that happened yesterday
+        cls.match = Match.objects.create(
+            user1=cls.user1,
+            user2=cls.user2,
+            matched_at=timezone.now() - timezone.timedelta(days=1),
+            notification_sent=False,
+        )
+
+    @patch("accounts.management.commands.notify_matches.send_mail")
+    def test_sending_notifications(self, mock_send_mail):
+        # Call the management command
+        call_command("notify_matches")
+
+        # Assert send_mail was called twice
+        self.assertEqual(mock_send_mail.call_count, 2)
+
+        # Assert the notification_sent flag is now True
+        self.match.refresh_from_db()
+        self.assertTrue(self.match.notification_sent)
+
+        # Check the calls to send_mail and their arguments
+        user1_call = mock_send_mail.call_args_list[0]
+        user2_call = mock_send_mail.call_args_list[1]
+
+        self.assertEqual(user1_call[1]["recipient_list"], [self.user1.email])
+        self.assertEqual(user2_call[1]["recipient_list"], [self.user2.email])
+
+    from django.core.management.base import CommandError
+
+
+@patch("accounts.management.commands.notify_matches.send_mail")
+def test_handling_send_mail_exceptions(self, mock_send_mail):
+    # Simulate an exception on sending email
+    mock_send_mail.side_effect = [Exception("Boom!"), Exception("Boom!")]
+
+    # Run the management command within a context manager to prevent the test from failing
+    # due to the raised exceptions within the command.
+    with self.assertRaises(CommandError):
+        call_command("notify_matches")
+
+    # Assert send_mail was attempted twice
+    self.assertEqual(mock_send_mail.call_count, 2)
+
+    # Assert the notification_sent flag is still False for both users
+    self.match.refresh_from_db()
+    self.assertFalse(self.match.notification_sent)

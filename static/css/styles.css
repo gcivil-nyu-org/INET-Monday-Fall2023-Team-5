@@ -149,4 +149,21 @@ a:hover {
     border: 1px dashed #ccc;
     min-height: 40px;
     padding: 10px;
+    background-color: #fff; /* This will set the background color to white */
+    color: #333; /* Sets the text color to a dark grey, assuming you want this for contrast */
+}
+
+#current-sentence .selected-word {
+    background-color: #e6e6e6; /* A light gray background for the selected word */
+    color: #333; /* Dark grey text color for contrast */
+    margin-right: 5px; /* Adds spacing between words */
+    padding: 3px 6px; /* Padding inside the word boxes */
+    border-radius: 4px; /* Rounded corners for the word boxes */
+    display: inline-block; /* Ensures that span behaves like a word block */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Optional: Adds a subtle shadow to make the words 'pop' */
+}
+
+.dragged {
+    background-color: #d3d3d3; /* This sets the background to a different color */
+    color: #555; /* Change the text color if necessary */
 }
