@@ -118,7 +118,7 @@
             <a href="{% url 'browse_profiles' %}">Browse Profile</a>
             <!-- Conditional class assignment for Playground link -->
             <a href="{% if game_session_url %}{{ game_session_url }}{% else %}#{% endif %}" 
-                class="sidebar a {% if not game_session_url %}inactive-link{% endif %}">Playground</a>
+                class="{% if not game_session_url %}inactive-link{% endif %}">Playground</a>
             <a href="{% url 'tag_view' %}">Tags</a>
             <a href="{% url 'account' %}">Account</a>
             <a href="#">Settings</a>
