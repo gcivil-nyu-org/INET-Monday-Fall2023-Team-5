@@ -150,3 +150,20 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = "Roleplay then Date roleplayanddate@gmail.com"
 
 SITE_URL = "http://roleplaydate-dev3.us-east-1.elasticbeanstalk.com"
+
+# Delete
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
