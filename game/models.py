@@ -2,6 +2,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import User
 import uuid
+from django.urls import reverse
 
 from django_fsm import FSMField, transition
 
@@ -143,6 +144,10 @@ class GameSession(models.Model):
             self.current_game_turn = GameTurn.objects.create()
         # Save the GameSession instance
         super(GameSession, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('game:game_progress', kwargs={'game_id': self.game_id})
+
 
 
 class GameTurn(models.Model):
