@@ -67,6 +67,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "game.context_processors.game_session_processor",
             ],
         },
     },
@@ -151,3 +152,5 @@ DEFAULT_FROM_EMAIL = "Roleplay then Date roleplayanddate@gmail.com"
 
 # SITE_URL = "http://roleplaydate-dev3.us-east-1.elasticbeanstalk.com"
 SITE_URL = "http://teamrepo-dev.us-east-1.elasticbeanstalk.com/"
+
+
