@@ -74,5 +74,8 @@ class Command(BaseCommand):
         )
     
     def get_full_url_with_domain(self, relative_url):
-        site_url = settings.SITE_URL.rstrip('/') + '/'
-        return f"{site_url}{relative_url}"
+        site_url = settings.SITE_URL
+        if not site_url.endswith('/'):
+            site_url += '/'
+        return f"{site_url}{relative_url.lstrip('/')}"
+
