@@ -148,5 +148,3 @@ EMAIL_HOST_PASSWORD = os.environ.get("RPTHENDATE_EMAIL_HOST_PASSWORD")
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = "Roleplay then Date roleplayanddate@gmail.com"
-
-SITE_URL = "http://roleplaydate-dev3.us-east-1.elasticbeanstalk.com/"
