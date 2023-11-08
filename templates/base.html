@@ -13,7 +13,7 @@
         .inactive-link {
             color: #c0c0c0; /* Grey color for inactive link */
             pointer-events: none; /* Make the link non-clickable */
-            cursor: default; /* Change cursor style */
+            cursor: not-allowed; 
             text-decoration: none; /* Optional: Remove underline from the link */
         }
 
@@ -52,6 +52,16 @@
             font-weight: bold ;
         }
         .sidebar a:hover {
+            background-color: #f0d9f0ff;
+            color: #ffffff;
+        }
+        .sidebar a.inactive-link {
+        color: #c0c0c0; /* Grey color for inactive link */
+        pointer-events: none; /* Make the link non-clickable */
+        cursor: not-allowed; 
+        text-decoration: none; /* Optional: Remove underline from the link */
+        }
+        .sidebar a:hover:not(.inactive-link) {
             background-color: #f0d9f0ff;
             color: #ffffff;
         }
@@ -108,9 +118,7 @@
             <a href="{% url 'browse_profiles' %}">Browse Profile</a>
             <!-- Conditional class assignment for Playground link -->
             <a href="{% if game_session_url %}{{ game_session_url }}{% else %}#{% endif %}" 
-               class="{% if not game_session_url %}inactive-link{% endif %}">
-                Playground
-            </a>
+                class="sidebar a {% if not game_session_url %}inactive-link{% endif %}">Playground</a>
             <a href="{% url 'tag_view' %}">Tags</a>
             <a href="{% url 'account' %}">Account</a>
             <a href="#">Settings</a>
