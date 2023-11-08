@@ -99,7 +99,7 @@
         <div class="col-md-3 sidebar">
             <a href="{% url 'view_profile' %}">View Profile</a>
             <a href="{% url 'browse_profiles' %}">Browse Profile</a>
-            <a href="#">Playground</a>
+            <a href="{% if game_session_url %}{{ game_session_url }}{% else %}#{% endif %}">Playground</a>
             <!-- is this correct? -->
             <a href="{% url 'tag_view' %}">Tags</a>
             <a href="{% url 'account' %}">Account</a>
