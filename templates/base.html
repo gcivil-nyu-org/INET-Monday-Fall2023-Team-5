@@ -10,6 +10,12 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
     <style>
 
+        .inactive-link {
+            color: #c0c0c0; /* or any color you wish to represent as 'disabled' */
+            pointer-events: none; /* This will make the link non-clickable */
+            cursor: default;
+        }
+
         .navbar {
             background-color: #0E6655;
             border-bottom: 3px solid #196F3D;
@@ -99,8 +105,9 @@
         <div class="col-md-3 sidebar">
             <a href="{% url 'view_profile' %}">View Profile</a>
             <a href="{% url 'browse_profiles' %}">Browse Profile</a>
-            <a href="{% if game_session_url %}{{ game_session_url }}{% else %}#{% endif %}">Playground</a>
-            <!-- is this correct? -->
+            <!-- Add a conditional class to the Playground link based on game_session_url -->
+            <a href="{% if game_session_url %}{{ game_session_url }}{% else %}#{% endif %}" 
+               class="{% if not game_session_url %}inactive-link{% endif %}">Playground</a>
             <a href="{% url 'tag_view' %}">Tags</a>
             <a href="{% url 'account' %}">Account</a>
             <a href="#">Settings</a>
