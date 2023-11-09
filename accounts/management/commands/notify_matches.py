@@ -50,10 +50,7 @@ class Command(BaseCommand):
                     match.notification_sent = True
                     match.save()
 
-                    success_message = (
-                        f"Notification sent for match between {match.user1.username} and {match.user2.username}. "
-                        f"Game session link included: {game_session_url}"
-                    )
+                    success_message = f"Notification sent for match between {match.user1.username} and {match.user2.username}."
                     self.stdout.write(self.style.SUCCESS(success_message))
 
             except Exception as e:
@@ -63,8 +60,18 @@ class Command(BaseCommand):
                 logger.error(error_message)
                 self.stderr.write(self.style.ERROR(error_message))
 
-    def send_email(self, user, url, subject):
-        message = f"Hello {user.username},\n\nYou have been matched with someone on our platform. Please log in to see more details about your match.\n\nClick here to join the game: {url}"
+    def send_email(self, user, subject):
+        message = (
+            f"Hello {user.username},\n\n"
+            "Exciting news! You've been matched in 'Roleplay and then Date'. "
+            "This isn't just another swipe-and-match encounter. Prepare yourself for an immersive journey of "
+            "anonymous role-playing, and a unique 28-day narrative that lets you connect with your match on a deeper level.\n\n"
+            "Log in to the app and play the game with your companion in this adventure of moonlit tales and mysterious connections. "
+            "Once inside, you can embark on your journey together and see where the story takes you.\n\n"
+            "Your moonlit adventure awaits!\n\n"
+            "Best wishes,\n"
+            "The Roleplay and then Date Team"
+        )
         send_mail(
             subject=subject,
             message=message,
@@ -72,10 +79,3 @@ class Command(BaseCommand):
             recipient_list=[user.email],
             fail_silently=False,
         )
-    
-    def get_full_url_with_domain(self, relative_url):
-        site_url = settings.SITE_URL
-        if not site_url.endswith('/'):
-            site_url += '/'
-        return f"{site_url}{relative_url.lstrip('/')}"
-
