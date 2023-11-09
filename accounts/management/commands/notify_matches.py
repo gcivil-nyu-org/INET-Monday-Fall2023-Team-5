@@ -11,12 +11,15 @@ from accounts.models import Match
 # Configure a logger for the command
 logger = logging.getLogger(__name__)
 
+
 class Command(BaseCommand):
     help = "Sends notifications to users about new matches at midnight."
 
     def handle(self, *args, **options):
         yesterday = timezone.now() - timedelta(days=1)
-        new_matches = Match.objects.filter(matched_at__gte=yesterday, notification_sent=False)
+        new_matches = Match.objects.filter(
+            matched_at__gte=yesterday, notification_sent=False
+        )
 
         for match in new_matches:
             try:
@@ -52,7 +55,6 @@ class Command(BaseCommand):
                     logger.error(f"Error sending email: {e}")
                     self.stderr.write(self.style.ERROR(f"Error sending email: {e}"))
                     raise CommandError(f"Error sending email: {e}")
-
 
             except CommandError as ce:
                 logger.error(str(ce))

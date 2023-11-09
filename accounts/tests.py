@@ -880,8 +880,12 @@ class NotifyMatchesCommandTest(TestCase):
     def setUpTestData(cls):
         # Set up data for the whole TestCase, which will be available in all test methods
         # Create two user instances for testing
-        cls.user1 = User.objects.create_user(username="user1", email="user1@example.com")
-        cls.user2 = User.objects.create_user(username="user2", email="user2@example.com")
+        cls.user1 = User.objects.create_user(
+            username="user1", email="user1@example.com"
+        )
+        cls.user2 = User.objects.create_user(
+            username="user2", email="user2@example.com"
+        )
 
         # Create a game session that is active and set up its current game turn
         cls.game_session = GameSession.objects.create(is_active=True)
@@ -890,15 +894,19 @@ class NotifyMatchesCommandTest(TestCase):
         cls.game_session.save()
 
         # Create player instances associated with the users and the game session
-        cls.player1 = Player.objects.create(user=cls.user1, game_session=cls.game_session, character_name="Character1")
-        cls.player2 = Player.objects.create(user=cls.user2, game_session=cls.game_session, character_name="Character2")
+        cls.player1 = Player.objects.create(
+            user=cls.user1, game_session=cls.game_session, character_name="Character1"
+        )
+        cls.player2 = Player.objects.create(
+            user=cls.user2, game_session=cls.game_session, character_name="Character2"
+        )
 
         # Create a match instance that simulates a match made yesterday without notification sent
         cls.match = Match.objects.create(
             user1=cls.user1,
             user2=cls.user2,
             matched_at=timezone.now() - timezone.timedelta(days=1),
-            notification_sent=False
+            notification_sent=False,
         )
 
     @patch("accounts.management.commands.notify_matches.send_mail")
