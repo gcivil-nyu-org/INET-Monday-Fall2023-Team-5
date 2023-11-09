@@ -39,6 +39,7 @@ def reset_likes(request):
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
+    path("game/", include("game.urls")),
     path("", home, name="home"),
     path("api/reset-likes/", reset_likes),
     path("tags/", include("tags.urls")),

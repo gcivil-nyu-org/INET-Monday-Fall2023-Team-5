@@ -48,7 +48,9 @@ Profile of {{ profile.user.username }}
 
     <!-- Display Like Button with Basic Styling -->
     <div class="like-section">
-        <button class="like-button {% if has_liked %}active{% endif %}" data-user-id="{{ profile.user.id }}" data-action="like">Like</button>
+        <button class="btn btn-like {% if has_liked %}liked{% endif %}" data-profile-id="{{ profile.id }}">
+            ❤️LIKE❤️
+        </button>        
         <span>Likes Remaining: <span id="likes-count">{{ user.profile.likes_remaining }}</span></span>
     </div>
 
@@ -93,6 +95,8 @@ Profile of {{ profile.user.username }}
         // Update the countdown every second
         setInterval(updateCountdown, 1000);
     </script>
-    <script src="{% static 'accounts/js/likeButton.js' %}"></script>
+    {% block scripts %}
+    <script src="{% static 'accounts/js/single_profile.js' %}"></script>
+    {% endblock scripts %}
 </div>
 {% endblock %}

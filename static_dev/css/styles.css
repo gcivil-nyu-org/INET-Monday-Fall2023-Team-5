@@ -149,21 +149,6 @@ a:hover {
     border: 1px dashed #ccc;
     min-height: 40px;
     padding: 10px;
-
-}
-
-.like-button {
-    background-color: #FFB6C1; /* slightly pink */
-}
-
-.like-button:hover {
-    background-color: #FF1493; /* vivid pink */
-}
-
-.like-button.active {
-    background-color: #FF1493; /* vivid pink */
-}
-
     background-color: #fff; /* This will set the background color to white */
     color: #333; /* Sets the text color to a dark grey, assuming you want this for contrast */
 }
@@ -183,3 +168,15 @@ a:hover {
     color: #555; /* Change the text color if necessary */
 }
 
+.btn-like {
+    background-color: #ffc0cb; /* light pink */
+}
+  
+  .btn-like:hover {
+    background-color: #ff69b4; /* light vivid pink */ 
+}
+  
+  .btn-like.liked {
+    background-color: #ff1493; /* vivid pink */
+}
+  

@@ -126,16 +126,3 @@ a:hover {
     width: auto;
     height: auto;
   }
-
-
-.like-button {
-    background-color: #FFB6C1; /* slightly pink */
-}
-
-.like-button:hover {
-    background-color: #FF1493; /* vivid pink */
-}
-
-.like-button.active {
-    background-color: #FF1493; /* vivid pink */
-}
