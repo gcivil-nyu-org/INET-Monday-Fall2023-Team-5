@@ -12,6 +12,7 @@ from game.models import GameSession, Player
 # Configure a logger for the command
 logger = logging.getLogger(__name__)
 
+
 class Command(BaseCommand):
     help = "Sends notifications to users about new matches at midnight."
 
