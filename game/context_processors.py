@@ -15,7 +15,7 @@ def game_session_processor(request):
                 is_active=True,  # Assuming you want only active game sessions
             ).latest(
                 "id"
-            )  # Assuming 'id' is an auto-incrementing field which reflects the creation order
+            )  # Assuming 'id' is an auto-incrementing that reflects creation order
 
             game_session_url = game_session.get_absolute_url()
             logger.info(

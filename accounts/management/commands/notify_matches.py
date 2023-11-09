@@ -5,7 +5,6 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.db import transaction
 import logging
-from django.urls import reverse
 from accounts.models import Match
 from game.models import GameSession, Player
 
@@ -30,7 +29,8 @@ class Command(BaseCommand):
                     game_session = GameSession(is_active=True)
                     game_session.save()
 
-                    # Get or create the Player instances, associating them with the new GameSession
+                    # Get or create the Player instances,
+                    # associating them with the new GameSession
                     playerA, _ = Player.objects.get_or_create(
                         user=match.user1, defaults={"game_session": game_session}
                     )
@@ -73,9 +73,9 @@ class Command(BaseCommand):
         message = (
             f"Hello {user.username},\n\n"
             "Exciting news! You've been matched in 'Roleplay and then Date'. "
-            "This isn't just another swipe-and-match encounter. Prepare yourself for an "
-            "immersive journey of anonymous role-playing, and a unique 28-day narrative "
-            "that lets you connect with your match on a deeper level.\n\n"
+            "This isn't just another swipe-and-match encounter. Prepare yourself for "
+            "an immersive journey of anonymous role-playing, and a unique 28-day "
+            "narrative that lets you connect with your match on a deeper level.\n\n"
             "Log in to the app and play the game with your companion in this adventure "
             "of moonlit tales and mysterious connections. "
             "Once inside, you can embark on your journey together and see where the "
