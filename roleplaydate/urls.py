@@ -44,7 +44,7 @@ urlpatterns = [
     path("api/reset-likes/", reset_likes),
     path("tags/", include("tags.urls")),
     path("api/notify-matches/", notify_matches),
-    path("game/", include(("game.urls", 'game'), namespace='game')),
+    path("game/", include(("game.urls", "game"), namespace="game")),
 ]
 
 # Add the following line to serve media files during development
