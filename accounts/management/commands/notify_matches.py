@@ -1,36 +1,29 @@
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
 from datetime import timedelta
 from django.core.mail import send_mail
 from django.conf import settings
 from django.db import transaction
 import logging
-from accounts.models import Match
 from game.models import GameSession, Player
+from accounts.models import Match
 
 # Configure a logger for the command
 logger = logging.getLogger(__name__)
-
 
 class Command(BaseCommand):
     help = "Sends notifications to users about new matches at midnight."
 
     def handle(self, *args, **options):
         yesterday = timezone.now() - timedelta(days=1)
-        new_matches = Match.objects.filter(
-            matched_at__gte=yesterday, notification_sent=False
-        )
+        new_matches = Match.objects.filter(matched_at__gte=yesterday, notification_sent=False)
 
         for match in new_matches:
             try:
-                # Create the GameSession and Players within a transaction
                 with transaction.atomic():
-                    # Create a new GameSession instance
                     game_session = GameSession(is_active=True)
                     game_session.save()
 
-                    # Get or create the Player instances,
-                    # associating them with the new GameSession
                     playerA, _ = Player.objects.get_or_create(
                         user=match.user1, defaults={"game_session": game_session}
                     )
@@ -38,36 +31,33 @@ class Command(BaseCommand):
                         user=match.user2, defaults={"game_session": game_session}
                     )
 
-                    # Link the GameSession with the Players
                     game_session.playerA = playerA
                     game_session.playerB = playerB
                     game_session.save()
 
-                    # Initialize the game session if it's newly created
                     if not game_session.current_game_turn_id:
                         game_session.initialize_game()
 
-                # Send email notifications
-                self.send_email(match.user1, "You have a new match!")
-                self.send_email(match.user2, "You have a new match!")
+                try:
+                    self.send_email(match.user1, "You have a new match!")
+                    self.send_email(match.user2, "You have a new match!")
 
-                # Mark the match as notified
-                match.notification_sent = True
-                match.save()
+                    match.notification_sent = True
+                    match.save()
 
-                success_message = (
-                    f"Notification sent for match between "
-                    f"{match.user1.username} and {match.user2.username}."
-                )
-                self.stdout.write(self.style.SUCCESS(success_message))
+                    success_message = f"Notification sent for match between {match.user1.username} and {match.user2.username}."
+                    self.stdout.write(self.style.SUCCESS(success_message))
 
-            except Exception as e:
-                error_message = (
-                    f"Failed to send notification for match between "
-                    f"{match.user1.username} and {match.user2.username}: {e}"
-                )
-                logger.error(error_message)
-                self.stderr.write(self.style.ERROR(error_message))
+                except Exception as e:
+                    logger.error(f"Error sending email: {e}")
+                    self.stderr.write(self.style.ERROR(f"Error sending email: {e}"))
+                    raise CommandError(f"Error sending email: {e}")
+
+
+            except CommandError as ce:
+                logger.error(str(ce))
+                self.stderr.write(self.style.ERROR(str(ce)))
+                raise  # Re-raise the CommandError so it can be caught by the test
 
     def send_email(self, user, subject):
         message = (
