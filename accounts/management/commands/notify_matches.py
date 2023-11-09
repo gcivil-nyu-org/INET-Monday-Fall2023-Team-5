@@ -5,7 +5,6 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.db import transaction
 import logging
-from django.urls import reverse
 
 from accounts.models import Match
 from game.models import GameSession, Player
@@ -18,60 +17,52 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         yesterday = timezone.now() - timedelta(days=1)
-        new_matches = Match.objects.filter(matched_at__gte=yesterday, notification_sent=False)
+        new_matches = Match.objects.filter(
+            matched_at__gte=yesterday, notification_sent=False
+        )
 
         for match in new_matches:
             try:
+                # Create the GameSession and Players within a transaction
                 with transaction.atomic():
                     # Create a new GameSession instance
-                    game_session = GameSession()
+                    game_session = GameSession(is_active=True)
                     game_session.save()
 
-                    # Creating Player instances for each matched user
-                    player_A = Player.objects.create(user=match.user1, game_session=game_session)
-                    player_B = Player.objects.create(user=match.user2, game_session=game_session)
+                    # Get or create the Player instances, associating them with the new GameSession
+                    playerA, _ = Player.objects.get_or_create(user=match.user1, defaults={'game_session': game_session})
+                    playerB, _ = Player.objects.get_or_create(user=match.user2, defaults={'game_session': game_session})
 
-                    # Assigning players to the game session
-                    game_session.playerA = player_A
-                    game_session.playerB = player_B
+                    # Link the GameSession with the Players
+                    game_session.playerA = playerA
+                    game_session.playerB = playerB
                     game_session.save()
 
-                    # Initializing the game session
-                    game_session.initialize_game()
+                    # Initialize the game session if it's newly created
+                    if not game_session.current_game_turn_id:
+                        game_session.initialize_game()
 
                     # Generate the URL for the game session
-                    game_session_url = self.get_full_url_with_domain(reverse('game:game_progress', kwargs={'game_id': game_session.game_id}))
+                    game_session_url = self.get_full_url_with_domain(game_session.get_absolute_url())
 
-                    # Send email notifications
-                    self.send_email(match.user1, game_session_url, 'You have a new match!')
-                    self.send_email(match.user2, game_session_url, 'You have a new match!')
+                # Send email notifications
+                self.send_email(match.user1, game_session_url, 'You have a new match!')
+                self.send_email(match.user2, game_session_url, 'You have a new match!')
 
-                    # Mark the match as notified
-                    match.notification_sent = True
-                    match.save()
+                # Mark the match as notified
+                match.notification_sent = True
+                match.save()
 
-                    success_message = f"Notification sent for match between {match.user1.username} and {match.user2.username}."
-                    self.stdout.write(self.style.SUCCESS(success_message))
+                success_message = f"Notification sent for match between {match.user1.username} and {match.user2.username}. Game session link included: {game_session_url}"
+                self.stdout.write(self.style.SUCCESS(success_message))
 
             except Exception as e:
-                error_message = (
-                    f"Failed to send notification for match between {match.user1.username} and {match.user2.username}: {e}"
-                )
+                error_message = f"Failed to send notification for match between {match.user1.username} and {match.user2.username}: {e}"
                 logger.error(error_message)
                 self.stderr.write(self.style.ERROR(error_message))
 
-    def send_email(self, user, subject):
-        message = (
-            f"Hello {user.username},\n\n"
-            "Exciting news! You've been matched in 'Roleplay and then Date'. "
-            "This isn't just another swipe-and-match encounter. Prepare yourself for an immersive journey of "
-            "anonymous role-playing, and a unique 28-day narrative that lets you connect with your match on a deeper level.\n\n"
-            "Log in to the app and play the game with your companion in this adventure of moonlit tales and mysterious connections. "
-            "Once inside, you can embark on your journey together and see where the story takes you.\n\n"
-            "Your moonlit adventure awaits!\n\n"
-            "Best wishes,\n"
-            "The Roleplay and then Date Team"
-        )
+    def send_email(self, user, url, subject):
+        message = f"Hello {user.username},\n\nYou have been matched with someone on our platform. Please log in to see more details about your match.\n\nClick here to join the game: {url}"
         send_mail(
             subject=subject,
             message=message,
@@ -79,3 +70,8 @@ class Command(BaseCommand):
             recipient_list=[user.email],
             fail_silently=False,
         )
+    
+    def get_full_url_with_domain(self, relative_url):
+        site_url = settings.SITE_URL.rstrip('/') + '/'
+        return f"{site_url}{relative_url.lstrip('/')}"
+
