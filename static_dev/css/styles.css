@@ -167,3 +167,16 @@ a:hover {
     background-color: #d3d3d3; /* This sets the background to a different color */
     color: #555; /* Change the text color if necessary */
 }
+
+.btn-like {
+    background-color: #ffc0cb; /* light pink */
+}
+  
+  .btn-like:hover {
+    background-color: #ff69b4; /* light vivid pink */ 
+}
+  
+  .btn-like.liked {
+    background-color: #ff1493; /* vivid pink */
+}
+  

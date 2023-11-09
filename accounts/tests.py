@@ -931,3 +931,25 @@ def test_handling_send_mail_exceptions(self, mock_send_mail):
     # Assert the notification_sent flag is still False for both users
     self.match.refresh_from_db()
     self.assertFalse(self.match.notification_sent)
+
+
+class LikeFeatureTest(TestCase):
+    def setUp(self):
+        # Create users
+        self.user1 = User.objects.create_user(username='user1', password='testpass123')
+        self.user2 = User.objects.create_user(username='user2', password='testpass123')
+
+        # Get or create profiles
+        self.profile1, created1 = Profile.objects.get_or_create(user=self.user1)
+        self.profile2, created2 = Profile.objects.get_or_create(user=self.user2)
+
+        # Set initial likes remaining if the profile was created
+        if created1:
+            self.profile1.likes_remaining = 3
+            self.profile1.save()
+        if created2:
+            self.profile2.likes_remaining = 3
+            self.profile2.save()
+
+        self.client = Client()
+        self.client.login(username='user1', password='testpass123')
