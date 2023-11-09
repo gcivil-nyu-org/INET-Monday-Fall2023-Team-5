@@ -58,7 +58,7 @@ class Command(BaseCommand):
                 logger.error(error_message)
                 self.stderr.write(self.style.ERROR(error_message))
 
-    def send_email(self, user, url, subject):
+    def send_email(self, user, subject):
         message = f"Hello {user.username},\n\nYou have been matched with someone on our platform. Please log in to see more details about your match."
         send_mail(
             subject=subject,
