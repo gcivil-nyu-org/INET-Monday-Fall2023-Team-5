@@ -12,6 +12,7 @@ from game.models import GameSession, Player
 # Configure a logger for the command
 logger = logging.getLogger(__name__)
 
+
 class Command(BaseCommand):
     help = "Sends notifications to users about new matches at midnight."
 
@@ -30,8 +31,12 @@ class Command(BaseCommand):
                     game_session.save()
 
                     # Get or create the Player instances, associating them with the new GameSession
-                    playerA, _ = Player.objects.get_or_create(user=match.user1, defaults={'game_session': game_session})
-                    playerB, _ = Player.objects.get_or_create(user=match.user2, defaults={'game_session': game_session})
+                    playerA, _ = Player.objects.get_or_create(
+                        user=match.user1, defaults={"game_session": game_session}
+                    )
+                    playerB, _ = Player.objects.get_or_create(
+                        user=match.user2, defaults={"game_session": game_session}
+                    )
 
                     # Link the GameSession with the Players
                     game_session.playerA = playerA
@@ -43,8 +48,8 @@ class Command(BaseCommand):
                         game_session.initialize_game()
 
                 # Send email notifications
-                self.send_email(match.user1, 'You have a new match!')
-                self.send_email(match.user2, 'You have a new match!')
+                self.send_email(match.user1, "You have a new match!")
+                self.send_email(match.user2, "You have a new match!")
 
                 # Mark the match as notified
                 match.notification_sent = True
@@ -77,4 +82,3 @@ class Command(BaseCommand):
             recipient_list=[user.email],
             fail_silently=False,
         )
-    
