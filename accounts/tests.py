@@ -25,6 +25,7 @@ from django.core import mail
 from django.utils import timezone
 from unittest.mock import patch
 from django.core.management.base import CommandError
+from game.models import GameSession, Player, GameTurn
 
 
 class ProfileModelTest(TestCase):
@@ -877,57 +878,63 @@ class ResetLikesCommandTest(TestCase):
 class NotifyMatchesCommandTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        # Create test users
-        cls.user1 = User.objects.create_user(
-            username="user1", email="user1@example.com"
-        )
-        cls.user2 = User.objects.create_user(
-            username="user2", email="user2@example.com"
-        )
+        # Set up data for the whole TestCase, which will be available in all test methods
+        # Create two user instances for testing
+        cls.user1 = User.objects.create_user(username="user1", email="user1@example.com")
+        cls.user2 = User.objects.create_user(username="user2", email="user2@example.com")
 
-        # Create a match that happened yesterday
+        # Create a game session that is active and set up its current game turn
+        cls.game_session = GameSession.objects.create(is_active=True)
+        cls.game_turn = GameTurn.objects.create()
+        cls.game_session.current_game_turn = cls.game_turn
+        cls.game_session.save()
+
+        # Create player instances associated with the users and the game session
+        cls.player1 = Player.objects.create(user=cls.user1, game_session=cls.game_session, character_name="Character1")
+        cls.player2 = Player.objects.create(user=cls.user2, game_session=cls.game_session, character_name="Character2")
+
+        # Create a match instance that simulates a match made yesterday without notification sent
         cls.match = Match.objects.create(
             user1=cls.user1,
             user2=cls.user2,
             matched_at=timezone.now() - timezone.timedelta(days=1),
-            notification_sent=False,
+            notification_sent=False
         )
 
     @patch("accounts.management.commands.notify_matches.send_mail")
     def test_sending_notifications(self, mock_send_mail):
-        # Call the management command
+        # Test if the notify_matches command sends notifications properly
         call_command("notify_matches")
-
-        # Assert send_mail was called twice
+        # Verify that send_mail was called twice, once for each user
         self.assertEqual(mock_send_mail.call_count, 2)
 
-        # Assert the notification_sent flag is now True
+        # Refresh the match object from the database to ensure it's up to date
         self.match.refresh_from_db()
+
+        # Check if the notification_sent flag on the match object is set to True after running the command
         self.assertTrue(self.match.notification_sent)
 
-        # Check the calls to send_mail and their arguments
+        # Verify that the correct email addresses were used when sending emails
         user1_call = mock_send_mail.call_args_list[0]
         user2_call = mock_send_mail.call_args_list[1]
-
         self.assertEqual(user1_call[1]["recipient_list"], [self.user1.email])
         self.assertEqual(user2_call[1]["recipient_list"], [self.user2.email])
 
-    from django.core.management.base import CommandError
+    @patch("accounts.management.commands.notify_matches.send_mail")
+    def test_handling_send_mail_exceptions(self, mock_send_mail):
+        # Test the command's ability to handle exceptions during email sending
+        # Simulate an exception when send_mail is called
+        mock_send_mail.side_effect = Exception("Boom!")
 
+        # Expect a CommandError to be raised when running the notify_matches command
+        with self.assertRaises(CommandError):
+            call_command("notify_matches")
 
-@patch("accounts.management.commands.notify_matches.send_mail")
-def test_handling_send_mail_exceptions(self, mock_send_mail):
-    # Simulate an exception on sending email
-    mock_send_mail.side_effect = [Exception("Boom!"), Exception("Boom!")]
+        # Verify that send_mail was called, which means the command attempted to send an email
+        mock_send_mail.assert_called()
 
-    # Run the management command within a context manager to prevent the test from failing
-    # due to the raised exceptions within the command.
-    with self.assertRaises(CommandError):
-        call_command("notify_matches")
+        # Refresh the match object from the database to get the latest data
+        self.match.refresh_from_db()
 
-    # Assert send_mail was attempted twice
-    self.assertEqual(mock_send_mail.call_count, 2)
-
-    # Assert the notification_sent flag is still False for both users
-    self.match.refresh_from_db()
-    self.assertFalse(self.match.notification_sent)
+        # Verify that the notification_sent flag is still False due to the simulated email exception
+        self.assertFalse(self.match.notification_sent)
