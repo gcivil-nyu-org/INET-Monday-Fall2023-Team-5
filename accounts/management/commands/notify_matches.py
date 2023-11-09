@@ -59,7 +59,17 @@ class Command(BaseCommand):
                 self.stderr.write(self.style.ERROR(error_message))
 
     def send_email(self, user, subject):
-        message = f"Hello {user.username},\n\nYou have been matched with someone on our platform. Please log in to see more details about your match."
+        message = (
+            f"Hello {user.username},\n\n"
+            "Exciting news! You've been matched in 'Roleplay and then Date'. "
+            "This isn't just another swipe-and-match encounter. Prepare yourself for an immersive journey of "
+            "anonymous role-playing, and a unique 28-day narrative that lets you connect with your match on a deeper level.\n\n"
+            "Log in to the app and play the game with your companion in this adventure of moonlit tales and mysterious connections. "
+            "Once inside, you can embark on your journey together and see where the story takes you.\n\n"
+            "Your moonlit adventure awaits!\n\n"
+            "Best wishes,\n"
+            "The Roleplay and then Date Team"
+        )
         send_mail(
             subject=subject,
             message=message,
@@ -68,5 +78,3 @@ class Command(BaseCommand):
             fail_silently=False,
         )
     
-
-
