@@ -42,18 +42,15 @@ class Command(BaseCommand):
                     if not game_session.current_game_turn_id:
                         game_session.initialize_game()
 
-                    # Generate the URL for the game session
-                    game_session_url = self.get_full_url_with_domain(game_session.get_absolute_url())
-
                 # Send email notifications
-                self.send_email(match.user1, game_session_url, 'You have a new match!')
-                self.send_email(match.user2, game_session_url, 'You have a new match!')
+                self.send_email(match.user1, 'You have a new match!')
+                self.send_email(match.user2, 'You have a new match!')
 
                 # Mark the match as notified
                 match.notification_sent = True
                 match.save()
 
-                success_message = f"Notification sent for match between {match.user1.username} and {match.user2.username}. Game session link included: {game_session_url}"
+                success_message = f"Notification sent for match between {match.user1.username} and {match.user2.username}."
                 self.stdout.write(self.style.SUCCESS(success_message))
 
             except Exception as e:
@@ -62,7 +59,7 @@ class Command(BaseCommand):
                 self.stderr.write(self.style.ERROR(error_message))
 
     def send_email(self, user, url, subject):
-        message = f"Hello {user.username},\n\nYou have been matched with someone on our platform. Please log in to see more details about your match.\n\nClick here to join the game: {url}"
+        message = f"Hello {user.username},\n\nYou have been matched with someone on our platform. Please log in to see more details about your match."
         send_mail(
             subject=subject,
             message=message,
@@ -71,7 +68,5 @@ class Command(BaseCommand):
             fail_silently=False,
         )
     
-    def get_full_url_with_domain(self, relative_url):
-        site_url = settings.SITE_URL.rstrip('/') + '/'
-        return f"{site_url}{relative_url.lstrip('/')}"
+
 
