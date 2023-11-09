@@ -48,7 +48,10 @@ class Command(BaseCommand):
                     match.notification_sent = True
                     match.save()
 
-                    success_message = f"Notification sent for match between {match.user1.username} and {match.user2.username}."
+                    success_message = (
+                        f"Notification sent for match between {match.user1.username} "
+                        f"and {match.user2.username}."
+                    )
                     self.stdout.write(self.style.SUCCESS(success_message))
 
                 except Exception as e:
