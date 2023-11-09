@@ -146,8 +146,7 @@ class GameSession(models.Model):
         super(GameSession, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('game:game_progress', kwargs={'game_id': self.game_id})
-
+        return reverse("game:game_progress", kwargs={"game_id": self.game_id})
 
 
 class GameTurn(models.Model):
