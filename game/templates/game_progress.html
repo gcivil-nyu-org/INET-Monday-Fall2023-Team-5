@@ -1,5 +1,86 @@
 {% extends "base.html" %}
 
+<script type="text/javascript">
+    // Establishing a WebSocket connection to the server
+    const gameSocket = new WebSocket(
+        `ws://${window.location.host}/ws/game_progress/${'{{ game_session.game_id }}'}/`
+    );
+
+    // Handling incoming WebSocket messages
+    gameSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        // You'll need to handle different types of messages here,
+        // such as new chat messages or game state updates.
+        console.log("Message received: ", data);
+    };
+
+    gameSocket.onclose = function(e) {
+        console.error('Game socket closed unexpectedly');
+    };
+
+    document.querySelector('#submit-narrative-choice').addEventListener('click', function(e) {
+        // Prevent the default form submission behavior
+        e.preventDefault();
+
+        // Get the value from the form input
+        const narrativeChoiceValue = document.querySelector('select[name="narrative"]').value;
+
+        // Send the action and value via WebSocket
+        gameSocket.send(JSON.stringify({
+            action: 'select_narrative',
+            narrative: narrativeChoiceValue
+        }));
+    });
+    document.querySelector('#share-moon-meaning').addEventListener('click', function(e) {
+        e.preventDefault();  // Prevent any default button click behavior
+
+        // Get the value from the textarea
+        const moonMeaning = document.querySelector('#moon-meaning-text').value;
+
+        // Send the action and value via WebSocket
+        gameSocket.send(JSON.stringify({
+            action: 'moon_phase',
+            moon_meaning: moonMeaning
+        }));
+    });
+    document.querySelectorAll('[data-action]').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const actionType = this.dataset.action;
+            let value;
+            switch (actionType) {
+                case 'select_question':
+                    value = document.querySelector('select[name="question"]').value;
+                    break;
+                case 'answer_question':
+                    value = document.querySelector('textarea[name="answer"]').value;
+                    break;
+                case 'react_emoji':
+                    value = document.querySelector('input[name="emoji"]:checked').value;
+                    break;
+            }
+            gameSocket.send(JSON.stringify({ action: actionType, value: value }));
+        });
+    });
+
+    document.querySelector('#end-game-session').addEventListener('click', function(e) {
+        e.preventDefault();  // Prevent any default form submission behavior
+
+        // Confirm with the user that they want to end the game session
+        if(confirm('Are you sure you want to end the game session?')) {
+            // Send the action via WebSocket
+            gameSocket.send(JSON.stringify({
+                action: 'end_game',
+                game_id: '{{ game_session.game_id }}'
+            }));
+        }
+    });
+
+</script>
+
+
+
+
 {% block content %}
     <div class="container">
         <h2>Game Progress for Game ID: {{ game_session.game_id }}</h2>
@@ -38,14 +119,11 @@
 
         <!-- Display actions based on the game phase -->
         {% if game_session.current_game_turn.state == 'narrative_choices' %}
-            {% if choice_made == False%}
-                <form action="{% url 'game_progress' game_session.game_id %}" method="post">
-                    {% csrf_token %}
-                    <h3>Select a Narrative Choice</h3>
-                    {{ narrative_form.narrative.label_tag }}
-                    {{ narrative_form.narrative }}
-                    <input type="submit" value="Submit">
-                </form>
+            {% if choice_made == False %}
+                <h3>Select a Narrative Choice</h3>
+                {{ narrative_form.narrative.label_tag }}
+                {{ narrative_form.narrative }}
+                <button id="submit-narrative-choice" data-action="select_narrative">Submit Choice</button>
             {% else %}
                 <p>You have already made a narrative choice. Please wait for the other players to make their choices.</p>
             {% endif %}
@@ -53,41 +131,33 @@
             {% if game_session.current_game_turn.state == 'moon_phase' %}
                 <h3>Moon Sign Phase: {{ moon_phase }}</h3>
                 <p>The Moon is currently in its {{ moon_phase }} phase. Share your personal meaning of the moon phase:</p>
-
-                <form method="post" action="{% url 'game_progress' game_session.game_id %}">
-                    {% csrf_token %}
-                    <textarea name="moon_meaning" rows="1" cols="50" placeholder="Share your personal meaning..."></textarea><br>
-                    <button type="submit">Share</button>
-                </form>
+                <textarea id="moon-meaning-text" rows="1" cols="140" placeholder="Share your personal meaning..."></textarea><br>
+                <button id="share-moon-meaning" data-action="moon_phase">Share</button>
                 <!-- You can add any additional Moon Sign Phases related content or actions here. -->
             {% else %}
-                <form action="{% url 'game_progress' game_session.game_id %}" method="post">
-                    {% csrf_token %}
-                    {% if game_session.current_game_turn.state == 'select_question' %}
-                        <h3>Select a Question</h3>
-                        {{ question_form.question.label_tag }}
-                        {{ question_form.question }}
-                        <input type="submit" value="Submit">
-                    {% elif game_session.current_game_turn.state == 'answer_question' %}
-                        <h3>Answer the Question</h3>
-                        {{ answer_form.answer.label_tag }}
-                        {{ answer_form.answer }}
-                        <input type="submit" value="Submit">
-                    {% elif game_session.current_game_turn.state == 'react_emoji' %}
-                        <h3>React with an Emoji</h3>
-                        {{ emoji_form.emoji.label_tag }}
-                        {{ emoji_form.emoji }}
-                        <input type="submit" value="Submit">
-                    {% endif %}
-                </form>
+                {% if game_session.current_game_turn.state == 'select_question' %}
+                    <h3>Select a Question</h3>
+                    {{ question_form.question.label_tag }}
+                    {{ question_form.question }}
+                    <button id="submit-question" data-action="select_question">Submit Question</button>
+
+                {% elif game_session.current_game_turn.state == 'answer_question' %}
+                    <h3>Answer the Question</h3>
+                    {{ answer_form.answer.label_tag }}
+                    {{ answer_form.answer }}
+                    <button id="submit-answer" data-action="answer_question">Submit Answer</button>
+
+                {% elif game_session.current_game_turn.state == 'react_emoji' %}
+                    <h3>React with an Emoji</h3>
+                    {{ emoji_form.emoji.label_tag }}
+                    {{ emoji_form.emoji }}
+                    <button id="submit-emoji" data-action="react_emoji">Submit Reaction</button>
+                {% endif %}
             {% endif %}
         {% else %}
             <p>You are not the active player. Please wait for your turn.</p>
         {% endif %}
 
-        <form action="{% url 'end_game_session' game_session.game_id %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">End Game Session</button>
-        </form>
+        <button id="end-game-session" class="btn btn-danger" data-action="end_game">End Game Session</button>
     </div>
 {% endblock %}
