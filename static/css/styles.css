@@ -172,11 +172,11 @@ a:hover {
     background-color: #ffc0cb; /* light pink */
 }
   
-  .btn-like:hover {
+.btn-like:hover {
     background-color: #ff69b4; /* light vivid pink */ 
 }
   
-  .btn-like.liked {
+.btn-like.liked {
     background-color: #ff1493; /* vivid pink */
 }
   
