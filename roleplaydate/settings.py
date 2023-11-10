@@ -35,7 +35,6 @@ INSTALLED_APPS = [
     "accounts",
     "game",
     "channels",
-    "daphne",
     "channels_redis",
     "django.contrib.admin",
     "django.contrib.auth",
