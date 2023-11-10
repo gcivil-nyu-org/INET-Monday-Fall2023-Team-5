@@ -76,7 +76,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "roleplaydate.wsgi.application"
+# WSGI_APPLICATION = "roleplaydate.wsgi.application"
 ASGI_APPLICATION = "roleplaydate.asgi.application"
 
 CHANNEL_LAYERS = {
