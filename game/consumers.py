@@ -30,6 +30,49 @@ class GameConsumer(AsyncWebsocketConsumer):
         return GameSession.objects.get(id=game_id)
 
     @database_sync_to_async
+    def get_game_state(self):
+        # Fetch the game session and related objects from the database
+        game_session = GameSession.objects.get(game_id=self.game_id)
+        current_turn = game_session.current_game_turn
+
+        # Serialize the game session state into a dictionary
+        game_state = {
+            "game_id": game_session.game_id,
+            "state": game_session.state,
+            "is_active": game_session.is_active,
+            "playerA": {
+                "id": game_session.playerA.id,
+                "character_name": game_session.playerA.character_name,
+            }
+            if game_session.playerA
+            else None,
+            "playerB": {
+                "id": game_session.playerB.id,
+                "character_name": game_session.playerB.character_name,
+            }
+            if game_session.playerB
+            else None,
+            "current_turn": {
+                "id": current_turn.id,
+                "turn_number": current_turn.turn_number,
+                "state": current_turn.state,
+                "active_player_id": current_turn.active_player.id
+                if current_turn.active_player
+                else None,
+                "active_player_character_name": current_turn.active_player.character_name
+                if current_turn.active_player
+                else None,
+            },
+            "chat_messages": list(
+                game_session.chat_messages.values(
+                    "id", "text", "sender__character_name", "timestamp"
+                )
+            ),
+        }
+
+        return game_state
+
+    @database_sync_to_async
     def save_game_turn(self, game_turn):
         game_turn.save()
 
@@ -134,17 +177,20 @@ class GameConsumer(AsyncWebsocketConsumer):
         except ValueError as e:
             await self.send_json({"error": str(e)})
 
-
     async def moon_phase(self, moon_meaning):
         player = self.scope["user"]
         if not player.is_authenticated:
             await self.send_json(
-                {"error": "You must be logged in to write a message about the moon phase."}
+                {
+                    "error": "You must be logged in to write a message about the moon phase."
+                }
             )
             return
 
         try:
-            game_turn = await database_sync_to_async(GameTurn.objects.get)(id=self.game_id)
+            game_turn = await database_sync_to_async(GameTurn.objects.get)(
+                id=self.game_id
+            )
             await database_sync_to_async(game_turn.write_message_about_moon_phase)(
                 moon_meaning, player
             )
@@ -152,20 +198,32 @@ class GameConsumer(AsyncWebsocketConsumer):
             await self.broadcast_game_state()
         except ValueError as e:
             await self.send_json({"error": str(e)})
+
     async def end_game(self, game_id):
+        try:
+            game_session = await database_sync_to_async(GameSession.objects.get)(
+                game_id=game_id
+            )
+            await database_sync_to_async(game_session.end_game)()
+            await self.broadcast_game_state()
+        except ValueError as e:
+            await self.send_json({"error": str(e)})
 
-    pass
+    async def broadcast_game_state(self):
+        # Get the current game state
+        game_state = await self.get_game_state()
+        # Broadcast the new game state to all players in the game session
+        await self.channel_layer.group_send(
+            self.game_group_name,
+            {
+                "type": "game_state_update",
+                "content": {
+                    "command": "refresh",  # Command to tell the client to refresh
+                    "game_state": game_state,  # The current game state
+                },
+            },
+        )
 
-# Helper methods to send messages to the WebSocket
-async def send_chat_message(self, message):
-    # Call this method when you want to send a chat message to the group
-    await self.channel_layer.group_send(
-        self.game_group_name, {"type": "chat_message", "message": message}
-    )
-
-async def chat_message(self, event):
-    # Handles the messages from send_chat_message
-    message = event["message"]
-
-    # Send message to WebSocket
-    await self.send(text_data=json.dumps({"message": message}))
+    async def game_state_update(self, event):
+        # Send the refresh command and game state to the WebSocket
+        await self.send_json(event["content"])

@@ -6,13 +6,21 @@
         `ws://${window.location.host}/ws/game_progress/${'{{ game_session.game_id }}'}/`
     );
 
-    // Handling incoming WebSocket messages
-    gameSocket.onmessage = function(e) {
-        const data = JSON.parse(e.data);
-        // You'll need to handle different types of messages here,
-        // such as new chat messages or game state updates.
-        console.log("Message received: ", data);
-    };
+
+    gameSocket.onmessage = function(event) {
+    const data = JSON.parse(event.data);
+    console.log("Message received: ", data);
+
+    // Handle different types of messages
+    switch (data.command) {
+        case 'refresh':
+            // Trigger a page refresh
+            window.location.reload(true);
+            break;
+        // Handle other commands or types of messages
+        // ...
+    }
+};
 
     gameSocket.onclose = function(e) {
         console.error('Game socket closed unexpectedly');
