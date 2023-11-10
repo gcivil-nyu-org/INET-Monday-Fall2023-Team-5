@@ -227,3 +227,17 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def game_state_update(self, event):
         # Send the refresh command and game state to the WebSocket
         await self.send_json(event["content"])
+
+
+# consumers.py in one of your apps
+
+from channels.generic.websocket import AsyncWebsocketConsumer
+
+
+class EchoConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        print("WebSocket connected!")
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        print("WebSocket disconnected!")
