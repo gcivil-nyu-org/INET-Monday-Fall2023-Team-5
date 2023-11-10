@@ -7,4 +7,5 @@ websocket_urlpatterns = [
         r"^ws/game_progress/(?P<game_id>[a-fA-F0-9\-]{36})/$",
         consumers.GameConsumer.as_asgi(),
     ),
+    path("ws/test/", consumers.TestConsumer.as_asgi()),
 ]

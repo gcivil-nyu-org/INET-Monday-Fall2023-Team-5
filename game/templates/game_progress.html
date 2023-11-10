@@ -2,9 +2,10 @@
 
 <script type="text/javascript">
     // Establishing a WebSocket connection to the server
-    const gameSocket = new WebSocket(
-        `ws://${window.location.host}/ws/game_progress/${'{{ game_session.game_id }}'}/`
-    );
+    const gameId = '{{ game_session.game_id }}';
+    const gameSocket = new WebSocket(`ws://${window.location.host}/ws/game_progress/${gameId}/`);
+    console.log("Game ID: ", gameId);
+    console.log("gameSocket: ", gameSocket);
 
 
     gameSocket.onmessage = function(event) {
@@ -18,7 +19,6 @@
             window.location.reload(true);
             break;
         // Handle other commands or types of messages
-        // ...
     }
 };
 
