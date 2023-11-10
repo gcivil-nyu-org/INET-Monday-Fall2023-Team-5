@@ -50,7 +50,7 @@ Profile of {{ profile.user.username }}
     <div class="like-section">
         <!-- when the user has liked the profile, add the liked class to the button -->
         <button class="btn btn-like {% if has_liked %}liked{% endif %}" data-profile-id="{{ profile.id }}"> 
-            ❤️LIKE❤️
+            &#x2764;LIKE&#x2764;
         </button>        
         <span>Likes Remaining: <span id="likes-count">{{ user.profile.likes_remaining }}</span></span>
     </div>
