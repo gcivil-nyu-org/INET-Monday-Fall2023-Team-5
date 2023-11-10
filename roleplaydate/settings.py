@@ -34,7 +34,6 @@ INSTALLED_APPS = [
     "tags",
     "accounts",
     "game",
-    "daphne",
     "channels",
     "channels_redis",
     "django.contrib.admin",
