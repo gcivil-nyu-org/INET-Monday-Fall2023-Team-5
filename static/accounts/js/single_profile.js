@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         this.classList.add('liked');
                         console.log('Like class added:', this);
                     } else {
+                        // this.classList.remove('liked'); // Revert the like button state if the action wasn't successful
                         alert(data.error);
                     }
                 })

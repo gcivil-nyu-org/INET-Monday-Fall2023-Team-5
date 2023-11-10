@@ -968,3 +968,5 @@ class LikeFeatureTest(TestCase):
 
         self.client = Client()
         self.client.login(username="user1", password="testpass123")
+        # Verify that the notification_sent flag is still False due to the simulated email exception
+        self.assertFalse(self.match.notification_sent)
