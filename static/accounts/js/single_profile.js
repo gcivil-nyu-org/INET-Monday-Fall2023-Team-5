@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (this.classList.contains('liked')) {
                 alert('You have already liked this person before.');
             } else {
-                this.classList.add('liked');
+                // this.classList.add('liked');
                 // Assuming you're using Django's CSRF token setup
                 fetch(`/accounts/like-profile/${profileId}/`, {
                     method: 'POST',
@@ -25,8 +25,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(data => {
                     if(data.success) {
                         document.getElementById('likes-count').innerText = data.likes_remaining;
+                        this.classList.add('liked');
+                        console.log('Like class added:', this);
                     } else {
-                        this.classList.remove('liked'); // Revert the like button state if the action wasn't successful
+                        // this.classList.remove('liked'); // Revert the like button state if the action wasn't successful
                         alert(data.error);
                     }
                 })
