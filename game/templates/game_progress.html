@@ -1,94 +1,4 @@
 {% extends "base.html" %}
-
-<script type="text/javascript">
-    // Establishing a WebSocket connection to the server
-    const gameId = '{{ game_session.game_id }}';
-    const gameSocket = new WebSocket(`ws://${window.location.host}/ws/game_progress/${gameId}/`);
-    console.log("Game ID: ", gameId);
-    console.log("gameSocket: ", gameSocket);
-
-
-    gameSocket.onmessage = function(event) {
-    const data = JSON.parse(event.data);
-    console.log("Message received: ", data);
-
-    // Handle different types of messages
-    switch (data.command) {
-        case 'refresh':
-            // Trigger a page refresh
-            window.location.reload(true);
-            break;
-        // Handle other commands or types of messages
-    }
-};
-
-    gameSocket.onclose = function(e) {
-        console.error('Game socket closed unexpectedly');
-    };
-
-    document.querySelector('#submit-narrative-choice').addEventListener('click', function(e) {
-        // Prevent the default form submission behavior
-        e.preventDefault();
-
-        // Get the value from the form input
-        const narrativeChoiceValue = document.querySelector('select[name="narrative"]').value;
-
-        // Send the action and value via WebSocket
-        gameSocket.send(JSON.stringify({
-            action: 'select_narrative',
-            narrative: narrativeChoiceValue
-        }));
-    });
-    document.querySelector('#share-moon-meaning').addEventListener('click', function(e) {
-        e.preventDefault();  // Prevent any default button click behavior
-
-        // Get the value from the textarea
-        const moonMeaning = document.querySelector('#moon-meaning-text').value;
-
-        // Send the action and value via WebSocket
-        gameSocket.send(JSON.stringify({
-            action: 'moon_phase',
-            moon_meaning: moonMeaning
-        }));
-    });
-    document.querySelectorAll('[data-action]').forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            const actionType = this.dataset.action;
-            let value;
-            switch (actionType) {
-                case 'select_question':
-                    value = document.querySelector('select[name="question"]').value;
-                    break;
-                case 'answer_question':
-                    value = document.querySelector('textarea[name="answer"]').value;
-                    break;
-                case 'react_emoji':
-                    value = document.querySelector('input[name="emoji"]:checked').value;
-                    break;
-            }
-            gameSocket.send(JSON.stringify({ action: actionType, value: value }));
-        });
-    });
-
-    document.querySelector('#end-game-session').addEventListener('click', function(e) {
-        e.preventDefault();  // Prevent any default form submission behavior
-
-        // Confirm with the user that they want to end the game session
-        if(confirm('Are you sure you want to end the game session?')) {
-            // Send the action via WebSocket
-            gameSocket.send(JSON.stringify({
-                action: 'end_game',
-                game_id: '{{ game_session.game_id }}'
-            }));
-        }
-    });
-
-</script>
-
-
-
-
 {% block content %}
     <div class="container">
         <h2>Game Progress for Game ID: {{ game_session.game_id }}</h2>
@@ -150,10 +60,9 @@
                     <button id="submit-question" data-action="select_question">Submit Question</button>
 
                 {% elif game_session.current_game_turn.state == 'answer_question' %}
-                    <h3>Answer the Question</h3>
-                    {{ answer_form.answer.label_tag }}
-                    {{ answer_form.answer }}
-                    <button id="submit-answer" data-action="answer_question">Submit Answer</button>
+                   <h3>Answer the Question</h3>
+                    <textarea id="answer-input" rows="1" cols="140" placeholder="Type your answer here..."></textarea>
+                    <button id="submit-answer" data-action="answer">Submit Answer</button>
 
                 {% elif game_session.current_game_turn.state == 'react_emoji' %}
                     <h3>React with an Emoji</h3>
@@ -168,4 +77,80 @@
 
         <button id="end-game-session" class="btn btn-danger" data-action="end_game">End Game Session</button>
     </div>
+
+    <script type="text/javascript">
+        // Establishing a WebSocket connection to the server
+        const gameId = '{{ game_session.game_id }}';
+        const gameSocket = new WebSocket(`ws://${window.location.host}/ws/game_progress/${gameId}/`);
+        console.log("Game ID: ", gameId);
+        console.log("gameSocket: ", gameSocket);
+
+        gameSocket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            console.log("Message received: ", data);
+            // Handle different types of messages
+            switch (data.command) {
+                case 'refresh':
+                    // Trigger a page refresh
+                    window.location.reload(true);
+                    break;
+
+            }
+        };
+
+        gameSocket.onopen = function() {
+            console.log("WebSocket connection established");
+        };
+        gameSocket.onerror = function(error) {
+            console.error("WebSocket error observed:", error);
+        };
+        gameSocket.onclose = function(e) {
+            console.log("WebSocket connection closed");
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.addEventListener('click', function(e) {
+                // Check if the clicked element has an ID or a data-action attribute
+                if (e.target.id === 'submit-narrative-choice') {
+                    e.preventDefault();
+                    const narrativeChoiceValue = document.querySelector('select[name="narrative"]').value;
+                    gameSocket.send(JSON.stringify({
+                        action: 'select_narrative',
+                        narrative: narrativeChoiceValue
+                    }));
+                } else if (e.target.id === 'share-moon-meaning') {
+                    e.preventDefault();
+                    const moonMeaning = document.querySelector('#moon-meaning-text').value;
+                    gameSocket.send(JSON.stringify({
+                        action: 'moon_phase',
+                        moon_meaning: moonMeaning
+                    }));
+                } else if (e.target.dataset.action) {
+                    e.preventDefault();
+                    const actionType = e.target.dataset.action;
+                    let value;
+                    switch (actionType) {
+                        case 'select_question':
+                            value = document.querySelector('select[name="question"]').value;
+                            break;
+                        case 'answer_question':
+                            value = document.querySelector('#answer-input').value;
+                            break;
+                        case 'react_emoji':
+                            value = document.querySelector('input[name="emoji"]:checked').value;
+                            break;
+                    }
+                    gameSocket.send(JSON.stringify({ action: actionType, value: value }));
+                } else if (e.target.id === 'end-game-session') {
+                    e.preventDefault();
+                    if (confirm('Are you sure you want to end the game session?')) {
+                        gameSocket.send(JSON.stringify({
+                            action: 'end_game',
+                            game_id: gameId
+                        }));
+                    }
+                }
+            });
+        });
+    </script>
 {% endblock %}

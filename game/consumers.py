@@ -65,7 +65,11 @@ class GameConsumer(AsyncWebsocketConsumer):
             },
             "chat_messages": list(
                 game_session.chat_messages.values(
-                    "id", "text", "sender__character_name", "timestamp"
+                    "id",
+                    "text",
+                    "sender",
+                    "timestamp",
+                    "reaction",
                 )
             ),
         }
@@ -78,21 +82,23 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     # Receive message from WebSocket
 
-    async def receive(self, text_data=None, bytes_data=None):
+    async def receive(self, text_data, bytes_data=None):
         data_json = json.loads(text_data)
         action = data_json["action"]
+        value = data_json["value"]
 
         # Map the action to a handler function
         if action == "select_narrative":
             await self.make_narrative_choice(data_json["narrative"])
         elif action == "select_question":
-            await self.select_question(data_json["value"])
-        elif action == "answer_question":
-            await self.answer_question(data_json["value"])
+            await self.select_question(value)
+        elif action == "answer":
+            print(value)
+            await self.answer_question(value)
         elif action == "react_emoji":
-            await self.react_emoji(data_json["value"])
+            await self.react_emoji(value)
         elif action == "moon_phase":
-            await self.moon_phase(data_json["value"])
+            await self.moon_phase(value)
         elif action == "end_game":
             await self.end_game(data_json["game_id"])
 
@@ -116,6 +122,13 @@ class GameConsumer(AsyncWebsocketConsumer):
         except ValueError as e:
             await self.send_json({"error": str(e)})
 
+    def select_question_sync(self, question, player):
+        game_id = self.game_id
+        game_session = GameSession.objects.get(game_id=game_id)
+        game_turn = game_session.current_game_turn
+        game_turn.select_question(question, player)
+        game_turn.save()
+
     async def select_question(self, question):
         user = self.scope["user"]
         if not user.is_authenticated:
@@ -125,21 +138,12 @@ class GameConsumer(AsyncWebsocketConsumer):
             return
 
         player = await database_sync_to_async(Player.objects.get)(user=user)
-        game_session = await database_sync_to_async(GameSession.objects.get)(
-            game_id=self.game_id
-        )
 
-        # Call the select_question method on the GameTurn model
         try:
-            await database_sync_to_async(
-                game_session.current_game_turn.select_question
-            )(question, player)
+            await database_sync_to_async(self.select_question_sync)(question, player)
+            await self.broadcast_game_state()
         except ValueError as e:
             await self.send_json({"error": str(e)})
-            return
-
-        # Broadcast the update to all players
-        await self.broadcast_game_state()
 
     async def answer_question(self, answer):
         player = self.scope["user"]
@@ -211,7 +215,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def broadcast_game_state(self):
         # Get the current game state
-        game_state = await self.get_game_state()
+        # game_state = await self.get_game_state()
         # Broadcast the new game state to all players in the game session
         await self.channel_layer.group_send(
             self.game_group_name,
@@ -219,7 +223,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 "type": "game_state_update",
                 "content": {
                     "command": "refresh",  # Command to tell the client to refresh
-                    "game_state": game_state,  # The current game state
+                    # "game_state": game_state,  # The current game state
                 },
             },
         )

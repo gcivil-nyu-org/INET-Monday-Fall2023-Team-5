@@ -9,7 +9,7 @@ charset-normalizer==3.3.0
 colorama==0.4.3
 coverage==6.5.0
 crispy-bootstrap4==2022.1
-daphne==3.0.2
+daphne==4.0.0
 Django==4.2
 django-crispy-forms==2.1
 django-environ==0.11.2
