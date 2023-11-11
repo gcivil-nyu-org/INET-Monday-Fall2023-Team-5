@@ -97,7 +97,6 @@
 
             }
         };
-
         gameSocket.onopen = function() {
             console.log("WebSocket connection established");
         };
@@ -127,7 +126,7 @@
                     if (narrativeChoiceValue) {
                         gameSocket.send(JSON.stringify({
                             action: 'select_narrative',
-                            narrative: narrativeChoiceValue
+                            value: narrativeChoiceValue
                         }));
                     } else {
                         console.error('No narrative choice selected.');
@@ -137,7 +136,7 @@
                     const moonMeaning = document.querySelector('#moon-meaning-text').value;
                     gameSocket.send(JSON.stringify({
                         action: 'moon_phase',
-                        moon_meaning: moonMeaning
+                        value: moonMeaning
                     }));
                 } else if (e.target.dataset.action) {
                     e.preventDefault();
@@ -153,16 +152,11 @@
                         case 'react_emoji':
                             value = document.querySelector('input[name="emoji"]:checked').value;
                             break;
+                        case 'end_game':
+                            value = gameId;
+                            break;
                     }
                     gameSocket.send(JSON.stringify({ action: actionType, value: value }));
-                } else if (e.target.id === 'end-game-session') {
-                    e.preventDefault();
-                    if (confirm('Are you sure you want to end the game session?')) {
-                        gameSocket.send(JSON.stringify({
-                            action: 'end_game',
-                            game_id: gameId
-                        }));
-                    }
                 }
             });
         });
