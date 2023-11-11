@@ -77,8 +77,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "roleplaydate.wsgi.application"
-# ASGI_APPLICATION = "roleplaydate.asgi.application"
-"""
+ASGI_APPLICATION = "roleplaydate.asgi.application"
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
@@ -87,7 +87,7 @@ CHANNEL_LAYERS = {
         },
     },
 }
-"""
+
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
