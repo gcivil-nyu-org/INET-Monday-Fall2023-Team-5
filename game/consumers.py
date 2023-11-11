@@ -84,6 +84,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data, bytes_data=None):
         data_json = json.loads(text_data)
+        print(data_json)
         action = data_json["action"]
         value = data_json["value"]
 
@@ -92,8 +93,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             await self.make_narrative_choice(data_json["narrative"])
         elif action == "select_question":
             await self.select_question(value)
-        elif action == "answer":
-            print(value)
+        elif action == "answer_question":
             await self.answer_question(value)
         elif action == "react_emoji":
             await self.react_emoji(value)
@@ -145,37 +145,48 @@ class GameConsumer(AsyncWebsocketConsumer):
         except ValueError as e:
             await self.send_json({"error": str(e)})
 
+    def answer_question_sync(self, answer, player):
+        game_id = self.game_id
+        game_session = GameSession.objects.get(game_id=game_id)
+        game_turn = game_session.current_game_turn
+        game_turn.answer_question(answer, player)
+        game_turn.save()
+
     async def answer_question(self, answer):
-        player = self.scope["user"]
-        if not player.is_authenticated:
+        user = self.scope["user"]
+        if not user.is_authenticated:
             await self.send_json(
-                {"error": "You must be logged in to answer a question."}
+                {"error": "You must be logged in to select a question."}
             )
             return
 
+        player = await database_sync_to_async(Player.objects.get)(user=user)
+
         try:
-            game_turn = await database_sync_to_async(GameTurn.objects.get)(
-                id=self.game_id
-            )
-            await database_sync_to_async(game_turn.answer_question)(answer, player)
+            await database_sync_to_async(self.answer_question_sync)(answer, player)
             # Broadcast the new state
             await self.broadcast_game_state()
         except ValueError as e:
             await self.send_json({"error": str(e)})
 
+    def react_with_emoji_sync(self, emoji, player):
+        game_id = self.game_id
+        game_session = GameSession.objects.get(game_id=game_id)
+        game_turn = game_session.current_game_turn
+        game_turn.react_with_emoji(emoji, player)
+        game_turn.save()
+
     async def react_emoji(self, emoji):
-        player = self.scope["user"]
-        if not player.is_authenticated:
+        user = self.scope["user"]
+        if not user.is_authenticated:
             await self.send_json(
-                {"error": "You must be logged in to react with emoji."}
+                {"error": "You must be logged in to select a question."}
             )
             return
 
+        player = await database_sync_to_async(Player.objects.get)(user=user)
         try:
-            game_turn = await database_sync_to_async(GameTurn.objects.get)(
-                id=self.game_id
-            )
-            await database_sync_to_async(game_turn.react_with_emoji)(emoji, player)
+            await database_sync_to_async(self.react_with_emoji_sync)(emoji, player)
             # Broadcast the new state
             await self.broadcast_game_state()
         except ValueError as e:
@@ -231,38 +242,3 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def game_state_update(self, event):
         # Send the refresh command and game state to the WebSocket
         await self.send_json(event["content"])
-
-
-# consumers.py in one of your apps
-
-from channels.generic.websocket import AsyncWebsocketConsumer
-
-
-class EchoConsumer(AsyncWebsocketConsumer):
-    async def connect(self):
-        print("WebSocket connected!")
-        await self.accept()
-
-    async def disconnect(self, close_code):
-        print("WebSocket disconnected!")
-
-
-class TestConsumer(AsyncWebsocketConsumer):
-    async def connect(self):
-        await self.channel_layer.group_add("test_group", self.channel_name)
-        await self.accept()
-
-    async def disconnect(self, close_code):
-        await self.channel_layer.group_discard("test_group", self.channel_name)
-
-    async def receive(self, text_data):
-        text_data_json = json.loads(text_data)
-        message = text_data_json["message"]
-
-        await self.channel_layer.group_send(
-            "test_group", {"type": "test_message", "message": message}
-        )
-
-    async def test_message(self, event):
-        message = event["message"]
-        await self.send(text_data=json.dumps({"message": message}))

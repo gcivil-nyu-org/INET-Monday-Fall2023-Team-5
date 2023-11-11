@@ -61,8 +61,8 @@
 
                 {% elif game_session.current_game_turn.state == 'answer_question' %}
                    <h3>Answer the Question</h3>
-                    <textarea id="answer-input" rows="1" cols="140" placeholder="Type your answer here..."></textarea>
-                    <button id="submit-answer" data-action="answer">Submit Answer</button>
+                    <textarea id="answer-input" rows="1" cols="100" placeholder="Type your answer here..."></textarea>
+                    <button id="submit-answer" data-action="answer_question">Submit Answer</button>
 
                 {% elif game_session.current_game_turn.state == 'react_emoji' %}
                     <h3>React with an Emoji</h3>
@@ -113,11 +113,25 @@
                 // Check if the clicked element has an ID or a data-action attribute
                 if (e.target.id === 'submit-narrative-choice') {
                     e.preventDefault();
-                    const narrativeChoiceValue = document.querySelector('select[name="narrative"]').value;
-                    gameSocket.send(JSON.stringify({
-                        action: 'select_narrative',
-                        narrative: narrativeChoiceValue
-                    }));
+                    // Get all radio buttons with the name "narrative"
+                    const narrativeChoices = document.querySelectorAll('input[name="narrative"]:checked');
+
+                    // Get the value of the selected radio button
+                    let narrativeChoiceValue = null;
+                    narrativeChoices.forEach((choice) => {
+                        if (choice.checked) {
+                            narrativeChoiceValue = choice.value;
+                        }
+                    });
+
+                    if (narrativeChoiceValue) {
+                        gameSocket.send(JSON.stringify({
+                            action: 'select_narrative',
+                            narrative: narrativeChoiceValue
+                        }));
+                    } else {
+                        console.error('No narrative choice selected.');
+                    }
                 } else if (e.target.id === 'share-moon-meaning') {
                     e.preventDefault();
                     const moonMeaning = document.querySelector('#moon-meaning-text').value;
