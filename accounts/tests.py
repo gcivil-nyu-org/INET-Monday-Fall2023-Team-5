@@ -947,42 +947,42 @@ class NotifyMatchesCommandTest(TestCase):
         # Verify that the notification_sent flag is still False due to the simulated email exception
         self.assertFalse(self.match.notification_sent)
 
-class DisableBrowsingLikingTest(TestCase):
 
+class DisableBrowsingLikingTest(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username='testuser', password='abc123')
-        self.client.login(username='testuser', password='abc123')
+        self.user = User.objects.create_user(username="testuser", password="abc123")
+        self.client.login(username="testuser", password="abc123")
 
     def test_browse_disabled_with_active_session(self):
-        # Create active game session 
+        # Create active game session
         GameSession.objects.create(playerA=self.user, is_active=True)
-        
+
         # Access browse view
-        response = self.client.get(reverse('browse_profiles'))
-        
+        response = self.client.get(reverse("browse_profiles"))
+
         # Verify redirect to disabled template
-        self.assertRedirects(response, reverse('browse_disabled'))
+        self.assertRedirects(response, reverse("browse_disabled"))
 
     def test_like_disabled_with_active_session(self):
         # Create active game session
         GameSession.objects.create(playerA=self.user, is_active=True)
-        
+
         # Attempt to like another user
-        response = self.client.post(reverse('like_profile', args=[2]), follow=True)
-        
+        response = self.client.post(reverse("like_profile", args=[2]), follow=True)
+
         # Verify redirect to disabled template
-        self.assertRedirects(response, reverse('like_disabled'))
+        self.assertRedirects(response, reverse("like_disabled"))
 
     def test_browse_enabled_without_active_session(self):
         # Access browse view without active session
-        response = self.client.get(reverse('browse_profiles'))
-        
+        response = self.client.get(reverse("browse_profiles"))
+
         # Verify 200 status code
         self.assertEqual(response.status_code, 200)
 
     def test_like_enabled_without_active_session(self):
         # Attempt to like user without active session
-        response = self.client.post(reverse('like_profile', args=[2]), follow=True)
-        
-        # Verify no redirect 
+        response = self.client.post(reverse("like_profile", args=[2]), follow=True)
+
+        # Verify no redirect
         self.assertEqual(response.status_code, 200)
