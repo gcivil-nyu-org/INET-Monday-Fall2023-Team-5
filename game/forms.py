@@ -10,9 +10,10 @@ class QuestionSelectForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
-        questions = kwargs.pop('questions', Question.objects.none())
+        questions = kwargs.pop("questions", Question.objects.none())
         super(QuestionSelectForm, self).__init__(*args, **kwargs)
-        self.fields['question'].queryset = questions
+        self.fields["question"].queryset = questions
+
 
 class AnswerForm(forms.Form):
     answer = forms.CharField(

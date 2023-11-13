@@ -119,7 +119,7 @@
             <!-- Conditional class assignment for Playground link -->
             <a href="{% if game_session_url %}{{ game_session_url }}{% else %}#{% endif %}" 
                 class="{% if not game_session_url %}inactive-link{% endif %}">Playground</a>
-            <a href="{% url 'tag_view' %}">Tags</a>
+            <!-- <a href="{% url 'tag_view' %}">Tags</a> -->
             <a href="{% url 'account' %}">Account</a>
             <a href="#">Settings</a>
         </div>

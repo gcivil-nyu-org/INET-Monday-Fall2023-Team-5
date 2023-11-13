@@ -70,10 +70,12 @@ class GameProgressView(View):
         if turn.state == GameTurn.SELECT_QUESTION:
             # Fetch unasked questions
             unasked_questions = Question.objects.exclude(
-                id__in=game_session.asked_questions.values_list('id', flat=True)
+                id__in=game_session.asked_questions.values_list("id", flat=True)
             )
             # Randomly select 3 questions
-            random_questions = random.sample(list(unasked_questions), min(len(unasked_questions), 3))
+            random_questions = random.sample(
+                list(unasked_questions), min(len(unasked_questions), 3)
+            )
             context.update({"random_questions": random_questions})
 
         elif turn.state == GameTurn.ANSWER_QUESTION:
@@ -118,7 +120,7 @@ class GameProgressView(View):
                     "moon_phase": turn.get_moon_phase(),
                 }
             )
-        
+
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
@@ -139,7 +141,9 @@ class GameProgressView(View):
                 selected_question_id = data.get("question")
                 current_game_turn.select_question(selected_question_id, player)
                 current_game_turn.save()
-                game_session.asked_questions.add(Question.objects.get(id=selected_question_id))
+                game_session.asked_questions.add(
+                    Question.objects.get(id=selected_question_id)
+                )
                 game_session.save()
 
             elif current_game_turn.state == GameTurn.ANSWER_QUESTION:
