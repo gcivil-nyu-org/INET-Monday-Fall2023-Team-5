@@ -3,10 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 import uuid
 from django.urls import reverse
-from django.conf import settings
 from django_fsm import FSMField, transition
-
-
 
 
 class Player(models.Model):
@@ -134,21 +131,25 @@ class GameSession(models.Model):
         self.current_game_turn.delete()
         self.chat_messages.all().delete()
         self.delete()
-    
+
     MAX_SESSIONS = 30  # Define a constant for the maximum number of sessions
 
     def save(self, *args, **kwargs):
         # Check if it's a new instance
         is_new = not self.pk
-        
+
         # If it's a new instance, create an initial GameTurn
         if is_new:
             self.current_game_turn = GameTurn.objects.create()
 
         # Check if the turn number has reached the limit before saving
-        if self.current_game_turn and self.current_game_turn.turn_number >= self.MAX_SESSIONS:
-            self.end_session()  # Call the end_session method to end the game and record emojis
-        
+        if (
+            self.current_game_turn
+            and self.current_game_turn.turn_number >= self.MAX_SESSIONS
+        ):
+            self.end_session()
+            # Call the end_session method to end the game and record emojis
+
         super(GameSession, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -390,4 +391,3 @@ class NarrativeChoice(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     choice = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
-
