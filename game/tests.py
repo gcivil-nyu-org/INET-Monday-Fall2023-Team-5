@@ -4,15 +4,18 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from .models import Player, GameSession, GameTurn, generate_unique_game_id
 from .forms import QuestionSelectForm, AnswerForm, EmojiReactForm, NarrativeChoiceForm
-
-
+from django.http import HttpRequest
+from .context_processors import game_session_processor
+from django.contrib.auth.models import AnonymousUser
+​
+​
 class GameViewTests(TestCase):
     def setUp(self):
         # Set up data for the tests
         self.client = Client()
         self.user1 = User.objects.create_user(username="admin5", password="password123")
         self.user2 = User.objects.create_user(username="admin6", password="password123")
-
+​
     def test_initiate_game_session_post(self):
         # Test POST request to initiate_game_session
         self.client.login(username="admin5", password="password123")
@@ -26,37 +29,37 @@ class GameViewTests(TestCase):
         self.assertRedirects(
             response, reverse("game_progress", kwargs={"game_id": game_session.game_id})
         )
-
-
+​
+​
 class GameProgressViewTest(TestCase):
     def __init__(self, methodName: str = ...):
         super().__init__(methodName)
         self.game_session = None
-
+​
     def setUp(self):
         # Set up data for the tests
         self.client = Client()
         self.user1 = User.objects.create_user(username="admin5", password="password123")
         self.user2 = User.objects.create_user(username="admin6", password="password123")
-
+​
         self.client.login(username="admin5", password="password123")
         response = self.client.post(reverse("initiate_game_session"), follow=True)
         self.assertEqual(response.status_code, 200)
         self.game_session = GameSession.objects.last()
-
+​
     def test_get_with_valid_session(self):
         # Log the user in
         self.client.login(username="admin6", password="password123")
-
+​
         # Get response using the 'game_progress' url
         url = reverse("game_progress", kwargs={"game_id": self.game_session.game_id})
         response = self.client.get(url)
-
+​
         # Assert that the user retrieves the page correctly
         self.assertEqual(response.status_code, 200)
-
+​
         self.assertEqual(response.context["game_session"], self.game_session)
-
+​
     def test_get_with_invalid_session(self):
         # Log the user in
         self.client.login(username="admin5", password="12345")
@@ -69,25 +72,25 @@ class GameProgressViewTest(TestCase):
         )
         # Now, check the final response after all redirects
         self.assertEqual(response.status_code, 200)
-
+​
     def test_get_with_non_participant_user(self):
         # Create another user and associate player
         User.objects.create_user(username="otheruser", password="67890")
         Player.objects.create(
             user=User.objects.get(username="otheruser"), game_session=self.game_session
         )
-
+​
         # Log the testuser in
         self.client.login(username="otheruser", password="67890")
-
+​
         # Try to access game session of admin5
         url = reverse("game_progress", kwargs={"game_id": self.game_session.game_id})
         response = self.client.get(url)
-
+​
         # User should be redirected to the 'home' url
         self.assertRedirects(response, reverse("home"))
-
-
+​
+​
 class EndGameSessionViewTest(TestCase):
     def setUp(self):
         # Create a game session
@@ -101,16 +104,16 @@ class EndGameSessionViewTest(TestCase):
         self.player2 = Player.objects.create(
             user=self.user2, game_session=self.game_session
         )
-
+​
         # Create a game session
         self.game_session.playerA = self.player1
         self.game_session.playerB = self.player2
-
+​
         self.game_session.save()
-
+​
         # Client to simulate browser
         self.client = Client()
-
+​
     def test_end_game_session_valid(self):
         self.client.login(username="testuser1", password="12345")
         response = self.client.get(
@@ -122,7 +125,7 @@ class EndGameSessionViewTest(TestCase):
             "Game session ended successfully." in [m.message for m in messages]
         )
         self.assertRedirects(response, reverse("initiate_game_session"))
-
+​
     def test_end_game_session_invalid_user(self):
         # Create another user who is not a participant of the game
         User.objects.create_user(username="otheruser", password="12345")
@@ -139,7 +142,7 @@ class EndGameSessionViewTest(TestCase):
         self.assertRedirects(
             response, reverse("home")
         )  # Adjust the redirect to your home view
-
+​
     def test_end_game_session_not_found(self):
         self.client.login(username="testuser1", password="12345")
         response = self.client.get(
@@ -149,3 +152,50 @@ class EndGameSessionViewTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertTrue("Game session not found." in [m.message for m in messages])
         self.assertRedirects(response, reverse("initiate_game_session"))
+​
+class GameSessionProcessorTest(TestCase):
+​
+    def setUp(self):
+        # Setup two users
+        self.user1 = User.objects.create_user(username='user1', password='pass')
+        self.user2 = User.objects.create_user(username='user2', password='pass')
+​
+        # Create a game session without players first
+        self.game_session = GameSession.objects.create(is_active=True)
+​
+        # Create Player instances for each user and associate them with the game session
+        self.player1 = Player.objects.create(user=self.user1, game_session=self.game_session)
+        self.player2 = Player.objects.create(user=self.user2, game_session=self.game_session)
+​
+        # Update the game session to reflect the players
+        self.game_session.playerA = self.player1
+        self.game_session.playerB = self.player2
+        self.game_session.save()
+​
+​
+    def test_with_active_game_session(self):
+        # Simulate an authenticated request
+        request = HttpRequest()
+        request.user = self.user1
+​
+        # Test the context processor
+        context = game_session_processor(request)
+        self.assertIsNotNone(context.get('game_session_url'))
+        self.assertEqual(context['game_session_url'], self.game_session.get_absolute_url())
+​
+    def test_no_game_session(self):
+        # Create a user with no game session
+        user_no_session = User.objects.create_user(username='user3', password='pass')
+​
+        request = HttpRequest()
+        request.user = user_no_session
+​
+        context = game_session_processor(request)
+        self.assertIsNone(context.get('game_session_url'))
+​
+    def test_unauthenticated_user(self):
+        request = HttpRequest()
+        request.user = AnonymousUser()  # Correct way to represent an unauthenticated user
+​
+        context = game_session_processor(request)
+        self.assertEqual(context, {})
