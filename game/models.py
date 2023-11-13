@@ -100,6 +100,8 @@ class GameSession(models.Model):
         related_name="parent_game",
     )
 
+    asked_questions = models.ManyToManyField('Question', blank=True)
+    
     chat_messages = models.ManyToManyField("ChatMessage", blank=True)
 
     def __init__(self, *args, **kwargs):
