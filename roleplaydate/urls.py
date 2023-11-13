@@ -21,6 +21,7 @@ from django.conf import settings  # Import settings
 from django.conf.urls.static import static  # Import static
 from django.http import HttpResponse
 from django.core.management import call_command
+
 # from django.contrib.admin.views.decorators import staff_member_required
 
 
