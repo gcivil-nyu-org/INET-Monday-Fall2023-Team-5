@@ -1,12 +1,28 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Initiate Game</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+<!-- Display game chat -->
+    <p>End of game: {{ game_id }}</p>
+    <div class="chat-box">
+        {% for name, messages in messages_by_sender.items %}
+            <div class="sender-section">
+                <h4>{{ name }}</h4>
+                {% for message in messages %}
+                    <div class="message">
+                        {% if message.reaction %}
+                            <span class="emoji">{{ message.reaction }}</span>
+                            <small class="timestamp">{{ message.timestamp|date:"F j, Y, g:i a" }}</small>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
     <form method="post">
         {% csrf_token %}
         <button type="submit">Start New Game</button>
     </form>
-</body>
-</html>
+</div>
+{% endblock content %}
+

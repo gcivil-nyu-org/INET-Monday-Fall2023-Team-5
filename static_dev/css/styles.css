@@ -167,3 +167,144 @@ a:hover {
     background-color: #d3d3d3; /* This sets the background to a different color */
     color: #555; /* Change the text color if necessary */
 }
+
+.btn-like {
+    background-color: #ffc0cb; /* light pink */
+}
+  
+.btn-like:hover {
+    background-color: #ff69b4; /* light vivid pink */ 
+}
+  
+.btn-like.liked {
+    background-color: #ff1493; /* vivid pink */
+}
+
+/* .chat-box {
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 8px;
+    max-height: 400px;
+    overflow-y: auto;
+    color: #000;
+} */
+.chat-box {
+    background-color: rgba(218, 232, 255, 0.8);
+    border-radius: 15px;
+    
+    max-height: 600px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 30px;
+    margin-bottom: 20px;
+    color: #000;
+}
+
+.emoji {
+    font-size: 1.5em;
+}
+
+.sender {
+    font-weight: bold;
+    font-size: 1em;
+}
+
+.timestamp {
+    display: block;
+    font-size: 1em;
+    color: #669;
+    margin-top: 5px;
+    opacity: 0.8;
+}
+
+.chat-message {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Aligns children to the start of the cross axis */
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.chat-message.right {
+    align-items: flex-end; /* Aligns children to the end of the cross axis for the current user */
+}
+
+.chat-message .message-bubble {
+    background-color: rgb(252, 202, 235); /* Example background color */
+    padding:10px 20px;
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 18px;
+    margin-bottom: 5px; /* Creates space between the message bubble and info */
+    max-width: 70%;
+    align-self: flex-start; /* Aligns the bubble to the start */
+    font-size: 1.1em;
+}
+
+.chat-message.right .message-bubble {
+    background-color: #ffffff; /* Example background color for the current user */
+    align-self: flex-end; /* Aligns the bubble to the end for the current user */
+}
+
+.chat-message .message-info {
+    align-self: flex-start; /* Aligns info to the start */
+    font-size: 0.8em;
+}
+
+.chat-message.right .message-info {
+    align-self: flex-end; /* Aligns info to the end for the current user */
+}
+
+.game-info {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.game-id {
+    font-size: 1.5em;
+    color: #fff; /* Adjust color as needed */
+    text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5); /* Optional shadow for better readability */
+}
+
+.current-turn-box {
+    display: inline-block;
+    background: #ffffff;
+    color: #333; /* Adjust text color as needed */
+    padding: 5px 10px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    font-weight: bold;
+}
+
+.action-section {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background: white;
+    border-radius: 20px;
+    margin-top: 10px;
+    color: black;
+}
+  
+.action-section .input {
+    flex-grow: 1;
+    border-radius: 15px;
+    border: none;
+    padding: 10px;
+    margin-right: 10px;
+}
+  
+.action-section button {
+    padding: 10px 20px;
+    border-radius: 15px;
+    border: none;
+    background-color: Purple;
+    color: white;
+    cursor: pointer;
+}
+
+.end-button button {
+    margin-top: 20px;
+    align-self: flex-end;
+}
+
+  
