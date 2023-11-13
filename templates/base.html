@@ -124,12 +124,24 @@
             <!-- <a id="playground-link" href="{% if game_session_url %}{{ game_session_url }}{% else %}#{% endif %}" 
                 class="{% if not game_session_url %}inactive-link{% endif %}">Playground</a> -->
 
-            <a id="browse-profile-link" href="{% if not game_session_url %}{% url 'browse_profiles' %}{% else %}#{% endif %}" 
+            <!-- <a id="browse-profile-link" href="{% if not game_session_url %}{% url 'browse_profiles' %}{% else %}#{% endif %}" 
+                data-active="{% if not game_session_url %}true{% else %}false{% endif %}">Browse Profile</a> -->
+            <!-- <a id="browse-profile-link" href="javascript:void(0);" 
+                data-active="{% if not game_session_url %}true{% else %}false{% endif %}">Browse Profile</a> -->
+            <a id="browse-profile-link" href="javascript:void(0);"
+                data-href="{% if not game_session_url %}{% url 'browse_profiles' %}{% endif %}"
                 data-active="{% if not game_session_url %}true{% else %}false{% endif %}">Browse Profile</a>
+             
             
             <!-- Modified Playground link -->
-            <a id="playground-link" href="{% if game_session_url %}{{ game_session_url }}{% else %}#{% endif %}" 
+            <!-- <a id="playground-link" href="{% if game_session_url %}{{ game_session_url }}{% else %}#{% endif %}" 
+                data-active="{% if game_session_url %}true{% else %}false{% endif %}">Playground</a> -->
+            <!-- <a id="playground-link" href="javascript:void(0);" 
+                data-active="{% if not game_session_url %}true{% else %}false{% endif %}">Playground</a> -->
+            <a id="playground-link" href="javascript:void(0);"
+                data-href="{{ game_session_url }}"
                 data-active="{% if game_session_url %}true{% else %}false{% endif %}">Playground</a>
+             
 
             <a href="{% url 'tag_view' %}">Tags</a>
             <a href="{% url 'account' %}">Account</a>
