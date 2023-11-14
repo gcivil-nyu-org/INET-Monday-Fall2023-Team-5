@@ -115,34 +115,10 @@
         <!-- Sidebar -->
         <div class="col-md-3 sidebar">
             <a href="{% url 'view_profile' %}">View Profile</a>
-            
-            <!-- Conditional class assignment for Browse Profile link -->
-            <!-- <a id="browse-profile-link" href="{% if not game_session_url %}{% url 'browse_profiles' %}{% else %}#{% endif %}" 
-            class="{% if game_session_url %}inactive-link{% endif %}">Browse Profile</a> -->
-
+            <a href="{% url 'browse_profiles' %}">Browse Profile</a>
             <!-- Conditional class assignment for Playground link -->
-            <!-- <a id="playground-link" href="{% if game_session_url %}{{ game_session_url }}{% else %}#{% endif %}" 
-                class="{% if not game_session_url %}inactive-link{% endif %}">Playground</a> -->
-
-            <!-- <a id="browse-profile-link" href="{% if not game_session_url %}{% url 'browse_profiles' %}{% else %}#{% endif %}" 
-                data-active="{% if not game_session_url %}true{% else %}false{% endif %}">Browse Profile</a> -->
-            <!-- <a id="browse-profile-link" href="javascript:void(0);" 
-                data-active="{% if not game_session_url %}true{% else %}false{% endif %}">Browse Profile</a> -->
-            <a id="browse-profile-link" href="javascript:void(0);"
-                data-href="{% if not game_session_url %}{% url 'browse_profiles' %}{% endif %}"
-                data-active="{% if not game_session_url %}true{% else %}false{% endif %}">Browse Profile</a>
-             
-            
-            <!-- Modified Playground link -->
-            <!-- <a id="playground-link" href="{% if game_session_url %}{{ game_session_url }}{% else %}#{% endif %}" 
-                data-active="{% if game_session_url %}true{% else %}false{% endif %}">Playground</a> -->
-            <!-- <a id="playground-link" href="javascript:void(0);" 
-                data-active="{% if not game_session_url %}true{% else %}false{% endif %}">Playground</a> -->
-            <a id="playground-link" href="javascript:void(0);"
-                data-href="{{ game_session_url }}"
-                data-active="{% if game_session_url %}true{% else %}false{% endif %}">Playground</a>
-             
-
+            <a href="{% if game_session_url %}{{ game_session_url }}{% else %}#{% endif %}" 
+                class="{% if not game_session_url %}inactive-link{% endif %}">Playground</a>
             <a href="{% url 'tag_view' %}">Tags</a>
             <a href="{% url 'account' %}">Account</a>
             <a href="#">Settings</a>
@@ -169,7 +145,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
     {% block scripts %}
     <script src="{% static 'js/tagging.js' %}"></script>
-    <script src="{% static 'js/tab_conditional_link.js' %}"></script>
     {% endblock scripts %}
 </body>
 </html>

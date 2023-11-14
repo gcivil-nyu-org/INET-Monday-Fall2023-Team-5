@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.messages import get_messages
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.contrib.auth.forms import PasswordChangeForm
-from .models import Profile, DatingPreference, Match, Like
+from .models import *
 import tempfile
 from django.core.files import File
 from .forms import EditProfileForm
@@ -265,8 +265,7 @@ class EditProfileViewTest(TestCase):
         self.assertRedirects(response, profile_updated_url)
 
         # Check the updated profile data
-        # Refresh the user instance to get updated related data
-        self.user.refresh_from_db()
+        self.user.refresh_from_db()  # Refresh the user instance to get updated related data
         self.assertEqual(self.user.profile.gender, "M")  # Check gender was updated
         self.assertEqual(
             self.user.profile.pronoun_preference, "he_him"
@@ -319,8 +318,7 @@ class EditProfileViewTest(TestCase):
         # Send a POST request to clear the profile picture
         post_data = {
             "gender": "M",
-            "profile_picture-clear": "on",
-            # Django expects the value 'on' for a checked checkbox
+            "profile_picture-clear": "on",  # Django expects the value 'on' for a checked checkbox
             # Add other required fields if needed
         }
         response = self.client.post(self.edit_profile_url, post_data)
@@ -377,8 +375,7 @@ class EditProfileViewTest(TestCase):
             html=True,
         )
 
-        # Check that the response status code is 200
-        # (indicating a form submission with validation errors)
+        # Check that the response status code is 200 (indicating a form submission with validation errors)
         self.assertEqual(response.status_code, 200)
 
         # Check that the form instance in the response context is invalid
@@ -636,8 +633,7 @@ class BrowseProfilesTestCase(TestCase):
             dp.gender for dp in current_profile.open_to_dating.all()
         ]
 
-        # Check if the fetched profiles from the view match
-        # the logged-in user's preferences
+        # Check if the fetched profiles from the view match the logged-in user's preferences
         for profile in context_profiles:
             self.assertIn(profile.gender, desired_gender_codes)
             self.assertNotEqual(profile.user, logged_in_user)
@@ -851,8 +847,7 @@ class ResetLikesCommandTest(TestCase):
             username="testuser2", email="testuser2@example.com"
         )
 
-        # Create Profile instances linked to the created User instances
-        # with the correct initial likes
+        # Create Profile instances linked to the created User instances with the correct initial likes
         cls.profile1, created = Profile.objects.get_or_create(
             user=cls.user1, defaults={"likes_remaining": 3}
         )
@@ -883,8 +878,7 @@ class ResetLikesCommandTest(TestCase):
 class NotifyMatchesCommandTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        # Set up data for the whole TestCase,
-        # which will be available in all test methods
+        # Set up data for the whole TestCase, which will be available in all test methods
         # Create two user instances for testing
         cls.user1 = User.objects.create_user(
             username="user1", email="user1@example.com"
@@ -907,8 +901,7 @@ class NotifyMatchesCommandTest(TestCase):
             user=cls.user2, game_session=cls.game_session, character_name="Character2"
         )
 
-        # Create a match instance that simulates a match made yesterday
-        # without notification sent
+        # Create a match instance that simulates a match made yesterday without notification sent
         cls.match = Match.objects.create(
             user1=cls.user1,
             user2=cls.user2,
@@ -926,8 +919,7 @@ class NotifyMatchesCommandTest(TestCase):
         # Refresh the match object from the database to ensure it's up to date
         self.match.refresh_from_db()
 
-        # Check if the notification_sent flag on the match object is set to True
-        # after running the command
+        # Check if the notification_sent flag on the match object is set to True after running the command
         self.assertTrue(self.match.notification_sent)
 
         # Verify that the correct email addresses were used when sending emails
@@ -946,15 +938,13 @@ class NotifyMatchesCommandTest(TestCase):
         with self.assertRaises(CommandError):
             call_command("notify_matches")
 
-        # Verify that send_mail was called,
-        # which means the command attempted to send an email
+        # Verify that send_mail was called, which means the command attempted to send an email
         mock_send_mail.assert_called()
 
         # Refresh the match object from the database to get the latest data
         self.match.refresh_from_db()
 
-        # Verify that the notification_sent flag is still False
-        # due to the simulated email exception
+        # Verify that the notification_sent flag is still False due to the simulated email exception
         self.assertFalse(self.match.notification_sent)
 
 
@@ -978,6 +968,5 @@ class LikeFeatureTest(TestCase):
 
         self.client = Client()
         self.client.login(username="user1", password="testpass123")
-        # Verify that the notification_sent flag is still False
-        # due to the simulated email exception
+        # Verify that the notification_sent flag is still False due to the simulated email exception
         self.assertFalse(self.match.notification_sent)
