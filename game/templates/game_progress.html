@@ -66,14 +66,27 @@
                 {% else %}
                     {% if game_session.current_game_turn.state == 'select_question' %}
                         <h3>Select a Question</h3>
-                        {{ question_form.question.label_tag }}
-                        {{ question_form.question }}
+                        {% for question in random_questions %}
+                        <div>
+                            <input type="radio" name="question" id="question_{{ question.id }}" value="{{ question.id }}">
+                            <label for="question_{{ question.id }}">{{ question.text }}</label>
+                        </div>
+                        {% endfor %}
                         <button id="submit-question" data-action="select_question">Submit Question</button>
 
                     {% elif game_session.current_game_turn.state == 'answer_question' %}
                        <h3>Answer the Question</h3>
-                        <textarea id="answer-input" rows="1" cols="100" placeholder="Type your answer here..."></textarea>
-                        <button id="submit-answer" data-action="answer_question">Submit Answer</button>
+                        <div id="tag-container">
+                            {% for tag in tags_answer %}
+                                <div class="draggable" draggable="true" id="tag-{{ forloop.counter }}">{{ tag }}</div>
+                            {% endfor %}
+                        </div>
+                        <div id="current-sentence" class="droppable">
+                            <!-- Tags will be dragged here -->
+                        </div>
+                        <input type="hidden" name="answer" id="hidden-answer-field">
+                        <button id="clear-all" type="button">Clear All</button>
+                        <input type="submit" value="Submit Answer">
 
                     {% elif game_session.current_game_turn.state == 'react_emoji' %}
                         <h3>React with an Emoji</h3>
@@ -158,10 +171,8 @@
                     let value;
                     switch (actionType) {
                         case 'select_question':
-                            value = document.querySelector('select[name="question"]').value;
-                            break;
-                        case 'answer_question':
-                            value = document.querySelector('#answer-input').value;
+                            const selectedQuestion = document.querySelector('input[name="question"]:checked');
+                            value = selectedQuestion ? selectedQuestion.value : null;
                             break;
                         case 'react_emoji':
                             value = document.querySelector('input[name="emoji"]:checked').value;
@@ -171,13 +182,33 @@
                             break;
                     }
                     gameSocket.send(JSON.stringify({ action: actionType, value: value }));
+                } else if (e.target.id === 'submit-answer') {
+                    e.preventDefault();
+
+                    // Collect the text from each tag and join them into a single string
+                    let answer = Array.from(document.querySelectorAll('#current-sentence .draggable'))
+                                      .map(tag => tag.textContent.trim())
+                                      .join(' ');
+
+                    // Send the answer through the WebSocket
+                    gameSocket.send(JSON.stringify({ action: 'answer_question', value: answer }));
+
+                } else if (e.target.id === 'clear-all') {
+                    // Clear the current sentence container and the hidden input field
+                    document.querySelector('#current-sentence').innerHTML = '';
+                    document.querySelector('#hidden-answer-field').value = '';
                 }
             });
         });
     </script>
 {% endblock content %}
 
-{% block css %}
+{% block styles %}
 <link href="{% static 'css/styles.css' %}" rel="stylesheet">
-{% endblock css %}
+{% endblock %}
 
+{% block scripts %}
+<script src="{% static 'js/tagging.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+{% endblock %}
