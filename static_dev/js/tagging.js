@@ -10,14 +10,23 @@ $(document).ready(function () {
 
     // Make the sentence container droppable
     $('#current-sentence').droppable({
-        accept: '.draggable', // Accept elements with the .draggable class
+        accept: '.draggable',
         drop: function(event, ui) {
-            // Append the text of the draggable item to the droppable container
             let wordText = $.trim($(ui.draggable).text());
-            // Ensure it doesn't already exist
-            if($('#current-sentence:contains("' + wordText + '")').length === 0) {
-                $(this).append($('<span>').addClass('selected-word').text(wordText + ' '));
-                $(ui.draggable).addClass('dragged'); // Add the 'dragged' class to the original word
+            if ($('#current-sentence:contains("' + wordText + '")').length === 0) {
+                var newWord = $('<span>').addClass('selected-word draggable').text(wordText + ' ').draggable({
+                    helper: 'clone',
+                    revert: 'invalid',
+                    start: function(event, ui) {
+                        $(ui.helper).addClass('dragging');
+                    }
+                });
+                $(this).append(newWord);
+    
+                // Remove the original element if it's a clone
+                if (ui.helper.is('.ui-draggable-helper')) {
+                    $(ui.draggable).remove();
+                }
             }
         }
     });
@@ -29,6 +38,24 @@ $(document).ready(function () {
         
         // Remove the 'dragged' class from all elements that have been dragged
         $('.draggable.dragged').removeClass('dragged');
+    });
+
+    // Setup for allowing words to be dragged back to the tag-container
+    $('#tag-container').droppable({
+        accept: '.selected-word',
+        drop: function(event, ui) {
+            // Remove the clone (the dragged element)
+            $(ui.draggable).remove();
+        }
+    });
+        $('#answer-form').submit(function(event) {
+        var selectedWords = [];
+        $('#current-sentence .selected-word').each(function() {
+            selectedWords.push($(this).text().trim());
+        });
+
+        var answer = selectedWords.join(' ');
+        $('#hidden-answer-field').val(answer);
     });
 });
 

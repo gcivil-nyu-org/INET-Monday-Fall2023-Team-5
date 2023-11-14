@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load static %}
 
 {% block content %}
     <div class="container">
@@ -64,37 +65,61 @@
                     <h3>Moon Sign Phase: {{ moon_phase }}</h3>
                     <p>The Moon is currently in its {{ moon_phase }} phase. Share your personal meaning of the moon phase:</p>
 
-                    <form method="post" action="{% url 'game_progress' game_session.game_id %}">
+                <form method="post" action="{% url 'game_progress' game_session.game_id %}">
+                    {% csrf_token %}
+                    <textarea name="moon_meaning" rows="1" cols="50" placeholder="Share your personal meaning..."></textarea><br>
+                    <button type="submit">Share</button>
+                </form>
+                <!-- You can add any additional Moon Sign Phases related content or actions here. -->
+            {% else %}
+
+                {% if game_session.current_game_turn.state == 'select_question' %}
+                <form action="{% url 'game_progress' game_session.game_id %}" method="post">
+                    {% csrf_token %}
+                    <h3>Select a Question</h3>
+                    {% for question in random_questions %}
+                    <div>
+                        <input type="radio" name="question" id="question_{{ question.id }}" value="{{ question.id }}">
+                        <label for="question_{{ question.id }}">{{ question.text }}</label>
+                    </div>
+                    {% endfor %}
+                    <input type="submit" value="Submit">
+                </form>
+                {% endif %}
+        
+                
+                {% if game_session.current_game_turn.state == 'answer_question' %}
+                    <form id="answer-form" action="{% url 'game_progress' game_session.game_id %}" method="post">
                         {% csrf_token %}
-                        <textarea name="moon_meaning" rows="1" cols="50" placeholder="Share your personal meaning..."></textarea><br>
-                        <button type="submit">Share</button>
-                    </form>
-                    <!-- You can add any additional Moon Sign Phases related content or actions here. -->
-                {% else %}
-                    <form action="{% url 'game_progress' game_session.game_id %}" method="post">
-                        {% csrf_token %}
-                        {% if game_session.current_game_turn.state == 'select_question' %}
-                            <h3>Select a Question</h3>
-                            {{ question_form.question.label_tag }}
-                            {{ question_form.question }}
-                            <input type="submit" value="Submit">
-                        {% elif game_session.current_game_turn.state == 'answer_question' %}
-                            <h3>Answer the Question</h3>
-                            {{ answer_form.answer.label_tag }}
-                            {{ answer_form.answer }}
-                            <input type="submit" value="Submit">
-                        {% elif game_session.current_game_turn.state == 'react_emoji' %}
-                            <h3>React with an Emoji</h3>
-                            {{ emoji_form.emoji.label_tag }}
-                            {{ emoji_form.emoji }}
-                            <input type="submit" value="Submit">
-                        {% endif %}
+                        <div id="tag-container">
+                            {% for tag in tags_answer %}
+                                <div class="draggable" draggable="true" id="tag-{{ forloop.counter }}">{{ tag }}</div>
+                            {% endfor %}
+                        </div>
+                        <div id="current-sentence" class="droppable">
+                            <!-- Tags will be dragged here -->
+                        </div>
+                        <input type="hidden" name="answer" id="hidden-answer-field">
+                        <button id="clear-all" type="button">Clear All</button>
+                        <input type="submit" value="Submit Answer">
                     </form>
                 {% endif %}
-            {% else %}
-                <p>You are not the active player. Please wait for your turn.</p>
+                
+                {% if game_session.current_game_turn.state == 'react_emoji' %}
+                    <form action="{% url 'game_progress' game_session.game_id %}" method="post">
+                        {% csrf_token %}
+                        <h3>React with an Emoji</h3>
+                        {{ emoji_form.emoji.label_tag }}
+                        {{ emoji_form.emoji }}
+                        <input type="submit" value="Submit">
+                    </form>
+                {% endif %}
+
             {% endif %}
-        </div>
+        {% else %}
+            <p>You are not the active player. Please wait for your turn.</p>
+        {% endif %}
+
 
         <div class="end-button">
             <form action="{% url 'end_game_session' game_session.game_id %}" method="post">
@@ -110,3 +135,12 @@
 <link href="{% static 'css/styles.css' %}" rel="stylesheet">
 {% endblock css %}
 
+{% block styles %}
+<link href="{% static 'css/styles.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/tagging.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+{% endblock %}
