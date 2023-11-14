@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.messages import get_messages
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.contrib.auth.forms import PasswordChangeForm
-from .models import Profile, DatingPreference, Match
+from .models import Profile, DatingPreference, Match, Like
 import tempfile
 from django.core.files import File
 from .forms import EditProfileForm
