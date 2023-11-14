@@ -469,7 +469,7 @@ class SignUpViewTest(TestCase):
             response.content
         )  # This will output the response content to see if there's any error message
         self.assertRedirects(response, reverse("confirmation_required"))
-'''
+
     def test_signup_email_already_in_use(self):
         # First, create a user with the desired email
         User.objects.create_user(
@@ -488,7 +488,7 @@ class SignUpViewTest(TestCase):
 
         # Check if the response contains the expected error message
         self.assertContains(response, "Email already in use.")
-'''
+
     def test_signup_non_nyu_email(self):
         signup_data = {
             "username": "newuser",
