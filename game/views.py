@@ -1,9 +1,16 @@
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .forms import QuestionSelectForm, AnswerForm, EmojiReactForm, NarrativeChoiceForm
-from .models import Player, GameSession, GameTurn
+from .models import (
+    Player,
+    GameSession,
+    GameTurn,
+    Word,
+    Question,
+)
 from django.shortcuts import redirect, render
 from django.views import View
+import random
 from collections import defaultdict
 
 
@@ -63,17 +70,26 @@ class GameProgressView(View):
         turn = game_session.current_game_turn
 
         if turn.state == GameTurn.SELECT_QUESTION:
-            context.update(
-                {
-                    "question_form": QuestionSelectForm(),
-                }
+            # Fetch unasked questions
+            unasked_questions = Question.objects.exclude(
+                id__in=game_session.asked_questions.values_list("id", flat=True)
             )
+            # Randomly select 3 questions
+            random_questions = random.sample(
+                list(unasked_questions), min(len(unasked_questions), 3)
+            )
+            context.update({"random_questions": random_questions})
+
         elif turn.state == GameTurn.ANSWER_QUESTION:
+            words = Word.objects.all()
+            tags_answer = [word.word for word in words]
+            context.update({"tags_answer": tags_answer})
             context.update(
                 {
                     "answer_form": AnswerForm(),
                 }
             )
+
         elif turn.state == GameTurn.REACT_EMOJI:
             context.update(
                 {
@@ -106,6 +122,7 @@ class GameProgressView(View):
                     "moon_phase": turn.get_moon_phase(),
                 }
             )
+
         return render(request, self.template_name, context)
 
 
@@ -125,11 +142,17 @@ class GameProgressView(View):
         # Call the appropriate method on the FSM based on the current state
         try:
             if current_game_turn.state == GameTurn.SELECT_QUESTION:
-                current_game_turn.select_question(data.get("question"), player)
+                selected_question_id = data.get("question")
+                current_game_turn.select_question(selected_question_id, player)
                 current_game_turn.save()
+                game_session.asked_questions.add(
+                    Question.objects.get(id=selected_question_id)
+                )
+                game_session.save()
 
             elif current_game_turn.state == GameTurn.ANSWER_QUESTION:
-                current_game_turn.answer_question(data.get("answer"), player)
+                answer = data.get("answer")
+                current_game_turn.answer_question(answer, player)
                 current_game_turn.save()
 
             elif current_game_turn.state == GameTurn.REACT_EMOJI:
