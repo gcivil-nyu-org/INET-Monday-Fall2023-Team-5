@@ -1,13 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .forms import QuestionSelectForm, AnswerForm, EmojiReactForm, NarrativeChoiceForm
-from .models import (
-    Player,
-    GameSession,
-    GameTurn,
-)
+from .models import Player, GameSession, GameTurn
 from django.shortcuts import redirect, render
 from django.views import View
+from collections import defaultdict
 
 
 def initiate_game_session(request):
@@ -58,6 +55,7 @@ class GameProgressView(View):
             "game_session": game_session,
             "chat_messages": chat_messages_for_session,
             "active_player": game_session.current_game_turn.get_active_player(),
+            "playerC": player.character_name,
         }
 
         # Add state-specific context
@@ -154,6 +152,24 @@ class GameProgressView(View):
         return redirect("game_progress", game_id=game_id)
 
 
+# def end_game_session(request, game_id):
+#     try:
+#         game_session = GameSession.objects.get(game_id=game_id)
+#         if (
+#             request.user not in [game_session.playerA.user, game_session.playerB.user]
+#             and not request.user.is_staff
+#         ):
+#             messages.error(request, "You are not a participant of this game session.")
+#             return redirect(
+#                 "home"
+#             )  # or another suitable view name with an error message
+#         game_session.end_session()
+#         messages.success(request, "Game session ended successfully.")
+#     except GameSession.DoesNotExist:
+#         messages.error(request, "Game session not found.")
+#     return redirect("initiate_game_session")
+
+
 def end_game_session(request, game_id):
     try:
         game_session = GameSession.objects.get(game_id=game_id)
@@ -162,11 +178,27 @@ def end_game_session(request, game_id):
             and not request.user.is_staff
         ):
             messages.error(request, "You are not a participant of this game session.")
-            return redirect(
-                "home"
-            )  # or another suitable view name with an error message
+            return redirect("home")
+
+        # Fetch chat messages for the session
+        chat_messages_for_session = game_session.chat_messages.all().order_by(
+            "timestamp"
+        )
+        # Organize messages by sender
+        messages_by_sender = defaultdict(list)
+        for message in chat_messages_for_session:
+            name = message.sender
+            messages_by_sender[name].append(message)
+
         game_session.end_session()
         messages.success(request, "Game session ended successfully.")
+
+        return render(
+            request,
+            "initiate_game_session.html",
+            {"game_id": game_id, "messages_by_sender": dict(messages_by_sender)},
+        )
+
     except GameSession.DoesNotExist:
         messages.error(request, "Game session not found.")
-    return redirect("initiate_game_session")
+        return redirect("initiate_game_session")

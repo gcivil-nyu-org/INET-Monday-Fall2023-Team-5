@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (browseProfileLink) {
         browseProfileLink.addEventListener('click', function(event) {
             if (this.getAttribute('data-active') === 'false') {
-                alert('Users engaged in an active game session cannot access "Browse Profiles".');
+                alert('Users engaged in an active game session cannot access "Browse Profiles."');
             } else {
                 var href = this.getAttribute('data-href');
                 if (href) {
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (playgroundLink) {
         playgroundLink.addEventListener('click', function(event) {
             if (this.getAttribute('data-active') === 'false') {
-                alert('Only users who have been successfully matched can access the "Playground".');
+                alert('Only users who have been successfully matched can access the "Playground."');
             } else {
                 var href = this.getAttribute('data-href');
                 if (href) {
