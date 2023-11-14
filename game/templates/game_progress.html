@@ -186,7 +186,7 @@
                     e.preventDefault();
 
                     // Collect the text from each tag and join them into a single string
-                    let answer = Array.from(document.querySelectorAll('#current-sentence .draggable'))
+                    let answer = Array.from(document.querySelectorAll('#current-sentence.draggable'))
                                       .map(tag => tag.textContent.trim())
                                       .join(' ');
 
