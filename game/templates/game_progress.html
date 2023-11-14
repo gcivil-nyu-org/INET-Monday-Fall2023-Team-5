@@ -1,9 +1,13 @@
 {% extends "base.html" %}
 {% load static %}
+{% load static %}
 
 {% block content %}
     <div class="container">
-        <h2>Game Progress for Game ID: {{ game_session.game_id }}</h2>
+        <div class="game-info">
+            <h2 class="game-id">Game Progress for Game ID: <span>{{ game_session.game_id }}</span></h2>
+            <div class="current-turn-box">Current Turn: <span>{{ game_session.current_game_turn.turn_number }}</span></div>
+        </div>
         <!-- Progress Steps -->
         <ul class="nav nav-pills mb-3">
             <li class="nav-item">
@@ -23,38 +27,43 @@
             </li>
         </ul>
 
-        <p>Current Turn: {{ game_session.current_game_turn.turn_number }}</p>
         <!-- Display game chat -->
         <div class="chat-box">
             {% for message in chat_messages %}
-                <div class="message">
-                    <strong>{{ message.sender }}:</strong> {{ message.text }}
-                    <small class="timestamp">{{ message.timestamp|date:"F j, Y, g:i a" }}</small>
-                    {% if message.reaction %}
-                        <span class="emoji">{{ message.reaction }}</span>
-                    {% endif %}
+                <div class="chat-message {% if message.sender == playerC %}right{% else %}left{% endif %}">
+                    <div class="message-bubble">
+                        <span class="message-content">{{ message.text }}</span>
+                        {% if message.reaction %}
+                            <span class="emoji">{{ message.reaction }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="message-info">
+                        <span class="sender">{{ message.sender }}</span>
+                        <span class="timestamp">{{ message.timestamp|date:"F j, Y, g:i a" }}</span>
+                    </div>
                 </div>
             {% endfor %}
         </div>
 
-        <!-- Display actions based on the game phase -->
-        {% if game_session.current_game_turn.state == 'narrative_choices' %}
-            {% if choice_made == False%}
-                <form action="{% url 'game_progress' game_session.game_id %}" method="post">
-                    {% csrf_token %}
-                    <h3>Select a Narrative Choice</h3>
-                    {{ narrative_form.narrative.label_tag }}
-                    {{ narrative_form.narrative }}
-                    <input type="submit" value="Submit">
-                </form>
-            {% else %}
-                <p>You have already made a narrative choice. Please wait for the other players to make their choices.</p>
-            {% endif %}
-
-        {% elif active_player == request.user.player %}
-            {% if game_session.current_game_turn.state == 'moon_phase' %}
-                <h3>Moon Sign Phase: {{ moon_phase }}</h3>
-                <p>The Moon is currently in its {{ moon_phase }} phase. Share your personal meaning of the moon phase:</p>
+            <!-- Display actions based on the game phase -->
+        <div class="action-section">
+            {% if game_session.current_game_turn.state == 'narrative_choices' %}
+                {% if choice_made == False%}
+                    <form action="{% url 'game_progress' game_session.game_id %}" method="post">
+                        {% csrf_token %}
+                        <h3>Select a Narrative Choice</h3>
+                        {{ narrative_form.narrative.label_tag }}
+                        {{ narrative_form.narrative }}
+                        <input type="submit" value="Submit">
+                    </form>
+                {% else %}
+                    <p>You have already made a narrative choice. Please wait for the other players to make their choices.</p>
+                {% endif %}
+            {% elif active_player == request.user.player %}
+                {% if game_session.current_game_turn.state == 'moon_phase' %}
+                    <h3>Moon Sign Phase: {{ moon_phase }}</h3>
+                    <p>The Moon is currently in its {{ moon_phase }} phase. Share your personal meaning of the moon phase:</p>
 
                 <form method="post" action="{% url 'game_progress' game_session.game_id %}">
                     {% csrf_token %}
@@ -112,20 +121,17 @@
         {% endif %}
 
 
-        <form action="{% url 'end_game_session' game_session.game_id %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">End Game Session</button>
-        </form>
+        <div class="end-button">
+            <form action="{% url 'end_game_session' game_session.game_id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">End Game Session</button>
+            </form>
+        </div>
     </div>
-{% endblock %}
 
-{% block styles %}
+{% endblock content %}
+
+{% block css %}
 <link href="{% static 'css/styles.css' %}" rel="stylesheet">
-{% endblock %}
-
-{% block scripts %}
-<script src="{% static 'js/tagging.js' %}"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-{% endblock %}
+{% endblock css %}
 
