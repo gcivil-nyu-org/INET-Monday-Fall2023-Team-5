@@ -76,18 +76,22 @@
 
                     {% elif game_session.current_game_turn.state == 'answer_question' %}
                        <h3>Answer the Question</h3>
-                        <div id="tag-container">
+                        <div id="interactive-container">
+                          <div id="tag-container">
+                            <!-- Tags will be generated here -->
                             {% for tag in tags_answer %}
-                                <div class="draggable" draggable="true" id="tag-{{ forloop.counter }}">{{ tag }}</div>
+                              <div class="draggable" draggable="true" id="tag-{{ forloop.counter }}">{{ tag }}</div>
                             {% endfor %}
+                          </div>
+                          <div id="answer-section">
+                            <div id="current-sentence" class="droppable">
+                              <!-- Tags will be dragged here -->
+                            </div>
+                            <input type="hidden" name="answer" id="hidden-answer-field">
+                            <button id="clear-all" type="button">Clear All</button>
+                            <button id="submit-answer" type="button">Submit Answer</button>
+                          </div>
                         </div>
-                        <div id="current-sentence" class="droppable">
-                            <!-- Tags will be dragged here -->
-                        </div>
-                        <input type="hidden" name="answer" id="hidden-answer-field">
-                        <button id="clear-all" type="button">Clear All</button>
-                        <button id="submit-answer" type="button">Submit Answer</button>
-
                     {% elif game_session.current_game_turn.state == 'react_emoji' %}
                         <h3>React with an Emoji</h3>
                         {{ emoji_form.emoji.label_tag }}
