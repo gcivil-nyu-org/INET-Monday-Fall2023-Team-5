@@ -3,3 +3,4 @@ max-line-length = 88
 exclude =
 	tests.py
 	test_settings.py
+	./venv/*

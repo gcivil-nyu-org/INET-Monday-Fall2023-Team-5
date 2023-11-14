@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.models import User
-from .forms import QuestionSelectForm, AnswerForm, EmojiReactForm, NarrativeChoiceForm
+from .forms import AnswerForm, EmojiReactForm, NarrativeChoiceForm
 from .models import (
     Player,
     GameSession,
@@ -125,6 +125,8 @@ class GameProgressView(View):
 
         return render(request, self.template_name, context)
 
+
+"""
     def post(self, request, *args, **kwargs):
         game_id = kwargs["game_id"]
         player = request.user.player
@@ -173,6 +175,7 @@ class GameProgressView(View):
             return redirect("game_progress", game_id=game_id)
 
         return redirect("game_progress", game_id=game_id)
+"""
 
 
 # def end_game_session(request, game_id):
