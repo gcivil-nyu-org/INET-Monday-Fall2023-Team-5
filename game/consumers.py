@@ -2,7 +2,7 @@ from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 
-from game.models import GameTurn, GameSession, Player
+from game.models import GameSession, Player
 
 
 class GameConsumer(AsyncWebsocketConsumer):
@@ -59,7 +59,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 "active_player_id": current_turn.active_player.id
                 if current_turn.active_player
                 else None,
-                "active_player_character_name": current_turn.active_player.character_name
+                "active_player_character_name": current_turn.active_player.character_name  # noqa
                 if current_turn.active_player
                 else None,
             },

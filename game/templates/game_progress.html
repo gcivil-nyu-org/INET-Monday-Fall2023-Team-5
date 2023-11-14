@@ -46,46 +46,46 @@
         </div>
 
             <!-- Display actions based on the game phase -->
-        <div class="action-section">{% if game_session.current_game_turn.state == 'narrative_choices' %}
-            {% if choice_made == False %}
-                <h3>Select a Narrative Choice</h3>
-                {{ narrative_form.narrative.label_tag }}
-                {{ narrative_form.narrative }}
-                <button id="submit-narrative-choice" data-action="select_narrative">Submit Choice</button>
-            {% else %}
-                <p>You have already made a narrative choice. Please wait for the other players to make their choices.</p>
-            {% endif %}
-        {% elif active_player == request.user.player %}
-            {% if game_session.current_game_turn.state == 'moon_phase' %}
-                <h3>Moon Sign Phase: {{ moon_phase }}</h3>
-                <p>The Moon is currently in its {{ moon_phase }} phase. Share your personal meaning of the moon phase:</p>
-                <textarea id="moon-meaning-text" rows="1" cols="140" placeholder="Share your personal meaning..."></textarea><br>
-                <button id="share-moon-meaning" data-action="moon_phase">Share</button>
-                <!-- You can add any additional Moon Sign Phases related content or actions here. -->
-            {% else %}
-                {% if game_session.current_game_turn.state == 'select_question' %}
-                    <h3>Select a Question</h3>
-                    {{ question_form.question.label_tag }}
-                    {{ question_form.question }}
-                    <button id="submit-question" data-action="select_question">Submit Question</button>
-
-                {% elif game_session.current_game_turn.state == 'answer_question' %}
-                   <h3>Answer the Question</h3>
-                    <textarea id="answer-input" rows="1" cols="100" placeholder="Type your answer here..."></textarea>
-                    <button id="submit-answer" data-action="answer_question">Submit Answer</button>
-
-                {% elif game_session.current_game_turn.state == 'react_emoji' %}
-                    <h3>React with an Emoji</h3>
-                    {{ emoji_form.emoji.label_tag }}
-                    {{ emoji_form.emoji }}
-                    <button id="submit-emoji" data-action="react_emoji">Submit Reaction</button>
+        <div class="action-section">
+            {% if game_session.current_game_turn.state == 'narrative_choices' %}
+                {% if choice_made == False %}
+                    <h3>Select a Narrative Choice</h3>
+                    {{ narrative_form.narrative.label_tag }}
+                    {{ narrative_form.narrative }}
+                    <button id="submit-narrative-choice" data-action="select_narrative">Submit Choice</button>
+                {% else %}
+                    <p>You have already made a narrative choice. Please wait for the other players to make their choices.</p>
                 {% endif %}
+            {% elif active_player == request.user.player %}
+                {% if game_session.current_game_turn.state == 'moon_phase' %}
+                    <h3>Moon Sign Phase: {{ moon_phase }}</h3>
+                    <p>The Moon is currently in its {{ moon_phase }} phase. Share your personal meaning of the moon phase:</p>
+                    <textarea id="moon-meaning-text" rows="1" cols="140" placeholder="Share your personal meaning..."></textarea><br>
+                    <button id="share-moon-meaning" data-action="moon_phase">Share</button>
+                    <!-- You can add any additional Moon Sign Phases related content or actions here. -->
+                {% else %}
+                    {% if game_session.current_game_turn.state == 'select_question' %}
+                        <h3>Select a Question</h3>
+                        {{ question_form.question.label_tag }}
+                        {{ question_form.question }}
+                        <button id="submit-question" data-action="select_question">Submit Question</button>
+
+                    {% elif game_session.current_game_turn.state == 'answer_question' %}
+                       <h3>Answer the Question</h3>
+                        <textarea id="answer-input" rows="1" cols="100" placeholder="Type your answer here..."></textarea>
+                        <button id="submit-answer" data-action="answer_question">Submit Answer</button>
+
+                    {% elif game_session.current_game_turn.state == 'react_emoji' %}
+                        <h3>React with an Emoji</h3>
+                        {{ emoji_form.emoji.label_tag }}
+                        {{ emoji_form.emoji }}
+                        <button id="submit-emoji" data-action="react_emoji">Submit Reaction</button>
+                    {% endif %}
                 {% endif %}
             {% else %}
                 <p>You are not the active player. Please wait for your turn.</p>
             {% endif %}
         </div>
-
         <div class="end-button">
             <button id="end-game-session" class="btn btn-danger" data-action="end_game">End Game Session</button>
         </div>
