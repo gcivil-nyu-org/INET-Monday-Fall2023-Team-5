@@ -115,7 +115,9 @@
         <!-- Sidebar -->
         <div class="col-md-3 sidebar">
             <a href="{% url 'view_profile' %}">View Profile</a>
-            <a href="{% url 'browse_profiles' %}">Browse Profile</a>
+            <!-- Conditional class assignment for Browse Profile link -->
+            <a href="{% if not game_session_url %}{% url 'browse_profiles' %}{% else %}#{% endif %}" 
+            class="{% if game_session_url %}inactive-link{% endif %}">Browse Profile</a>
             <!-- Conditional class assignment for Playground link -->
             <a href="{% if game_session_url %}{{ game_session_url }}{% else %}#{% endif %}" 
                 class="{% if not game_session_url %}inactive-link{% endif %}">Playground</a>
