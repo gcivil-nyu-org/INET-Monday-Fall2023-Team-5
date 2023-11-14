@@ -34,6 +34,9 @@ INSTALLED_APPS = [
     "tags",
     "accounts",
     "game",
+    "daphne",
+    "channels",
+    "channels_redis",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -74,6 +77,18 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "roleplaydate.wsgi.application"
+ASGI_APPLICATION = "roleplaydate.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [
+                (os.environ.get("REDIS_ENDPOINT_URL"), os.environ.get("REDIS_PORT"))
+            ],
+        },
+    },
+}
 
 
 # Database

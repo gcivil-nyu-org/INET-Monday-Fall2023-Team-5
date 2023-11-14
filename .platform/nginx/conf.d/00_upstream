@@ -1,0 +1,8 @@
+upstream django {
+  server 127.0.0.1:8000; # Your WSGI server
+}
+
+upstream daphne {
+  server 127.0.0.1:8001; # Your Daphne server
+}
+

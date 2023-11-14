@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load static %}
-{% load static %}
 
 {% block content %}
     <div class="container">
@@ -49,14 +48,11 @@
             <!-- Display actions based on the game phase -->
         <div class="action-section">
             {% if game_session.current_game_turn.state == 'narrative_choices' %}
-                {% if choice_made == False%}
-                    <form action="{% url 'game_progress' game_session.game_id %}" method="post">
-                        {% csrf_token %}
-                        <h3>Select a Narrative Choice</h3>
-                        {{ narrative_form.narrative.label_tag }}
-                        {{ narrative_form.narrative }}
-                        <input type="submit" value="Submit">
-                    </form>
+                {% if choice_made == False %}
+                    <h3>Select a Narrative Choice</h3>
+                    {{ narrative_form.narrative.label_tag }}
+                    {{ narrative_form.narrative }}
+                    <button id="submit-narrative-choice" data-action="select_narrative">Submit Choice</button>
                 {% else %}
                     <p>You have already made a narrative choice. Please wait for the other players to make their choices.</p>
                 {% endif %}
@@ -64,76 +60,152 @@
                 {% if game_session.current_game_turn.state == 'moon_phase' %}
                     <h3>Moon Sign Phase: {{ moon_phase }}</h3>
                     <p>The Moon is currently in its {{ moon_phase }} phase. Share your personal meaning of the moon phase:</p>
+                    <textarea id="moon-meaning-text" rows="1" cols="140" placeholder="Share your personal meaning..."></textarea><br>
+                    <button id="share-moon-meaning" data-action="moon_phase">Share</button>
+                    <!-- You can add any additional Moon Sign Phases related content or actions here. -->
+                {% else %}
+                    {% if game_session.current_game_turn.state == 'select_question' %}
+                        <h3>Select a Question</h3>
+                        {% for question in random_questions %}
+                        <div>
+                            <input type="radio" name="question" id="question_{{ question.id }}" value="{{ question.id }}">
+                            <label for="question_{{ question.id }}">{{ question.text }}</label>
+                        </div>
+                        {% endfor %}
+                        <button id="submit-question" data-action="select_question">Submit Question</button>
 
-                <form method="post" action="{% url 'game_progress' game_session.game_id %}">
-                    {% csrf_token %}
-                    <textarea name="moon_meaning" rows="1" cols="50" placeholder="Share your personal meaning..."></textarea><br>
-                    <button type="submit">Share</button>
-                </form>
-                <!-- You can add any additional Moon Sign Phases related content or actions here. -->
-            {% else %}
-
-                {% if game_session.current_game_turn.state == 'select_question' %}
-                <form action="{% url 'game_progress' game_session.game_id %}" method="post">
-                    {% csrf_token %}
-                    <h3>Select a Question</h3>
-                    {% for question in random_questions %}
-                    <div>
-                        <input type="radio" name="question" id="question_{{ question.id }}" value="{{ question.id }}">
-                        <label for="question_{{ question.id }}">{{ question.text }}</label>
-                    </div>
-                    {% endfor %}
-                    <input type="submit" value="Submit">
-                </form>
-                {% endif %}
-        
-                
-                {% if game_session.current_game_turn.state == 'answer_question' %}
-                    <form id="answer-form" action="{% url 'game_progress' game_session.game_id %}" method="post">
-                        {% csrf_token %}
-                        <div id="tag-container">
+                    {% elif game_session.current_game_turn.state == 'answer_question' %}
+                       <h3>Answer the Question</h3>
+                        <div id="interactive-container">
+                          <div id="tag-container">
+                            <!-- Tags will be generated here -->
                             {% for tag in tags_answer %}
-                                <div class="draggable" draggable="true" id="tag-{{ forloop.counter }}">{{ tag }}</div>
+                              <div class="draggable" draggable="true" id="tag-{{ forloop.counter }}">{{ tag }}</div>
                             {% endfor %}
+                          </div>
+                          <div id="answer-section">
+                            <div id="current-sentence" class="droppable">
+                              <!-- Tags will be dragged here -->
+                            </div>
+                            <input type="hidden" name="answer" id="hidden-answer-field">
+                            <button id="clear-all" type="button">Clear All</button>
+                            <button id="submit-answer" type="button">Submit Answer</button>
+                          </div>
                         </div>
-                        <div id="current-sentence" class="droppable">
-                            <!-- Tags will be dragged here -->
-                        </div>
-                        <input type="hidden" name="answer" id="hidden-answer-field">
-                        <button id="clear-all" type="button">Clear All</button>
-                        <input type="submit" value="Submit Answer">
-                    </form>
-                {% endif %}
-                
-                {% if game_session.current_game_turn.state == 'react_emoji' %}
-                    <form action="{% url 'game_progress' game_session.game_id %}" method="post">
-                        {% csrf_token %}
+                    {% elif game_session.current_game_turn.state == 'react_emoji' %}
                         <h3>React with an Emoji</h3>
                         {{ emoji_form.emoji.label_tag }}
                         {{ emoji_form.emoji }}
-                        <input type="submit" value="Submit">
-                    </form>
+                        <button id="submit-emoji" data-action="react_emoji">Submit Reaction</button>
+                    {% endif %}
                 {% endif %}
-
+            {% else %}
+                <p>You are not the active player. Please wait for your turn.</p>
             {% endif %}
-        {% else %}
-            <p>You are not the active player. Please wait for your turn.</p>
-        {% endif %}
-
+        </div>
 
         <div class="end-button">
-            <form action="{% url 'end_game_session' game_session.game_id %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger">End Game Session</button>
-            </form>
+            <button id="end-game-session" class="btn btn-danger" data-action="end_game">End Game Session</button>
         </div>
     </div>
 
-{% endblock content %}
+    <script type="text/javascript">
+        // Establishing a WebSocket connection to the server
+        const gameId = '{{ game_session.game_id }}';
+        const gameSocket = new WebSocket(`ws://${window.location.host}/ws/game_progress/${gameId}/`);
+        console.log("Game ID: ", gameId);
+        console.log("gameSocket: ", gameSocket);
 
-{% block css %}
-<link href="{% static 'css/styles.css' %}" rel="stylesheet">
-{% endblock css %}
+        gameSocket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            console.log("Message received: ", data);
+            // Handle different types of messages
+            switch (data.command) {
+                case 'refresh':
+                    // Trigger a page refresh
+                    window.location.reload(true);
+                    break;
+
+            }
+        };
+        gameSocket.onopen = function() {
+            console.log("WebSocket connection established");
+        };
+        gameSocket.onerror = function(error) {
+            console.error("WebSocket error observed:", error);
+        };
+        gameSocket.onclose = function(e) {
+            console.log("WebSocket connection closed");
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.addEventListener('click', function(e) {
+                // Check if the clicked element has an ID or a data-action attribute
+                if (e.target.id === 'submit-narrative-choice') {
+                    e.preventDefault();
+                    // Get all radio buttons with the name "narrative"
+                    const narrativeChoices = document.querySelectorAll('input[name="narrative"]:checked');
+
+                    // Get the value of the selected radio button
+                    let narrativeChoiceValue = null;
+                    narrativeChoices.forEach((choice) => {
+                        if (choice.checked) {
+                            narrativeChoiceValue = choice.value;
+                        }
+                    });
+
+                    if (narrativeChoiceValue) {
+                        gameSocket.send(JSON.stringify({
+                            action: 'select_narrative',
+                            value: narrativeChoiceValue
+                        }));
+                    } else {
+                        console.error('No narrative choice selected.');
+                    }
+                } else if (e.target.id === 'share-moon-meaning') {
+                    e.preventDefault();
+                    const moonMeaning = document.querySelector('#moon-meaning-text').value;
+                    gameSocket.send(JSON.stringify({
+                        action: 'moon_phase',
+                        value: moonMeaning
+                    }));
+                } else if (e.target.dataset.action) {
+                    e.preventDefault();
+                    const actionType = e.target.dataset.action;
+                    let value;
+                    switch (actionType) {
+                        case 'select_question':
+                            const selectedQuestion = document.querySelector('input[name="question"]:checked');
+                            value = selectedQuestion ? selectedQuestion.value : null;
+                            break;
+                        case 'react_emoji':
+                            value = document.querySelector('input[name="emoji"]:checked').value;
+                            break;
+                        case 'end_game':
+                            value = gameId;
+                            break;
+                    }
+                    gameSocket.send(JSON.stringify({ action: actionType, value: value }));
+                } else if (e.target.id === 'submit-answer') {
+                    e.preventDefault();
+
+                    // Collect the text from each tag and join them into a single string
+                    let answer = Array.from(document.querySelectorAll('#current-sentence'))
+                                      .map(tag => tag.textContent.trim())
+                                      .join(' ');
+
+                    // Send the answer through the WebSocket
+                    gameSocket.send(JSON.stringify({ action: 'answer_question', value: answer }));
+
+                } else if (e.target.id === 'clear-all') {
+                    // Clear the current sentence container and the hidden input field
+                    document.querySelector('#current-sentence').innerHTML = '';
+                    document.querySelector('#hidden-answer-field').value = '';
+                }
+            });
+        });
+    </script>
+{% endblock content %}
 
 {% block styles %}
 <link href="{% static 'css/styles.css' %}" rel="stylesheet">
