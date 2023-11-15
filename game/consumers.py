@@ -2,6 +2,8 @@ from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 
+from channels.layers import get_channel_layer
+
 from game.models import GameSession, Player
 
 
@@ -228,13 +230,27 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def end_game(self, game_id):
         try:
-            game_session = await database_sync_to_async(GameSession.objects.get)(
-                game_id=game_id
+            end_game_url = f"/game/end_game_session/{game_id}/"
+            channel_layer = get_channel_layer()
+            group_name = f"game_{game_id}"
+
+            # Broadcast the message to the group
+            await channel_layer.group_send(
+                group_name,
+                {
+                    "type": "group_message",
+                    "message": {"command": "navigate", "url": end_game_url},
+                },
             )
-            await database_sync_to_async(game_session.end_session)()
-            await self.broadcast_game_state()
+
         except ValueError as e:
             await self.send_json({"error": str(e)})
+
+        # Handler for group messages
+
+    async def group_message(self, event):
+        # Send a message down to the client
+        await self.send_json(event["message"])
 
     async def broadcast_game_state(self):
         # Get the current game state

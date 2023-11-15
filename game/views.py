@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth.models import User
+from django.db import transaction
 from .forms import AnswerForm, EmojiReactForm, NarrativeChoiceForm
 from .models import (
     Player,
@@ -12,17 +12,23 @@ from django.shortcuts import redirect, render
 from django.views import View
 import random
 from collections import defaultdict
+from django.contrib.auth.models import User
 
 
 def initiate_game_session(request):
     if request.method == "POST":
-        # Fetching two users to start the game
-        user1 = User.objects.get(username="admin5")
-        user2 = User.objects.get(username="admin6")
+        # Fetching the logged-in user
+        user1 = request.user
 
+        # Retrieving the selected user's username from the POST request
+        selected_username = request.POST.get("selected_user")
+        user2 = User.objects.get(username=selected_username)
+
+        # Create a new game session and save it
         game_session = GameSession()
         game_session.save()
-        # Creating players
+
+        # Create players for the game session
         player_A = Player.objects.create(user=user1, game_session=game_session)
         player_B = Player.objects.create(user=user2, game_session=game_session)
 
@@ -31,11 +37,32 @@ def initiate_game_session(request):
         game_session.playerB = player_B
         game_session.save()
 
-        # Redirecting to GameProgressView
+        # Initialize the game and redirect to the GameProgressView
         game_session.initialize_game()
         return redirect("game_progress", game_id=game_session.game_id)
+    else:
+        # Define a list of the usernames that can be selected
+        selectable_usernames = [
+            "prof_test",
+            "ta_test",
+            "test1",
+            "test2",
+            "test3",
+            "test4",
+            "test5",
+        ]
 
-    return render(request, "initiate_game_session.html")
+        # Fetch the users with the specified usernames and not the logged-in user
+        selectable_users = User.objects.filter(
+            username__in=selectable_usernames
+        ).exclude(id=request.user.id)
+
+        # Pass the list of selectable users to the template
+        return render(
+            request,
+            "initiate_game_session.html",
+            {"selectable_users": selectable_users},
+        )
 
 
 class GameProgressView(View):
@@ -216,8 +243,18 @@ def end_game_session(request, game_id):
             name = message.sender
             messages_by_sender[name].append(message)
 
-        game_session.end_session()
-        messages.success(request, "Game session ended successfully.")
+        with transaction.atomic():  # Start a database transaction
+            # Lock the game session row
+            game_session = GameSession.objects.select_for_update().get(game_id=game_id)
+            # User checks if GameSession's state is ENDED
+            if game_session.state != GameSession.ENDED:
+                game_session.state = GameSession.ENDED
+                game_session.save()
+            else:
+                # Call GameSession's end_session method
+                game_session.end_session()
+            # What this achieves is that the first player sets the state to ENDED,
+            # and the second player calls end_session() and the game session is deleted.
 
         return render(
             request,

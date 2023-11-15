@@ -125,9 +125,15 @@
                     // Trigger a page refresh
                     window.location.reload(true);
                     break;
-
+                case 'navigate':
+            // Navigate to a given URL provided by the server
+                    if (data.url) {
+                        window.location.href = data.url;
+                    }
+                    break;
             }
         };
+
         gameSocket.onopen = function() {
             console.log("WebSocket connection established");
         };
