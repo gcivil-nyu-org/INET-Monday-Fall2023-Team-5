@@ -55,8 +55,10 @@ def initiate_game_session(request):
             "test5",
         ]
 
-        # Fetch the users with the specified usernames
-        selectable_users = User.objects.filter(username__in=selectable_usernames)
+        # Fetch the users with the specified usernames and not the logged-in user
+        selectable_users = User.objects.filter(
+            username__in=selectable_usernames
+        ).exclude(id=request.user.id)
 
         # Pass the list of selectable users to the template
         return render(
