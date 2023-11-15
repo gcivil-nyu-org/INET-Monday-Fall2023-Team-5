@@ -253,8 +253,8 @@ def end_game_session(request, game_id):
             else:
                 # Call GameSession's end_session method
                 game_session.end_session()
-            # What this achieves is that the first player sets the state to ENDED, and the second player
-            # calls end_session() and the game session is deleted.
+            # What this achieves is that the first player sets the state to ENDED,
+            # and the second player calls end_session() and the game session is deleted.
 
         return render(
             request,
