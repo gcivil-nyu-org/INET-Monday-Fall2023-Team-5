@@ -21,7 +21,13 @@
     </div>
     <form method="post">
         {% csrf_token %}
-        <button type="submit">Start New Game</button>
+        <label for="selected_user">Select a user to play with:</label>
+        <select name="selected_user" id="selected_user">
+            {% for user in selectable_users %}
+                <option value="{{ user.username }}">{{ user.username }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Start Game">
     </form>
 </div>
 {% endblock content %}
