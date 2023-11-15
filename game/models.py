@@ -134,8 +134,6 @@ class GameSession(models.Model):
         self.chat_messages.all().delete()
         self.delete()
 
-    MAX_SESSIONS = 30  # Define a constant for the maximum number of sessions
-
     def save(self, *args, **kwargs):
         # Check if it's a new instance
         is_new = not self.pk
@@ -143,14 +141,6 @@ class GameSession(models.Model):
         # If it's a new instance, create an initial GameTurn
         if is_new:
             self.current_game_turn = GameTurn.objects.create()
-
-        # Check if the turn number has reached the limit before saving
-        if (
-            self.current_game_turn
-            and self.current_game_turn.turn_number >= self.MAX_SESSIONS
-        ):
-            self.end_session()
-            # Call the end_session method to end the game and record emojis
 
         super(GameSession, self).save(*args, **kwargs)
 
