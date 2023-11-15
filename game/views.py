@@ -14,15 +14,25 @@ import random
 from collections import defaultdict
 
 
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+
+
+@login_required
 def initiate_game_session(request):
     if request.method == "POST":
-        # Fetching two users to start the game
-        user1 = User.objects.get(username="admin5")
-        user2 = User.objects.get(username="admin6")
+        # Fetching the logged-in user
+        user1 = request.user
 
+        # Retrieving the selected user's username from the POST request
+        selected_username = request.POST.get("selected_user")
+        user2 = User.objects.get(username=selected_username)
+
+        # Create a new game session and save it
         game_session = GameSession()
         game_session.save()
-        # Creating players
+
+        # Create players for the game session
         player_A = Player.objects.create(user=user1, game_session=game_session)
         player_B = Player.objects.create(user=user2, game_session=game_session)
 
@@ -31,11 +41,20 @@ def initiate_game_session(request):
         game_session.playerB = player_B
         game_session.save()
 
-        # Redirecting to GameProgressView
+        # Initialize the game and redirect to the GameProgressView
         game_session.initialize_game()
         return redirect("game_progress", game_id=game_session.game_id)
+    else:
+        # Fetch the list of users that can be selected as partners
+        # Excluding the logged-in user from the list
+        selectable_users = User.objects.exclude(id=request.user.id)
 
-    return render(request, "initiate_game_session.html")
+        # Pass the list of selectable users to the template
+        return render(
+            request,
+            "initiate_game_session.html",
+            {"selectable_users": selectable_users},
+        )
 
 
 class GameProgressView(View):
