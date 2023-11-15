@@ -18,7 +18,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
 
-@login_required
 def initiate_game_session(request):
     if request.method == "POST":
         # Fetching the logged-in user
@@ -45,9 +44,19 @@ def initiate_game_session(request):
         game_session.initialize_game()
         return redirect("game_progress", game_id=game_session.game_id)
     else:
-        # Fetch the list of users that can be selected as partners
-        # Excluding the logged-in user from the list
-        selectable_users = User.objects.exclude(id=request.user.id)
+        # Define a list of the usernames that can be selected
+        selectable_usernames = [
+            "prof_test",
+            "ta_test",
+            "test1",
+            "test2",
+            "test3",
+            "test4",
+            "test5",
+        ]
+
+        # Fetch the users with the specified usernames
+        selectable_users = User.objects.filter(username__in=selectable_usernames)
 
         # Pass the list of selectable users to the template
         return render(
