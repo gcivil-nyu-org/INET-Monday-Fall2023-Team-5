@@ -228,7 +228,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def end_game(self, game_id):
         try:
-            end_game_url = f"/end_game_session/{game_id}/"  # Construct the URL
+            end_game_url = f"/game/end_game_session/{game_id}/"  # Construct the URL
             await self.send_json({"command": "navigate", "url": end_game_url})
         except ValueError as e:
             await self.send_json({"error": str(e)})
