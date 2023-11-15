@@ -284,6 +284,8 @@ class GameTurn(models.Model):
         # process the narrative choice here:
         # adding the associated words to the player's word pool
 
+        MAX_NUMBER_OF_TURNS = 30
+
         # Check if both players have made their choices
         if self.player_a_narrative_choice_made and self.player_b_narrative_choice_made:
             # Reset the flags for the next turn
@@ -291,6 +293,11 @@ class GameTurn(models.Model):
             self.player_b_narrative_choice_made = False
             # Transition to the SELECT_QUESTION state and add 1 to the turn number
             self.turn_number += 1
+
+            if self.turn_number >= MAX_NUMBER_OF_TURNS:
+                self.parent_game.set_game_inactive()
+                self.parent_game.state = self.parent_game.ENDED
+
             # Dynamically determine the next state
             next_state = self.regular_or_special_moon_next()
             # Set the state to the determined next state

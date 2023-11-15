@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth.models import User
+from django.db import transaction
 from .forms import AnswerForm, EmojiReactForm, NarrativeChoiceForm
 from .models import (
     Player,
@@ -12,9 +12,6 @@ from django.shortcuts import redirect, render
 from django.views import View
 import random
 from collections import defaultdict
-
-
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
 
@@ -246,8 +243,18 @@ def end_game_session(request, game_id):
             name = message.sender
             messages_by_sender[name].append(message)
 
-        game_session.end_session()
-        messages.success(request, "Game session ended successfully.")
+        with transaction.atomic():  # Start a database transaction
+            # Lock the game session row
+            game_session = GameSession.objects.select_for_update().get(game_id=game_id)
+            # User checks if GameSession's state is ENDED
+            if game_session.state != GameSession.ENDED:
+                game_session.state = GameSession.ENDED
+                game_session.save()
+            else:
+                # Call GameSession's end_session method
+                game_session.end_session()
+            # What this achieves is that the first player sets the state to ENDED, and the second player
+            # calls end_session() and the game session is deleted.
 
         return render(
             request,
