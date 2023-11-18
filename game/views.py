@@ -39,6 +39,7 @@ def initiate_game_session(request):
 
         # Initialize the game and redirect to the GameProgressView
         game_session.initialize_game()
+        game_session.save()
         return redirect("game_progress", game_id=game_session.game_id)
     else:
         # Define a list of the usernames that can be selected

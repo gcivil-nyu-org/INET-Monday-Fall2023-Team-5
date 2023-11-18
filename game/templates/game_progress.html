@@ -194,10 +194,11 @@
                             document.querySelector('#current-sentence').innerHTML = '';
                             document.querySelector('#hidden-answer-field').value = '';
                             break;
-                        
                     }
-                    gameSocket.send(JSON.stringify({ action: actionType, value: value }));
-            };
+                    if (value) {
+                        gameSocket.send(JSON.stringify({ action: actionType, value: value }));
+                    }
+            }
         });
     });
     </script>

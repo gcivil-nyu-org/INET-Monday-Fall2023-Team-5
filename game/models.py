@@ -29,11 +29,6 @@ class Player(models.Model):
             self.character_name = "Character of " + self.user.get_username()
         super(Player, self).save(*args, **kwargs)
 
-        # Update current_game_turn's current_player if it's None
-        if not self.game_session.current_game_turn.active_player:
-            self.game_session.current_game_turn.active_player = self
-            self.game_session.current_game_turn.save()
-
     def delete(self, *args, **kwargs):
         # Update the related GameSession's is_active field
         self.game_session.set_game_inactive()
@@ -137,16 +132,11 @@ class GameSession(models.Model):
         self.playerA.delete()
         self.playerB.delete()
         self.current_game_turn.delete()
+        self.refresh_from_db()
         # self.chat_messages.all().delete()
         # self.delete()
-        self.save()
 
     def save(self, *args, **kwargs):
-        # Check if it's a new instance
-        is_new = not self.pk
-        # If it's a new instance, create an initial GameTurn
-        if is_new:
-            self.initialize_game()
         super(GameSession, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -224,7 +214,7 @@ class GameTurn(models.Model):
         # Create a chat message and add it to the log
         chat_message = ChatMessage.objects.create(
             sender=str(player.character_name),
-            text=str(answer.text),
+            text=str(answer),
         )
         self.parent_game.gameLog.chat_messages.add(chat_message)
         self.switch_active_player()
@@ -334,7 +324,7 @@ class GameTurn(models.Model):
         # Create a chat message and add it to the log
         chat_message = ChatMessage.objects.create(
             sender=str(player.character_name),
-            text=str(message.text),
+            text=str(message),
         )
         self.parent_game.gameLog.chat_messages.add(chat_message)
 
@@ -371,6 +361,9 @@ class GameLog(models.Model):
     chat_messages = models.ManyToManyField(
         "ChatMessage", blank=True, related_name="game_log"
     )
+
+    def __int__(self):
+        return self.id
 
 
 class ChatMessage(models.Model):
