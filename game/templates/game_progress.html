@@ -72,7 +72,7 @@
                             <label for="question_{{ question.id }}">{{ question.text }}</label>
                         </div>
                         {% endfor %}
-                        <button id="submit-question" data-action="select_question">Submit Question</button>
+                        <button id="submit-question" data-action="submit_question">Submit Question</button>
 
                     {% elif game_session.current_game_turn.state == 'answer_question' %}
                        <h3>Answer the Question</h3>
@@ -88,8 +88,8 @@
                               <!-- Tags will be dragged here -->
                             </div>
                             <input type="hidden" name="answer" id="hidden-answer-field">
-                            <button id="clear-all" type="button">Clear All</button>
-                            <button id="submit-answer" type="button">Submit Answer</button>
+                            <button id="clear-all" data-action="'clear_all">Clear All</button>
+                            <button id="submit-answer" data-action = "submit_answer">Submit Answer</button>
                           </div>
                         </div>
                     {% elif game_session.current_game_turn.state == 'react_emoji' %}
@@ -146,41 +146,33 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             document.body.addEventListener('click', function(e) {
-                // Check if the clicked element has an ID or a data-action attribute
-                if (e.target.id === 'submit-narrative-choice') {
-                    e.preventDefault();
-                    // Get all radio buttons with the name "narrative"
-                    const narrativeChoices = document.querySelectorAll('input[name="narrative"]:checked');
-
-                    // Get the value of the selected radio button
-                    let narrativeChoiceValue = null;
-                    narrativeChoices.forEach((choice) => {
-                        if (choice.checked) {
-                            narrativeChoiceValue = choice.value;
-                        }
-                    });
-
-                    if (narrativeChoiceValue) {
-                        gameSocket.send(JSON.stringify({
-                            action: 'select_narrative',
-                            value: narrativeChoiceValue
-                        }));
-                    } else {
-                        console.error('No narrative choice selected.');
-                    }
-                } else if (e.target.id === 'share-moon-meaning') {
-                    e.preventDefault();
-                    const moonMeaning = document.querySelector('#moon-meaning-text').value;
-                    gameSocket.send(JSON.stringify({
-                        action: 'moon_phase',
-                        value: moonMeaning
-                    }));
-                } else if (e.target.dataset.action) {
+                if (e.target.dataset.action) {
                     e.preventDefault();
                     const actionType = e.target.dataset.action;
                     let value;
                     switch (actionType) {
-                        case 'select_question':
+                        case 'select_narrative':
+                            // Get all radio buttons with the name "narrative"
+                            const narrativeChoices = document.querySelectorAll('input[name="narrative"]:checked');
+
+                            // Get the value of the selected radio button
+                            let narrativeChoiceValue = null;
+                            narrativeChoices.forEach((choice) => {
+                                if (choice.checked) {
+                                    narrativeChoiceValue = choice.value;
+                                }
+                            });
+
+                            if (narrativeChoiceValue) {
+                                value = narrativeChoiceValue;
+                            } else {
+                                console.error('No narrative choice selected.');
+                            }
+                            break;
+                        case 'moon_phase':
+                            value = document.querySelector('#moon-meaning-text').value;
+                            break;
+                        case 'submit_question':
                             const selectedQuestion = document.querySelector('input[name="question"]:checked');
                             value = selectedQuestion ? selectedQuestion.value : null;
                             break;
@@ -190,26 +182,24 @@
                         case 'end_game':
                             value = gameId;
                             break;
-                    }
-                    gameSocket.send(JSON.stringify({ action: actionType, value: value }));
-                } else if (e.target.id === 'submit-answer') {
-                    e.preventDefault();
-
-                    // Collect the text from each tag and join them into a single string
-                    let answer = Array.from(document.querySelectorAll('#current-sentence'))
+                        case 'submit_answer':
+                            // Collect the text from each tag and join them into a single string
+                            let answer = Array.from(document.querySelectorAll('#current-sentence'))
                                       .map(tag => tag.textContent.trim())
                                       .join(' ');
-
-                    // Send the answer through the WebSocket
-                    gameSocket.send(JSON.stringify({ action: 'answer_question', value: answer }));
-
-                } else if (e.target.id === 'clear-all') {
-                    // Clear the current sentence container and the hidden input field
-                    document.querySelector('#current-sentence').innerHTML = '';
-                    document.querySelector('#hidden-answer-field').value = '';
-                }
-            });
+                            value = answer;
+                            break;
+                        case 'clear_all':
+                            // Clear the current sentence container and the hidden input field
+                            document.querySelector('#current-sentence').innerHTML = '';
+                            document.querySelector('#hidden-answer-field').value = '';
+                            break;
+                        
+                    }
+                    gameSocket.send(JSON.stringify({ action: actionType, value: value }));
+            };
         });
+    });
     </script>
 {% endblock content %}
 

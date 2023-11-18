@@ -93,9 +93,9 @@ class GameConsumer(AsyncWebsocketConsumer):
         # Map the action to a handler function
         if action == "select_narrative":
             await self.make_narrative_choice(value)
-        elif action == "select_question":
+        elif action == "submit_question":
             await self.select_question(value)
-        elif action == "answer_question":
+        elif action == "submit_answer":
             await self.answer_question(value)
         elif action == "react_emoji":
             await self.react_emoji(value)
