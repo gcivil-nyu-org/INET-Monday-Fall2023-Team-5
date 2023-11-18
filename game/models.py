@@ -131,8 +131,9 @@ class GameSession(models.Model):
         self.playerA.delete()
         self.playerB.delete()
         self.current_game_turn.delete()
-        self.chat_messages.all().delete()
-        self.delete()
+        # self.chat_messages.all().delete()
+        # self.delete()
+        self.save()
 
     def save(self, *args, **kwargs):
         # Check if it's a new instance
@@ -390,3 +391,6 @@ class NarrativeChoice(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     choice = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
+
+
+
