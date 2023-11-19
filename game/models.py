@@ -114,9 +114,9 @@ class GameSession(models.Model):
         # Check if both players are set
         if not self.playerA or not self.playerB:
             raise ValueError("Both players must be set before initializing the game.")
+        self.gameLog = GameLog.objects.create()
         self.current_game_turn = GameTurn.objects.create()
         self.current_game_turn.active_player = self.playerA
-        self.current_game_turn.gameLog = GameLog.objects.create()
         self.current_game_turn.save()
         return True, "Game initialized successfully."
 
