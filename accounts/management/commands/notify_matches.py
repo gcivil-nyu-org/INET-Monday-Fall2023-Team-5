@@ -40,6 +40,7 @@ class Command(BaseCommand):
 
                     # if not game_session.current_game_turn_id:
                     game_session.initialize_game()
+                    game_session.save()
 
                 try:
                     self.send_email(match.user1, "You have a new match!")
