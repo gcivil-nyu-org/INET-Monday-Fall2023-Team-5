@@ -39,6 +39,7 @@ def initiate_game_session(request):
 
         # Initialize the game and redirect to the GameProgressView
         game_session.initialize_game()
+        game_session.save()
         return redirect("game_progress", game_id=game_session.game_id)
     else:
         # Define a list of the usernames that can be selected
@@ -65,53 +66,6 @@ def initiate_game_session(request):
         )
 
 
-    if request.method == "POST":
-        user1 = request.user
-        selected_username = request.POST.get("selected_user")
-        user2 = User.objects.get(username=selected_username)
-
-        # Create a new game session and save it
-        game_session = GameSession()
-        game_session.save()
-
-        # Get or create players
-        player_A = get_or_create_player(user1, game_session)
-        player_B = get_or_create_player(user2, game_session)
-
-        # Assigning players to the game session
-        game_session.playerA = player_A
-        game_session.playerB = player_B
-        game_session.save()
-
-        # Initialize the game and redirect to the GameProgressView
-        game_session.initialize_game()
-        return redirect("game_progress", game_id=game_session.game_id)
-    else:
-        selectable_users = User.objects.exclude(id=request.user.id)
-        # Define a list of the usernames that can be selected
-        selectable_usernames = [
-            "prof_test",
-            "ta_test",
-            "test1",
-            "test2",
-            "test3",
-            "test4",
-            "test5",
-        ]
-
-        # Fetch the users with the specified usernames and not the logged-in user
-        selectable_users = User.objects.filter(
-            username__in=selectable_usernames
-        ).exclude(id=request.user.id)
-
-        return render(
-            request,
-            "initiate_game_session.html",
-            {"selectable_users": selectable_users},
-        )
-
-
-
 class GameProgressView(View):
     template_name = "game_progress.html"
 
@@ -124,30 +78,26 @@ class GameProgressView(View):
             return redirect("end_game_session", game_id=game_id)
 
         if game_session.state == GameSession.ENDED:
-
-            chat_messages_for_session = game_session.chat_messages.all()
-
-            # Organize messages by sender
-            messages_by_sender = defaultdict(list)
-            for message in chat_messages_for_session:
-                name = message.sender
-                messages_by_sender[name].append(message)
-
+            messages_by_sender = retrieve_messages_from_log(game_session.gameLog)
             if game_session.state == GameSession.ENDED:
-                messages.error(request, "Game session has ended.")
                 return render(
-                request,
-                "end_game_session.html",
-                {"game_id": game_id, "messages_by_sender": dict(messages_by_sender)},
-            )
+                    request,
+                    "end_game_session.html",
+                    {
+                        "game_id": game_id,
+                        "messages_by_sender": dict(messages_by_sender),
+                    },
+                )
         else:
             player = request.user.player
             # Check if the user is a participant of the game session
             if player not in [game_session.playerA, game_session.playerB]:
-                messages.error(request, "You are not a participant of this game session.")
+                messages.error(
+                    request, "You are not a participant of this game session."
+                )
                 return redirect("home")
 
-            chat_messages_for_session = game_session.chat_messages.all()
+            chat_messages_for_session = game_session.gameLog.chat_messages.all()
 
             # Context that is common to all states
             context = {
@@ -158,7 +108,6 @@ class GameProgressView(View):
             }
 
             # Add state-specific context
-
             turn = game_session.current_game_turn
 
             if turn.state == GameTurn.SELECT_QUESTION:
@@ -218,76 +167,6 @@ class GameProgressView(View):
             return render(request, self.template_name, context)
 
 
-"""
-    def post(self, request, *args, **kwargs):
-        game_id = kwargs["game_id"]
-        player = request.user.player
-        try:
-            game_session = GameSession.objects.get(game_id=game_id)
-        except GameSession.DoesNotExist:
-            return redirect("end_game_session", game_id=game_id)
-
-        current_game_turn = game_session.current_game_turn
-        # Get the data from the POST request
-        data = request.POST
-
-        # Call the appropriate method on the FSM based on the current state
-        try:
-            if current_game_turn.state == GameTurn.SELECT_QUESTION:
-                selected_question_id = data.get("question")
-                current_game_turn.select_question(selected_question_id, player)
-                current_game_turn.save()
-                game_session.asked_questions.add(
-                    Question.objects.get(id=selected_question_id)
-                )
-                game_session.save()
-
-            elif current_game_turn.state == GameTurn.ANSWER_QUESTION:
-                answer = data.get("answer")
-                current_game_turn.answer_question(answer, player)
-                current_game_turn.save()
-
-            elif current_game_turn.state == GameTurn.REACT_EMOJI:
-                current_game_turn.react_with_emoji(data.get("emoji"), player)
-                current_game_turn.save()
-
-            elif current_game_turn.state == GameTurn.NARRATIVE_CHOICES:
-                current_game_turn.make_narrative_choice(data.get("narrative"), player)
-                current_game_turn.save()
-
-            elif current_game_turn.state == GameTurn.MOON_PHASE:
-                current_game_turn.write_message_about_moon_phase(
-                    data.get("moon_meaning"), player
-                )
-                current_game_turn.save()
-        except Exception as e:
-            # Handle any other exceptions that might occur.
-            # Update players or send a message to inform them of the error.
-            messages.error(request, str(e))
-            return redirect("game_progress", game_id=game_id)
-
-        return redirect("game_progress", game_id=game_id)
-"""
-
-
-# def end_game_session(request, game_id):
-#     try:
-#         game_session = GameSession.objects.get(game_id=game_id)
-#         if (
-#             request.user not in [game_session.playerA.user, game_session.playerB.user]
-#             and not request.user.is_staff
-#         ):
-#             messages.error(request, "You are not a participant of this game session.")
-#             return redirect(
-#                 "home"
-#             )  # or another suitable view name with an error message
-#         game_session.end_session()
-#         messages.success(request, "Game session ended successfully.")
-#     except GameSession.DoesNotExist:
-#         messages.error(request, "Game session not found.")
-#     return redirect("initiate_game_session")
-
-
 def end_game_session(request, game_id):
     try:
         game_session = GameSession.objects.get(game_id=game_id)
@@ -298,28 +177,15 @@ def end_game_session(request, game_id):
             messages.error(request, "You are not a participant of this game session.")
             return redirect("home")
 
-        # Fetch chat messages for the session
-        chat_messages_for_session = game_session.chat_messages.all().order_by(
-            "timestamp"
-        )
-        # Organize messages by sender
-        messages_by_sender = defaultdict(list)
-        for message in chat_messages_for_session:
-            name = message.sender
-            messages_by_sender[name].append(message)
+        messages_by_sender = retrieve_messages_from_log(game_session.gameLog)
 
         with transaction.atomic():  # Start a database transaction
             # Lock the game session row
             game_session = GameSession.objects.select_for_update().get(game_id=game_id)
             # User checks if GameSession's state is ENDED
             if game_session.state != GameSession.ENDED:
-                game_session.state = GameSession.ENDED
-                game_session.save()
-            else:
-                # Call GameSession's end_session method
                 game_session.end_session()
-            # What this achieves is that the first player sets the state to ENDED,
-            # and the second player calls end_session() and the game session is deleted.
+                game_session.save()
 
         return render(
             request,
@@ -330,3 +196,10 @@ def end_game_session(request, game_id):
     except GameSession.DoesNotExist:
         messages.error(request, "Game session not found.")
         return redirect("initiate_game_session")
+
+
+def retrieve_messages_from_log(game_log):
+    messages_by_sender = defaultdict(list)
+    for message in game_log.chat_messages.all():
+        messages_by_sender[message.sender].append(message)
+    return messages_by_sender

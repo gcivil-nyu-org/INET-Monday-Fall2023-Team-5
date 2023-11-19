@@ -29,11 +29,6 @@ class Player(models.Model):
             self.character_name = "Character of " + self.user.get_username()
         super(Player, self).save(*args, **kwargs)
 
-        # Update current_game_turn's current_player if it's None
-        if not self.game_session.current_game_turn.active_player:
-            self.game_session.current_game_turn.active_player = self
-            self.game_session.current_game_turn.save()
-
     def delete(self, *args, **kwargs):
         # Update the related GameSession's is_active field
         self.game_session.set_game_inactive()
@@ -101,7 +96,13 @@ class GameSession(models.Model):
 
     asked_questions = models.ManyToManyField("Question", blank=True)
 
-    chat_messages = models.ManyToManyField("ChatMessage", blank=True)
+    gameLog = models.OneToOneField(
+        "GameLog",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="parent_game",
+    )
 
     def __init__(self, *args, **kwargs):
         super(GameSession, self).__init__(*args, **kwargs)
@@ -113,13 +114,13 @@ class GameSession(models.Model):
         # Check if both players are set
         if not self.playerA or not self.playerB:
             raise ValueError("Both players must be set before initializing the game.")
-
-        # Update the current game turn's active player
+        self.current_game_turn = GameTurn.objects.create()
         self.current_game_turn.active_player = self.playerA
+        self.current_game_turn.gameLog = GameLog.objects.create()
         self.current_game_turn.save()
-        # Transition to the REGULAR_TURN state
-        # This will change later when we add the character creation step
         return True, "Game initialized successfully."
+
+    # This will change later to be a transition to the character creation state
 
     @transition(field=state, source="*", target="inactive")
     def set_game_inactive(self):
@@ -131,18 +132,11 @@ class GameSession(models.Model):
         self.playerA.delete()
         self.playerB.delete()
         self.current_game_turn.delete()
+        self.refresh_from_db()
         # self.chat_messages.all().delete()
         # self.delete()
-        self.save()
 
     def save(self, *args, **kwargs):
-        # Check if it's a new instance
-        is_new = not self.pk
-
-        # If it's a new instance, create an initial GameTurn
-        if is_new:
-            self.current_game_turn = GameTurn.objects.create()
-
         super(GameSession, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -185,7 +179,6 @@ class GameTurn(models.Model):
         return self.active_player
 
     def switch_active_player(self):
-        """Switch the active player for this turn."""
         if self.active_player == self.parent_game.playerA:
             self.active_player = self.parent_game.playerB
         else:
@@ -203,15 +196,13 @@ class GameTurn(models.Model):
         if not selected_question:
             raise ValueError("No question selected.")
 
-        # Create a chat message
+        # Create a chat message and add it to the log
         chat_message = ChatMessage.objects.create(
-            game_session=self.parent_game,
             sender=str(player.character_name),
-            text=str(selected_question),
+            text=str(selected_question.text),
         )
+        self.parent_game.gameLog.chat_messages.add(chat_message)
 
-        # Add the chat message to the GameSession's chat_messages ManyToManyField
-        self.parent_game.chat_messages.add(chat_message)
         self.switch_active_player()
 
     @transition(field=state, source=ANSWER_QUESTION, target=REACT_EMOJI)
@@ -219,14 +210,13 @@ class GameTurn(models.Model):
         # Check if the current user is the active player
         if player != self.active_player:
             raise ValueError("It's not your turn.")
-        # Create a chat message
+
+        # Create a chat message and add it to the log
         chat_message = ChatMessage.objects.create(
-            game_session=self.parent_game,
             sender=str(player.character_name),
             text=str(answer),
         )
-        # Add the chat message to the GameSession's chat_messages ManyToManyField
-        self.parent_game.chat_messages.add(chat_message)
+        self.parent_game.gameLog.chat_messages.add(chat_message)
         self.switch_active_player()
 
     @transition(field=state, source=REACT_EMOJI, target=None)
@@ -247,7 +237,7 @@ class GameTurn(models.Model):
             raise ValueError("Invalid player.")
 
         # Fetch the latest message for the current game session to add the reaction
-        latest_message = self.parent_game.chat_messages.last()
+        latest_message = self.parent_game.gameLog.chat_messages.last()
 
         if latest_message:
             latest_message.reaction = emoji
@@ -331,14 +321,13 @@ class GameTurn(models.Model):
         else:
             raise ValueError("Invalid player.")
         self.save()
-        # Create a chat message
+        # Create a chat message and add it to the log
         chat_message = ChatMessage.objects.create(
-            game_session=self.parent_game,
             sender=str(player.character_name),
             text=str(message),
         )
-        # Add the chat message to the GameSession's chat_messages ManyToManyField
-        self.parent_game.chat_messages.add(chat_message)
+        self.parent_game.gameLog.chat_messages.add(chat_message)
+
         self.switch_active_player()
         # Check if both players have written their messages
         if (
@@ -368,10 +357,16 @@ class Word(models.Model):
         return self.word
 
 
+class GameLog(models.Model):
+    chat_messages = models.ManyToManyField(
+        "ChatMessage", blank=True, related_name="game_log"
+    )
+
+    def __int__(self):
+        return self.id
+
+
 class ChatMessage(models.Model):
-    game_session = models.ForeignKey(
-        GameSession, on_delete=models.CASCADE
-    )  # To relate the message to a game session
     sender = models.CharField(max_length=255)  # The name of the sender (player)
     text = models.TextField()  # The main content of the message (question/answer)
     reaction = models.CharField(
@@ -391,6 +386,3 @@ class NarrativeChoice(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     choice = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
-
-
-
