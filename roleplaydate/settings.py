@@ -84,11 +84,12 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
             "hosts": [
-                (os.environ.get("REDIS_ENDPOINT_URL"), os.environ.get("REDIS_PORT"))
+                (os.environ.get("REDIS_ENDPOINT_URL"), int(os.environ.get("REDIS_PORT")))
             ],
         },
     },
 }
+
 
 
 # Database
