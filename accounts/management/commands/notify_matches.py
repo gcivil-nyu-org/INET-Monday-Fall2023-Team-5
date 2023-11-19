@@ -27,12 +27,17 @@ class Command(BaseCommand):
                     game_session = GameSession(is_active=True)
                     game_session.save()
 
-                    playerA, _ = Player.objects.get_or_create(
-                        user=match.user1, defaults={"game_session": game_session}
-                    )
-                    playerB, _ = Player.objects.get_or_create(
-                        user=match.user2, defaults={"game_session": game_session}
-                    )
+                    # playerA, _ = Player.objects.get_or_create(
+                    #     user=match.user1, defaults={"game_session": game_session}
+                    # )
+                    # playerB, _ = Player.objects.get_or_create(
+                    #     user=match.user2, defaults={"game_session": game_session}
+                    # )
+                    
+                    # Create players for the game session
+                    playerA = Player.objects.create(user=match.user1, game_session=game_session)
+                    playerB = Player.objects.create(user=match.user2, game_session=game_session)
+                    
 
                     game_session.playerA = playerA
                     game_session.playerB = playerB
