@@ -13,6 +13,8 @@ from django.views import View
 import random
 from collections import defaultdict
 from django.contrib.auth.models import User
+from django.db.models import Q
+from accounts.models import Match
 
 
 def initiate_game_session(request):
@@ -184,6 +186,16 @@ def end_game_session(request, game_id):
             game_session = GameSession.objects.select_for_update().get(game_id=game_id)
             # User checks if GameSession's state is ENDED
             if game_session.state != GameSession.ENDED:
+                 # Check if both players are not None
+                if game_session.playerA and game_session.playerB:
+                    user1 = game_session.playerA.user
+                    user2 = game_session.playerB.user
+
+                    # Query and delete the match involving these two users
+                    Match.objects.filter(
+                        (Q(user1=user1) & Q(user2=user2)) | (Q(user1=user2) & Q(user2=user1))
+                    ).delete()
+
                 game_session.end_session()
                 game_session.save()
 
