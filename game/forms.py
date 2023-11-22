@@ -37,14 +37,6 @@ class NarrativeChoiceForm(forms.Form):
     )
 
 
-""" class CharacterSelectionForm(forms.Form):
-    character = forms.ModelChoiceField(
-        queryset=Character.objects.all(),
-        widget=forms.RadioSelect(),
-        empty_label=None
-    ) """
-
-
 class CharacterSelectionForm(forms.Form):
     character = forms.ModelChoiceField(
         queryset=Character.objects.all(),
