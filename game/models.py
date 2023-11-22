@@ -146,6 +146,10 @@ class GameSession(models.Model):
     def get_absolute_url(self):
         return reverse("game:game_progress", kwargs={"game_id": self.game_id})
 
+    @transition(field=state, source=CHARACTER_CREATION, target=REGULAR_TURN)
+    def start_regular_turn(self):
+        pass
+
 
 class GameTurn(models.Model):
     active_player = models.ForeignKey(
