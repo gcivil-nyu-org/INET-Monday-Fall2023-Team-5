@@ -16,14 +16,18 @@ def game_session_processor(request):
                 is_active=True,
             ).latest("id")
             # Check if the player has a character
-            # player = Player.objects.get(user=request.user)
-            # if player.character:
+            player = Player.objects.get(user=request.user)
+            print("Game session state: " + game_session.state)
             if game_session.state == game_session.CHARACTER_CREATION:
-                game_session_url = game_session.get_absolute_url()
+                if player.character:
+                    game_session_url = game_session.get_absolute_url()
+                else:
+                    game_session_url = reverse(
+                        "game:character_creation",
+                        kwargs={"game_id": game_session.game_id},
+                    )
             else:
-                game_session_url = reverse(
-                    "game:character_creation", kwargs={"game_id": game_session.game_id}
-                )
+                game_session_url = game_session.get_absolute_url()
 
             return {"game_session_url": game_session_url}
 
