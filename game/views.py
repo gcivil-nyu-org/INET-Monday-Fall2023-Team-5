@@ -225,36 +225,63 @@ class CharacterCreationView(View):
         game_id = kwargs["game_id"]
         try:
             game_session = GameSession.objects.get(game_id=game_id)
+            if game_session.state != GameSession.CHARACTER_CREATION:
+                # If the game is not in the character creation state,
+                # redirect to the game progress
+                return redirect(game_session.get_absolute_url())
+
+            # Proceed with character creation form since the
+            # game is in the correct state
+            form = CharacterSelectionForm()
+            return render(
+                request, self.template_name, {"form": form, "game_id": game_id}
+            )
+
         except GameSession.DoesNotExist:
             # Handle the error, e.g., by showing a message or redirecting
-            pass
-        player, created = Player.objects.get_or_create(
-            user=request.user, defaults={"game_session": game_session}
-        )
-
-        # If the player already has a character, redirect them
-        if player.character:
-            return redirect("game:game_progress", game_id=game_id)
-
-        form = CharacterSelectionForm()
-        return render(request, self.template_name, {"form": form, "game_id": game_id})
+            messages.error(request, "Game session not found.")
+            return redirect(
+                "game:game_list"
+            )  # Redirect to a view where the user can see a list of games
 
     def post(self, request, *args, **kwargs):
         game_id = kwargs["game_id"]
         try:
             game_session = GameSession.objects.get(game_id=game_id)
+            if game_session.state != GameSession.CHARACTER_CREATION:
+                # If the game is not in the character creation state,
+                # redirect to the game progress
+                return redirect(game_session.get_absolute_url())
+
+            form = CharacterSelectionForm(request.POST)
+            if form.is_valid():
+                # The form is valid, save the character for the player
+                player, _ = Player.objects.get_or_create(
+                    user=request.user, defaults={"game_session": game_session}
+                )
+                player.character = form.cleaned_data["character"]
+                player.save()
+
+                # Fetch players associated with this game session
+                players = Player.objects.filter(game_session=game_session)
+
+                # Ensure there are exactly two players
+                if players.count() == 2:
+                    playerA, playerB = players.all()
+                    if playerA.character and playerB.character:
+                        game_session.start_regular_turn()
+                        game_session.save()
+                else:
+                    print("There are not 2 players")
+
+                return redirect(game_session.get_absolute_url())
+
         except GameSession.DoesNotExist:
             # Handle the error, e.g., by showing a message or redirecting
-            pass
+            messages.error(request, "Game session not found.")
+            return redirect("game:game_list")
 
-        form = CharacterSelectionForm(request.POST)
-        if form.is_valid():
-            # Retrieve the player without using 'defaults'
-            player = Player.objects.get(user=request.user, game_session=game_session)
-            player.character = form.cleaned_data["character"]
-            player.save()
-            return redirect("game:game_progress", game_id=game_id)
-
+        # Re-render the form with errors if it's not valid
         return render(request, self.template_name, {"form": form, "game_id": game_id})
 
 
