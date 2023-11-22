@@ -423,9 +423,7 @@ class Interest(models.Model):
 
 class NarrativeChoice(models.Model):
     name = models.CharField(max_length=255)
-    image = models.ImageField(
-        upload_to="narrative_choices", blank=True, on_delete=models.CASCADE
-    )
+    image = models.ImageField(upload_to="narrative_choices", blank=True, null=True)
     interest = models.ForeignKey(
         "Interest", on_delete=models.CASCADE, related_name="narrative_choices"
     )
