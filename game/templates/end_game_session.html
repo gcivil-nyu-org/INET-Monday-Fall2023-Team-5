@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="container">
-<!-- Display game chat
+<!-- Display game chat -->
     <p>End of game: {{ game_id }}</p>
     <div class="chat-box">
         {% for name, messages in messages_by_sender.items %}
@@ -18,17 +18,9 @@
                 {% endfor %}
             </div>
         {% endfor %}
-    </div> -->
-    <form method="post">
-        {% csrf_token %}
-        <label for="selected_user">Select a user to play with:</label>
-        <select name="selected_user" id="selected_user">
-            {% for user in selectable_users %}
-                <option value="{{ user.username }}">{{ user.username }}</option>
-            {% endfor %}
-        </select>
-        <input type="submit" value="Start Game">
-    </form>
+    </div>
 </div>
-{% endblock content %}
 
+<a href="{% url 'initiate_game_session' %}" class="btn btn-primary">Start New Game</a>
+
+{% endblock content %}

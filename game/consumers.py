@@ -32,53 +32,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         return GameSession.objects.get(id=game_id)
 
     @database_sync_to_async
-    def get_game_state(self):
-        # Fetch the game session and related objects from the database
-        game_session = GameSession.objects.get(game_id=self.game_id)
-        current_turn = game_session.current_game_turn
-
-        # Serialize the game session state into a dictionary
-        game_state = {
-            "game_id": game_session.game_id,
-            "state": game_session.state,
-            "is_active": game_session.is_active,
-            "playerA": {
-                "id": game_session.playerA.id,
-                "character_name": game_session.playerA.character_name,
-            }
-            if game_session.playerA
-            else None,
-            "playerB": {
-                "id": game_session.playerB.id,
-                "character_name": game_session.playerB.character_name,
-            }
-            if game_session.playerB
-            else None,
-            "current_turn": {
-                "id": current_turn.id,
-                "turn_number": current_turn.turn_number,
-                "state": current_turn.state,
-                "active_player_id": current_turn.active_player.id
-                if current_turn.active_player
-                else None,
-                "active_player_character_name": current_turn.active_player.character_name  # noqa
-                if current_turn.active_player
-                else None,
-            },
-            "chat_messages": list(
-                game_session.chat_messages.values(
-                    "id",
-                    "text",
-                    "sender",
-                    "timestamp",
-                    "reaction",
-                )
-            ),
-        }
-
-        return game_state
-
-    @database_sync_to_async
     def save_game_turn(self, game_turn):
         game_turn.save()
 
@@ -86,16 +39,15 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data, bytes_data=None):
         data_json = json.loads(text_data)
-        print(data_json)
         action = data_json["action"]
         value = data_json["value"]
 
         # Map the action to a handler function
         if action == "select_narrative":
             await self.make_narrative_choice(value)
-        elif action == "select_question":
+        elif action == "submit_question":
             await self.select_question(value)
-        elif action == "answer_question":
+        elif action == "submit_answer":
             await self.answer_question(value)
         elif action == "react_emoji":
             await self.react_emoji(value)
