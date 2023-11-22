@@ -18,6 +18,9 @@ class Player(models.Model):
     game_session = models.ForeignKey(
         "GameSession", related_name="game_players", on_delete=models.CASCADE
     )
+    character = models.ForeignKey(
+        "Character", on_delete=models.SET_NULL, null=True, blank=True
+    )
 
     def save(self, *args, **kwargs):
         if not self.game_session:
@@ -109,7 +112,7 @@ class GameSession(models.Model):
         if not self.game_id:
             self.game_id = generate_unique_game_id()
 
-    @transition(field=state, source=INITIALIZING, target=REGULAR_TURN)
+    @transition(field=state, source=INITIALIZING, target=CHARACTER_CREATION)
     def initialize_game(self):
         # Check if both players are set
         if not self.playerA or not self.playerB:
@@ -142,6 +145,10 @@ class GameSession(models.Model):
 
     def get_absolute_url(self):
         return reverse("game:game_progress", kwargs={"game_id": self.game_id})
+
+    @transition(field=state, source=CHARACTER_CREATION, target=REGULAR_TURN)
+    def start_regular_turn(self):
+        pass
 
 
 class GameTurn(models.Model):
@@ -387,3 +394,21 @@ class NarrativeChoice(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     choice = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
+
+
+class Character(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    quality_1_choices = models.CharField(max_length=255)
+    quality_2_choices = models.CharField(max_length=255)
+    quality_3_choices = models.CharField(max_length=255)
+    interest_1_choices = models.CharField(max_length=255)
+    interest_2_choices = models.CharField(max_length=255)
+    interest_3_choices = models.CharField(max_length=255)
+    activity_1_choices = models.CharField(max_length=255)
+    activity_2_choices = models.CharField(max_length=255)
+    # Image field for visual representation
+    image = models.ImageField(upload_to="characters/", blank=True, null=True)
+
+    def __str__(self):
+        return self.name
