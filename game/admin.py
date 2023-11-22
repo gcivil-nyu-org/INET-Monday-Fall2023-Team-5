@@ -25,13 +25,5 @@ class CharacterAdmin(admin.ModelAdmin):
     list_display = (
         "name",
         "description",
-        "quality_1_choices",
-        "quality_2_choices",
-        "quality_3_choices",
-        "interest_1_choices",
-        "interest_2_choices",
-        "interest_3_choices",
-        "activity_1_choices",
-        "activity_2_choices",
     )
     search_fields = ("name",)
