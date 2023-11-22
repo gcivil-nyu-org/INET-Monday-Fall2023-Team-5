@@ -18,7 +18,9 @@ class Player(models.Model):
     game_session = models.ForeignKey(
         "GameSession", related_name="game_players", on_delete=models.CASCADE
     )
-    character = models.ForeignKey('Character', on_delete=models.SET_NULL, null=True, blank=True)  
+    character = models.ForeignKey(
+        "Character", on_delete=models.SET_NULL, null=True, blank=True
+    )
 
     def save(self, *args, **kwargs):
         if not self.game_session:
@@ -402,7 +404,7 @@ class Character(models.Model):
     activity_1_choices = models.CharField(max_length=255)
     activity_2_choices = models.CharField(max_length=255)
     # Image field for visual representation
-    image = models.ImageField(upload_to='characters/', blank=True, null=True)
+    image = models.ImageField(upload_to="characters/", blank=True, null=True)
 
     def __str__(self):
         return self.name

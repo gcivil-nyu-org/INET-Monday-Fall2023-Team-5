@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path
 from . import views
 from .views import GameProgressView
 
@@ -19,14 +19,14 @@ urlpatterns = [
         views.end_game_session,
         name="end_game_session",
     ),
-
     path(
         "character_creation/<uuid:game_id>/",
         views.CharacterCreationView.as_view(),
-        name="character_creation"
+        name="character_creation",
     ),
-    
-    path('get_character_details/', views.get_character_details, name='get_character_details'),
-
-    
+    path(
+        "get_character_details/",
+        views.get_character_details,
+        name="get_character_details",
+    ),
 ]

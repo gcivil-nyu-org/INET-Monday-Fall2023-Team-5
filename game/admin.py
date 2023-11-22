@@ -7,7 +7,7 @@ from .models import (
     Word,
     ChatMessage,
     NarrativeChoice,
-    Character
+    Character,
 )
 
 # Register your models here.
@@ -19,8 +19,19 @@ admin.site.register(Word)
 admin.site.register(ChatMessage)
 admin.site.register(NarrativeChoice)
 
+
 @admin.register(Character)
 class CharacterAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'quality_1_choices', 'quality_2_choices', 'quality_3_choices', 'interest_1_choices', 'interest_2_choices', 'interest_3_choices', 'activity_1_choices', 'activity_2_choices')
-    search_fields = ('name',)
-
+    list_display = (
+        "name",
+        "description",
+        "quality_1_choices",
+        "quality_2_choices",
+        "quality_3_choices",
+        "interest_1_choices",
+        "interest_2_choices",
+        "interest_3_choices",
+        "activity_1_choices",
+        "activity_2_choices",
+    )
+    search_fields = ("name",)
