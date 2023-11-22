@@ -1,12 +1,13 @@
 from django.contrib import messages
 from django.db import transaction
-from .forms import AnswerForm, EmojiReactForm, NarrativeChoiceForm
+from .forms import AnswerForm, EmojiReactForm, NarrativeChoiceForm, CharacterSelectionForm
 from .models import (
     Player,
     GameSession,
     GameTurn,
     Word,
     Question,
+    Character
 )
 from django.shortcuts import redirect, render
 from django.views import View
@@ -15,6 +16,7 @@ from collections import defaultdict
 from django.contrib.auth.models import User
 from django.db.models import Q
 from accounts.models import Match
+from django.http import JsonResponse
 
 
 def initiate_game_session(request):
@@ -216,3 +218,61 @@ def retrieve_messages_from_log(game_log):
     for message in game_log.chat_messages.all():
         messages_by_sender[message.sender].append(message)
     return messages_by_sender
+
+
+class CharacterCreationView(View):
+    template_name = 'character_creation.html'
+
+    def get(self, request, *args, **kwargs):
+        game_id = kwargs['game_id']
+        try:
+            game_session = GameSession.objects.get(game_id=game_id)
+        except GameSession.DoesNotExist:
+            # Handle the error, e.g., by showing a message or redirecting
+            pass
+        player, created = Player.objects.get_or_create(
+            user=request.user, 
+            defaults={'game_session': game_session}
+            )
+
+        # If the player already has a character, redirect them
+        if player.character:
+            return redirect('game:game_progress', game_id=game_id)
+
+        form = CharacterSelectionForm()
+        return render(request, self.template_name, {'form': form, 'game_id': game_id})
+
+    def post(self, request, *args, **kwargs):
+        game_id = kwargs['game_id']
+        try:
+            game_session = GameSession.objects.get(game_id=game_id)
+        except GameSession.DoesNotExist:
+            # Handle the error, e.g., by showing a message or redirecting
+            pass
+
+        form = CharacterSelectionForm(request.POST)
+        if form.is_valid():
+            # Retrieve the player without using 'defaults'
+            player = Player.objects.get(user=request.user, game_session=game_session)
+            player.character = form.cleaned_data['character']
+            player.save()
+            return redirect('game:game_progress', game_id=game_id)
+
+        return render(request, self.template_name, {'form': form, 'game_id': game_id})
+
+
+def get_character_details(request):
+    character_id = request.GET.get('id')
+    if not character_id:
+        return JsonResponse({'error': 'No character ID provided'}, status=400)
+    
+    try:
+        character = Character.objects.get(id=character_id)
+        return JsonResponse({
+            'name': character.name,
+            'description': character.description,
+            'image_url': character.image.url if character.image else ''
+        })
+    except Character.DoesNotExist:
+        return JsonResponse({'error': 'Character not found'}, status=404)
+
