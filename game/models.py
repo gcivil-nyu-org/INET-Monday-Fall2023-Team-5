@@ -12,8 +12,8 @@ class Player(models.Model):
     )  # if the user is deleted, the 'Player' is deleted.
 
     character_name = models.CharField(max_length=255, blank=True)
-    character_word_pool = models.ManyToManyField("Word", blank=True)
-    simple_word_pool = models.ManyToManyField("Word", blank=True)
+    character_word_pool = models.ManyToManyField("Word", blank=True, related_name="wp")
+    simple_word_pool = models.ManyToManyField("Word", blank=True, related_name="swp")
     question_pool = models.ManyToManyField("Question", blank=True)
     narrative_choice_pool = models.ManyToManyField("NarrativeChoice", blank=True)
 
@@ -383,14 +383,24 @@ class ChatMessage(models.Model):
 class Character(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    quality_1_choices = models.ManyToManyField("Quality", blank=True)
-    quality_2_choices = models.ManyToManyField("Quality", blank=True)
-    quality_3_choices = models.ManyToManyField("Quality", blank=True)
-    interest_1_choices = models.ManyToManyField("Interest", blank=True)
-    interest_2_choices = models.ManyToManyField("Interest", blank=True)
-    interest_3_choices = models.ManyToManyField("Interest", blank=True)
-    activity_1_choices = models.ManyToManyField("Activity", blank=True)
-    activity_2_choices = models.ManyToManyField("Activity", blank=True)
+    quality_1_choices = models.ManyToManyField("Quality", blank=True, related_name="q1")
+    quality_2_choices = models.ManyToManyField("Quality", blank=True, related_name="q2")
+    quality_3_choices = models.ManyToManyField("Quality", blank=True, related_name="q3")
+    interest_1_choices = models.ManyToManyField(
+        "Interest", blank=True, related_name="i1"
+    )
+    interest_2_choices = models.ManyToManyField(
+        "Interest", blank=True, related_name="i2"
+    )
+    interest_3_choices = models.ManyToManyField(
+        "Interest", blank=True, related_name="i3"
+    )
+    activity_1_choices = models.ManyToManyField(
+        "Activity", blank=True, related_name="a1"
+    )
+    activity_2_choices = models.ManyToManyField(
+        "Activity", blank=True, related_name="a2"
+    )
     # Image field for visual representation
     image = models.ImageField(upload_to="characters/", blank=True, null=True)
 
@@ -447,7 +457,7 @@ class Question(models.Model):
 
 class Word(models.Model):
     word = models.CharField(max_length=255)
-    isSimple = models.BooleanField(default=True)
+    isSimple = models.BooleanField(default=False)
 
     def __str__(self):
         return self.word
