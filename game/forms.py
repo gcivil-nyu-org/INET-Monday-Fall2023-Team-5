@@ -1,4 +1,7 @@
 from django import forms
+from .models import (
+    Character,
+)  # Ensure this import is correct based on your project structure
 
 
 class AnswerForm(forms.Form):
@@ -31,4 +34,13 @@ class NarrativeChoiceForm(forms.Form):
         choices=NARRATIVE_CHOICES,
         widget=forms.RadioSelect(attrs={"class": "narrative-radio"}),
         label="Select a Narrative Choice",
+    )
+
+
+class CharacterSelectionForm(forms.Form):
+    character = forms.ModelChoiceField(
+        queryset=Character.objects.all(),
+        widget=forms.RadioSelect(attrs={"onclick": "loadCharacterDetails(this)"}),
+        empty_label=None,
+        to_field_name="id",
     )

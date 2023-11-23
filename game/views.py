@@ -1,13 +1,12 @@
 from django.contrib import messages
 from django.db import transaction
-from .forms import AnswerForm, EmojiReactForm, NarrativeChoiceForm
-from .models import (
-    Player,
-    GameSession,
-    GameTurn,
-    Word,
-    Question,
+from .forms import (
+    AnswerForm,
+    EmojiReactForm,
+    NarrativeChoiceForm,
+    CharacterSelectionForm,
 )
+from .models import Player, GameSession, GameTurn, Word, Question, Character
 from django.shortcuts import redirect, render
 from django.views import View
 import random
@@ -15,6 +14,7 @@ from collections import defaultdict
 from django.contrib.auth.models import User
 from django.db.models import Q
 from accounts.models import Match
+from django.http import JsonResponse
 
 
 def initiate_game_session(request):
@@ -216,3 +216,88 @@ def retrieve_messages_from_log(game_log):
     for message in game_log.chat_messages.all():
         messages_by_sender[message.sender].append(message)
     return messages_by_sender
+
+
+class CharacterCreationView(View):
+    template_name = "character_creation.html"
+
+    def get(self, request, *args, **kwargs):
+        game_id = kwargs["game_id"]
+        try:
+            game_session = GameSession.objects.get(game_id=game_id)
+            if game_session.state != GameSession.CHARACTER_CREATION:
+                # If the game is not in the character creation state,
+                # redirect to the game progress
+                return redirect(game_session.get_absolute_url())
+
+            # Proceed with character creation form since the
+            # game is in the correct state
+            form = CharacterSelectionForm()
+            return render(
+                request, self.template_name, {"form": form, "game_id": game_id}
+            )
+
+        except GameSession.DoesNotExist:
+            # Handle the error, e.g., by showing a message or redirecting
+            messages.error(request, "Game session not found.")
+            return redirect(
+                "game:game_list"
+            )  # Redirect to a view where the user can see a list of games
+
+    def post(self, request, *args, **kwargs):
+        game_id = kwargs["game_id"]
+        try:
+            game_session = GameSession.objects.get(game_id=game_id)
+            if game_session.state != GameSession.CHARACTER_CREATION:
+                # If the game is not in the character creation state,
+                # redirect to the game progress
+                return redirect(game_session.get_absolute_url())
+
+            form = CharacterSelectionForm(request.POST)
+            if form.is_valid():
+                # The form is valid, save the character for the player
+                player, _ = Player.objects.get_or_create(
+                    user=request.user, defaults={"game_session": game_session}
+                )
+                player.character = form.cleaned_data["character"]
+                player.save()
+
+                # Fetch players associated with this game session
+                players = Player.objects.filter(game_session=game_session)
+
+                # Ensure there are exactly two players
+                if players.count() == 2:
+                    playerA, playerB = players.all()
+                    if playerA.character and playerB.character:
+                        game_session.start_regular_turn()
+                        game_session.save()
+                else:
+                    print("There are not 2 players")
+
+                return redirect(game_session.get_absolute_url())
+
+        except GameSession.DoesNotExist:
+            # Handle the error, e.g., by showing a message or redirecting
+            messages.error(request, "Game session not found.")
+            return redirect("game:game_list")
+
+        # Re-render the form with errors if it's not valid
+        return render(request, self.template_name, {"form": form, "game_id": game_id})
+
+
+def get_character_details(request):
+    character_id = request.GET.get("id")
+    if not character_id:
+        return JsonResponse({"error": "No character ID provided"}, status=400)
+
+    try:
+        character = Character.objects.get(id=character_id)
+        return JsonResponse(
+            {
+                "name": character.name,
+                "description": character.description,
+                "image_url": character.image.url if character.image else "",
+            }
+        )
+    except Character.DoesNotExist:
+        return JsonResponse({"error": "Character not found"}, status=404)

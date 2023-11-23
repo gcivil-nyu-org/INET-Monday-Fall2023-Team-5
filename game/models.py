@@ -12,11 +12,16 @@ class Player(models.Model):
     )  # if the user is deleted, the 'Player' is deleted.
 
     character_name = models.CharField(max_length=255, blank=True)
-    word_pool = models.ManyToManyField("Word", blank=True)
+    character_word_pool = models.ManyToManyField("Word", blank=True, related_name="wp")
+    simple_word_pool = models.ManyToManyField("Word", blank=True, related_name="swp")
     question_pool = models.ManyToManyField("Question", blank=True)
+    narrative_choice_pool = models.ManyToManyField("NarrativeChoice", blank=True)
 
     game_session = models.ForeignKey(
         "GameSession", related_name="game_players", on_delete=models.CASCADE
+    )
+    character = models.ForeignKey(
+        "Character", on_delete=models.SET_NULL, null=True, blank=True
     )
 
     def save(self, *args, **kwargs):
@@ -35,6 +40,10 @@ class Player(models.Model):
 
         # Now, actually delete the player
         super(Player, self).delete(*args, **kwargs)
+
+    def remove_specific_question_from_pool(self, question):
+        self.question_pool.remove(question)
+        self.save()
 
 
 def generate_game_id():
@@ -109,7 +118,7 @@ class GameSession(models.Model):
         if not self.game_id:
             self.game_id = generate_unique_game_id()
 
-    @transition(field=state, source=INITIALIZING, target=REGULAR_TURN)
+    @transition(field=state, source=INITIALIZING, target=CHARACTER_CREATION)
     def initialize_game(self):
         # Check if both players are set
         if not self.playerA or not self.playerB:
@@ -142,6 +151,10 @@ class GameSession(models.Model):
 
     def get_absolute_url(self):
         return reverse("game:game_progress", kwargs={"game_id": self.game_id})
+
+    @transition(field=state, source=CHARACTER_CREATION, target=REGULAR_TURN)
+    def start_regular_turn(self):
+        pass
 
 
 class GameTurn(models.Model):
@@ -344,20 +357,6 @@ class GameTurn(models.Model):
             raise ValueError("Not both players have written their messages.")
 
 
-class Question(models.Model):
-    text = models.CharField(max_length=1024)
-
-    def __str__(self):
-        return self.text
-
-
-class Word(models.Model):
-    word = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.word
-
-
 class GameLog(models.Model):
     chat_messages = models.ManyToManyField(
         "ChatMessage", blank=True, related_name="game_log"
@@ -381,9 +380,84 @@ class ChatMessage(models.Model):
         return self.text
 
 
+class Character(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    quality_1_choices = models.ManyToManyField("Quality", blank=True, related_name="q1")
+    quality_2_choices = models.ManyToManyField("Quality", blank=True, related_name="q2")
+    quality_3_choices = models.ManyToManyField("Quality", blank=True, related_name="q3")
+    interest_1_choices = models.ManyToManyField(
+        "Interest", blank=True, related_name="i1"
+    )
+    interest_2_choices = models.ManyToManyField(
+        "Interest", blank=True, related_name="i2"
+    )
+    interest_3_choices = models.ManyToManyField(
+        "Interest", blank=True, related_name="i3"
+    )
+    activity_1_choices = models.ManyToManyField(
+        "Activity", blank=True, related_name="a1"
+    )
+    activity_2_choices = models.ManyToManyField(
+        "Activity", blank=True, related_name="a2"
+    )
+    # Image field for visual representation
+    image = models.ImageField(upload_to="characters/", blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Quality(models.Model):
+    name = models.CharField(max_length=255)
+    words = models.ManyToManyField("Word", blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Activity(models.Model):
+    name = models.CharField(max_length=255)
+    questions = models.ManyToManyField("Question", blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Interest(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
 class NarrativeChoice(models.Model):
-    game_session = models.ForeignKey(GameSession, on_delete=models.CASCADE)
-    game_turn = models.ForeignKey(GameTurn, on_delete=models.CASCADE)
-    player = models.ForeignKey(Player, on_delete=models.CASCADE)
-    choice = models.TextField()
-    timestamp = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=255)
+    image = models.ImageField(upload_to="narrative_choices", blank=True, null=True)
+    interest = models.ForeignKey(
+        "Interest", on_delete=models.CASCADE, related_name="narrative_choices"
+    )
+    night_number = models.IntegerField()
+    words = models.ManyToManyField("Word", blank=True)
+
+    class Meta:
+        unique_together = ("interest", "name", "night_number")
+        # This ensures that the combination of interest and night_number is unique
+
+    def __str__(self):
+        return self.name
+
+
+class Question(models.Model):
+    text = models.CharField(max_length=1024)
+
+    def __str__(self):
+        return self.text
+
+
+class Word(models.Model):
+    word = models.CharField(max_length=255)
+    isSimple = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.word
