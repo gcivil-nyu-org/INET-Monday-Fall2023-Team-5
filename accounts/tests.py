@@ -489,7 +489,6 @@ class SignUpViewTest(TestCase):
         # Check if the response contains the expected error message
         self.assertContains(response, "Email already in use.")
 
-
     def test_signup_non_nyu_email(self):
         signup_data = {
             "username": "newuser",
@@ -501,7 +500,6 @@ class SignUpViewTest(TestCase):
 
         # Check if the response contains the expected error message
         self.assertContains(response, "Please use your NYU email.")
-
 
 
 class ViewSingleProfileTest(TestCase):
@@ -970,3 +968,43 @@ class LikeFeatureTest(TestCase):
         self.client.login(username="user1", password="testpass123")
         # Verify that the notification_sent flag is still False due to the simulated email exception
         self.assertFalse(self.match.notification_sent)
+
+
+class UserSignalTest(TestCase):
+    def test_user_profile_signal(self):
+        # Create a new user
+        user = User.objects.create(username="testuser", email="test@example.com")
+
+        # Check if a corresponding profile is created
+        self.assertTrue(Profile.objects.filter(user=user).exists())
+
+        # Retrieve the profile
+        profile = Profile.objects.get(user=user)
+
+        # Check default values of the profile
+        self.assertEqual(profile.gender, "NS")
+        self.assertEqual(profile.pronoun_preference, "not_specified")
+        self.assertEqual(profile.likes_remaining, 3)
+        self.assertIsNone(profile.custom_pronoun)
+
+        # Check if profile picture is empty
+        self.assertFalse(profile.profile_picture.name)
+
+        # Update the user and save
+        user.email = "new_email@example.com"
+        user.save()
+
+        # Refresh the profile from the database
+        profile.refresh_from_db()
+
+
+class PostMigrateSignalTest(TestCase):
+    def test_default_dating_preferences(self):
+        # Run migrations
+        call_command("migrate")
+
+        # Check that a DatingPreference exists for each gender choice
+        for gender_code, _ in DatingPreference.gender_choices_pref:
+            self.assertTrue(
+                DatingPreference.objects.filter(gender=gender_code).exists()
+            )
