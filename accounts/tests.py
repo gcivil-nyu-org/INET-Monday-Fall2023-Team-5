@@ -1070,3 +1070,50 @@ class CustomUserCreationFormTest(TestCase):
         self.assertEqual(User.objects.count(), 1)
         self.assertFalse(user.is_active)  # User should be inactive initially
         self.assertEqual(user.email, "testuser@nyu.edu")
+
+
+class EditProfileFormTest(TestCase):
+    def setUp(self):
+        # Create instances of DatingPreference if needed
+        DatingPreference.objects.create(gender="M")
+        # Add more if necessary
+
+    def test_form_valid_data(self):
+        form = EditProfileForm(
+            data={
+                "gender": "M",
+                "pronoun_preference": "he_him",
+                # Include other fields as necessary
+            }
+        )
+        self.assertTrue(form.is_valid())
+
+    def test_form_custom_pronoun_validation(self):
+        # Test the custom pronoun validation
+        form = EditProfileForm(
+            data={
+                "gender": "M",
+                "pronoun_preference": "other",
+                "custom_pronoun": "",  # Intentionally left blank
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertIn("custom_pronoun", form.errors)
+
+    def test_pronoun_preference_choices(self):
+        form = EditProfileForm()
+        expected_choices = [
+            ("he_him", "He/Him"),
+            ("she_her", "She/Her"),
+            ("they_them", "They/Them"),
+            ("other", "Other"),
+            ("not_specified", "Not Specified"),
+        ]
+        self.assertEqual(form.fields["pronoun_preference"].choices, expected_choices)
+
+    def test_open_to_dating_field(self):
+        form = EditProfileForm()
+        self.assertEqual(
+            list(form.fields["open_to_dating"].queryset),
+            list(DatingPreference.objects.all()),
+        )
