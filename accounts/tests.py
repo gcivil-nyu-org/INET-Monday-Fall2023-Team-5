@@ -503,7 +503,7 @@ class SignUpViewTest(TestCase):
         self.assertContains(response, "Please use your NYU email.")
 
 
-"""
+
 class ViewSingleProfileTest(TestCase):
     def setUp(self):
         # Create a test user and an associated profile
@@ -521,7 +521,6 @@ class ViewSingleProfileTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "accounts/profile/single_profile.html")
         self.assertEqual(response.context["profile"], self.profile)
-"""
 
 
 class ActivateAccountTest(TestCase):
