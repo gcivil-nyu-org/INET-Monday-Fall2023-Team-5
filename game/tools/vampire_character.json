@@ -1,0 +1,3901 @@
+{
+    "character": {
+        "name": "Vampire",
+        "quality_1_choices": [
+            "Mysterious",
+            "Charming",
+            "Ancient"
+        ],
+        "quality_2_choices": [
+            "Nocturnal",
+            "Elegant",
+            "Powerful"
+        ],
+        "quality_3_choices": [
+            "Immortal",
+            "Solitary",
+            "Mystical"
+        ],
+        "interest_1_choices": [
+            "Gothic Literature",
+            "Classical Music",
+            "History"
+        ],
+        "interest_2_choices": [
+            "Mystery",
+            "Romance",
+            "Exploration"
+        ],
+        "interest_3_choices": [
+            "Supernatural",
+            "Occult",
+            "Art"
+        ],
+        "activity_1_choices": [
+            "Night Stalking",
+            "Castle Dwelling"
+        ],
+        "activity_2_choices": [
+            "Socializing",
+            "Animal Transformation"
+        ]
+    },
+    "qualities": [
+        {
+            "name": "Mysterious",
+            "words": [
+                "Glide",
+                "Occult",
+                "Pale",
+                "Shadow",
+                "Silent",
+                "Sly",
+                "Stealthy",
+                "Subtle",
+                "Surreptitious",
+                "Unseen"
+            ]
+        },
+        {
+            "name": "Charming",
+            "words": [
+                "Charming_word_1",
+                "Charming_word_2",
+                "Charming_word_3",
+                "Charming_word_4",
+                "Charming_word_5",
+                "Charming_word_6",
+                "Charming_word_7",
+                "Charming_word_8",
+                "Charming_word_9",
+                "Charming_word_10",
+                "Charming_word_11",
+                "Charming_word_12",
+                "Charming_word_13",
+                "Charming_word_14",
+                "Charming_word_15"
+            ]
+        },
+        {
+            "name": "Ancient",
+            "words": [
+                "Ancient_word_1",
+                "Ancient_word_2",
+                "Ancient_word_3",
+                "Ancient_word_4",
+                "Ancient_word_5",
+                "Ancient_word_6",
+                "Ancient_word_7",
+                "Ancient_word_8",
+                "Ancient_word_9",
+                "Ancient_word_10",
+                "Ancient_word_11",
+                "Ancient_word_12",
+                "Ancient_word_13",
+                "Ancient_word_14",
+                "Ancient_word_15"
+            ]
+        },
+        {
+            "name": "Nocturnal",
+            "words": [
+                "Nocturnal_word_1",
+                "Nocturnal_word_2",
+                "Nocturnal_word_3",
+                "Nocturnal_word_4",
+                "Nocturnal_word_5",
+                "Nocturnal_word_6",
+                "Nocturnal_word_7",
+                "Nocturnal_word_8",
+                "Nocturnal_word_9",
+                "Nocturnal_word_10",
+                "Nocturnal_word_11",
+                "Nocturnal_word_12",
+                "Nocturnal_word_13",
+                "Nocturnal_word_14",
+                "Nocturnal_word_15"
+            ]
+        },
+        {
+            "name": "Elegant",
+            "words": [
+                "Elegant_word_1",
+                "Elegant_word_2",
+                "Elegant_word_3",
+                "Elegant_word_4",
+                "Elegant_word_5",
+                "Elegant_word_6",
+                "Elegant_word_7",
+                "Elegant_word_8",
+                "Elegant_word_9",
+                "Elegant_word_10",
+                "Elegant_word_11",
+                "Elegant_word_12",
+                "Elegant_word_13",
+                "Elegant_word_14",
+                "Elegant_word_15"
+            ]
+        },
+        {
+            "name": "Powerful",
+            "words": [
+                "Powerful_word_1",
+                "Powerful_word_2",
+                "Powerful_word_3",
+                "Powerful_word_4",
+                "Powerful_word_5",
+                "Powerful_word_6",
+                "Powerful_word_7",
+                "Powerful_word_8",
+                "Powerful_word_9",
+                "Powerful_word_10",
+                "Powerful_word_11",
+                "Powerful_word_12",
+                "Powerful_word_13",
+                "Powerful_word_14",
+                "Powerful_word_15"
+            ]
+        },
+        {
+            "name": "Immortal",
+            "words": [
+                "Immortal_word_1",
+                "Immortal_word_2",
+                "Immortal_word_3",
+                "Immortal_word_4",
+                "Immortal_word_5",
+                "Immortal_word_6",
+                "Immortal_word_7",
+                "Immortal_word_8",
+                "Immortal_word_9",
+                "Immortal_word_10",
+                "Immortal_word_11",
+                "Immortal_word_12",
+                "Immortal_word_13",
+                "Immortal_word_14",
+                "Immortal_word_15"
+            ]
+        },
+        {
+            "name": "Solitary",
+            "words": [
+                "Solitary_word_1",
+                "Solitary_word_2",
+                "Solitary_word_3",
+                "Solitary_word_4",
+                "Solitary_word_5",
+                "Solitary_word_6",
+                "Solitary_word_7",
+                "Solitary_word_8",
+                "Solitary_word_9",
+                "Solitary_word_10",
+                "Solitary_word_11",
+                "Solitary_word_12",
+                "Solitary_word_13",
+                "Solitary_word_14",
+                "Solitary_word_15"
+            ]
+        },
+        {
+            "name": "Mystical",
+            "words": [
+                "Mystical_word_1",
+                "Mystical_word_2",
+                "Mystical_word_3",
+                "Mystical_word_4",
+                "Mystical_word_5",
+                "Mystical_word_6",
+                "Mystical_word_7",
+                "Mystical_word_8",
+                "Mystical_word_9",
+                "Mystical_word_10",
+                "Mystical_word_11",
+                "Mystical_word_12",
+                "Mystical_word_13",
+                "Mystical_word_14",
+                "Mystical_word_15"
+            ]
+        }
+    ],
+    "activities": [
+        {
+            "name": "Night Stalking",
+            "questions": [
+                "Do you like to go out at night?",
+                "When you go out at night, do you like to be alone?",
+                "Are you afraid of the dark?"
+            ]
+        },
+        {
+            "name": "Castle Dwelling",
+            "questions": [
+                "Castle_Dwelling_question_1",
+                "Castle_Dwelling_question_2",
+                "Castle_Dwelling_question_3"
+            ]
+        },
+        {
+            "name": "Socializing",
+            "questions": [
+                "Socializing_question_1",
+                "Socializing_question_2",
+                "Socializing_question_3"
+            ]
+        },
+        {
+            "name": "Animal Transformation",
+            "questions": [
+                "Animal_Transformation_question_1",
+                "Animal_Transformation_question_2",
+                "Animal_Transformation_question_3"
+            ]
+        }
+    ],
+    "interests": [
+        {
+            "name": "Gothic Literature",
+            "narrative_choices": [
+                {
+                    "name": "Reanimated Corpse",
+                    "night_number": 1,
+                    "words": [
+                        "curse",
+                        "dark",
+                        "death",
+                        "demon",
+                        "despair",
+                        "devil",
+                        "dread",
+                        "evil",
+                        "fear",
+                        "ghost"
+                    ]
+                },
+                {
+                    "name": "The Black Cat",
+                    "night_number": 2,
+                    "words": [
+                        "black",
+                        "cat",
+                        "meow",
+                        "purr",
+                        "scratch",
+                        "tail",
+                        "whiskers",
+                        "claws",
+                        "feline",
+                        "kitten"
+                    ]
+                },
+                {
+                    "name": "Gothic_Literature_narrative_choice_3",
+                    "night_number": 3,
+                    "words": [
+                        "Gothic_Literature_narrative_choice_3_word_1",
+                        "Gothic_Literature_narrative_choice_3_word_2",
+                        "Gothic_Literature_narrative_choice_3_word_3",
+                        "Gothic_Literature_narrative_choice_3_word_4",
+                        "Gothic_Literature_narrative_choice_3_word_5",
+                        "Gothic_Literature_narrative_choice_3_word_6",
+                        "Gothic_Literature_narrative_choice_3_word_7",
+                        "Gothic_Literature_narrative_choice_3_word_8",
+                        "Gothic_Literature_narrative_choice_3_word_9",
+                        "Gothic_Literature_narrative_choice_3_word_10"
+                    ]
+                },
+                {
+                    "name": "Gothic_Literature_narrative_choice_4",
+                    "night_number": 4,
+                    "words": [
+                        "Gothic_Literature_narrative_choice_4_word_1",
+                        "Gothic_Literature_narrative_choice_4_word_2",
+                        "Gothic_Literature_narrative_choice_4_word_3",
+                        "Gothic_Literature_narrative_choice_4_word_4",
+                        "Gothic_Literature_narrative_choice_4_word_5",
+                        "Gothic_Literature_narrative_choice_4_word_6",
+                        "Gothic_Literature_narrative_choice_4_word_7",
+                        "Gothic_Literature_narrative_choice_4_word_8",
+                        "Gothic_Literature_narrative_choice_4_word_9",
+                        "Gothic_Literature_narrative_choice_4_word_10"
+                    ]
+                },
+                {
+                    "name": "Gothic_Literature_narrative_choice_5",
+                    "night_number": 5,
+                    "words": [
+                        "Gothic_Literature_narrative_choice_5_word_1",
+                        "Gothic_Literature_narrative_choice_5_word_2",
+                        "Gothic_Literature_narrative_choice_5_word_3",
+                        "Gothic_Literature_narrative_choice_5_word_4",
+                        "Gothic_Literature_narrative_choice_5_word_5",
+                        "Gothic_Literature_narrative_choice_5_word_6",
+                        "Gothic_Literature_narrative_choice_5_word_7",
+                        "Gothic_Literature_narrative_choice_5_word_8",
+                        "Gothic_Literature_narrative_choice_5_word_9",
+                        "Gothic_Literature_narrative_choice_5_word_10"
+                    ]
+                },
+                {
+                    "name": "Gothic_Literature_narrative_choice_6",
+                    "night_number": 6,
+                    "words": [
+                        "Gothic_Literature_narrative_choice_6_word_1",
+                        "Gothic_Literature_narrative_choice_6_word_2",
+                        "Gothic_Literature_narrative_choice_6_word_3",
+                        "Gothic_Literature_narrative_choice_6_word_4",
+                        "Gothic_Literature_narrative_choice_6_word_5",
+                        "Gothic_Literature_narrative_choice_6_word_6",
+                        "Gothic_Literature_narrative_choice_6_word_7",
+                        "Gothic_Literature_narrative_choice_6_word_8",
+                        "Gothic_Literature_narrative_choice_6_word_9",
+                        "Gothic_Literature_narrative_choice_6_word_10"
+                    ]
+                },
+                {
+                    "name": "Gothic_Literature_narrative_choice_7",
+                    "night_number": 7,
+                    "words": [
+                        "Gothic_Literature_narrative_choice_7_word_1",
+                        "Gothic_Literature_narrative_choice_7_word_2",
+                        "Gothic_Literature_narrative_choice_7_word_3",
+                        "Gothic_Literature_narrative_choice_7_word_4",
+                        "Gothic_Literature_narrative_choice_7_word_5",
+                        "Gothic_Literature_narrative_choice_7_word_6",
+                        "Gothic_Literature_narrative_choice_7_word_7",
+                        "Gothic_Literature_narrative_choice_7_word_8",
+                        "Gothic_Literature_narrative_choice_7_word_9",
+                        "Gothic_Literature_narrative_choice_7_word_10"
+                    ]
+                },
+                {
+                    "name": "Gothic_Literature_narrative_choice_8",
+                    "night_number": 8,
+                    "words": [
+                        "Gothic_Literature_narrative_choice_8_word_1",
+                        "Gothic_Literature_narrative_choice_8_word_2",
+                        "Gothic_Literature_narrative_choice_8_word_3",
+                        "Gothic_Literature_narrative_choice_8_word_4",
+                        "Gothic_Literature_narrative_choice_8_word_5",
+                        "Gothic_Literature_narrative_choice_8_word_6",
+                        "Gothic_Literature_narrative_choice_8_word_7",
+                        "Gothic_Literature_narrative_choice_8_word_8",
+                        "Gothic_Literature_narrative_choice_8_word_9",
+                        "Gothic_Literature_narrative_choice_8_word_10"
+                    ]
+                },
+                {
+                    "name": "Gothic_Literature_narrative_choice_9",
+                    "night_number": 9,
+                    "words": [
+                        "Gothic_Literature_narrative_choice_9_word_1",
+                        "Gothic_Literature_narrative_choice_9_word_2",
+                        "Gothic_Literature_narrative_choice_9_word_3",
+                        "Gothic_Literature_narrative_choice_9_word_4",
+                        "Gothic_Literature_narrative_choice_9_word_5",
+                        "Gothic_Literature_narrative_choice_9_word_6",
+                        "Gothic_Literature_narrative_choice_9_word_7",
+                        "Gothic_Literature_narrative_choice_9_word_8",
+                        "Gothic_Literature_narrative_choice_9_word_9",
+                        "Gothic_Literature_narrative_choice_9_word_10"
+                    ]
+                },
+                {
+                    "name": "Gothic_Literature_narrative_choice_10",
+                    "night_number": 10,
+                    "words": [
+                        "Gothic_Literature_narrative_choice_10_word_1",
+                        "Gothic_Literature_narrative_choice_10_word_2",
+                        "Gothic_Literature_narrative_choice_10_word_3",
+                        "Gothic_Literature_narrative_choice_10_word_4",
+                        "Gothic_Literature_narrative_choice_10_word_5",
+                        "Gothic_Literature_narrative_choice_10_word_6",
+                        "Gothic_Literature_narrative_choice_10_word_7",
+                        "Gothic_Literature_narrative_choice_10_word_8",
+                        "Gothic_Literature_narrative_choice_10_word_9",
+                        "Gothic_Literature_narrative_choice_10_word_10"
+                    ]
+                },
+                {
+                    "name": "Gothic_Literature_narrative_choice_11",
+                    "night_number": 11,
+                    "words": [
+                        "Gothic_Literature_narrative_choice_11_word_1",
+                        "Gothic_Literature_narrative_choice_11_word_2",
+                        "Gothic_Literature_narrative_choice_11_word_3",
+                        "Gothic_Literature_narrative_choice_11_word_4",
+                        "Gothic_Literature_narrative_choice_11_word_5",
+                        "Gothic_Literature_narrative_choice_11_word_6",
+                        "Gothic_Literature_narrative_choice_11_word_7",
+                        "Gothic_Literature_narrative_choice_11_word_8",
+                        "Gothic_Literature_narrative_choice_11_word_9",
+                        "Gothic_Literature_narrative_choice_11_word_10"
+                    ]
+                },
+                {
+                    "name": "Gothic_Literature_narrative_choice_12",
+                    "night_number": 12,
+                    "words": [
+                        "Gothic_Literature_narrative_choice_12_word_1",
+                        "Gothic_Literature_narrative_choice_12_word_2",
+                        "Gothic_Literature_narrative_choice_12_word_3",
+                        "Gothic_Literature_narrative_choice_12_word_4",
+                        "Gothic_Literature_narrative_choice_12_word_5",
+                        "Gothic_Literature_narrative_choice_12_word_6",
+                        "Gothic_Literature_narrative_choice_12_word_7",
+                        "Gothic_Literature_narrative_choice_12_word_8",
+                        "Gothic_Literature_narrative_choice_12_word_9",
+                        "Gothic_Literature_narrative_choice_12_word_10"
+                    ]
+                },
+                {
+                    "name": "Gothic_Literature_narrative_choice_13",
+                    "night_number": 13,
+                    "words": [
+                        "Gothic_Literature_narrative_choice_13_word_1",
+                        "Gothic_Literature_narrative_choice_13_word_2",
+                        "Gothic_Literature_narrative_choice_13_word_3",
+                        "Gothic_Literature_narrative_choice_13_word_4",
+                        "Gothic_Literature_narrative_choice_13_word_5",
+                        "Gothic_Literature_narrative_choice_13_word_6",
+                        "Gothic_Literature_narrative_choice_13_word_7",
+                        "Gothic_Literature_narrative_choice_13_word_8",
+                        "Gothic_Literature_narrative_choice_13_word_9",
+                        "Gothic_Literature_narrative_choice_13_word_10"
+                    ]
+                },
+                {
+                    "name": "Gothic_Literature_narrative_choice_14",
+                    "night_number": 14,
+                    "words": [
+                        "Gothic_Literature_narrative_choice_14_word_1",
+                        "Gothic_Literature_narrative_choice_14_word_2",
+                        "Gothic_Literature_narrative_choice_14_word_3",
+                        "Gothic_Literature_narrative_choice_14_word_4",
+                        "Gothic_Literature_narrative_choice_14_word_5",
+                        "Gothic_Literature_narrative_choice_14_word_6",
+                        "Gothic_Literature_narrative_choice_14_word_7",
+                        "Gothic_Literature_narrative_choice_14_word_8",
+                        "Gothic_Literature_narrative_choice_14_word_9",
+                        "Gothic_Literature_narrative_choice_14_word_10"
+                    ]
+                },
+                {
+                    "name": "Gothic_Literature_narrative_choice_15",
+                    "night_number": 15,
+                    "words": [
+                        "Gothic_Literature_narrative_choice_15_word_1",
+                        "Gothic_Literature_narrative_choice_15_word_2",
+                        "Gothic_Literature_narrative_choice_15_word_3",
+                        "Gothic_Literature_narrative_choice_15_word_4",
+                        "Gothic_Literature_narrative_choice_15_word_5",
+                        "Gothic_Literature_narrative_choice_15_word_6",
+                        "Gothic_Literature_narrative_choice_15_word_7",
+                        "Gothic_Literature_narrative_choice_15_word_8",
+                        "Gothic_Literature_narrative_choice_15_word_9",
+                        "Gothic_Literature_narrative_choice_15_word_10"
+                    ]
+                },
+                {
+                    "name": "Gothic_Literature_narrative_choice_16",
+                    "night_number": 16,
+                    "words": [
+                        "Gothic_Literature_narrative_choice_16_word_1",
+                        "Gothic_Literature_narrative_choice_16_word_2",
+                        "Gothic_Literature_narrative_choice_16_word_3",
+                        "Gothic_Literature_narrative_choice_16_word_4",
+                        "Gothic_Literature_narrative_choice_16_word_5",
+                        "Gothic_Literature_narrative_choice_16_word_6",
+                        "Gothic_Literature_narrative_choice_16_word_7",
+                        "Gothic_Literature_narrative_choice_16_word_8",
+                        "Gothic_Literature_narrative_choice_16_word_9",
+                        "Gothic_Literature_narrative_choice_16_word_10"
+                    ]
+                },
+                {
+                    "name": "Gothic_Literature_narrative_choice_17",
+                    "night_number": 17,
+                    "words": [
+                        "Gothic_Literature_narrative_choice_17_word_1",
+                        "Gothic_Literature_narrative_choice_17_word_2",
+                        "Gothic_Literature_narrative_choice_17_word_3",
+                        "Gothic_Literature_narrative_choice_17_word_4",
+                        "Gothic_Literature_narrative_choice_17_word_5",
+                        "Gothic_Literature_narrative_choice_17_word_6",
+                        "Gothic_Literature_narrative_choice_17_word_7",
+                        "Gothic_Literature_narrative_choice_17_word_8",
+                        "Gothic_Literature_narrative_choice_17_word_9",
+                        "Gothic_Literature_narrative_choice_17_word_10"
+                    ]
+                },
+                {
+                    "name": "Gothic_Literature_narrative_choice_18",
+                    "night_number": 18,
+                    "words": [
+                        "Gothic_Literature_narrative_choice_18_word_1",
+                        "Gothic_Literature_narrative_choice_18_word_2",
+                        "Gothic_Literature_narrative_choice_18_word_3",
+                        "Gothic_Literature_narrative_choice_18_word_4",
+                        "Gothic_Literature_narrative_choice_18_word_5",
+                        "Gothic_Literature_narrative_choice_18_word_6",
+                        "Gothic_Literature_narrative_choice_18_word_7",
+                        "Gothic_Literature_narrative_choice_18_word_8",
+                        "Gothic_Literature_narrative_choice_18_word_9",
+                        "Gothic_Literature_narrative_choice_18_word_10"
+                    ]
+                },
+                {
+                    "name": "Gothic_Literature_narrative_choice_19",
+                    "night_number": 19,
+                    "words": [
+                        "Gothic_Literature_narrative_choice_19_word_1",
+                        "Gothic_Literature_narrative_choice_19_word_2",
+                        "Gothic_Literature_narrative_choice_19_word_3",
+                        "Gothic_Literature_narrative_choice_19_word_4",
+                        "Gothic_Literature_narrative_choice_19_word_5",
+                        "Gothic_Literature_narrative_choice_19_word_6",
+                        "Gothic_Literature_narrative_choice_19_word_7",
+                        "Gothic_Literature_narrative_choice_19_word_8",
+                        "Gothic_Literature_narrative_choice_19_word_9",
+                        "Gothic_Literature_narrative_choice_19_word_10"
+                    ]
+                },
+                {
+                    "name": "Gothic_Literature_narrative_choice_20",
+                    "night_number": 20,
+                    "words": [
+                        "Gothic_Literature_narrative_choice_20_word_1",
+                        "Gothic_Literature_narrative_choice_20_word_2",
+                        "Gothic_Literature_narrative_choice_20_word_3",
+                        "Gothic_Literature_narrative_choice_20_word_4",
+                        "Gothic_Literature_narrative_choice_20_word_5",
+                        "Gothic_Literature_narrative_choice_20_word_6",
+                        "Gothic_Literature_narrative_choice_20_word_7",
+                        "Gothic_Literature_narrative_choice_20_word_8",
+                        "Gothic_Literature_narrative_choice_20_word_9",
+                        "Gothic_Literature_narrative_choice_20_word_10"
+                    ]
+                },
+                {
+                    "name": "Gothic_Literature_narrative_choice_21",
+                    "night_number": 21,
+                    "words": [
+                        "Gothic_Literature_narrative_choice_21_word_1",
+                        "Gothic_Literature_narrative_choice_21_word_2",
+                        "Gothic_Literature_narrative_choice_21_word_3",
+                        "Gothic_Literature_narrative_choice_21_word_4",
+                        "Gothic_Literature_narrative_choice_21_word_5",
+                        "Gothic_Literature_narrative_choice_21_word_6",
+                        "Gothic_Literature_narrative_choice_21_word_7",
+                        "Gothic_Literature_narrative_choice_21_word_8",
+                        "Gothic_Literature_narrative_choice_21_word_9",
+                        "Gothic_Literature_narrative_choice_21_word_10"
+                    ]
+                },
+                {
+                    "name": "Gothic_Literature_narrative_choice_22",
+                    "night_number": 22,
+                    "words": [
+                        "Gothic_Literature_narrative_choice_22_word_1",
+                        "Gothic_Literature_narrative_choice_22_word_2",
+                        "Gothic_Literature_narrative_choice_22_word_3",
+                        "Gothic_Literature_narrative_choice_22_word_4",
+                        "Gothic_Literature_narrative_choice_22_word_5",
+                        "Gothic_Literature_narrative_choice_22_word_6",
+                        "Gothic_Literature_narrative_choice_22_word_7",
+                        "Gothic_Literature_narrative_choice_22_word_8",
+                        "Gothic_Literature_narrative_choice_22_word_9",
+                        "Gothic_Literature_narrative_choice_22_word_10"
+                    ]
+                },
+                {
+                    "name": "Gothic_Literature_narrative_choice_23",
+                    "night_number": 23,
+                    "words": [
+                        "Gothic_Literature_narrative_choice_23_word_1",
+                        "Gothic_Literature_narrative_choice_23_word_2",
+                        "Gothic_Literature_narrative_choice_23_word_3",
+                        "Gothic_Literature_narrative_choice_23_word_4",
+                        "Gothic_Literature_narrative_choice_23_word_5",
+                        "Gothic_Literature_narrative_choice_23_word_6",
+                        "Gothic_Literature_narrative_choice_23_word_7",
+                        "Gothic_Literature_narrative_choice_23_word_8",
+                        "Gothic_Literature_narrative_choice_23_word_9",
+                        "Gothic_Literature_narrative_choice_23_word_10"
+                    ]
+                },
+                {
+                    "name": "Gothic_Literature_narrative_choice_24",
+                    "night_number": 24,
+                    "words": [
+                        "Gothic_Literature_narrative_choice_24_word_1",
+                        "Gothic_Literature_narrative_choice_24_word_2",
+                        "Gothic_Literature_narrative_choice_24_word_3",
+                        "Gothic_Literature_narrative_choice_24_word_4",
+                        "Gothic_Literature_narrative_choice_24_word_5",
+                        "Gothic_Literature_narrative_choice_24_word_6",
+                        "Gothic_Literature_narrative_choice_24_word_7",
+                        "Gothic_Literature_narrative_choice_24_word_8",
+                        "Gothic_Literature_narrative_choice_24_word_9",
+                        "Gothic_Literature_narrative_choice_24_word_10"
+                    ]
+                },
+                {
+                    "name": "Gothic_Literature_narrative_choice_25",
+                    "night_number": 25,
+                    "words": [
+                        "Gothic_Literature_narrative_choice_25_word_1",
+                        "Gothic_Literature_narrative_choice_25_word_2",
+                        "Gothic_Literature_narrative_choice_25_word_3",
+                        "Gothic_Literature_narrative_choice_25_word_4",
+                        "Gothic_Literature_narrative_choice_25_word_5",
+                        "Gothic_Literature_narrative_choice_25_word_6",
+                        "Gothic_Literature_narrative_choice_25_word_7",
+                        "Gothic_Literature_narrative_choice_25_word_8",
+                        "Gothic_Literature_narrative_choice_25_word_9",
+                        "Gothic_Literature_narrative_choice_25_word_10"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Classical Music",
+            "narrative_choices": [
+                {
+                    "name": "Classical_Music_narrative_choice_1",
+                    "night_number": 1,
+                    "words": [
+                        "Classical_Music_narrative_choice_1_word_1",
+                        "Classical_Music_narrative_choice_1_word_2",
+                        "Classical_Music_narrative_choice_1_word_3",
+                        "Classical_Music_narrative_choice_1_word_4",
+                        "Classical_Music_narrative_choice_1_word_5",
+                        "Classical_Music_narrative_choice_1_word_6",
+                        "Classical_Music_narrative_choice_1_word_7",
+                        "Classical_Music_narrative_choice_1_word_8",
+                        "Classical_Music_narrative_choice_1_word_9",
+                        "Classical_Music_narrative_choice_1_word_10"
+                    ]
+                },
+                {
+                    "name": "Classical_Music_narrative_choice_2",
+                    "night_number": 2,
+                    "words": [
+                        "Classical_Music_narrative_choice_2_word_1",
+                        "Classical_Music_narrative_choice_2_word_2",
+                        "Classical_Music_narrative_choice_2_word_3",
+                        "Classical_Music_narrative_choice_2_word_4",
+                        "Classical_Music_narrative_choice_2_word_5",
+                        "Classical_Music_narrative_choice_2_word_6",
+                        "Classical_Music_narrative_choice_2_word_7",
+                        "Classical_Music_narrative_choice_2_word_8",
+                        "Classical_Music_narrative_choice_2_word_9",
+                        "Classical_Music_narrative_choice_2_word_10"
+                    ]
+                },
+                {
+                    "name": "Classical_Music_narrative_choice_3",
+                    "night_number": 3,
+                    "words": [
+                        "Classical_Music_narrative_choice_3_word_1",
+                        "Classical_Music_narrative_choice_3_word_2",
+                        "Classical_Music_narrative_choice_3_word_3",
+                        "Classical_Music_narrative_choice_3_word_4",
+                        "Classical_Music_narrative_choice_3_word_5",
+                        "Classical_Music_narrative_choice_3_word_6",
+                        "Classical_Music_narrative_choice_3_word_7",
+                        "Classical_Music_narrative_choice_3_word_8",
+                        "Classical_Music_narrative_choice_3_word_9",
+                        "Classical_Music_narrative_choice_3_word_10"
+                    ]
+                },
+                {
+                    "name": "Classical_Music_narrative_choice_4",
+                    "night_number": 4,
+                    "words": [
+                        "Classical_Music_narrative_choice_4_word_1",
+                        "Classical_Music_narrative_choice_4_word_2",
+                        "Classical_Music_narrative_choice_4_word_3",
+                        "Classical_Music_narrative_choice_4_word_4",
+                        "Classical_Music_narrative_choice_4_word_5",
+                        "Classical_Music_narrative_choice_4_word_6",
+                        "Classical_Music_narrative_choice_4_word_7",
+                        "Classical_Music_narrative_choice_4_word_8",
+                        "Classical_Music_narrative_choice_4_word_9",
+                        "Classical_Music_narrative_choice_4_word_10"
+                    ]
+                },
+                {
+                    "name": "Classical_Music_narrative_choice_5",
+                    "night_number": 5,
+                    "words": [
+                        "Classical_Music_narrative_choice_5_word_1",
+                        "Classical_Music_narrative_choice_5_word_2",
+                        "Classical_Music_narrative_choice_5_word_3",
+                        "Classical_Music_narrative_choice_5_word_4",
+                        "Classical_Music_narrative_choice_5_word_5",
+                        "Classical_Music_narrative_choice_5_word_6",
+                        "Classical_Music_narrative_choice_5_word_7",
+                        "Classical_Music_narrative_choice_5_word_8",
+                        "Classical_Music_narrative_choice_5_word_9",
+                        "Classical_Music_narrative_choice_5_word_10"
+                    ]
+                },
+                {
+                    "name": "Classical_Music_narrative_choice_6",
+                    "night_number": 6,
+                    "words": [
+                        "Classical_Music_narrative_choice_6_word_1",
+                        "Classical_Music_narrative_choice_6_word_2",
+                        "Classical_Music_narrative_choice_6_word_3",
+                        "Classical_Music_narrative_choice_6_word_4",
+                        "Classical_Music_narrative_choice_6_word_5",
+                        "Classical_Music_narrative_choice_6_word_6",
+                        "Classical_Music_narrative_choice_6_word_7",
+                        "Classical_Music_narrative_choice_6_word_8",
+                        "Classical_Music_narrative_choice_6_word_9",
+                        "Classical_Music_narrative_choice_6_word_10"
+                    ]
+                },
+                {
+                    "name": "Classical_Music_narrative_choice_7",
+                    "night_number": 7,
+                    "words": [
+                        "Classical_Music_narrative_choice_7_word_1",
+                        "Classical_Music_narrative_choice_7_word_2",
+                        "Classical_Music_narrative_choice_7_word_3",
+                        "Classical_Music_narrative_choice_7_word_4",
+                        "Classical_Music_narrative_choice_7_word_5",
+                        "Classical_Music_narrative_choice_7_word_6",
+                        "Classical_Music_narrative_choice_7_word_7",
+                        "Classical_Music_narrative_choice_7_word_8",
+                        "Classical_Music_narrative_choice_7_word_9",
+                        "Classical_Music_narrative_choice_7_word_10"
+                    ]
+                },
+                {
+                    "name": "Classical_Music_narrative_choice_8",
+                    "night_number": 8,
+                    "words": [
+                        "Classical_Music_narrative_choice_8_word_1",
+                        "Classical_Music_narrative_choice_8_word_2",
+                        "Classical_Music_narrative_choice_8_word_3",
+                        "Classical_Music_narrative_choice_8_word_4",
+                        "Classical_Music_narrative_choice_8_word_5",
+                        "Classical_Music_narrative_choice_8_word_6",
+                        "Classical_Music_narrative_choice_8_word_7",
+                        "Classical_Music_narrative_choice_8_word_8",
+                        "Classical_Music_narrative_choice_8_word_9",
+                        "Classical_Music_narrative_choice_8_word_10"
+                    ]
+                },
+                {
+                    "name": "Classical_Music_narrative_choice_9",
+                    "night_number": 9,
+                    "words": [
+                        "Classical_Music_narrative_choice_9_word_1",
+                        "Classical_Music_narrative_choice_9_word_2",
+                        "Classical_Music_narrative_choice_9_word_3",
+                        "Classical_Music_narrative_choice_9_word_4",
+                        "Classical_Music_narrative_choice_9_word_5",
+                        "Classical_Music_narrative_choice_9_word_6",
+                        "Classical_Music_narrative_choice_9_word_7",
+                        "Classical_Music_narrative_choice_9_word_8",
+                        "Classical_Music_narrative_choice_9_word_9",
+                        "Classical_Music_narrative_choice_9_word_10"
+                    ]
+                },
+                {
+                    "name": "Classical_Music_narrative_choice_10",
+                    "night_number": 10,
+                    "words": [
+                        "Classical_Music_narrative_choice_10_word_1",
+                        "Classical_Music_narrative_choice_10_word_2",
+                        "Classical_Music_narrative_choice_10_word_3",
+                        "Classical_Music_narrative_choice_10_word_4",
+                        "Classical_Music_narrative_choice_10_word_5",
+                        "Classical_Music_narrative_choice_10_word_6",
+                        "Classical_Music_narrative_choice_10_word_7",
+                        "Classical_Music_narrative_choice_10_word_8",
+                        "Classical_Music_narrative_choice_10_word_9",
+                        "Classical_Music_narrative_choice_10_word_10"
+                    ]
+                },
+                {
+                    "name": "Classical_Music_narrative_choice_11",
+                    "night_number": 11,
+                    "words": [
+                        "Classical_Music_narrative_choice_11_word_1",
+                        "Classical_Music_narrative_choice_11_word_2",
+                        "Classical_Music_narrative_choice_11_word_3",
+                        "Classical_Music_narrative_choice_11_word_4",
+                        "Classical_Music_narrative_choice_11_word_5",
+                        "Classical_Music_narrative_choice_11_word_6",
+                        "Classical_Music_narrative_choice_11_word_7",
+                        "Classical_Music_narrative_choice_11_word_8",
+                        "Classical_Music_narrative_choice_11_word_9",
+                        "Classical_Music_narrative_choice_11_word_10"
+                    ]
+                },
+                {
+                    "name": "Classical_Music_narrative_choice_12",
+                    "night_number": 12,
+                    "words": [
+                        "Classical_Music_narrative_choice_12_word_1",
+                        "Classical_Music_narrative_choice_12_word_2",
+                        "Classical_Music_narrative_choice_12_word_3",
+                        "Classical_Music_narrative_choice_12_word_4",
+                        "Classical_Music_narrative_choice_12_word_5",
+                        "Classical_Music_narrative_choice_12_word_6",
+                        "Classical_Music_narrative_choice_12_word_7",
+                        "Classical_Music_narrative_choice_12_word_8",
+                        "Classical_Music_narrative_choice_12_word_9",
+                        "Classical_Music_narrative_choice_12_word_10"
+                    ]
+                },
+                {
+                    "name": "Classical_Music_narrative_choice_13",
+                    "night_number": 13,
+                    "words": [
+                        "Classical_Music_narrative_choice_13_word_1",
+                        "Classical_Music_narrative_choice_13_word_2",
+                        "Classical_Music_narrative_choice_13_word_3",
+                        "Classical_Music_narrative_choice_13_word_4",
+                        "Classical_Music_narrative_choice_13_word_5",
+                        "Classical_Music_narrative_choice_13_word_6",
+                        "Classical_Music_narrative_choice_13_word_7",
+                        "Classical_Music_narrative_choice_13_word_8",
+                        "Classical_Music_narrative_choice_13_word_9",
+                        "Classical_Music_narrative_choice_13_word_10"
+                    ]
+                },
+                {
+                    "name": "Classical_Music_narrative_choice_14",
+                    "night_number": 14,
+                    "words": [
+                        "Classical_Music_narrative_choice_14_word_1",
+                        "Classical_Music_narrative_choice_14_word_2",
+                        "Classical_Music_narrative_choice_14_word_3",
+                        "Classical_Music_narrative_choice_14_word_4",
+                        "Classical_Music_narrative_choice_14_word_5",
+                        "Classical_Music_narrative_choice_14_word_6",
+                        "Classical_Music_narrative_choice_14_word_7",
+                        "Classical_Music_narrative_choice_14_word_8",
+                        "Classical_Music_narrative_choice_14_word_9",
+                        "Classical_Music_narrative_choice_14_word_10"
+                    ]
+                },
+                {
+                    "name": "Classical_Music_narrative_choice_15",
+                    "night_number": 15,
+                    "words": [
+                        "Classical_Music_narrative_choice_15_word_1",
+                        "Classical_Music_narrative_choice_15_word_2",
+                        "Classical_Music_narrative_choice_15_word_3",
+                        "Classical_Music_narrative_choice_15_word_4",
+                        "Classical_Music_narrative_choice_15_word_5",
+                        "Classical_Music_narrative_choice_15_word_6",
+                        "Classical_Music_narrative_choice_15_word_7",
+                        "Classical_Music_narrative_choice_15_word_8",
+                        "Classical_Music_narrative_choice_15_word_9",
+                        "Classical_Music_narrative_choice_15_word_10"
+                    ]
+                },
+                {
+                    "name": "Classical_Music_narrative_choice_16",
+                    "night_number": 16,
+                    "words": [
+                        "Classical_Music_narrative_choice_16_word_1",
+                        "Classical_Music_narrative_choice_16_word_2",
+                        "Classical_Music_narrative_choice_16_word_3",
+                        "Classical_Music_narrative_choice_16_word_4",
+                        "Classical_Music_narrative_choice_16_word_5",
+                        "Classical_Music_narrative_choice_16_word_6",
+                        "Classical_Music_narrative_choice_16_word_7",
+                        "Classical_Music_narrative_choice_16_word_8",
+                        "Classical_Music_narrative_choice_16_word_9",
+                        "Classical_Music_narrative_choice_16_word_10"
+                    ]
+                },
+                {
+                    "name": "Classical_Music_narrative_choice_17",
+                    "night_number": 17,
+                    "words": [
+                        "Classical_Music_narrative_choice_17_word_1",
+                        "Classical_Music_narrative_choice_17_word_2",
+                        "Classical_Music_narrative_choice_17_word_3",
+                        "Classical_Music_narrative_choice_17_word_4",
+                        "Classical_Music_narrative_choice_17_word_5",
+                        "Classical_Music_narrative_choice_17_word_6",
+                        "Classical_Music_narrative_choice_17_word_7",
+                        "Classical_Music_narrative_choice_17_word_8",
+                        "Classical_Music_narrative_choice_17_word_9",
+                        "Classical_Music_narrative_choice_17_word_10"
+                    ]
+                },
+                {
+                    "name": "Classical_Music_narrative_choice_18",
+                    "night_number": 18,
+                    "words": [
+                        "Classical_Music_narrative_choice_18_word_1",
+                        "Classical_Music_narrative_choice_18_word_2",
+                        "Classical_Music_narrative_choice_18_word_3",
+                        "Classical_Music_narrative_choice_18_word_4",
+                        "Classical_Music_narrative_choice_18_word_5",
+                        "Classical_Music_narrative_choice_18_word_6",
+                        "Classical_Music_narrative_choice_18_word_7",
+                        "Classical_Music_narrative_choice_18_word_8",
+                        "Classical_Music_narrative_choice_18_word_9",
+                        "Classical_Music_narrative_choice_18_word_10"
+                    ]
+                },
+                {
+                    "name": "Classical_Music_narrative_choice_19",
+                    "night_number": 19,
+                    "words": [
+                        "Classical_Music_narrative_choice_19_word_1",
+                        "Classical_Music_narrative_choice_19_word_2",
+                        "Classical_Music_narrative_choice_19_word_3",
+                        "Classical_Music_narrative_choice_19_word_4",
+                        "Classical_Music_narrative_choice_19_word_5",
+                        "Classical_Music_narrative_choice_19_word_6",
+                        "Classical_Music_narrative_choice_19_word_7",
+                        "Classical_Music_narrative_choice_19_word_8",
+                        "Classical_Music_narrative_choice_19_word_9",
+                        "Classical_Music_narrative_choice_19_word_10"
+                    ]
+                },
+                {
+                    "name": "Classical_Music_narrative_choice_20",
+                    "night_number": 20,
+                    "words": [
+                        "Classical_Music_narrative_choice_20_word_1",
+                        "Classical_Music_narrative_choice_20_word_2",
+                        "Classical_Music_narrative_choice_20_word_3",
+                        "Classical_Music_narrative_choice_20_word_4",
+                        "Classical_Music_narrative_choice_20_word_5",
+                        "Classical_Music_narrative_choice_20_word_6",
+                        "Classical_Music_narrative_choice_20_word_7",
+                        "Classical_Music_narrative_choice_20_word_8",
+                        "Classical_Music_narrative_choice_20_word_9",
+                        "Classical_Music_narrative_choice_20_word_10"
+                    ]
+                },
+                {
+                    "name": "Classical_Music_narrative_choice_21",
+                    "night_number": 21,
+                    "words": [
+                        "Classical_Music_narrative_choice_21_word_1",
+                        "Classical_Music_narrative_choice_21_word_2",
+                        "Classical_Music_narrative_choice_21_word_3",
+                        "Classical_Music_narrative_choice_21_word_4",
+                        "Classical_Music_narrative_choice_21_word_5",
+                        "Classical_Music_narrative_choice_21_word_6",
+                        "Classical_Music_narrative_choice_21_word_7",
+                        "Classical_Music_narrative_choice_21_word_8",
+                        "Classical_Music_narrative_choice_21_word_9",
+                        "Classical_Music_narrative_choice_21_word_10"
+                    ]
+                },
+                {
+                    "name": "Classical_Music_narrative_choice_22",
+                    "night_number": 22,
+                    "words": [
+                        "Classical_Music_narrative_choice_22_word_1",
+                        "Classical_Music_narrative_choice_22_word_2",
+                        "Classical_Music_narrative_choice_22_word_3",
+                        "Classical_Music_narrative_choice_22_word_4",
+                        "Classical_Music_narrative_choice_22_word_5",
+                        "Classical_Music_narrative_choice_22_word_6",
+                        "Classical_Music_narrative_choice_22_word_7",
+                        "Classical_Music_narrative_choice_22_word_8",
+                        "Classical_Music_narrative_choice_22_word_9",
+                        "Classical_Music_narrative_choice_22_word_10"
+                    ]
+                },
+                {
+                    "name": "Classical_Music_narrative_choice_23",
+                    "night_number": 23,
+                    "words": [
+                        "Classical_Music_narrative_choice_23_word_1",
+                        "Classical_Music_narrative_choice_23_word_2",
+                        "Classical_Music_narrative_choice_23_word_3",
+                        "Classical_Music_narrative_choice_23_word_4",
+                        "Classical_Music_narrative_choice_23_word_5",
+                        "Classical_Music_narrative_choice_23_word_6",
+                        "Classical_Music_narrative_choice_23_word_7",
+                        "Classical_Music_narrative_choice_23_word_8",
+                        "Classical_Music_narrative_choice_23_word_9",
+                        "Classical_Music_narrative_choice_23_word_10"
+                    ]
+                },
+                {
+                    "name": "Classical_Music_narrative_choice_24",
+                    "night_number": 24,
+                    "words": [
+                        "Classical_Music_narrative_choice_24_word_1",
+                        "Classical_Music_narrative_choice_24_word_2",
+                        "Classical_Music_narrative_choice_24_word_3",
+                        "Classical_Music_narrative_choice_24_word_4",
+                        "Classical_Music_narrative_choice_24_word_5",
+                        "Classical_Music_narrative_choice_24_word_6",
+                        "Classical_Music_narrative_choice_24_word_7",
+                        "Classical_Music_narrative_choice_24_word_8",
+                        "Classical_Music_narrative_choice_24_word_9",
+                        "Classical_Music_narrative_choice_24_word_10"
+                    ]
+                },
+                {
+                    "name": "Classical_Music_narrative_choice_25",
+                    "night_number": 25,
+                    "words": [
+                        "Classical_Music_narrative_choice_25_word_1",
+                        "Classical_Music_narrative_choice_25_word_2",
+                        "Classical_Music_narrative_choice_25_word_3",
+                        "Classical_Music_narrative_choice_25_word_4",
+                        "Classical_Music_narrative_choice_25_word_5",
+                        "Classical_Music_narrative_choice_25_word_6",
+                        "Classical_Music_narrative_choice_25_word_7",
+                        "Classical_Music_narrative_choice_25_word_8",
+                        "Classical_Music_narrative_choice_25_word_9",
+                        "Classical_Music_narrative_choice_25_word_10"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "History",
+            "narrative_choices": [
+                {
+                    "name": "History_narrative_choice_1",
+                    "night_number": 1,
+                    "words": [
+                        "History_narrative_choice_1_word_1",
+                        "History_narrative_choice_1_word_2",
+                        "History_narrative_choice_1_word_3",
+                        "History_narrative_choice_1_word_4",
+                        "History_narrative_choice_1_word_5",
+                        "History_narrative_choice_1_word_6",
+                        "History_narrative_choice_1_word_7",
+                        "History_narrative_choice_1_word_8",
+                        "History_narrative_choice_1_word_9",
+                        "History_narrative_choice_1_word_10"
+                    ]
+                },
+                {
+                    "name": "History_narrative_choice_2",
+                    "night_number": 2,
+                    "words": [
+                        "History_narrative_choice_2_word_1",
+                        "History_narrative_choice_2_word_2",
+                        "History_narrative_choice_2_word_3",
+                        "History_narrative_choice_2_word_4",
+                        "History_narrative_choice_2_word_5",
+                        "History_narrative_choice_2_word_6",
+                        "History_narrative_choice_2_word_7",
+                        "History_narrative_choice_2_word_8",
+                        "History_narrative_choice_2_word_9",
+                        "History_narrative_choice_2_word_10"
+                    ]
+                },
+                {
+                    "name": "History_narrative_choice_3",
+                    "night_number": 3,
+                    "words": [
+                        "History_narrative_choice_3_word_1",
+                        "History_narrative_choice_3_word_2",
+                        "History_narrative_choice_3_word_3",
+                        "History_narrative_choice_3_word_4",
+                        "History_narrative_choice_3_word_5",
+                        "History_narrative_choice_3_word_6",
+                        "History_narrative_choice_3_word_7",
+                        "History_narrative_choice_3_word_8",
+                        "History_narrative_choice_3_word_9",
+                        "History_narrative_choice_3_word_10"
+                    ]
+                },
+                {
+                    "name": "History_narrative_choice_4",
+                    "night_number": 4,
+                    "words": [
+                        "History_narrative_choice_4_word_1",
+                        "History_narrative_choice_4_word_2",
+                        "History_narrative_choice_4_word_3",
+                        "History_narrative_choice_4_word_4",
+                        "History_narrative_choice_4_word_5",
+                        "History_narrative_choice_4_word_6",
+                        "History_narrative_choice_4_word_7",
+                        "History_narrative_choice_4_word_8",
+                        "History_narrative_choice_4_word_9",
+                        "History_narrative_choice_4_word_10"
+                    ]
+                },
+                {
+                    "name": "History_narrative_choice_5",
+                    "night_number": 5,
+                    "words": [
+                        "History_narrative_choice_5_word_1",
+                        "History_narrative_choice_5_word_2",
+                        "History_narrative_choice_5_word_3",
+                        "History_narrative_choice_5_word_4",
+                        "History_narrative_choice_5_word_5",
+                        "History_narrative_choice_5_word_6",
+                        "History_narrative_choice_5_word_7",
+                        "History_narrative_choice_5_word_8",
+                        "History_narrative_choice_5_word_9",
+                        "History_narrative_choice_5_word_10"
+                    ]
+                },
+                {
+                    "name": "History_narrative_choice_6",
+                    "night_number": 6,
+                    "words": [
+                        "History_narrative_choice_6_word_1",
+                        "History_narrative_choice_6_word_2",
+                        "History_narrative_choice_6_word_3",
+                        "History_narrative_choice_6_word_4",
+                        "History_narrative_choice_6_word_5",
+                        "History_narrative_choice_6_word_6",
+                        "History_narrative_choice_6_word_7",
+                        "History_narrative_choice_6_word_8",
+                        "History_narrative_choice_6_word_9",
+                        "History_narrative_choice_6_word_10"
+                    ]
+                },
+                {
+                    "name": "History_narrative_choice_7",
+                    "night_number": 7,
+                    "words": [
+                        "History_narrative_choice_7_word_1",
+                        "History_narrative_choice_7_word_2",
+                        "History_narrative_choice_7_word_3",
+                        "History_narrative_choice_7_word_4",
+                        "History_narrative_choice_7_word_5",
+                        "History_narrative_choice_7_word_6",
+                        "History_narrative_choice_7_word_7",
+                        "History_narrative_choice_7_word_8",
+                        "History_narrative_choice_7_word_9",
+                        "History_narrative_choice_7_word_10"
+                    ]
+                },
+                {
+                    "name": "History_narrative_choice_8",
+                    "night_number": 8,
+                    "words": [
+                        "History_narrative_choice_8_word_1",
+                        "History_narrative_choice_8_word_2",
+                        "History_narrative_choice_8_word_3",
+                        "History_narrative_choice_8_word_4",
+                        "History_narrative_choice_8_word_5",
+                        "History_narrative_choice_8_word_6",
+                        "History_narrative_choice_8_word_7",
+                        "History_narrative_choice_8_word_8",
+                        "History_narrative_choice_8_word_9",
+                        "History_narrative_choice_8_word_10"
+                    ]
+                },
+                {
+                    "name": "History_narrative_choice_9",
+                    "night_number": 9,
+                    "words": [
+                        "History_narrative_choice_9_word_1",
+                        "History_narrative_choice_9_word_2",
+                        "History_narrative_choice_9_word_3",
+                        "History_narrative_choice_9_word_4",
+                        "History_narrative_choice_9_word_5",
+                        "History_narrative_choice_9_word_6",
+                        "History_narrative_choice_9_word_7",
+                        "History_narrative_choice_9_word_8",
+                        "History_narrative_choice_9_word_9",
+                        "History_narrative_choice_9_word_10"
+                    ]
+                },
+                {
+                    "name": "History_narrative_choice_10",
+                    "night_number": 10,
+                    "words": [
+                        "History_narrative_choice_10_word_1",
+                        "History_narrative_choice_10_word_2",
+                        "History_narrative_choice_10_word_3",
+                        "History_narrative_choice_10_word_4",
+                        "History_narrative_choice_10_word_5",
+                        "History_narrative_choice_10_word_6",
+                        "History_narrative_choice_10_word_7",
+                        "History_narrative_choice_10_word_8",
+                        "History_narrative_choice_10_word_9",
+                        "History_narrative_choice_10_word_10"
+                    ]
+                },
+                {
+                    "name": "History_narrative_choice_11",
+                    "night_number": 11,
+                    "words": [
+                        "History_narrative_choice_11_word_1",
+                        "History_narrative_choice_11_word_2",
+                        "History_narrative_choice_11_word_3",
+                        "History_narrative_choice_11_word_4",
+                        "History_narrative_choice_11_word_5",
+                        "History_narrative_choice_11_word_6",
+                        "History_narrative_choice_11_word_7",
+                        "History_narrative_choice_11_word_8",
+                        "History_narrative_choice_11_word_9",
+                        "History_narrative_choice_11_word_10"
+                    ]
+                },
+                {
+                    "name": "History_narrative_choice_12",
+                    "night_number": 12,
+                    "words": [
+                        "History_narrative_choice_12_word_1",
+                        "History_narrative_choice_12_word_2",
+                        "History_narrative_choice_12_word_3",
+                        "History_narrative_choice_12_word_4",
+                        "History_narrative_choice_12_word_5",
+                        "History_narrative_choice_12_word_6",
+                        "History_narrative_choice_12_word_7",
+                        "History_narrative_choice_12_word_8",
+                        "History_narrative_choice_12_word_9",
+                        "History_narrative_choice_12_word_10"
+                    ]
+                },
+                {
+                    "name": "History_narrative_choice_13",
+                    "night_number": 13,
+                    "words": [
+                        "History_narrative_choice_13_word_1",
+                        "History_narrative_choice_13_word_2",
+                        "History_narrative_choice_13_word_3",
+                        "History_narrative_choice_13_word_4",
+                        "History_narrative_choice_13_word_5",
+                        "History_narrative_choice_13_word_6",
+                        "History_narrative_choice_13_word_7",
+                        "History_narrative_choice_13_word_8",
+                        "History_narrative_choice_13_word_9",
+                        "History_narrative_choice_13_word_10"
+                    ]
+                },
+                {
+                    "name": "History_narrative_choice_14",
+                    "night_number": 14,
+                    "words": [
+                        "History_narrative_choice_14_word_1",
+                        "History_narrative_choice_14_word_2",
+                        "History_narrative_choice_14_word_3",
+                        "History_narrative_choice_14_word_4",
+                        "History_narrative_choice_14_word_5",
+                        "History_narrative_choice_14_word_6",
+                        "History_narrative_choice_14_word_7",
+                        "History_narrative_choice_14_word_8",
+                        "History_narrative_choice_14_word_9",
+                        "History_narrative_choice_14_word_10"
+                    ]
+                },
+                {
+                    "name": "History_narrative_choice_15",
+                    "night_number": 15,
+                    "words": [
+                        "History_narrative_choice_15_word_1",
+                        "History_narrative_choice_15_word_2",
+                        "History_narrative_choice_15_word_3",
+                        "History_narrative_choice_15_word_4",
+                        "History_narrative_choice_15_word_5",
+                        "History_narrative_choice_15_word_6",
+                        "History_narrative_choice_15_word_7",
+                        "History_narrative_choice_15_word_8",
+                        "History_narrative_choice_15_word_9",
+                        "History_narrative_choice_15_word_10"
+                    ]
+                },
+                {
+                    "name": "History_narrative_choice_16",
+                    "night_number": 16,
+                    "words": [
+                        "History_narrative_choice_16_word_1",
+                        "History_narrative_choice_16_word_2",
+                        "History_narrative_choice_16_word_3",
+                        "History_narrative_choice_16_word_4",
+                        "History_narrative_choice_16_word_5",
+                        "History_narrative_choice_16_word_6",
+                        "History_narrative_choice_16_word_7",
+                        "History_narrative_choice_16_word_8",
+                        "History_narrative_choice_16_word_9",
+                        "History_narrative_choice_16_word_10"
+                    ]
+                },
+                {
+                    "name": "History_narrative_choice_17",
+                    "night_number": 17,
+                    "words": [
+                        "History_narrative_choice_17_word_1",
+                        "History_narrative_choice_17_word_2",
+                        "History_narrative_choice_17_word_3",
+                        "History_narrative_choice_17_word_4",
+                        "History_narrative_choice_17_word_5",
+                        "History_narrative_choice_17_word_6",
+                        "History_narrative_choice_17_word_7",
+                        "History_narrative_choice_17_word_8",
+                        "History_narrative_choice_17_word_9",
+                        "History_narrative_choice_17_word_10"
+                    ]
+                },
+                {
+                    "name": "History_narrative_choice_18",
+                    "night_number": 18,
+                    "words": [
+                        "History_narrative_choice_18_word_1",
+                        "History_narrative_choice_18_word_2",
+                        "History_narrative_choice_18_word_3",
+                        "History_narrative_choice_18_word_4",
+                        "History_narrative_choice_18_word_5",
+                        "History_narrative_choice_18_word_6",
+                        "History_narrative_choice_18_word_7",
+                        "History_narrative_choice_18_word_8",
+                        "History_narrative_choice_18_word_9",
+                        "History_narrative_choice_18_word_10"
+                    ]
+                },
+                {
+                    "name": "History_narrative_choice_19",
+                    "night_number": 19,
+                    "words": [
+                        "History_narrative_choice_19_word_1",
+                        "History_narrative_choice_19_word_2",
+                        "History_narrative_choice_19_word_3",
+                        "History_narrative_choice_19_word_4",
+                        "History_narrative_choice_19_word_5",
+                        "History_narrative_choice_19_word_6",
+                        "History_narrative_choice_19_word_7",
+                        "History_narrative_choice_19_word_8",
+                        "History_narrative_choice_19_word_9",
+                        "History_narrative_choice_19_word_10"
+                    ]
+                },
+                {
+                    "name": "History_narrative_choice_20",
+                    "night_number": 20,
+                    "words": [
+                        "History_narrative_choice_20_word_1",
+                        "History_narrative_choice_20_word_2",
+                        "History_narrative_choice_20_word_3",
+                        "History_narrative_choice_20_word_4",
+                        "History_narrative_choice_20_word_5",
+                        "History_narrative_choice_20_word_6",
+                        "History_narrative_choice_20_word_7",
+                        "History_narrative_choice_20_word_8",
+                        "History_narrative_choice_20_word_9",
+                        "History_narrative_choice_20_word_10"
+                    ]
+                },
+                {
+                    "name": "History_narrative_choice_21",
+                    "night_number": 21,
+                    "words": [
+                        "History_narrative_choice_21_word_1",
+                        "History_narrative_choice_21_word_2",
+                        "History_narrative_choice_21_word_3",
+                        "History_narrative_choice_21_word_4",
+                        "History_narrative_choice_21_word_5",
+                        "History_narrative_choice_21_word_6",
+                        "History_narrative_choice_21_word_7",
+                        "History_narrative_choice_21_word_8",
+                        "History_narrative_choice_21_word_9",
+                        "History_narrative_choice_21_word_10"
+                    ]
+                },
+                {
+                    "name": "History_narrative_choice_22",
+                    "night_number": 22,
+                    "words": [
+                        "History_narrative_choice_22_word_1",
+                        "History_narrative_choice_22_word_2",
+                        "History_narrative_choice_22_word_3",
+                        "History_narrative_choice_22_word_4",
+                        "History_narrative_choice_22_word_5",
+                        "History_narrative_choice_22_word_6",
+                        "History_narrative_choice_22_word_7",
+                        "History_narrative_choice_22_word_8",
+                        "History_narrative_choice_22_word_9",
+                        "History_narrative_choice_22_word_10"
+                    ]
+                },
+                {
+                    "name": "History_narrative_choice_23",
+                    "night_number": 23,
+                    "words": [
+                        "History_narrative_choice_23_word_1",
+                        "History_narrative_choice_23_word_2",
+                        "History_narrative_choice_23_word_3",
+                        "History_narrative_choice_23_word_4",
+                        "History_narrative_choice_23_word_5",
+                        "History_narrative_choice_23_word_6",
+                        "History_narrative_choice_23_word_7",
+                        "History_narrative_choice_23_word_8",
+                        "History_narrative_choice_23_word_9",
+                        "History_narrative_choice_23_word_10"
+                    ]
+                },
+                {
+                    "name": "History_narrative_choice_24",
+                    "night_number": 24,
+                    "words": [
+                        "History_narrative_choice_24_word_1",
+                        "History_narrative_choice_24_word_2",
+                        "History_narrative_choice_24_word_3",
+                        "History_narrative_choice_24_word_4",
+                        "History_narrative_choice_24_word_5",
+                        "History_narrative_choice_24_word_6",
+                        "History_narrative_choice_24_word_7",
+                        "History_narrative_choice_24_word_8",
+                        "History_narrative_choice_24_word_9",
+                        "History_narrative_choice_24_word_10"
+                    ]
+                },
+                {
+                    "name": "History_narrative_choice_25",
+                    "night_number": 25,
+                    "words": [
+                        "History_narrative_choice_25_word_1",
+                        "History_narrative_choice_25_word_2",
+                        "History_narrative_choice_25_word_3",
+                        "History_narrative_choice_25_word_4",
+                        "History_narrative_choice_25_word_5",
+                        "History_narrative_choice_25_word_6",
+                        "History_narrative_choice_25_word_7",
+                        "History_narrative_choice_25_word_8",
+                        "History_narrative_choice_25_word_9",
+                        "History_narrative_choice_25_word_10"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Mystery",
+            "narrative_choices": [
+                {
+                    "name": "Mystery_narrative_choice_1",
+                    "night_number": 1,
+                    "words": [
+                        "Mystery_narrative_choice_1_word_1",
+                        "Mystery_narrative_choice_1_word_2",
+                        "Mystery_narrative_choice_1_word_3",
+                        "Mystery_narrative_choice_1_word_4",
+                        "Mystery_narrative_choice_1_word_5",
+                        "Mystery_narrative_choice_1_word_6",
+                        "Mystery_narrative_choice_1_word_7",
+                        "Mystery_narrative_choice_1_word_8",
+                        "Mystery_narrative_choice_1_word_9",
+                        "Mystery_narrative_choice_1_word_10"
+                    ]
+                },
+                {
+                    "name": "Mystery_narrative_choice_2",
+                    "night_number": 2,
+                    "words": [
+                        "Mystery_narrative_choice_2_word_1",
+                        "Mystery_narrative_choice_2_word_2",
+                        "Mystery_narrative_choice_2_word_3",
+                        "Mystery_narrative_choice_2_word_4",
+                        "Mystery_narrative_choice_2_word_5",
+                        "Mystery_narrative_choice_2_word_6",
+                        "Mystery_narrative_choice_2_word_7",
+                        "Mystery_narrative_choice_2_word_8",
+                        "Mystery_narrative_choice_2_word_9",
+                        "Mystery_narrative_choice_2_word_10"
+                    ]
+                },
+                {
+                    "name": "Mystery_narrative_choice_3",
+                    "night_number": 3,
+                    "words": [
+                        "Mystery_narrative_choice_3_word_1",
+                        "Mystery_narrative_choice_3_word_2",
+                        "Mystery_narrative_choice_3_word_3",
+                        "Mystery_narrative_choice_3_word_4",
+                        "Mystery_narrative_choice_3_word_5",
+                        "Mystery_narrative_choice_3_word_6",
+                        "Mystery_narrative_choice_3_word_7",
+                        "Mystery_narrative_choice_3_word_8",
+                        "Mystery_narrative_choice_3_word_9",
+                        "Mystery_narrative_choice_3_word_10"
+                    ]
+                },
+                {
+                    "name": "Mystery_narrative_choice_4",
+                    "night_number": 4,
+                    "words": [
+                        "Mystery_narrative_choice_4_word_1",
+                        "Mystery_narrative_choice_4_word_2",
+                        "Mystery_narrative_choice_4_word_3",
+                        "Mystery_narrative_choice_4_word_4",
+                        "Mystery_narrative_choice_4_word_5",
+                        "Mystery_narrative_choice_4_word_6",
+                        "Mystery_narrative_choice_4_word_7",
+                        "Mystery_narrative_choice_4_word_8",
+                        "Mystery_narrative_choice_4_word_9",
+                        "Mystery_narrative_choice_4_word_10"
+                    ]
+                },
+                {
+                    "name": "Mystery_narrative_choice_5",
+                    "night_number": 5,
+                    "words": [
+                        "Mystery_narrative_choice_5_word_1",
+                        "Mystery_narrative_choice_5_word_2",
+                        "Mystery_narrative_choice_5_word_3",
+                        "Mystery_narrative_choice_5_word_4",
+                        "Mystery_narrative_choice_5_word_5",
+                        "Mystery_narrative_choice_5_word_6",
+                        "Mystery_narrative_choice_5_word_7",
+                        "Mystery_narrative_choice_5_word_8",
+                        "Mystery_narrative_choice_5_word_9",
+                        "Mystery_narrative_choice_5_word_10"
+                    ]
+                },
+                {
+                    "name": "Mystery_narrative_choice_6",
+                    "night_number": 6,
+                    "words": [
+                        "Mystery_narrative_choice_6_word_1",
+                        "Mystery_narrative_choice_6_word_2",
+                        "Mystery_narrative_choice_6_word_3",
+                        "Mystery_narrative_choice_6_word_4",
+                        "Mystery_narrative_choice_6_word_5",
+                        "Mystery_narrative_choice_6_word_6",
+                        "Mystery_narrative_choice_6_word_7",
+                        "Mystery_narrative_choice_6_word_8",
+                        "Mystery_narrative_choice_6_word_9",
+                        "Mystery_narrative_choice_6_word_10"
+                    ]
+                },
+                {
+                    "name": "Mystery_narrative_choice_7",
+                    "night_number": 7,
+                    "words": [
+                        "Mystery_narrative_choice_7_word_1",
+                        "Mystery_narrative_choice_7_word_2",
+                        "Mystery_narrative_choice_7_word_3",
+                        "Mystery_narrative_choice_7_word_4",
+                        "Mystery_narrative_choice_7_word_5",
+                        "Mystery_narrative_choice_7_word_6",
+                        "Mystery_narrative_choice_7_word_7",
+                        "Mystery_narrative_choice_7_word_8",
+                        "Mystery_narrative_choice_7_word_9",
+                        "Mystery_narrative_choice_7_word_10"
+                    ]
+                },
+                {
+                    "name": "Mystery_narrative_choice_8",
+                    "night_number": 8,
+                    "words": [
+                        "Mystery_narrative_choice_8_word_1",
+                        "Mystery_narrative_choice_8_word_2",
+                        "Mystery_narrative_choice_8_word_3",
+                        "Mystery_narrative_choice_8_word_4",
+                        "Mystery_narrative_choice_8_word_5",
+                        "Mystery_narrative_choice_8_word_6",
+                        "Mystery_narrative_choice_8_word_7",
+                        "Mystery_narrative_choice_8_word_8",
+                        "Mystery_narrative_choice_8_word_9",
+                        "Mystery_narrative_choice_8_word_10"
+                    ]
+                },
+                {
+                    "name": "Mystery_narrative_choice_9",
+                    "night_number": 9,
+                    "words": [
+                        "Mystery_narrative_choice_9_word_1",
+                        "Mystery_narrative_choice_9_word_2",
+                        "Mystery_narrative_choice_9_word_3",
+                        "Mystery_narrative_choice_9_word_4",
+                        "Mystery_narrative_choice_9_word_5",
+                        "Mystery_narrative_choice_9_word_6",
+                        "Mystery_narrative_choice_9_word_7",
+                        "Mystery_narrative_choice_9_word_8",
+                        "Mystery_narrative_choice_9_word_9",
+                        "Mystery_narrative_choice_9_word_10"
+                    ]
+                },
+                {
+                    "name": "Mystery_narrative_choice_10",
+                    "night_number": 10,
+                    "words": [
+                        "Mystery_narrative_choice_10_word_1",
+                        "Mystery_narrative_choice_10_word_2",
+                        "Mystery_narrative_choice_10_word_3",
+                        "Mystery_narrative_choice_10_word_4",
+                        "Mystery_narrative_choice_10_word_5",
+                        "Mystery_narrative_choice_10_word_6",
+                        "Mystery_narrative_choice_10_word_7",
+                        "Mystery_narrative_choice_10_word_8",
+                        "Mystery_narrative_choice_10_word_9",
+                        "Mystery_narrative_choice_10_word_10"
+                    ]
+                },
+                {
+                    "name": "Mystery_narrative_choice_11",
+                    "night_number": 11,
+                    "words": [
+                        "Mystery_narrative_choice_11_word_1",
+                        "Mystery_narrative_choice_11_word_2",
+                        "Mystery_narrative_choice_11_word_3",
+                        "Mystery_narrative_choice_11_word_4",
+                        "Mystery_narrative_choice_11_word_5",
+                        "Mystery_narrative_choice_11_word_6",
+                        "Mystery_narrative_choice_11_word_7",
+                        "Mystery_narrative_choice_11_word_8",
+                        "Mystery_narrative_choice_11_word_9",
+                        "Mystery_narrative_choice_11_word_10"
+                    ]
+                },
+                {
+                    "name": "Mystery_narrative_choice_12",
+                    "night_number": 12,
+                    "words": [
+                        "Mystery_narrative_choice_12_word_1",
+                        "Mystery_narrative_choice_12_word_2",
+                        "Mystery_narrative_choice_12_word_3",
+                        "Mystery_narrative_choice_12_word_4",
+                        "Mystery_narrative_choice_12_word_5",
+                        "Mystery_narrative_choice_12_word_6",
+                        "Mystery_narrative_choice_12_word_7",
+                        "Mystery_narrative_choice_12_word_8",
+                        "Mystery_narrative_choice_12_word_9",
+                        "Mystery_narrative_choice_12_word_10"
+                    ]
+                },
+                {
+                    "name": "Mystery_narrative_choice_13",
+                    "night_number": 13,
+                    "words": [
+                        "Mystery_narrative_choice_13_word_1",
+                        "Mystery_narrative_choice_13_word_2",
+                        "Mystery_narrative_choice_13_word_3",
+                        "Mystery_narrative_choice_13_word_4",
+                        "Mystery_narrative_choice_13_word_5",
+                        "Mystery_narrative_choice_13_word_6",
+                        "Mystery_narrative_choice_13_word_7",
+                        "Mystery_narrative_choice_13_word_8",
+                        "Mystery_narrative_choice_13_word_9",
+                        "Mystery_narrative_choice_13_word_10"
+                    ]
+                },
+                {
+                    "name": "Mystery_narrative_choice_14",
+                    "night_number": 14,
+                    "words": [
+                        "Mystery_narrative_choice_14_word_1",
+                        "Mystery_narrative_choice_14_word_2",
+                        "Mystery_narrative_choice_14_word_3",
+                        "Mystery_narrative_choice_14_word_4",
+                        "Mystery_narrative_choice_14_word_5",
+                        "Mystery_narrative_choice_14_word_6",
+                        "Mystery_narrative_choice_14_word_7",
+                        "Mystery_narrative_choice_14_word_8",
+                        "Mystery_narrative_choice_14_word_9",
+                        "Mystery_narrative_choice_14_word_10"
+                    ]
+                },
+                {
+                    "name": "Mystery_narrative_choice_15",
+                    "night_number": 15,
+                    "words": [
+                        "Mystery_narrative_choice_15_word_1",
+                        "Mystery_narrative_choice_15_word_2",
+                        "Mystery_narrative_choice_15_word_3",
+                        "Mystery_narrative_choice_15_word_4",
+                        "Mystery_narrative_choice_15_word_5",
+                        "Mystery_narrative_choice_15_word_6",
+                        "Mystery_narrative_choice_15_word_7",
+                        "Mystery_narrative_choice_15_word_8",
+                        "Mystery_narrative_choice_15_word_9",
+                        "Mystery_narrative_choice_15_word_10"
+                    ]
+                },
+                {
+                    "name": "Mystery_narrative_choice_16",
+                    "night_number": 16,
+                    "words": [
+                        "Mystery_narrative_choice_16_word_1",
+                        "Mystery_narrative_choice_16_word_2",
+                        "Mystery_narrative_choice_16_word_3",
+                        "Mystery_narrative_choice_16_word_4",
+                        "Mystery_narrative_choice_16_word_5",
+                        "Mystery_narrative_choice_16_word_6",
+                        "Mystery_narrative_choice_16_word_7",
+                        "Mystery_narrative_choice_16_word_8",
+                        "Mystery_narrative_choice_16_word_9",
+                        "Mystery_narrative_choice_16_word_10"
+                    ]
+                },
+                {
+                    "name": "Mystery_narrative_choice_17",
+                    "night_number": 17,
+                    "words": [
+                        "Mystery_narrative_choice_17_word_1",
+                        "Mystery_narrative_choice_17_word_2",
+                        "Mystery_narrative_choice_17_word_3",
+                        "Mystery_narrative_choice_17_word_4",
+                        "Mystery_narrative_choice_17_word_5",
+                        "Mystery_narrative_choice_17_word_6",
+                        "Mystery_narrative_choice_17_word_7",
+                        "Mystery_narrative_choice_17_word_8",
+                        "Mystery_narrative_choice_17_word_9",
+                        "Mystery_narrative_choice_17_word_10"
+                    ]
+                },
+                {
+                    "name": "Mystery_narrative_choice_18",
+                    "night_number": 18,
+                    "words": [
+                        "Mystery_narrative_choice_18_word_1",
+                        "Mystery_narrative_choice_18_word_2",
+                        "Mystery_narrative_choice_18_word_3",
+                        "Mystery_narrative_choice_18_word_4",
+                        "Mystery_narrative_choice_18_word_5",
+                        "Mystery_narrative_choice_18_word_6",
+                        "Mystery_narrative_choice_18_word_7",
+                        "Mystery_narrative_choice_18_word_8",
+                        "Mystery_narrative_choice_18_word_9",
+                        "Mystery_narrative_choice_18_word_10"
+                    ]
+                },
+                {
+                    "name": "Mystery_narrative_choice_19",
+                    "night_number": 19,
+                    "words": [
+                        "Mystery_narrative_choice_19_word_1",
+                        "Mystery_narrative_choice_19_word_2",
+                        "Mystery_narrative_choice_19_word_3",
+                        "Mystery_narrative_choice_19_word_4",
+                        "Mystery_narrative_choice_19_word_5",
+                        "Mystery_narrative_choice_19_word_6",
+                        "Mystery_narrative_choice_19_word_7",
+                        "Mystery_narrative_choice_19_word_8",
+                        "Mystery_narrative_choice_19_word_9",
+                        "Mystery_narrative_choice_19_word_10"
+                    ]
+                },
+                {
+                    "name": "Mystery_narrative_choice_20",
+                    "night_number": 20,
+                    "words": [
+                        "Mystery_narrative_choice_20_word_1",
+                        "Mystery_narrative_choice_20_word_2",
+                        "Mystery_narrative_choice_20_word_3",
+                        "Mystery_narrative_choice_20_word_4",
+                        "Mystery_narrative_choice_20_word_5",
+                        "Mystery_narrative_choice_20_word_6",
+                        "Mystery_narrative_choice_20_word_7",
+                        "Mystery_narrative_choice_20_word_8",
+                        "Mystery_narrative_choice_20_word_9",
+                        "Mystery_narrative_choice_20_word_10"
+                    ]
+                },
+                {
+                    "name": "Mystery_narrative_choice_21",
+                    "night_number": 21,
+                    "words": [
+                        "Mystery_narrative_choice_21_word_1",
+                        "Mystery_narrative_choice_21_word_2",
+                        "Mystery_narrative_choice_21_word_3",
+                        "Mystery_narrative_choice_21_word_4",
+                        "Mystery_narrative_choice_21_word_5",
+                        "Mystery_narrative_choice_21_word_6",
+                        "Mystery_narrative_choice_21_word_7",
+                        "Mystery_narrative_choice_21_word_8",
+                        "Mystery_narrative_choice_21_word_9",
+                        "Mystery_narrative_choice_21_word_10"
+                    ]
+                },
+                {
+                    "name": "Mystery_narrative_choice_22",
+                    "night_number": 22,
+                    "words": [
+                        "Mystery_narrative_choice_22_word_1",
+                        "Mystery_narrative_choice_22_word_2",
+                        "Mystery_narrative_choice_22_word_3",
+                        "Mystery_narrative_choice_22_word_4",
+                        "Mystery_narrative_choice_22_word_5",
+                        "Mystery_narrative_choice_22_word_6",
+                        "Mystery_narrative_choice_22_word_7",
+                        "Mystery_narrative_choice_22_word_8",
+                        "Mystery_narrative_choice_22_word_9",
+                        "Mystery_narrative_choice_22_word_10"
+                    ]
+                },
+                {
+                    "name": "Mystery_narrative_choice_23",
+                    "night_number": 23,
+                    "words": [
+                        "Mystery_narrative_choice_23_word_1",
+                        "Mystery_narrative_choice_23_word_2",
+                        "Mystery_narrative_choice_23_word_3",
+                        "Mystery_narrative_choice_23_word_4",
+                        "Mystery_narrative_choice_23_word_5",
+                        "Mystery_narrative_choice_23_word_6",
+                        "Mystery_narrative_choice_23_word_7",
+                        "Mystery_narrative_choice_23_word_8",
+                        "Mystery_narrative_choice_23_word_9",
+                        "Mystery_narrative_choice_23_word_10"
+                    ]
+                },
+                {
+                    "name": "Mystery_narrative_choice_24",
+                    "night_number": 24,
+                    "words": [
+                        "Mystery_narrative_choice_24_word_1",
+                        "Mystery_narrative_choice_24_word_2",
+                        "Mystery_narrative_choice_24_word_3",
+                        "Mystery_narrative_choice_24_word_4",
+                        "Mystery_narrative_choice_24_word_5",
+                        "Mystery_narrative_choice_24_word_6",
+                        "Mystery_narrative_choice_24_word_7",
+                        "Mystery_narrative_choice_24_word_8",
+                        "Mystery_narrative_choice_24_word_9",
+                        "Mystery_narrative_choice_24_word_10"
+                    ]
+                },
+                {
+                    "name": "Mystery_narrative_choice_25",
+                    "night_number": 25,
+                    "words": [
+                        "Mystery_narrative_choice_25_word_1",
+                        "Mystery_narrative_choice_25_word_2",
+                        "Mystery_narrative_choice_25_word_3",
+                        "Mystery_narrative_choice_25_word_4",
+                        "Mystery_narrative_choice_25_word_5",
+                        "Mystery_narrative_choice_25_word_6",
+                        "Mystery_narrative_choice_25_word_7",
+                        "Mystery_narrative_choice_25_word_8",
+                        "Mystery_narrative_choice_25_word_9",
+                        "Mystery_narrative_choice_25_word_10"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Romance",
+            "narrative_choices": [
+                {
+                    "name": "Romance_narrative_choice_1",
+                    "night_number": 1,
+                    "words": [
+                        "Romance_narrative_choice_1_word_1",
+                        "Romance_narrative_choice_1_word_2",
+                        "Romance_narrative_choice_1_word_3",
+                        "Romance_narrative_choice_1_word_4",
+                        "Romance_narrative_choice_1_word_5",
+                        "Romance_narrative_choice_1_word_6",
+                        "Romance_narrative_choice_1_word_7",
+                        "Romance_narrative_choice_1_word_8",
+                        "Romance_narrative_choice_1_word_9",
+                        "Romance_narrative_choice_1_word_10"
+                    ]
+                },
+                {
+                    "name": "Romance_narrative_choice_2",
+                    "night_number": 2,
+                    "words": [
+                        "Romance_narrative_choice_2_word_1",
+                        "Romance_narrative_choice_2_word_2",
+                        "Romance_narrative_choice_2_word_3",
+                        "Romance_narrative_choice_2_word_4",
+                        "Romance_narrative_choice_2_word_5",
+                        "Romance_narrative_choice_2_word_6",
+                        "Romance_narrative_choice_2_word_7",
+                        "Romance_narrative_choice_2_word_8",
+                        "Romance_narrative_choice_2_word_9",
+                        "Romance_narrative_choice_2_word_10"
+                    ]
+                },
+                {
+                    "name": "Romance_narrative_choice_3",
+                    "night_number": 3,
+                    "words": [
+                        "Romance_narrative_choice_3_word_1",
+                        "Romance_narrative_choice_3_word_2",
+                        "Romance_narrative_choice_3_word_3",
+                        "Romance_narrative_choice_3_word_4",
+                        "Romance_narrative_choice_3_word_5",
+                        "Romance_narrative_choice_3_word_6",
+                        "Romance_narrative_choice_3_word_7",
+                        "Romance_narrative_choice_3_word_8",
+                        "Romance_narrative_choice_3_word_9",
+                        "Romance_narrative_choice_3_word_10"
+                    ]
+                },
+                {
+                    "name": "Romance_narrative_choice_4",
+                    "night_number": 4,
+                    "words": [
+                        "Romance_narrative_choice_4_word_1",
+                        "Romance_narrative_choice_4_word_2",
+                        "Romance_narrative_choice_4_word_3",
+                        "Romance_narrative_choice_4_word_4",
+                        "Romance_narrative_choice_4_word_5",
+                        "Romance_narrative_choice_4_word_6",
+                        "Romance_narrative_choice_4_word_7",
+                        "Romance_narrative_choice_4_word_8",
+                        "Romance_narrative_choice_4_word_9",
+                        "Romance_narrative_choice_4_word_10"
+                    ]
+                },
+                {
+                    "name": "Romance_narrative_choice_5",
+                    "night_number": 5,
+                    "words": [
+                        "Romance_narrative_choice_5_word_1",
+                        "Romance_narrative_choice_5_word_2",
+                        "Romance_narrative_choice_5_word_3",
+                        "Romance_narrative_choice_5_word_4",
+                        "Romance_narrative_choice_5_word_5",
+                        "Romance_narrative_choice_5_word_6",
+                        "Romance_narrative_choice_5_word_7",
+                        "Romance_narrative_choice_5_word_8",
+                        "Romance_narrative_choice_5_word_9",
+                        "Romance_narrative_choice_5_word_10"
+                    ]
+                },
+                {
+                    "name": "Romance_narrative_choice_6",
+                    "night_number": 6,
+                    "words": [
+                        "Romance_narrative_choice_6_word_1",
+                        "Romance_narrative_choice_6_word_2",
+                        "Romance_narrative_choice_6_word_3",
+                        "Romance_narrative_choice_6_word_4",
+                        "Romance_narrative_choice_6_word_5",
+                        "Romance_narrative_choice_6_word_6",
+                        "Romance_narrative_choice_6_word_7",
+                        "Romance_narrative_choice_6_word_8",
+                        "Romance_narrative_choice_6_word_9",
+                        "Romance_narrative_choice_6_word_10"
+                    ]
+                },
+                {
+                    "name": "Romance_narrative_choice_7",
+                    "night_number": 7,
+                    "words": [
+                        "Romance_narrative_choice_7_word_1",
+                        "Romance_narrative_choice_7_word_2",
+                        "Romance_narrative_choice_7_word_3",
+                        "Romance_narrative_choice_7_word_4",
+                        "Romance_narrative_choice_7_word_5",
+                        "Romance_narrative_choice_7_word_6",
+                        "Romance_narrative_choice_7_word_7",
+                        "Romance_narrative_choice_7_word_8",
+                        "Romance_narrative_choice_7_word_9",
+                        "Romance_narrative_choice_7_word_10"
+                    ]
+                },
+                {
+                    "name": "Romance_narrative_choice_8",
+                    "night_number": 8,
+                    "words": [
+                        "Romance_narrative_choice_8_word_1",
+                        "Romance_narrative_choice_8_word_2",
+                        "Romance_narrative_choice_8_word_3",
+                        "Romance_narrative_choice_8_word_4",
+                        "Romance_narrative_choice_8_word_5",
+                        "Romance_narrative_choice_8_word_6",
+                        "Romance_narrative_choice_8_word_7",
+                        "Romance_narrative_choice_8_word_8",
+                        "Romance_narrative_choice_8_word_9",
+                        "Romance_narrative_choice_8_word_10"
+                    ]
+                },
+                {
+                    "name": "Romance_narrative_choice_9",
+                    "night_number": 9,
+                    "words": [
+                        "Romance_narrative_choice_9_word_1",
+                        "Romance_narrative_choice_9_word_2",
+                        "Romance_narrative_choice_9_word_3",
+                        "Romance_narrative_choice_9_word_4",
+                        "Romance_narrative_choice_9_word_5",
+                        "Romance_narrative_choice_9_word_6",
+                        "Romance_narrative_choice_9_word_7",
+                        "Romance_narrative_choice_9_word_8",
+                        "Romance_narrative_choice_9_word_9",
+                        "Romance_narrative_choice_9_word_10"
+                    ]
+                },
+                {
+                    "name": "Romance_narrative_choice_10",
+                    "night_number": 10,
+                    "words": [
+                        "Romance_narrative_choice_10_word_1",
+                        "Romance_narrative_choice_10_word_2",
+                        "Romance_narrative_choice_10_word_3",
+                        "Romance_narrative_choice_10_word_4",
+                        "Romance_narrative_choice_10_word_5",
+                        "Romance_narrative_choice_10_word_6",
+                        "Romance_narrative_choice_10_word_7",
+                        "Romance_narrative_choice_10_word_8",
+                        "Romance_narrative_choice_10_word_9",
+                        "Romance_narrative_choice_10_word_10"
+                    ]
+                },
+                {
+                    "name": "Romance_narrative_choice_11",
+                    "night_number": 11,
+                    "words": [
+                        "Romance_narrative_choice_11_word_1",
+                        "Romance_narrative_choice_11_word_2",
+                        "Romance_narrative_choice_11_word_3",
+                        "Romance_narrative_choice_11_word_4",
+                        "Romance_narrative_choice_11_word_5",
+                        "Romance_narrative_choice_11_word_6",
+                        "Romance_narrative_choice_11_word_7",
+                        "Romance_narrative_choice_11_word_8",
+                        "Romance_narrative_choice_11_word_9",
+                        "Romance_narrative_choice_11_word_10"
+                    ]
+                },
+                {
+                    "name": "Romance_narrative_choice_12",
+                    "night_number": 12,
+                    "words": [
+                        "Romance_narrative_choice_12_word_1",
+                        "Romance_narrative_choice_12_word_2",
+                        "Romance_narrative_choice_12_word_3",
+                        "Romance_narrative_choice_12_word_4",
+                        "Romance_narrative_choice_12_word_5",
+                        "Romance_narrative_choice_12_word_6",
+                        "Romance_narrative_choice_12_word_7",
+                        "Romance_narrative_choice_12_word_8",
+                        "Romance_narrative_choice_12_word_9",
+                        "Romance_narrative_choice_12_word_10"
+                    ]
+                },
+                {
+                    "name": "Romance_narrative_choice_13",
+                    "night_number": 13,
+                    "words": [
+                        "Romance_narrative_choice_13_word_1",
+                        "Romance_narrative_choice_13_word_2",
+                        "Romance_narrative_choice_13_word_3",
+                        "Romance_narrative_choice_13_word_4",
+                        "Romance_narrative_choice_13_word_5",
+                        "Romance_narrative_choice_13_word_6",
+                        "Romance_narrative_choice_13_word_7",
+                        "Romance_narrative_choice_13_word_8",
+                        "Romance_narrative_choice_13_word_9",
+                        "Romance_narrative_choice_13_word_10"
+                    ]
+                },
+                {
+                    "name": "Romance_narrative_choice_14",
+                    "night_number": 14,
+                    "words": [
+                        "Romance_narrative_choice_14_word_1",
+                        "Romance_narrative_choice_14_word_2",
+                        "Romance_narrative_choice_14_word_3",
+                        "Romance_narrative_choice_14_word_4",
+                        "Romance_narrative_choice_14_word_5",
+                        "Romance_narrative_choice_14_word_6",
+                        "Romance_narrative_choice_14_word_7",
+                        "Romance_narrative_choice_14_word_8",
+                        "Romance_narrative_choice_14_word_9",
+                        "Romance_narrative_choice_14_word_10"
+                    ]
+                },
+                {
+                    "name": "Romance_narrative_choice_15",
+                    "night_number": 15,
+                    "words": [
+                        "Romance_narrative_choice_15_word_1",
+                        "Romance_narrative_choice_15_word_2",
+                        "Romance_narrative_choice_15_word_3",
+                        "Romance_narrative_choice_15_word_4",
+                        "Romance_narrative_choice_15_word_5",
+                        "Romance_narrative_choice_15_word_6",
+                        "Romance_narrative_choice_15_word_7",
+                        "Romance_narrative_choice_15_word_8",
+                        "Romance_narrative_choice_15_word_9",
+                        "Romance_narrative_choice_15_word_10"
+                    ]
+                },
+                {
+                    "name": "Romance_narrative_choice_16",
+                    "night_number": 16,
+                    "words": [
+                        "Romance_narrative_choice_16_word_1",
+                        "Romance_narrative_choice_16_word_2",
+                        "Romance_narrative_choice_16_word_3",
+                        "Romance_narrative_choice_16_word_4",
+                        "Romance_narrative_choice_16_word_5",
+                        "Romance_narrative_choice_16_word_6",
+                        "Romance_narrative_choice_16_word_7",
+                        "Romance_narrative_choice_16_word_8",
+                        "Romance_narrative_choice_16_word_9",
+                        "Romance_narrative_choice_16_word_10"
+                    ]
+                },
+                {
+                    "name": "Romance_narrative_choice_17",
+                    "night_number": 17,
+                    "words": [
+                        "Romance_narrative_choice_17_word_1",
+                        "Romance_narrative_choice_17_word_2",
+                        "Romance_narrative_choice_17_word_3",
+                        "Romance_narrative_choice_17_word_4",
+                        "Romance_narrative_choice_17_word_5",
+                        "Romance_narrative_choice_17_word_6",
+                        "Romance_narrative_choice_17_word_7",
+                        "Romance_narrative_choice_17_word_8",
+                        "Romance_narrative_choice_17_word_9",
+                        "Romance_narrative_choice_17_word_10"
+                    ]
+                },
+                {
+                    "name": "Romance_narrative_choice_18",
+                    "night_number": 18,
+                    "words": [
+                        "Romance_narrative_choice_18_word_1",
+                        "Romance_narrative_choice_18_word_2",
+                        "Romance_narrative_choice_18_word_3",
+                        "Romance_narrative_choice_18_word_4",
+                        "Romance_narrative_choice_18_word_5",
+                        "Romance_narrative_choice_18_word_6",
+                        "Romance_narrative_choice_18_word_7",
+                        "Romance_narrative_choice_18_word_8",
+                        "Romance_narrative_choice_18_word_9",
+                        "Romance_narrative_choice_18_word_10"
+                    ]
+                },
+                {
+                    "name": "Romance_narrative_choice_19",
+                    "night_number": 19,
+                    "words": [
+                        "Romance_narrative_choice_19_word_1",
+                        "Romance_narrative_choice_19_word_2",
+                        "Romance_narrative_choice_19_word_3",
+                        "Romance_narrative_choice_19_word_4",
+                        "Romance_narrative_choice_19_word_5",
+                        "Romance_narrative_choice_19_word_6",
+                        "Romance_narrative_choice_19_word_7",
+                        "Romance_narrative_choice_19_word_8",
+                        "Romance_narrative_choice_19_word_9",
+                        "Romance_narrative_choice_19_word_10"
+                    ]
+                },
+                {
+                    "name": "Romance_narrative_choice_20",
+                    "night_number": 20,
+                    "words": [
+                        "Romance_narrative_choice_20_word_1",
+                        "Romance_narrative_choice_20_word_2",
+                        "Romance_narrative_choice_20_word_3",
+                        "Romance_narrative_choice_20_word_4",
+                        "Romance_narrative_choice_20_word_5",
+                        "Romance_narrative_choice_20_word_6",
+                        "Romance_narrative_choice_20_word_7",
+                        "Romance_narrative_choice_20_word_8",
+                        "Romance_narrative_choice_20_word_9",
+                        "Romance_narrative_choice_20_word_10"
+                    ]
+                },
+                {
+                    "name": "Romance_narrative_choice_21",
+                    "night_number": 21,
+                    "words": [
+                        "Romance_narrative_choice_21_word_1",
+                        "Romance_narrative_choice_21_word_2",
+                        "Romance_narrative_choice_21_word_3",
+                        "Romance_narrative_choice_21_word_4",
+                        "Romance_narrative_choice_21_word_5",
+                        "Romance_narrative_choice_21_word_6",
+                        "Romance_narrative_choice_21_word_7",
+                        "Romance_narrative_choice_21_word_8",
+                        "Romance_narrative_choice_21_word_9",
+                        "Romance_narrative_choice_21_word_10"
+                    ]
+                },
+                {
+                    "name": "Romance_narrative_choice_22",
+                    "night_number": 22,
+                    "words": [
+                        "Romance_narrative_choice_22_word_1",
+                        "Romance_narrative_choice_22_word_2",
+                        "Romance_narrative_choice_22_word_3",
+                        "Romance_narrative_choice_22_word_4",
+                        "Romance_narrative_choice_22_word_5",
+                        "Romance_narrative_choice_22_word_6",
+                        "Romance_narrative_choice_22_word_7",
+                        "Romance_narrative_choice_22_word_8",
+                        "Romance_narrative_choice_22_word_9",
+                        "Romance_narrative_choice_22_word_10"
+                    ]
+                },
+                {
+                    "name": "Romance_narrative_choice_23",
+                    "night_number": 23,
+                    "words": [
+                        "Romance_narrative_choice_23_word_1",
+                        "Romance_narrative_choice_23_word_2",
+                        "Romance_narrative_choice_23_word_3",
+                        "Romance_narrative_choice_23_word_4",
+                        "Romance_narrative_choice_23_word_5",
+                        "Romance_narrative_choice_23_word_6",
+                        "Romance_narrative_choice_23_word_7",
+                        "Romance_narrative_choice_23_word_8",
+                        "Romance_narrative_choice_23_word_9",
+                        "Romance_narrative_choice_23_word_10"
+                    ]
+                },
+                {
+                    "name": "Romance_narrative_choice_24",
+                    "night_number": 24,
+                    "words": [
+                        "Romance_narrative_choice_24_word_1",
+                        "Romance_narrative_choice_24_word_2",
+                        "Romance_narrative_choice_24_word_3",
+                        "Romance_narrative_choice_24_word_4",
+                        "Romance_narrative_choice_24_word_5",
+                        "Romance_narrative_choice_24_word_6",
+                        "Romance_narrative_choice_24_word_7",
+                        "Romance_narrative_choice_24_word_8",
+                        "Romance_narrative_choice_24_word_9",
+                        "Romance_narrative_choice_24_word_10"
+                    ]
+                },
+                {
+                    "name": "Romance_narrative_choice_25",
+                    "night_number": 25,
+                    "words": [
+                        "Romance_narrative_choice_25_word_1",
+                        "Romance_narrative_choice_25_word_2",
+                        "Romance_narrative_choice_25_word_3",
+                        "Romance_narrative_choice_25_word_4",
+                        "Romance_narrative_choice_25_word_5",
+                        "Romance_narrative_choice_25_word_6",
+                        "Romance_narrative_choice_25_word_7",
+                        "Romance_narrative_choice_25_word_8",
+                        "Romance_narrative_choice_25_word_9",
+                        "Romance_narrative_choice_25_word_10"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Exploration",
+            "narrative_choices": [
+                {
+                    "name": "Exploration_narrative_choice_1",
+                    "night_number": 1,
+                    "words": [
+                        "Exploration_narrative_choice_1_word_1",
+                        "Exploration_narrative_choice_1_word_2",
+                        "Exploration_narrative_choice_1_word_3",
+                        "Exploration_narrative_choice_1_word_4",
+                        "Exploration_narrative_choice_1_word_5",
+                        "Exploration_narrative_choice_1_word_6",
+                        "Exploration_narrative_choice_1_word_7",
+                        "Exploration_narrative_choice_1_word_8",
+                        "Exploration_narrative_choice_1_word_9",
+                        "Exploration_narrative_choice_1_word_10"
+                    ]
+                },
+                {
+                    "name": "Exploration_narrative_choice_2",
+                    "night_number": 2,
+                    "words": [
+                        "Exploration_narrative_choice_2_word_1",
+                        "Exploration_narrative_choice_2_word_2",
+                        "Exploration_narrative_choice_2_word_3",
+                        "Exploration_narrative_choice_2_word_4",
+                        "Exploration_narrative_choice_2_word_5",
+                        "Exploration_narrative_choice_2_word_6",
+                        "Exploration_narrative_choice_2_word_7",
+                        "Exploration_narrative_choice_2_word_8",
+                        "Exploration_narrative_choice_2_word_9",
+                        "Exploration_narrative_choice_2_word_10"
+                    ]
+                },
+                {
+                    "name": "Exploration_narrative_choice_3",
+                    "night_number": 3,
+                    "words": [
+                        "Exploration_narrative_choice_3_word_1",
+                        "Exploration_narrative_choice_3_word_2",
+                        "Exploration_narrative_choice_3_word_3",
+                        "Exploration_narrative_choice_3_word_4",
+                        "Exploration_narrative_choice_3_word_5",
+                        "Exploration_narrative_choice_3_word_6",
+                        "Exploration_narrative_choice_3_word_7",
+                        "Exploration_narrative_choice_3_word_8",
+                        "Exploration_narrative_choice_3_word_9",
+                        "Exploration_narrative_choice_3_word_10"
+                    ]
+                },
+                {
+                    "name": "Exploration_narrative_choice_4",
+                    "night_number": 4,
+                    "words": [
+                        "Exploration_narrative_choice_4_word_1",
+                        "Exploration_narrative_choice_4_word_2",
+                        "Exploration_narrative_choice_4_word_3",
+                        "Exploration_narrative_choice_4_word_4",
+                        "Exploration_narrative_choice_4_word_5",
+                        "Exploration_narrative_choice_4_word_6",
+                        "Exploration_narrative_choice_4_word_7",
+                        "Exploration_narrative_choice_4_word_8",
+                        "Exploration_narrative_choice_4_word_9",
+                        "Exploration_narrative_choice_4_word_10"
+                    ]
+                },
+                {
+                    "name": "Exploration_narrative_choice_5",
+                    "night_number": 5,
+                    "words": [
+                        "Exploration_narrative_choice_5_word_1",
+                        "Exploration_narrative_choice_5_word_2",
+                        "Exploration_narrative_choice_5_word_3",
+                        "Exploration_narrative_choice_5_word_4",
+                        "Exploration_narrative_choice_5_word_5",
+                        "Exploration_narrative_choice_5_word_6",
+                        "Exploration_narrative_choice_5_word_7",
+                        "Exploration_narrative_choice_5_word_8",
+                        "Exploration_narrative_choice_5_word_9",
+                        "Exploration_narrative_choice_5_word_10"
+                    ]
+                },
+                {
+                    "name": "Exploration_narrative_choice_6",
+                    "night_number": 6,
+                    "words": [
+                        "Exploration_narrative_choice_6_word_1",
+                        "Exploration_narrative_choice_6_word_2",
+                        "Exploration_narrative_choice_6_word_3",
+                        "Exploration_narrative_choice_6_word_4",
+                        "Exploration_narrative_choice_6_word_5",
+                        "Exploration_narrative_choice_6_word_6",
+                        "Exploration_narrative_choice_6_word_7",
+                        "Exploration_narrative_choice_6_word_8",
+                        "Exploration_narrative_choice_6_word_9",
+                        "Exploration_narrative_choice_6_word_10"
+                    ]
+                },
+                {
+                    "name": "Exploration_narrative_choice_7",
+                    "night_number": 7,
+                    "words": [
+                        "Exploration_narrative_choice_7_word_1",
+                        "Exploration_narrative_choice_7_word_2",
+                        "Exploration_narrative_choice_7_word_3",
+                        "Exploration_narrative_choice_7_word_4",
+                        "Exploration_narrative_choice_7_word_5",
+                        "Exploration_narrative_choice_7_word_6",
+                        "Exploration_narrative_choice_7_word_7",
+                        "Exploration_narrative_choice_7_word_8",
+                        "Exploration_narrative_choice_7_word_9",
+                        "Exploration_narrative_choice_7_word_10"
+                    ]
+                },
+                {
+                    "name": "Exploration_narrative_choice_8",
+                    "night_number": 8,
+                    "words": [
+                        "Exploration_narrative_choice_8_word_1",
+                        "Exploration_narrative_choice_8_word_2",
+                        "Exploration_narrative_choice_8_word_3",
+                        "Exploration_narrative_choice_8_word_4",
+                        "Exploration_narrative_choice_8_word_5",
+                        "Exploration_narrative_choice_8_word_6",
+                        "Exploration_narrative_choice_8_word_7",
+                        "Exploration_narrative_choice_8_word_8",
+                        "Exploration_narrative_choice_8_word_9",
+                        "Exploration_narrative_choice_8_word_10"
+                    ]
+                },
+                {
+                    "name": "Exploration_narrative_choice_9",
+                    "night_number": 9,
+                    "words": [
+                        "Exploration_narrative_choice_9_word_1",
+                        "Exploration_narrative_choice_9_word_2",
+                        "Exploration_narrative_choice_9_word_3",
+                        "Exploration_narrative_choice_9_word_4",
+                        "Exploration_narrative_choice_9_word_5",
+                        "Exploration_narrative_choice_9_word_6",
+                        "Exploration_narrative_choice_9_word_7",
+                        "Exploration_narrative_choice_9_word_8",
+                        "Exploration_narrative_choice_9_word_9",
+                        "Exploration_narrative_choice_9_word_10"
+                    ]
+                },
+                {
+                    "name": "Exploration_narrative_choice_10",
+                    "night_number": 10,
+                    "words": [
+                        "Exploration_narrative_choice_10_word_1",
+                        "Exploration_narrative_choice_10_word_2",
+                        "Exploration_narrative_choice_10_word_3",
+                        "Exploration_narrative_choice_10_word_4",
+                        "Exploration_narrative_choice_10_word_5",
+                        "Exploration_narrative_choice_10_word_6",
+                        "Exploration_narrative_choice_10_word_7",
+                        "Exploration_narrative_choice_10_word_8",
+                        "Exploration_narrative_choice_10_word_9",
+                        "Exploration_narrative_choice_10_word_10"
+                    ]
+                },
+                {
+                    "name": "Exploration_narrative_choice_11",
+                    "night_number": 11,
+                    "words": [
+                        "Exploration_narrative_choice_11_word_1",
+                        "Exploration_narrative_choice_11_word_2",
+                        "Exploration_narrative_choice_11_word_3",
+                        "Exploration_narrative_choice_11_word_4",
+                        "Exploration_narrative_choice_11_word_5",
+                        "Exploration_narrative_choice_11_word_6",
+                        "Exploration_narrative_choice_11_word_7",
+                        "Exploration_narrative_choice_11_word_8",
+                        "Exploration_narrative_choice_11_word_9",
+                        "Exploration_narrative_choice_11_word_10"
+                    ]
+                },
+                {
+                    "name": "Exploration_narrative_choice_12",
+                    "night_number": 12,
+                    "words": [
+                        "Exploration_narrative_choice_12_word_1",
+                        "Exploration_narrative_choice_12_word_2",
+                        "Exploration_narrative_choice_12_word_3",
+                        "Exploration_narrative_choice_12_word_4",
+                        "Exploration_narrative_choice_12_word_5",
+                        "Exploration_narrative_choice_12_word_6",
+                        "Exploration_narrative_choice_12_word_7",
+                        "Exploration_narrative_choice_12_word_8",
+                        "Exploration_narrative_choice_12_word_9",
+                        "Exploration_narrative_choice_12_word_10"
+                    ]
+                },
+                {
+                    "name": "Exploration_narrative_choice_13",
+                    "night_number": 13,
+                    "words": [
+                        "Exploration_narrative_choice_13_word_1",
+                        "Exploration_narrative_choice_13_word_2",
+                        "Exploration_narrative_choice_13_word_3",
+                        "Exploration_narrative_choice_13_word_4",
+                        "Exploration_narrative_choice_13_word_5",
+                        "Exploration_narrative_choice_13_word_6",
+                        "Exploration_narrative_choice_13_word_7",
+                        "Exploration_narrative_choice_13_word_8",
+                        "Exploration_narrative_choice_13_word_9",
+                        "Exploration_narrative_choice_13_word_10"
+                    ]
+                },
+                {
+                    "name": "Exploration_narrative_choice_14",
+                    "night_number": 14,
+                    "words": [
+                        "Exploration_narrative_choice_14_word_1",
+                        "Exploration_narrative_choice_14_word_2",
+                        "Exploration_narrative_choice_14_word_3",
+                        "Exploration_narrative_choice_14_word_4",
+                        "Exploration_narrative_choice_14_word_5",
+                        "Exploration_narrative_choice_14_word_6",
+                        "Exploration_narrative_choice_14_word_7",
+                        "Exploration_narrative_choice_14_word_8",
+                        "Exploration_narrative_choice_14_word_9",
+                        "Exploration_narrative_choice_14_word_10"
+                    ]
+                },
+                {
+                    "name": "Exploration_narrative_choice_15",
+                    "night_number": 15,
+                    "words": [
+                        "Exploration_narrative_choice_15_word_1",
+                        "Exploration_narrative_choice_15_word_2",
+                        "Exploration_narrative_choice_15_word_3",
+                        "Exploration_narrative_choice_15_word_4",
+                        "Exploration_narrative_choice_15_word_5",
+                        "Exploration_narrative_choice_15_word_6",
+                        "Exploration_narrative_choice_15_word_7",
+                        "Exploration_narrative_choice_15_word_8",
+                        "Exploration_narrative_choice_15_word_9",
+                        "Exploration_narrative_choice_15_word_10"
+                    ]
+                },
+                {
+                    "name": "Exploration_narrative_choice_16",
+                    "night_number": 16,
+                    "words": [
+                        "Exploration_narrative_choice_16_word_1",
+                        "Exploration_narrative_choice_16_word_2",
+                        "Exploration_narrative_choice_16_word_3",
+                        "Exploration_narrative_choice_16_word_4",
+                        "Exploration_narrative_choice_16_word_5",
+                        "Exploration_narrative_choice_16_word_6",
+                        "Exploration_narrative_choice_16_word_7",
+                        "Exploration_narrative_choice_16_word_8",
+                        "Exploration_narrative_choice_16_word_9",
+                        "Exploration_narrative_choice_16_word_10"
+                    ]
+                },
+                {
+                    "name": "Exploration_narrative_choice_17",
+                    "night_number": 17,
+                    "words": [
+                        "Exploration_narrative_choice_17_word_1",
+                        "Exploration_narrative_choice_17_word_2",
+                        "Exploration_narrative_choice_17_word_3",
+                        "Exploration_narrative_choice_17_word_4",
+                        "Exploration_narrative_choice_17_word_5",
+                        "Exploration_narrative_choice_17_word_6",
+                        "Exploration_narrative_choice_17_word_7",
+                        "Exploration_narrative_choice_17_word_8",
+                        "Exploration_narrative_choice_17_word_9",
+                        "Exploration_narrative_choice_17_word_10"
+                    ]
+                },
+                {
+                    "name": "Exploration_narrative_choice_18",
+                    "night_number": 18,
+                    "words": [
+                        "Exploration_narrative_choice_18_word_1",
+                        "Exploration_narrative_choice_18_word_2",
+                        "Exploration_narrative_choice_18_word_3",
+                        "Exploration_narrative_choice_18_word_4",
+                        "Exploration_narrative_choice_18_word_5",
+                        "Exploration_narrative_choice_18_word_6",
+                        "Exploration_narrative_choice_18_word_7",
+                        "Exploration_narrative_choice_18_word_8",
+                        "Exploration_narrative_choice_18_word_9",
+                        "Exploration_narrative_choice_18_word_10"
+                    ]
+                },
+                {
+                    "name": "Exploration_narrative_choice_19",
+                    "night_number": 19,
+                    "words": [
+                        "Exploration_narrative_choice_19_word_1",
+                        "Exploration_narrative_choice_19_word_2",
+                        "Exploration_narrative_choice_19_word_3",
+                        "Exploration_narrative_choice_19_word_4",
+                        "Exploration_narrative_choice_19_word_5",
+                        "Exploration_narrative_choice_19_word_6",
+                        "Exploration_narrative_choice_19_word_7",
+                        "Exploration_narrative_choice_19_word_8",
+                        "Exploration_narrative_choice_19_word_9",
+                        "Exploration_narrative_choice_19_word_10"
+                    ]
+                },
+                {
+                    "name": "Exploration_narrative_choice_20",
+                    "night_number": 20,
+                    "words": [
+                        "Exploration_narrative_choice_20_word_1",
+                        "Exploration_narrative_choice_20_word_2",
+                        "Exploration_narrative_choice_20_word_3",
+                        "Exploration_narrative_choice_20_word_4",
+                        "Exploration_narrative_choice_20_word_5",
+                        "Exploration_narrative_choice_20_word_6",
+                        "Exploration_narrative_choice_20_word_7",
+                        "Exploration_narrative_choice_20_word_8",
+                        "Exploration_narrative_choice_20_word_9",
+                        "Exploration_narrative_choice_20_word_10"
+                    ]
+                },
+                {
+                    "name": "Exploration_narrative_choice_21",
+                    "night_number": 21,
+                    "words": [
+                        "Exploration_narrative_choice_21_word_1",
+                        "Exploration_narrative_choice_21_word_2",
+                        "Exploration_narrative_choice_21_word_3",
+                        "Exploration_narrative_choice_21_word_4",
+                        "Exploration_narrative_choice_21_word_5",
+                        "Exploration_narrative_choice_21_word_6",
+                        "Exploration_narrative_choice_21_word_7",
+                        "Exploration_narrative_choice_21_word_8",
+                        "Exploration_narrative_choice_21_word_9",
+                        "Exploration_narrative_choice_21_word_10"
+                    ]
+                },
+                {
+                    "name": "Exploration_narrative_choice_22",
+                    "night_number": 22,
+                    "words": [
+                        "Exploration_narrative_choice_22_word_1",
+                        "Exploration_narrative_choice_22_word_2",
+                        "Exploration_narrative_choice_22_word_3",
+                        "Exploration_narrative_choice_22_word_4",
+                        "Exploration_narrative_choice_22_word_5",
+                        "Exploration_narrative_choice_22_word_6",
+                        "Exploration_narrative_choice_22_word_7",
+                        "Exploration_narrative_choice_22_word_8",
+                        "Exploration_narrative_choice_22_word_9",
+                        "Exploration_narrative_choice_22_word_10"
+                    ]
+                },
+                {
+                    "name": "Exploration_narrative_choice_23",
+                    "night_number": 23,
+                    "words": [
+                        "Exploration_narrative_choice_23_word_1",
+                        "Exploration_narrative_choice_23_word_2",
+                        "Exploration_narrative_choice_23_word_3",
+                        "Exploration_narrative_choice_23_word_4",
+                        "Exploration_narrative_choice_23_word_5",
+                        "Exploration_narrative_choice_23_word_6",
+                        "Exploration_narrative_choice_23_word_7",
+                        "Exploration_narrative_choice_23_word_8",
+                        "Exploration_narrative_choice_23_word_9",
+                        "Exploration_narrative_choice_23_word_10"
+                    ]
+                },
+                {
+                    "name": "Exploration_narrative_choice_24",
+                    "night_number": 24,
+                    "words": [
+                        "Exploration_narrative_choice_24_word_1",
+                        "Exploration_narrative_choice_24_word_2",
+                        "Exploration_narrative_choice_24_word_3",
+                        "Exploration_narrative_choice_24_word_4",
+                        "Exploration_narrative_choice_24_word_5",
+                        "Exploration_narrative_choice_24_word_6",
+                        "Exploration_narrative_choice_24_word_7",
+                        "Exploration_narrative_choice_24_word_8",
+                        "Exploration_narrative_choice_24_word_9",
+                        "Exploration_narrative_choice_24_word_10"
+                    ]
+                },
+                {
+                    "name": "Exploration_narrative_choice_25",
+                    "night_number": 25,
+                    "words": [
+                        "Exploration_narrative_choice_25_word_1",
+                        "Exploration_narrative_choice_25_word_2",
+                        "Exploration_narrative_choice_25_word_3",
+                        "Exploration_narrative_choice_25_word_4",
+                        "Exploration_narrative_choice_25_word_5",
+                        "Exploration_narrative_choice_25_word_6",
+                        "Exploration_narrative_choice_25_word_7",
+                        "Exploration_narrative_choice_25_word_8",
+                        "Exploration_narrative_choice_25_word_9",
+                        "Exploration_narrative_choice_25_word_10"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Supernatural",
+            "narrative_choices": [
+                {
+                    "name": "Supernatural_narrative_choice_1",
+                    "night_number": 1,
+                    "words": [
+                        "Supernatural_narrative_choice_1_word_1",
+                        "Supernatural_narrative_choice_1_word_2",
+                        "Supernatural_narrative_choice_1_word_3",
+                        "Supernatural_narrative_choice_1_word_4",
+                        "Supernatural_narrative_choice_1_word_5",
+                        "Supernatural_narrative_choice_1_word_6",
+                        "Supernatural_narrative_choice_1_word_7",
+                        "Supernatural_narrative_choice_1_word_8",
+                        "Supernatural_narrative_choice_1_word_9",
+                        "Supernatural_narrative_choice_1_word_10"
+                    ]
+                },
+                {
+                    "name": "Supernatural_narrative_choice_2",
+                    "night_number": 2,
+                    "words": [
+                        "Supernatural_narrative_choice_2_word_1",
+                        "Supernatural_narrative_choice_2_word_2",
+                        "Supernatural_narrative_choice_2_word_3",
+                        "Supernatural_narrative_choice_2_word_4",
+                        "Supernatural_narrative_choice_2_word_5",
+                        "Supernatural_narrative_choice_2_word_6",
+                        "Supernatural_narrative_choice_2_word_7",
+                        "Supernatural_narrative_choice_2_word_8",
+                        "Supernatural_narrative_choice_2_word_9",
+                        "Supernatural_narrative_choice_2_word_10"
+                    ]
+                },
+                {
+                    "name": "Supernatural_narrative_choice_3",
+                    "night_number": 3,
+                    "words": [
+                        "Supernatural_narrative_choice_3_word_1",
+                        "Supernatural_narrative_choice_3_word_2",
+                        "Supernatural_narrative_choice_3_word_3",
+                        "Supernatural_narrative_choice_3_word_4",
+                        "Supernatural_narrative_choice_3_word_5",
+                        "Supernatural_narrative_choice_3_word_6",
+                        "Supernatural_narrative_choice_3_word_7",
+                        "Supernatural_narrative_choice_3_word_8",
+                        "Supernatural_narrative_choice_3_word_9",
+                        "Supernatural_narrative_choice_3_word_10"
+                    ]
+                },
+                {
+                    "name": "Supernatural_narrative_choice_4",
+                    "night_number": 4,
+                    "words": [
+                        "Supernatural_narrative_choice_4_word_1",
+                        "Supernatural_narrative_choice_4_word_2",
+                        "Supernatural_narrative_choice_4_word_3",
+                        "Supernatural_narrative_choice_4_word_4",
+                        "Supernatural_narrative_choice_4_word_5",
+                        "Supernatural_narrative_choice_4_word_6",
+                        "Supernatural_narrative_choice_4_word_7",
+                        "Supernatural_narrative_choice_4_word_8",
+                        "Supernatural_narrative_choice_4_word_9",
+                        "Supernatural_narrative_choice_4_word_10"
+                    ]
+                },
+                {
+                    "name": "Supernatural_narrative_choice_5",
+                    "night_number": 5,
+                    "words": [
+                        "Supernatural_narrative_choice_5_word_1",
+                        "Supernatural_narrative_choice_5_word_2",
+                        "Supernatural_narrative_choice_5_word_3",
+                        "Supernatural_narrative_choice_5_word_4",
+                        "Supernatural_narrative_choice_5_word_5",
+                        "Supernatural_narrative_choice_5_word_6",
+                        "Supernatural_narrative_choice_5_word_7",
+                        "Supernatural_narrative_choice_5_word_8",
+                        "Supernatural_narrative_choice_5_word_9",
+                        "Supernatural_narrative_choice_5_word_10"
+                    ]
+                },
+                {
+                    "name": "Supernatural_narrative_choice_6",
+                    "night_number": 6,
+                    "words": [
+                        "Supernatural_narrative_choice_6_word_1",
+                        "Supernatural_narrative_choice_6_word_2",
+                        "Supernatural_narrative_choice_6_word_3",
+                        "Supernatural_narrative_choice_6_word_4",
+                        "Supernatural_narrative_choice_6_word_5",
+                        "Supernatural_narrative_choice_6_word_6",
+                        "Supernatural_narrative_choice_6_word_7",
+                        "Supernatural_narrative_choice_6_word_8",
+                        "Supernatural_narrative_choice_6_word_9",
+                        "Supernatural_narrative_choice_6_word_10"
+                    ]
+                },
+                {
+                    "name": "Supernatural_narrative_choice_7",
+                    "night_number": 7,
+                    "words": [
+                        "Supernatural_narrative_choice_7_word_1",
+                        "Supernatural_narrative_choice_7_word_2",
+                        "Supernatural_narrative_choice_7_word_3",
+                        "Supernatural_narrative_choice_7_word_4",
+                        "Supernatural_narrative_choice_7_word_5",
+                        "Supernatural_narrative_choice_7_word_6",
+                        "Supernatural_narrative_choice_7_word_7",
+                        "Supernatural_narrative_choice_7_word_8",
+                        "Supernatural_narrative_choice_7_word_9",
+                        "Supernatural_narrative_choice_7_word_10"
+                    ]
+                },
+                {
+                    "name": "Supernatural_narrative_choice_8",
+                    "night_number": 8,
+                    "words": [
+                        "Supernatural_narrative_choice_8_word_1",
+                        "Supernatural_narrative_choice_8_word_2",
+                        "Supernatural_narrative_choice_8_word_3",
+                        "Supernatural_narrative_choice_8_word_4",
+                        "Supernatural_narrative_choice_8_word_5",
+                        "Supernatural_narrative_choice_8_word_6",
+                        "Supernatural_narrative_choice_8_word_7",
+                        "Supernatural_narrative_choice_8_word_8",
+                        "Supernatural_narrative_choice_8_word_9",
+                        "Supernatural_narrative_choice_8_word_10"
+                    ]
+                },
+                {
+                    "name": "Supernatural_narrative_choice_9",
+                    "night_number": 9,
+                    "words": [
+                        "Supernatural_narrative_choice_9_word_1",
+                        "Supernatural_narrative_choice_9_word_2",
+                        "Supernatural_narrative_choice_9_word_3",
+                        "Supernatural_narrative_choice_9_word_4",
+                        "Supernatural_narrative_choice_9_word_5",
+                        "Supernatural_narrative_choice_9_word_6",
+                        "Supernatural_narrative_choice_9_word_7",
+                        "Supernatural_narrative_choice_9_word_8",
+                        "Supernatural_narrative_choice_9_word_9",
+                        "Supernatural_narrative_choice_9_word_10"
+                    ]
+                },
+                {
+                    "name": "Supernatural_narrative_choice_10",
+                    "night_number": 10,
+                    "words": [
+                        "Supernatural_narrative_choice_10_word_1",
+                        "Supernatural_narrative_choice_10_word_2",
+                        "Supernatural_narrative_choice_10_word_3",
+                        "Supernatural_narrative_choice_10_word_4",
+                        "Supernatural_narrative_choice_10_word_5",
+                        "Supernatural_narrative_choice_10_word_6",
+                        "Supernatural_narrative_choice_10_word_7",
+                        "Supernatural_narrative_choice_10_word_8",
+                        "Supernatural_narrative_choice_10_word_9",
+                        "Supernatural_narrative_choice_10_word_10"
+                    ]
+                },
+                {
+                    "name": "Supernatural_narrative_choice_11",
+                    "night_number": 11,
+                    "words": [
+                        "Supernatural_narrative_choice_11_word_1",
+                        "Supernatural_narrative_choice_11_word_2",
+                        "Supernatural_narrative_choice_11_word_3",
+                        "Supernatural_narrative_choice_11_word_4",
+                        "Supernatural_narrative_choice_11_word_5",
+                        "Supernatural_narrative_choice_11_word_6",
+                        "Supernatural_narrative_choice_11_word_7",
+                        "Supernatural_narrative_choice_11_word_8",
+                        "Supernatural_narrative_choice_11_word_9",
+                        "Supernatural_narrative_choice_11_word_10"
+                    ]
+                },
+                {
+                    "name": "Supernatural_narrative_choice_12",
+                    "night_number": 12,
+                    "words": [
+                        "Supernatural_narrative_choice_12_word_1",
+                        "Supernatural_narrative_choice_12_word_2",
+                        "Supernatural_narrative_choice_12_word_3",
+                        "Supernatural_narrative_choice_12_word_4",
+                        "Supernatural_narrative_choice_12_word_5",
+                        "Supernatural_narrative_choice_12_word_6",
+                        "Supernatural_narrative_choice_12_word_7",
+                        "Supernatural_narrative_choice_12_word_8",
+                        "Supernatural_narrative_choice_12_word_9",
+                        "Supernatural_narrative_choice_12_word_10"
+                    ]
+                },
+                {
+                    "name": "Supernatural_narrative_choice_13",
+                    "night_number": 13,
+                    "words": [
+                        "Supernatural_narrative_choice_13_word_1",
+                        "Supernatural_narrative_choice_13_word_2",
+                        "Supernatural_narrative_choice_13_word_3",
+                        "Supernatural_narrative_choice_13_word_4",
+                        "Supernatural_narrative_choice_13_word_5",
+                        "Supernatural_narrative_choice_13_word_6",
+                        "Supernatural_narrative_choice_13_word_7",
+                        "Supernatural_narrative_choice_13_word_8",
+                        "Supernatural_narrative_choice_13_word_9",
+                        "Supernatural_narrative_choice_13_word_10"
+                    ]
+                },
+                {
+                    "name": "Supernatural_narrative_choice_14",
+                    "night_number": 14,
+                    "words": [
+                        "Supernatural_narrative_choice_14_word_1",
+                        "Supernatural_narrative_choice_14_word_2",
+                        "Supernatural_narrative_choice_14_word_3",
+                        "Supernatural_narrative_choice_14_word_4",
+                        "Supernatural_narrative_choice_14_word_5",
+                        "Supernatural_narrative_choice_14_word_6",
+                        "Supernatural_narrative_choice_14_word_7",
+                        "Supernatural_narrative_choice_14_word_8",
+                        "Supernatural_narrative_choice_14_word_9",
+                        "Supernatural_narrative_choice_14_word_10"
+                    ]
+                },
+                {
+                    "name": "Supernatural_narrative_choice_15",
+                    "night_number": 15,
+                    "words": [
+                        "Supernatural_narrative_choice_15_word_1",
+                        "Supernatural_narrative_choice_15_word_2",
+                        "Supernatural_narrative_choice_15_word_3",
+                        "Supernatural_narrative_choice_15_word_4",
+                        "Supernatural_narrative_choice_15_word_5",
+                        "Supernatural_narrative_choice_15_word_6",
+                        "Supernatural_narrative_choice_15_word_7",
+                        "Supernatural_narrative_choice_15_word_8",
+                        "Supernatural_narrative_choice_15_word_9",
+                        "Supernatural_narrative_choice_15_word_10"
+                    ]
+                },
+                {
+                    "name": "Supernatural_narrative_choice_16",
+                    "night_number": 16,
+                    "words": [
+                        "Supernatural_narrative_choice_16_word_1",
+                        "Supernatural_narrative_choice_16_word_2",
+                        "Supernatural_narrative_choice_16_word_3",
+                        "Supernatural_narrative_choice_16_word_4",
+                        "Supernatural_narrative_choice_16_word_5",
+                        "Supernatural_narrative_choice_16_word_6",
+                        "Supernatural_narrative_choice_16_word_7",
+                        "Supernatural_narrative_choice_16_word_8",
+                        "Supernatural_narrative_choice_16_word_9",
+                        "Supernatural_narrative_choice_16_word_10"
+                    ]
+                },
+                {
+                    "name": "Supernatural_narrative_choice_17",
+                    "night_number": 17,
+                    "words": [
+                        "Supernatural_narrative_choice_17_word_1",
+                        "Supernatural_narrative_choice_17_word_2",
+                        "Supernatural_narrative_choice_17_word_3",
+                        "Supernatural_narrative_choice_17_word_4",
+                        "Supernatural_narrative_choice_17_word_5",
+                        "Supernatural_narrative_choice_17_word_6",
+                        "Supernatural_narrative_choice_17_word_7",
+                        "Supernatural_narrative_choice_17_word_8",
+                        "Supernatural_narrative_choice_17_word_9",
+                        "Supernatural_narrative_choice_17_word_10"
+                    ]
+                },
+                {
+                    "name": "Supernatural_narrative_choice_18",
+                    "night_number": 18,
+                    "words": [
+                        "Supernatural_narrative_choice_18_word_1",
+                        "Supernatural_narrative_choice_18_word_2",
+                        "Supernatural_narrative_choice_18_word_3",
+                        "Supernatural_narrative_choice_18_word_4",
+                        "Supernatural_narrative_choice_18_word_5",
+                        "Supernatural_narrative_choice_18_word_6",
+                        "Supernatural_narrative_choice_18_word_7",
+                        "Supernatural_narrative_choice_18_word_8",
+                        "Supernatural_narrative_choice_18_word_9",
+                        "Supernatural_narrative_choice_18_word_10"
+                    ]
+                },
+                {
+                    "name": "Supernatural_narrative_choice_19",
+                    "night_number": 19,
+                    "words": [
+                        "Supernatural_narrative_choice_19_word_1",
+                        "Supernatural_narrative_choice_19_word_2",
+                        "Supernatural_narrative_choice_19_word_3",
+                        "Supernatural_narrative_choice_19_word_4",
+                        "Supernatural_narrative_choice_19_word_5",
+                        "Supernatural_narrative_choice_19_word_6",
+                        "Supernatural_narrative_choice_19_word_7",
+                        "Supernatural_narrative_choice_19_word_8",
+                        "Supernatural_narrative_choice_19_word_9",
+                        "Supernatural_narrative_choice_19_word_10"
+                    ]
+                },
+                {
+                    "name": "Supernatural_narrative_choice_20",
+                    "night_number": 20,
+                    "words": [
+                        "Supernatural_narrative_choice_20_word_1",
+                        "Supernatural_narrative_choice_20_word_2",
+                        "Supernatural_narrative_choice_20_word_3",
+                        "Supernatural_narrative_choice_20_word_4",
+                        "Supernatural_narrative_choice_20_word_5",
+                        "Supernatural_narrative_choice_20_word_6",
+                        "Supernatural_narrative_choice_20_word_7",
+                        "Supernatural_narrative_choice_20_word_8",
+                        "Supernatural_narrative_choice_20_word_9",
+                        "Supernatural_narrative_choice_20_word_10"
+                    ]
+                },
+                {
+                    "name": "Supernatural_narrative_choice_21",
+                    "night_number": 21,
+                    "words": [
+                        "Supernatural_narrative_choice_21_word_1",
+                        "Supernatural_narrative_choice_21_word_2",
+                        "Supernatural_narrative_choice_21_word_3",
+                        "Supernatural_narrative_choice_21_word_4",
+                        "Supernatural_narrative_choice_21_word_5",
+                        "Supernatural_narrative_choice_21_word_6",
+                        "Supernatural_narrative_choice_21_word_7",
+                        "Supernatural_narrative_choice_21_word_8",
+                        "Supernatural_narrative_choice_21_word_9",
+                        "Supernatural_narrative_choice_21_word_10"
+                    ]
+                },
+                {
+                    "name": "Supernatural_narrative_choice_22",
+                    "night_number": 22,
+                    "words": [
+                        "Supernatural_narrative_choice_22_word_1",
+                        "Supernatural_narrative_choice_22_word_2",
+                        "Supernatural_narrative_choice_22_word_3",
+                        "Supernatural_narrative_choice_22_word_4",
+                        "Supernatural_narrative_choice_22_word_5",
+                        "Supernatural_narrative_choice_22_word_6",
+                        "Supernatural_narrative_choice_22_word_7",
+                        "Supernatural_narrative_choice_22_word_8",
+                        "Supernatural_narrative_choice_22_word_9",
+                        "Supernatural_narrative_choice_22_word_10"
+                    ]
+                },
+                {
+                    "name": "Supernatural_narrative_choice_23",
+                    "night_number": 23,
+                    "words": [
+                        "Supernatural_narrative_choice_23_word_1",
+                        "Supernatural_narrative_choice_23_word_2",
+                        "Supernatural_narrative_choice_23_word_3",
+                        "Supernatural_narrative_choice_23_word_4",
+                        "Supernatural_narrative_choice_23_word_5",
+                        "Supernatural_narrative_choice_23_word_6",
+                        "Supernatural_narrative_choice_23_word_7",
+                        "Supernatural_narrative_choice_23_word_8",
+                        "Supernatural_narrative_choice_23_word_9",
+                        "Supernatural_narrative_choice_23_word_10"
+                    ]
+                },
+                {
+                    "name": "Supernatural_narrative_choice_24",
+                    "night_number": 24,
+                    "words": [
+                        "Supernatural_narrative_choice_24_word_1",
+                        "Supernatural_narrative_choice_24_word_2",
+                        "Supernatural_narrative_choice_24_word_3",
+                        "Supernatural_narrative_choice_24_word_4",
+                        "Supernatural_narrative_choice_24_word_5",
+                        "Supernatural_narrative_choice_24_word_6",
+                        "Supernatural_narrative_choice_24_word_7",
+                        "Supernatural_narrative_choice_24_word_8",
+                        "Supernatural_narrative_choice_24_word_9",
+                        "Supernatural_narrative_choice_24_word_10"
+                    ]
+                },
+                {
+                    "name": "Supernatural_narrative_choice_25",
+                    "night_number": 25,
+                    "words": [
+                        "Supernatural_narrative_choice_25_word_1",
+                        "Supernatural_narrative_choice_25_word_2",
+                        "Supernatural_narrative_choice_25_word_3",
+                        "Supernatural_narrative_choice_25_word_4",
+                        "Supernatural_narrative_choice_25_word_5",
+                        "Supernatural_narrative_choice_25_word_6",
+                        "Supernatural_narrative_choice_25_word_7",
+                        "Supernatural_narrative_choice_25_word_8",
+                        "Supernatural_narrative_choice_25_word_9",
+                        "Supernatural_narrative_choice_25_word_10"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Occult",
+            "narrative_choices": [
+                {
+                    "name": "Occult_narrative_choice_1",
+                    "night_number": 1,
+                    "words": [
+                        "Occult_narrative_choice_1_word_1",
+                        "Occult_narrative_choice_1_word_2",
+                        "Occult_narrative_choice_1_word_3",
+                        "Occult_narrative_choice_1_word_4",
+                        "Occult_narrative_choice_1_word_5",
+                        "Occult_narrative_choice_1_word_6",
+                        "Occult_narrative_choice_1_word_7",
+                        "Occult_narrative_choice_1_word_8",
+                        "Occult_narrative_choice_1_word_9",
+                        "Occult_narrative_choice_1_word_10"
+                    ]
+                },
+                {
+                    "name": "Occult_narrative_choice_2",
+                    "night_number": 2,
+                    "words": [
+                        "Occult_narrative_choice_2_word_1",
+                        "Occult_narrative_choice_2_word_2",
+                        "Occult_narrative_choice_2_word_3",
+                        "Occult_narrative_choice_2_word_4",
+                        "Occult_narrative_choice_2_word_5",
+                        "Occult_narrative_choice_2_word_6",
+                        "Occult_narrative_choice_2_word_7",
+                        "Occult_narrative_choice_2_word_8",
+                        "Occult_narrative_choice_2_word_9",
+                        "Occult_narrative_choice_2_word_10"
+                    ]
+                },
+                {
+                    "name": "Occult_narrative_choice_3",
+                    "night_number": 3,
+                    "words": [
+                        "Occult_narrative_choice_3_word_1",
+                        "Occult_narrative_choice_3_word_2",
+                        "Occult_narrative_choice_3_word_3",
+                        "Occult_narrative_choice_3_word_4",
+                        "Occult_narrative_choice_3_word_5",
+                        "Occult_narrative_choice_3_word_6",
+                        "Occult_narrative_choice_3_word_7",
+                        "Occult_narrative_choice_3_word_8",
+                        "Occult_narrative_choice_3_word_9",
+                        "Occult_narrative_choice_3_word_10"
+                    ]
+                },
+                {
+                    "name": "Occult_narrative_choice_4",
+                    "night_number": 4,
+                    "words": [
+                        "Occult_narrative_choice_4_word_1",
+                        "Occult_narrative_choice_4_word_2",
+                        "Occult_narrative_choice_4_word_3",
+                        "Occult_narrative_choice_4_word_4",
+                        "Occult_narrative_choice_4_word_5",
+                        "Occult_narrative_choice_4_word_6",
+                        "Occult_narrative_choice_4_word_7",
+                        "Occult_narrative_choice_4_word_8",
+                        "Occult_narrative_choice_4_word_9",
+                        "Occult_narrative_choice_4_word_10"
+                    ]
+                },
+                {
+                    "name": "Occult_narrative_choice_5",
+                    "night_number": 5,
+                    "words": [
+                        "Occult_narrative_choice_5_word_1",
+                        "Occult_narrative_choice_5_word_2",
+                        "Occult_narrative_choice_5_word_3",
+                        "Occult_narrative_choice_5_word_4",
+                        "Occult_narrative_choice_5_word_5",
+                        "Occult_narrative_choice_5_word_6",
+                        "Occult_narrative_choice_5_word_7",
+                        "Occult_narrative_choice_5_word_8",
+                        "Occult_narrative_choice_5_word_9",
+                        "Occult_narrative_choice_5_word_10"
+                    ]
+                },
+                {
+                    "name": "Occult_narrative_choice_6",
+                    "night_number": 6,
+                    "words": [
+                        "Occult_narrative_choice_6_word_1",
+                        "Occult_narrative_choice_6_word_2",
+                        "Occult_narrative_choice_6_word_3",
+                        "Occult_narrative_choice_6_word_4",
+                        "Occult_narrative_choice_6_word_5",
+                        "Occult_narrative_choice_6_word_6",
+                        "Occult_narrative_choice_6_word_7",
+                        "Occult_narrative_choice_6_word_8",
+                        "Occult_narrative_choice_6_word_9",
+                        "Occult_narrative_choice_6_word_10"
+                    ]
+                },
+                {
+                    "name": "Occult_narrative_choice_7",
+                    "night_number": 7,
+                    "words": [
+                        "Occult_narrative_choice_7_word_1",
+                        "Occult_narrative_choice_7_word_2",
+                        "Occult_narrative_choice_7_word_3",
+                        "Occult_narrative_choice_7_word_4",
+                        "Occult_narrative_choice_7_word_5",
+                        "Occult_narrative_choice_7_word_6",
+                        "Occult_narrative_choice_7_word_7",
+                        "Occult_narrative_choice_7_word_8",
+                        "Occult_narrative_choice_7_word_9",
+                        "Occult_narrative_choice_7_word_10"
+                    ]
+                },
+                {
+                    "name": "Occult_narrative_choice_8",
+                    "night_number": 8,
+                    "words": [
+                        "Occult_narrative_choice_8_word_1",
+                        "Occult_narrative_choice_8_word_2",
+                        "Occult_narrative_choice_8_word_3",
+                        "Occult_narrative_choice_8_word_4",
+                        "Occult_narrative_choice_8_word_5",
+                        "Occult_narrative_choice_8_word_6",
+                        "Occult_narrative_choice_8_word_7",
+                        "Occult_narrative_choice_8_word_8",
+                        "Occult_narrative_choice_8_word_9",
+                        "Occult_narrative_choice_8_word_10"
+                    ]
+                },
+                {
+                    "name": "Occult_narrative_choice_9",
+                    "night_number": 9,
+                    "words": [
+                        "Occult_narrative_choice_9_word_1",
+                        "Occult_narrative_choice_9_word_2",
+                        "Occult_narrative_choice_9_word_3",
+                        "Occult_narrative_choice_9_word_4",
+                        "Occult_narrative_choice_9_word_5",
+                        "Occult_narrative_choice_9_word_6",
+                        "Occult_narrative_choice_9_word_7",
+                        "Occult_narrative_choice_9_word_8",
+                        "Occult_narrative_choice_9_word_9",
+                        "Occult_narrative_choice_9_word_10"
+                    ]
+                },
+                {
+                    "name": "Occult_narrative_choice_10",
+                    "night_number": 10,
+                    "words": [
+                        "Occult_narrative_choice_10_word_1",
+                        "Occult_narrative_choice_10_word_2",
+                        "Occult_narrative_choice_10_word_3",
+                        "Occult_narrative_choice_10_word_4",
+                        "Occult_narrative_choice_10_word_5",
+                        "Occult_narrative_choice_10_word_6",
+                        "Occult_narrative_choice_10_word_7",
+                        "Occult_narrative_choice_10_word_8",
+                        "Occult_narrative_choice_10_word_9",
+                        "Occult_narrative_choice_10_word_10"
+                    ]
+                },
+                {
+                    "name": "Occult_narrative_choice_11",
+                    "night_number": 11,
+                    "words": [
+                        "Occult_narrative_choice_11_word_1",
+                        "Occult_narrative_choice_11_word_2",
+                        "Occult_narrative_choice_11_word_3",
+                        "Occult_narrative_choice_11_word_4",
+                        "Occult_narrative_choice_11_word_5",
+                        "Occult_narrative_choice_11_word_6",
+                        "Occult_narrative_choice_11_word_7",
+                        "Occult_narrative_choice_11_word_8",
+                        "Occult_narrative_choice_11_word_9",
+                        "Occult_narrative_choice_11_word_10"
+                    ]
+                },
+                {
+                    "name": "Occult_narrative_choice_12",
+                    "night_number": 12,
+                    "words": [
+                        "Occult_narrative_choice_12_word_1",
+                        "Occult_narrative_choice_12_word_2",
+                        "Occult_narrative_choice_12_word_3",
+                        "Occult_narrative_choice_12_word_4",
+                        "Occult_narrative_choice_12_word_5",
+                        "Occult_narrative_choice_12_word_6",
+                        "Occult_narrative_choice_12_word_7",
+                        "Occult_narrative_choice_12_word_8",
+                        "Occult_narrative_choice_12_word_9",
+                        "Occult_narrative_choice_12_word_10"
+                    ]
+                },
+                {
+                    "name": "Occult_narrative_choice_13",
+                    "night_number": 13,
+                    "words": [
+                        "Occult_narrative_choice_13_word_1",
+                        "Occult_narrative_choice_13_word_2",
+                        "Occult_narrative_choice_13_word_3",
+                        "Occult_narrative_choice_13_word_4",
+                        "Occult_narrative_choice_13_word_5",
+                        "Occult_narrative_choice_13_word_6",
+                        "Occult_narrative_choice_13_word_7",
+                        "Occult_narrative_choice_13_word_8",
+                        "Occult_narrative_choice_13_word_9",
+                        "Occult_narrative_choice_13_word_10"
+                    ]
+                },
+                {
+                    "name": "Occult_narrative_choice_14",
+                    "night_number": 14,
+                    "words": [
+                        "Occult_narrative_choice_14_word_1",
+                        "Occult_narrative_choice_14_word_2",
+                        "Occult_narrative_choice_14_word_3",
+                        "Occult_narrative_choice_14_word_4",
+                        "Occult_narrative_choice_14_word_5",
+                        "Occult_narrative_choice_14_word_6",
+                        "Occult_narrative_choice_14_word_7",
+                        "Occult_narrative_choice_14_word_8",
+                        "Occult_narrative_choice_14_word_9",
+                        "Occult_narrative_choice_14_word_10"
+                    ]
+                },
+                {
+                    "name": "Occult_narrative_choice_15",
+                    "night_number": 15,
+                    "words": [
+                        "Occult_narrative_choice_15_word_1",
+                        "Occult_narrative_choice_15_word_2",
+                        "Occult_narrative_choice_15_word_3",
+                        "Occult_narrative_choice_15_word_4",
+                        "Occult_narrative_choice_15_word_5",
+                        "Occult_narrative_choice_15_word_6",
+                        "Occult_narrative_choice_15_word_7",
+                        "Occult_narrative_choice_15_word_8",
+                        "Occult_narrative_choice_15_word_9",
+                        "Occult_narrative_choice_15_word_10"
+                    ]
+                },
+                {
+                    "name": "Occult_narrative_choice_16",
+                    "night_number": 16,
+                    "words": [
+                        "Occult_narrative_choice_16_word_1",
+                        "Occult_narrative_choice_16_word_2",
+                        "Occult_narrative_choice_16_word_3",
+                        "Occult_narrative_choice_16_word_4",
+                        "Occult_narrative_choice_16_word_5",
+                        "Occult_narrative_choice_16_word_6",
+                        "Occult_narrative_choice_16_word_7",
+                        "Occult_narrative_choice_16_word_8",
+                        "Occult_narrative_choice_16_word_9",
+                        "Occult_narrative_choice_16_word_10"
+                    ]
+                },
+                {
+                    "name": "Occult_narrative_choice_17",
+                    "night_number": 17,
+                    "words": [
+                        "Occult_narrative_choice_17_word_1",
+                        "Occult_narrative_choice_17_word_2",
+                        "Occult_narrative_choice_17_word_3",
+                        "Occult_narrative_choice_17_word_4",
+                        "Occult_narrative_choice_17_word_5",
+                        "Occult_narrative_choice_17_word_6",
+                        "Occult_narrative_choice_17_word_7",
+                        "Occult_narrative_choice_17_word_8",
+                        "Occult_narrative_choice_17_word_9",
+                        "Occult_narrative_choice_17_word_10"
+                    ]
+                },
+                {
+                    "name": "Occult_narrative_choice_18",
+                    "night_number": 18,
+                    "words": [
+                        "Occult_narrative_choice_18_word_1",
+                        "Occult_narrative_choice_18_word_2",
+                        "Occult_narrative_choice_18_word_3",
+                        "Occult_narrative_choice_18_word_4",
+                        "Occult_narrative_choice_18_word_5",
+                        "Occult_narrative_choice_18_word_6",
+                        "Occult_narrative_choice_18_word_7",
+                        "Occult_narrative_choice_18_word_8",
+                        "Occult_narrative_choice_18_word_9",
+                        "Occult_narrative_choice_18_word_10"
+                    ]
+                },
+                {
+                    "name": "Occult_narrative_choice_19",
+                    "night_number": 19,
+                    "words": [
+                        "Occult_narrative_choice_19_word_1",
+                        "Occult_narrative_choice_19_word_2",
+                        "Occult_narrative_choice_19_word_3",
+                        "Occult_narrative_choice_19_word_4",
+                        "Occult_narrative_choice_19_word_5",
+                        "Occult_narrative_choice_19_word_6",
+                        "Occult_narrative_choice_19_word_7",
+                        "Occult_narrative_choice_19_word_8",
+                        "Occult_narrative_choice_19_word_9",
+                        "Occult_narrative_choice_19_word_10"
+                    ]
+                },
+                {
+                    "name": "Occult_narrative_choice_20",
+                    "night_number": 20,
+                    "words": [
+                        "Occult_narrative_choice_20_word_1",
+                        "Occult_narrative_choice_20_word_2",
+                        "Occult_narrative_choice_20_word_3",
+                        "Occult_narrative_choice_20_word_4",
+                        "Occult_narrative_choice_20_word_5",
+                        "Occult_narrative_choice_20_word_6",
+                        "Occult_narrative_choice_20_word_7",
+                        "Occult_narrative_choice_20_word_8",
+                        "Occult_narrative_choice_20_word_9",
+                        "Occult_narrative_choice_20_word_10"
+                    ]
+                },
+                {
+                    "name": "Occult_narrative_choice_21",
+                    "night_number": 21,
+                    "words": [
+                        "Occult_narrative_choice_21_word_1",
+                        "Occult_narrative_choice_21_word_2",
+                        "Occult_narrative_choice_21_word_3",
+                        "Occult_narrative_choice_21_word_4",
+                        "Occult_narrative_choice_21_word_5",
+                        "Occult_narrative_choice_21_word_6",
+                        "Occult_narrative_choice_21_word_7",
+                        "Occult_narrative_choice_21_word_8",
+                        "Occult_narrative_choice_21_word_9",
+                        "Occult_narrative_choice_21_word_10"
+                    ]
+                },
+                {
+                    "name": "Occult_narrative_choice_22",
+                    "night_number": 22,
+                    "words": [
+                        "Occult_narrative_choice_22_word_1",
+                        "Occult_narrative_choice_22_word_2",
+                        "Occult_narrative_choice_22_word_3",
+                        "Occult_narrative_choice_22_word_4",
+                        "Occult_narrative_choice_22_word_5",
+                        "Occult_narrative_choice_22_word_6",
+                        "Occult_narrative_choice_22_word_7",
+                        "Occult_narrative_choice_22_word_8",
+                        "Occult_narrative_choice_22_word_9",
+                        "Occult_narrative_choice_22_word_10"
+                    ]
+                },
+                {
+                    "name": "Occult_narrative_choice_23",
+                    "night_number": 23,
+                    "words": [
+                        "Occult_narrative_choice_23_word_1",
+                        "Occult_narrative_choice_23_word_2",
+                        "Occult_narrative_choice_23_word_3",
+                        "Occult_narrative_choice_23_word_4",
+                        "Occult_narrative_choice_23_word_5",
+                        "Occult_narrative_choice_23_word_6",
+                        "Occult_narrative_choice_23_word_7",
+                        "Occult_narrative_choice_23_word_8",
+                        "Occult_narrative_choice_23_word_9",
+                        "Occult_narrative_choice_23_word_10"
+                    ]
+                },
+                {
+                    "name": "Occult_narrative_choice_24",
+                    "night_number": 24,
+                    "words": [
+                        "Occult_narrative_choice_24_word_1",
+                        "Occult_narrative_choice_24_word_2",
+                        "Occult_narrative_choice_24_word_3",
+                        "Occult_narrative_choice_24_word_4",
+                        "Occult_narrative_choice_24_word_5",
+                        "Occult_narrative_choice_24_word_6",
+                        "Occult_narrative_choice_24_word_7",
+                        "Occult_narrative_choice_24_word_8",
+                        "Occult_narrative_choice_24_word_9",
+                        "Occult_narrative_choice_24_word_10"
+                    ]
+                },
+                {
+                    "name": "Occult_narrative_choice_25",
+                    "night_number": 25,
+                    "words": [
+                        "Occult_narrative_choice_25_word_1",
+                        "Occult_narrative_choice_25_word_2",
+                        "Occult_narrative_choice_25_word_3",
+                        "Occult_narrative_choice_25_word_4",
+                        "Occult_narrative_choice_25_word_5",
+                        "Occult_narrative_choice_25_word_6",
+                        "Occult_narrative_choice_25_word_7",
+                        "Occult_narrative_choice_25_word_8",
+                        "Occult_narrative_choice_25_word_9",
+                        "Occult_narrative_choice_25_word_10"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Art",
+            "narrative_choices": [
+                {
+                    "name": "Art_narrative_choice_1",
+                    "night_number": 1,
+                    "words": [
+                        "Art_narrative_choice_1_word_1",
+                        "Art_narrative_choice_1_word_2",
+                        "Art_narrative_choice_1_word_3",
+                        "Art_narrative_choice_1_word_4",
+                        "Art_narrative_choice_1_word_5",
+                        "Art_narrative_choice_1_word_6",
+                        "Art_narrative_choice_1_word_7",
+                        "Art_narrative_choice_1_word_8",
+                        "Art_narrative_choice_1_word_9",
+                        "Art_narrative_choice_1_word_10"
+                    ]
+                },
+                {
+                    "name": "Art_narrative_choice_2",
+                    "night_number": 2,
+                    "words": [
+                        "Art_narrative_choice_2_word_1",
+                        "Art_narrative_choice_2_word_2",
+                        "Art_narrative_choice_2_word_3",
+                        "Art_narrative_choice_2_word_4",
+                        "Art_narrative_choice_2_word_5",
+                        "Art_narrative_choice_2_word_6",
+                        "Art_narrative_choice_2_word_7",
+                        "Art_narrative_choice_2_word_8",
+                        "Art_narrative_choice_2_word_9",
+                        "Art_narrative_choice_2_word_10"
+                    ]
+                },
+                {
+                    "name": "Art_narrative_choice_3",
+                    "night_number": 3,
+                    "words": [
+                        "Art_narrative_choice_3_word_1",
+                        "Art_narrative_choice_3_word_2",
+                        "Art_narrative_choice_3_word_3",
+                        "Art_narrative_choice_3_word_4",
+                        "Art_narrative_choice_3_word_5",
+                        "Art_narrative_choice_3_word_6",
+                        "Art_narrative_choice_3_word_7",
+                        "Art_narrative_choice_3_word_8",
+                        "Art_narrative_choice_3_word_9",
+                        "Art_narrative_choice_3_word_10"
+                    ]
+                },
+                {
+                    "name": "Art_narrative_choice_4",
+                    "night_number": 4,
+                    "words": [
+                        "Art_narrative_choice_4_word_1",
+                        "Art_narrative_choice_4_word_2",
+                        "Art_narrative_choice_4_word_3",
+                        "Art_narrative_choice_4_word_4",
+                        "Art_narrative_choice_4_word_5",
+                        "Art_narrative_choice_4_word_6",
+                        "Art_narrative_choice_4_word_7",
+                        "Art_narrative_choice_4_word_8",
+                        "Art_narrative_choice_4_word_9",
+                        "Art_narrative_choice_4_word_10"
+                    ]
+                },
+                {
+                    "name": "Art_narrative_choice_5",
+                    "night_number": 5,
+                    "words": [
+                        "Art_narrative_choice_5_word_1",
+                        "Art_narrative_choice_5_word_2",
+                        "Art_narrative_choice_5_word_3",
+                        "Art_narrative_choice_5_word_4",
+                        "Art_narrative_choice_5_word_5",
+                        "Art_narrative_choice_5_word_6",
+                        "Art_narrative_choice_5_word_7",
+                        "Art_narrative_choice_5_word_8",
+                        "Art_narrative_choice_5_word_9",
+                        "Art_narrative_choice_5_word_10"
+                    ]
+                },
+                {
+                    "name": "Art_narrative_choice_6",
+                    "night_number": 6,
+                    "words": [
+                        "Art_narrative_choice_6_word_1",
+                        "Art_narrative_choice_6_word_2",
+                        "Art_narrative_choice_6_word_3",
+                        "Art_narrative_choice_6_word_4",
+                        "Art_narrative_choice_6_word_5",
+                        "Art_narrative_choice_6_word_6",
+                        "Art_narrative_choice_6_word_7",
+                        "Art_narrative_choice_6_word_8",
+                        "Art_narrative_choice_6_word_9",
+                        "Art_narrative_choice_6_word_10"
+                    ]
+                },
+                {
+                    "name": "Art_narrative_choice_7",
+                    "night_number": 7,
+                    "words": [
+                        "Art_narrative_choice_7_word_1",
+                        "Art_narrative_choice_7_word_2",
+                        "Art_narrative_choice_7_word_3",
+                        "Art_narrative_choice_7_word_4",
+                        "Art_narrative_choice_7_word_5",
+                        "Art_narrative_choice_7_word_6",
+                        "Art_narrative_choice_7_word_7",
+                        "Art_narrative_choice_7_word_8",
+                        "Art_narrative_choice_7_word_9",
+                        "Art_narrative_choice_7_word_10"
+                    ]
+                },
+                {
+                    "name": "Art_narrative_choice_8",
+                    "night_number": 8,
+                    "words": [
+                        "Art_narrative_choice_8_word_1",
+                        "Art_narrative_choice_8_word_2",
+                        "Art_narrative_choice_8_word_3",
+                        "Art_narrative_choice_8_word_4",
+                        "Art_narrative_choice_8_word_5",
+                        "Art_narrative_choice_8_word_6",
+                        "Art_narrative_choice_8_word_7",
+                        "Art_narrative_choice_8_word_8",
+                        "Art_narrative_choice_8_word_9",
+                        "Art_narrative_choice_8_word_10"
+                    ]
+                },
+                {
+                    "name": "Art_narrative_choice_9",
+                    "night_number": 9,
+                    "words": [
+                        "Art_narrative_choice_9_word_1",
+                        "Art_narrative_choice_9_word_2",
+                        "Art_narrative_choice_9_word_3",
+                        "Art_narrative_choice_9_word_4",
+                        "Art_narrative_choice_9_word_5",
+                        "Art_narrative_choice_9_word_6",
+                        "Art_narrative_choice_9_word_7",
+                        "Art_narrative_choice_9_word_8",
+                        "Art_narrative_choice_9_word_9",
+                        "Art_narrative_choice_9_word_10"
+                    ]
+                },
+                {
+                    "name": "Art_narrative_choice_10",
+                    "night_number": 10,
+                    "words": [
+                        "Art_narrative_choice_10_word_1",
+                        "Art_narrative_choice_10_word_2",
+                        "Art_narrative_choice_10_word_3",
+                        "Art_narrative_choice_10_word_4",
+                        "Art_narrative_choice_10_word_5",
+                        "Art_narrative_choice_10_word_6",
+                        "Art_narrative_choice_10_word_7",
+                        "Art_narrative_choice_10_word_8",
+                        "Art_narrative_choice_10_word_9",
+                        "Art_narrative_choice_10_word_10"
+                    ]
+                },
+                {
+                    "name": "Art_narrative_choice_11",
+                    "night_number": 11,
+                    "words": [
+                        "Art_narrative_choice_11_word_1",
+                        "Art_narrative_choice_11_word_2",
+                        "Art_narrative_choice_11_word_3",
+                        "Art_narrative_choice_11_word_4",
+                        "Art_narrative_choice_11_word_5",
+                        "Art_narrative_choice_11_word_6",
+                        "Art_narrative_choice_11_word_7",
+                        "Art_narrative_choice_11_word_8",
+                        "Art_narrative_choice_11_word_9",
+                        "Art_narrative_choice_11_word_10"
+                    ]
+                },
+                {
+                    "name": "Art_narrative_choice_12",
+                    "night_number": 12,
+                    "words": [
+                        "Art_narrative_choice_12_word_1",
+                        "Art_narrative_choice_12_word_2",
+                        "Art_narrative_choice_12_word_3",
+                        "Art_narrative_choice_12_word_4",
+                        "Art_narrative_choice_12_word_5",
+                        "Art_narrative_choice_12_word_6",
+                        "Art_narrative_choice_12_word_7",
+                        "Art_narrative_choice_12_word_8",
+                        "Art_narrative_choice_12_word_9",
+                        "Art_narrative_choice_12_word_10"
+                    ]
+                },
+                {
+                    "name": "Art_narrative_choice_13",
+                    "night_number": 13,
+                    "words": [
+                        "Art_narrative_choice_13_word_1",
+                        "Art_narrative_choice_13_word_2",
+                        "Art_narrative_choice_13_word_3",
+                        "Art_narrative_choice_13_word_4",
+                        "Art_narrative_choice_13_word_5",
+                        "Art_narrative_choice_13_word_6",
+                        "Art_narrative_choice_13_word_7",
+                        "Art_narrative_choice_13_word_8",
+                        "Art_narrative_choice_13_word_9",
+                        "Art_narrative_choice_13_word_10"
+                    ]
+                },
+                {
+                    "name": "Art_narrative_choice_14",
+                    "night_number": 14,
+                    "words": [
+                        "Art_narrative_choice_14_word_1",
+                        "Art_narrative_choice_14_word_2",
+                        "Art_narrative_choice_14_word_3",
+                        "Art_narrative_choice_14_word_4",
+                        "Art_narrative_choice_14_word_5",
+                        "Art_narrative_choice_14_word_6",
+                        "Art_narrative_choice_14_word_7",
+                        "Art_narrative_choice_14_word_8",
+                        "Art_narrative_choice_14_word_9",
+                        "Art_narrative_choice_14_word_10"
+                    ]
+                },
+                {
+                    "name": "Art_narrative_choice_15",
+                    "night_number": 15,
+                    "words": [
+                        "Art_narrative_choice_15_word_1",
+                        "Art_narrative_choice_15_word_2",
+                        "Art_narrative_choice_15_word_3",
+                        "Art_narrative_choice_15_word_4",
+                        "Art_narrative_choice_15_word_5",
+                        "Art_narrative_choice_15_word_6",
+                        "Art_narrative_choice_15_word_7",
+                        "Art_narrative_choice_15_word_8",
+                        "Art_narrative_choice_15_word_9",
+                        "Art_narrative_choice_15_word_10"
+                    ]
+                },
+                {
+                    "name": "Art_narrative_choice_16",
+                    "night_number": 16,
+                    "words": [
+                        "Art_narrative_choice_16_word_1",
+                        "Art_narrative_choice_16_word_2",
+                        "Art_narrative_choice_16_word_3",
+                        "Art_narrative_choice_16_word_4",
+                        "Art_narrative_choice_16_word_5",
+                        "Art_narrative_choice_16_word_6",
+                        "Art_narrative_choice_16_word_7",
+                        "Art_narrative_choice_16_word_8",
+                        "Art_narrative_choice_16_word_9",
+                        "Art_narrative_choice_16_word_10"
+                    ]
+                },
+                {
+                    "name": "Art_narrative_choice_17",
+                    "night_number": 17,
+                    "words": [
+                        "Art_narrative_choice_17_word_1",
+                        "Art_narrative_choice_17_word_2",
+                        "Art_narrative_choice_17_word_3",
+                        "Art_narrative_choice_17_word_4",
+                        "Art_narrative_choice_17_word_5",
+                        "Art_narrative_choice_17_word_6",
+                        "Art_narrative_choice_17_word_7",
+                        "Art_narrative_choice_17_word_8",
+                        "Art_narrative_choice_17_word_9",
+                        "Art_narrative_choice_17_word_10"
+                    ]
+                },
+                {
+                    "name": "Art_narrative_choice_18",
+                    "night_number": 18,
+                    "words": [
+                        "Art_narrative_choice_18_word_1",
+                        "Art_narrative_choice_18_word_2",
+                        "Art_narrative_choice_18_word_3",
+                        "Art_narrative_choice_18_word_4",
+                        "Art_narrative_choice_18_word_5",
+                        "Art_narrative_choice_18_word_6",
+                        "Art_narrative_choice_18_word_7",
+                        "Art_narrative_choice_18_word_8",
+                        "Art_narrative_choice_18_word_9",
+                        "Art_narrative_choice_18_word_10"
+                    ]
+                },
+                {
+                    "name": "Art_narrative_choice_19",
+                    "night_number": 19,
+                    "words": [
+                        "Art_narrative_choice_19_word_1",
+                        "Art_narrative_choice_19_word_2",
+                        "Art_narrative_choice_19_word_3",
+                        "Art_narrative_choice_19_word_4",
+                        "Art_narrative_choice_19_word_5",
+                        "Art_narrative_choice_19_word_6",
+                        "Art_narrative_choice_19_word_7",
+                        "Art_narrative_choice_19_word_8",
+                        "Art_narrative_choice_19_word_9",
+                        "Art_narrative_choice_19_word_10"
+                    ]
+                },
+                {
+                    "name": "Art_narrative_choice_20",
+                    "night_number": 20,
+                    "words": [
+                        "Art_narrative_choice_20_word_1",
+                        "Art_narrative_choice_20_word_2",
+                        "Art_narrative_choice_20_word_3",
+                        "Art_narrative_choice_20_word_4",
+                        "Art_narrative_choice_20_word_5",
+                        "Art_narrative_choice_20_word_6",
+                        "Art_narrative_choice_20_word_7",
+                        "Art_narrative_choice_20_word_8",
+                        "Art_narrative_choice_20_word_9",
+                        "Art_narrative_choice_20_word_10"
+                    ]
+                },
+                {
+                    "name": "Art_narrative_choice_21",
+                    "night_number": 21,
+                    "words": [
+                        "Art_narrative_choice_21_word_1",
+                        "Art_narrative_choice_21_word_2",
+                        "Art_narrative_choice_21_word_3",
+                        "Art_narrative_choice_21_word_4",
+                        "Art_narrative_choice_21_word_5",
+                        "Art_narrative_choice_21_word_6",
+                        "Art_narrative_choice_21_word_7",
+                        "Art_narrative_choice_21_word_8",
+                        "Art_narrative_choice_21_word_9",
+                        "Art_narrative_choice_21_word_10"
+                    ]
+                },
+                {
+                    "name": "Art_narrative_choice_22",
+                    "night_number": 22,
+                    "words": [
+                        "Art_narrative_choice_22_word_1",
+                        "Art_narrative_choice_22_word_2",
+                        "Art_narrative_choice_22_word_3",
+                        "Art_narrative_choice_22_word_4",
+                        "Art_narrative_choice_22_word_5",
+                        "Art_narrative_choice_22_word_6",
+                        "Art_narrative_choice_22_word_7",
+                        "Art_narrative_choice_22_word_8",
+                        "Art_narrative_choice_22_word_9",
+                        "Art_narrative_choice_22_word_10"
+                    ]
+                },
+                {
+                    "name": "Art_narrative_choice_23",
+                    "night_number": 23,
+                    "words": [
+                        "Art_narrative_choice_23_word_1",
+                        "Art_narrative_choice_23_word_2",
+                        "Art_narrative_choice_23_word_3",
+                        "Art_narrative_choice_23_word_4",
+                        "Art_narrative_choice_23_word_5",
+                        "Art_narrative_choice_23_word_6",
+                        "Art_narrative_choice_23_word_7",
+                        "Art_narrative_choice_23_word_8",
+                        "Art_narrative_choice_23_word_9",
+                        "Art_narrative_choice_23_word_10"
+                    ]
+                },
+                {
+                    "name": "Art_narrative_choice_24",
+                    "night_number": 24,
+                    "words": [
+                        "Art_narrative_choice_24_word_1",
+                        "Art_narrative_choice_24_word_2",
+                        "Art_narrative_choice_24_word_3",
+                        "Art_narrative_choice_24_word_4",
+                        "Art_narrative_choice_24_word_5",
+                        "Art_narrative_choice_24_word_6",
+                        "Art_narrative_choice_24_word_7",
+                        "Art_narrative_choice_24_word_8",
+                        "Art_narrative_choice_24_word_9",
+                        "Art_narrative_choice_24_word_10"
+                    ]
+                },
+                {
+                    "name": "Art_narrative_choice_25",
+                    "night_number": 25,
+                    "words": [
+                        "Art_narrative_choice_25_word_1",
+                        "Art_narrative_choice_25_word_2",
+                        "Art_narrative_choice_25_word_3",
+                        "Art_narrative_choice_25_word_4",
+                        "Art_narrative_choice_25_word_5",
+                        "Art_narrative_choice_25_word_6",
+                        "Art_narrative_choice_25_word_7",
+                        "Art_narrative_choice_25_word_8",
+                        "Art_narrative_choice_25_word_9",
+                        "Art_narrative_choice_25_word_10"
+                    ]
+                }
+            ]
+        }
+    ]
+}
