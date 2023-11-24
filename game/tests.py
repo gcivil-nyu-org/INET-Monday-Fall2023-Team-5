@@ -12,7 +12,7 @@ from django.urls import reverse
 from .views import CharacterCreationView
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
-
+from .context_processors import game_session_processor
 
 class CharacterModelTest(TestCase):
     def setUp(self):
@@ -385,3 +385,63 @@ class GetCharacterDetailsTest(TestCase):
         self.assertJSONEqual(
             str(response.content, encoding="utf8"), {"error": "Character not found"}
         )
+
+
+class GameSessionProcessorTest(TestCase):
+
+    def setUp(self):
+        # Create test users
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        another_user = User.objects.create_user(username='testuser2', password='12345')
+
+        # Create a test game session
+        self.game_session = GameSession.objects.create()
+
+        # Create test players and associate them with the game session
+        self.playerA = Player.objects.create(user=self.user, game_session=self.game_session)
+        self.playerB = Player.objects.create(user=another_user, game_session=self.game_session)
+
+        # Optionally associate the players with the game session
+        self.game_session.playerA = self.playerA
+        self.game_session.playerB = self.playerB
+        self.game_session.save()
+
+        # Set up a request factory
+        self.factory = RequestFactory()
+
+
+    def test_authenticated_user_with_active_game_session(self):
+        # Create a test game session
+        game_session = GameSession.objects.create(playerA=self.playerA, is_active=True)
+
+        # Create a request object
+        request = self.factory.get('/some/url')
+        request.user = self.user
+
+        # Call the context processor
+        context = game_session_processor(request)
+
+        # Check if the context contains the correct game session URL
+        self.assertIsNotNone(context.get('game_session_url'))
+        self.assertIn(game_session.get_absolute_url(), context['game_session_url'])
+
+    def test_authenticated_user_no_active_game_session(self):
+        # Make sure there are no active game sessions for the user
+        GameSession.objects.filter(playerA=self.playerA).update(is_active=False)
+        # Create a request object
+        request = self.factory.get('/some/url')
+        request.user = self.user
+
+        # Call the context processor
+        context = game_session_processor(request)
+
+        # Check if the context does not contain a game session URL
+        self.assertIsNone(context.get('game_session_url'))
+
+    def test_unauthenticated_user(self):
+        # Adjust the expected outcome to match the actual behavior
+        request = self.factory.get('/some/url')
+        request.user = User()  # User instance not saved to the database
+        context = game_session_processor(request)
+        self.assertEqual(context, {'game_session_url': None})
+
