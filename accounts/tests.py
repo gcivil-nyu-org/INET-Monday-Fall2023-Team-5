@@ -7,7 +7,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from .models import *
 import tempfile
 from django.core.files import File
-from .forms import EditProfileForm
+from .forms import EditProfileForm, CustomUserCreationForm
 from django.core.files.uploadedfile import SimpleUploadedFile
 from PIL import Image
 from io import BytesIO
@@ -1008,3 +1008,65 @@ class PostMigrateSignalTest(TestCase):
             self.assertTrue(
                 DatingPreference.objects.filter(gender=gender_code).exists()
             )
+
+
+class CustomUserCreationFormTest(TestCase):
+    def test_valid_data(self):
+        form = CustomUserCreationForm(
+            {
+                "username": "testuser",
+                "email": "testuser@nyu.edu",
+                "password1": "supersecretpassword",
+                "password2": "supersecretpassword",
+            }
+        )
+        self.assertTrue(form.is_valid())
+
+    def test_email_validation_for_existing_user(self):
+        # Create a user first
+        User.objects.create_user(
+            username="existinguser", email="existing@nyu.edu", password="password123"
+        )
+
+        # Now try to create another user with the same email
+        form = CustomUserCreationForm(
+            {
+                "username": "newuser",
+                "email": "existing@nyu.edu",
+                "password1": "anotherpassword",
+                "password2": "anotherpassword",
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertIn("email", form.errors)
+        self.assertEqual(form.errors["email"], ["Email already in use."])
+
+    def test_nyu_email_validation(self):
+        form = CustomUserCreationForm(
+            {
+                "username": "testuser",
+                "email": "testuser@gmail.com",  # Not an NYU email
+                "password1": "supersecretpassword",
+                "password2": "supersecretpassword",
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertIn("email", form.errors)
+        self.assertEqual(form.errors["email"], ["Please use your NYU email."])
+
+    def test_save_user(self):
+        form = CustomUserCreationForm(
+            {
+                "username": "testuser",
+                "email": "testuser@nyu.edu",
+                "password1": "supersecretpassword",
+                "password2": "supersecretpassword",
+            },
+            domain="example.com",
+        )  # Assume domain is provided
+        self.assertTrue(form.is_valid())
+
+        user = form.save()
+        self.assertEqual(User.objects.count(), 1)
+        self.assertFalse(user.is_active)  # User should be inactive initially
+        self.assertEqual(user.email, "testuser@nyu.edu")
