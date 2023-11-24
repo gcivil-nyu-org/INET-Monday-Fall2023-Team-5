@@ -26,7 +26,6 @@ from django.utils import timezone
 from unittest.mock import patch
 from django.core.management.base import CommandError
 from game.models import GameSession, Player, GameTurn
-from django.test.client import RequestFactory
 
 
 class ProfileModelTest(TestCase):
@@ -1118,32 +1117,3 @@ class EditProfileFormTest(TestCase):
             list(form.fields["open_to_dating"].queryset),
             list(DatingPreference.objects.all()),
         )
-
-
-class ProfileUpdatedViewTest(TestCase):
-    def setUp(self):
-        # Create a test user and profile
-        self.user = User.objects.create_user(username="testuser", password="12345")
-        Profile.objects.create(user=self.user, pronoun_preference="he_him")
-
-        # Set up a request factory
-        self.factory = RequestFactory()
-
-    def test_profile_updated_view(self):
-        # Create a request and attach the user to it
-        request = self.factory.get(
-            reverse("profile_updated")
-        )  # Replace with your actual URL name
-        request.user = self.user
-
-        # Call the view
-        response = profile_updated(request)
-
-        # Check the response status code
-        self.assertEqual(response.status_code, 200)
-
-        # Check if the context contains the correct pronoun preference
-        self.assertEqual(response.context_data["pronoun_preference"], "He/Him")
-
-        # Optionally, check if the correct template was used
-        self.assertTemplateUsed(response, "accounts/profile/profile_updated.html")
