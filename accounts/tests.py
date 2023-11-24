@@ -15,7 +15,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_str
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
-from accounts.views import get_recommended_profiles, profile_updated
+from accounts.views import get_recommended_profiles
 from accounts.admin import ProfileAdmin
 from django.contrib.admin.sites import AdminSite
 from importlib import import_module
@@ -1122,11 +1122,11 @@ class EditProfileFormTest(TestCase):
 
 class ProfileUpdatedViewTest(TestCase):
     def setUp(self):
+        # Create a test user and profile
         self.user = User.objects.create_user(username="testuser", password="12345")
-        Profile.objects.get_or_create(
-            user=self.user, defaults={"pronoun_preference": "he_him"}
-        )
+        Profile.objects.create(user=self.user, pronoun_preference="he_him")
 
+        # Set up a request factory
         self.factory = RequestFactory()
 
     def test_profile_updated_view(self):
