@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 <style>
@@ -43,10 +44,64 @@
         color: #fff;
         font-size: 0.7em;
     }
-    
+    #profileText {
+        background-color: #fabcd7;
+        color: #001474;
+        border-radius: 15px; /* Rounded corners */
+        padding: 20px; /* Space inside the box */
+        border: 5px solid #f406a2; /* Pink border, match this with the exact color from your image */
+        margin: 20px auto; /* Centering the box */
+        width: 80%; /* Adjust the width as needed */
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Box shadow for a slight 3D effect */
+        position: relative; /* For absolute positioning of the dropdown */
+    }
+
+    .selectable {
+        color: #a90771; /* Lighter pink for the clickable options, match with the image */
+        cursor: pointer; /* Change cursor to indicate clickable */
+        border-radius: 5px; /* Rounded corners for clickable options */
+        display: inline-block; /* Ensure it does not take full width */
+    }
+
+    .selectable:hover {
+        color: #001474; /* Slightly darker pink on hover */
+    }
+
+    .dropdown-content {
+      display: block;
+      position: absolute;
+      background-color: #0d034a; /* Hot pink background to match the image */
+      color: #ffffff; /* White text color */
+      min-width: 160px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Slightly softer shadow */
+      border-radius: 8px; /* Rounded corners */
+      margin-top: 5px; /* Add a little space above the dropdown */
+      font-family: Luminari, sans-serif; /* Specify a font */
+      z-index: 100; /* Ensure it's above other elements */
+    }
+
+    /* Style the dropdown options */
+    .dropdown-content div {
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    /* Last child should not have a border-bottom */
+    .dropdown-content div:last-child {
+      border-bottom: none;
+    }
+
+    /* Change color of dropdown options on hover */
+    .dropdown-content div:hover {
+      background-color: #ff1493; /* Deeper pink on hover */
+      border-radius: 8px; /* Rounded corners */
+    }
+
 </style>
 
-<div class="character-selection">
+{% if player.character_creation_state == "character_avatar_selection" %}
+    <div class="character-selection">
     <h2>Select Your Character</h2>
     <form method="post">
         {% csrf_token %}
@@ -65,5 +120,69 @@
         <div id="submit"></div>
         <button type="submit" class="confirm-btn">Confirm Selection</button>
     </form>
-</div>
+    </div>
+
+{% elif player.character_creation_state == "MOON_MEANING_SELECTION" %}
+    <!-- Form for Moon Meaning Selection -->
+    <div class="moon-meaning-selection">
+        <h2>Select Moon Meaning</h2>
+        <form method="post">
+            {% csrf_token %}
+            <!-- Render your moon meaning selection fields here -->
+            <input type="submit" value="Confirm Moon Meaning" class="confirm-btn">
+        </form>
+    </div>
+
+{% elif player.character_creation_state == "public_profile_creation" %}
+
+    <div class="public-profile-creation">
+        <h2>Create Your Public Profile</h2>
+            <form id="publicProfileCreationForm" method="post">
+            {% csrf_token %}
+            <!-- The template for the profile text -->
+            <div id="profileText">
+              I am {{ player.character.name }} a {{ player.character.description }}. I am
+              <span class="selectable" data-field="quality_1" onclick="showChoices(this);">[quality #1]</span>,
+              <span class="selectable" data-field="quality_2" onclick="showChoices(this);">[quality #2]</span>,
+              <span class="selectable" data-field="quality_3" onclick="showChoices(this);">[quality #3]</span>.
+              I love
+              <span class="selectable" data-field="interest_1" onclick="showChoices(this);">[interest #1]</span>,
+              <span class="selectable" data-field="interest_2" onclick="showChoices(this);">[interest #2]</span>,
+              and
+              <span class="selectable" data-field="interest_3" onclick="showChoices(this);">[interest #3]</span>.
+              Looking for someone to
+              <span class="selectable" data-field="activity_1" onclick="showChoices(this);">[activity #1]</span>,
+              <span class="selectable" data-field="activity_2" onclick="showChoices(this);">[activity #2]</span>.
+              Also, I love the moon. It's really important to me. Don't message me if you hate the moon!
+            </div>
+
+            <!-- The actual form fields, hidden -->
+
+            <input type="hidden" id="hiddenQuality_1" name="{{ form.quality_1.html_name }}" value="{{ form.quality_1.value }}">
+            <input type="hidden" id="hiddenQuality_2" name="{{ form.quality_2.html_name }}" value="{{ form.quality_2.value }}">
+            <input type="hidden" id="hiddenQuality_3" name="{{ form.quality_3.html_name }}" value="{{ form.quality_3.value }}">
+            <input type="hidden" id="hiddenInterest_1" name="{{ form.interest_1.html_name }}" value="{{ form.interest_1.value }}">
+            <input type="hidden" id="hiddenInterest_2" name="{{ form.interest_2.html_name }}" value="{{ form.interest_2.value }}">
+            <input type="hidden" id="hiddenInterest_3" name="{{ form.interest_3.html_name }}" value="{{ form.interest_3.value }}">
+            <input type="hidden" id="hiddenActivity_1" name="{{ form.activity_1.html_name }}" value="{{ form.activity_1.value }}">
+            <input type="hidden" id="hiddenActivity_2" name="{{ form.activity_2.html_name }}" value="{{ form.activity_2.value }}">
+
+
+            <input type="submit" value="Submit" />
+            </form>
+    </div>
+
+{% else %}
+    <!-- Fallback or error message if the state is unrecognized -->
+    <p>Unrecognized character creation state.</p>
+{% endif %}
+{% endblock %}
+
+
+{% block scripts %}
+<script type="text/javascript">
+    // Define the formChoices variable with the JSON data from your Django context
+    var formChoices = {{ form_choices_json|safe }};
+</script>
+<script src="{% static 'js/public_profile.js' %}"></script>
 {% endblock %}

@@ -1,7 +1,44 @@
 import json
 
+CHARACTER_NAME = "Witch"
+QUALITIES = [
+    "Wise",
+    "Intuitive",
+    "Enigmatic",
+    "Spiritual",
+    "Resourceful",
+    "Mystical",
+    "Alchemy Expert",
+    "Nature-Bound",
+    "Herbalist",
+]
+
+INTERESTS = [
+    "Herbology",
+    "Astrology",
+    "Ancient Runes",
+    "Potion Brewing",
+    "Divination",
+    "Nature Lore",
+    "Ceremonial Magic",
+    "Elemental Control",
+    "Shapeshifting",
+]
+
+ACTIVITIES = [
+    "Potion Crafting",
+    "Crystal Scrying",
+    "Spellcasting",
+    "Tarot Reading",
+]
+WORDS_PER_QUALITY = 15
+QUESTIONS_PER_ACTIVITY = 3
+NARRATIVE_CHOICES_PER_INTEREST = 25
+WORDS_PER_NARRATIVE_CHOICE = 10
+
 
 def generate_words(argument, number):
+    argument = argument.lower().replace(" ", "_")
     return [f"{argument}_word_{i}" for i in range(1, number + 1)]
 
 
@@ -12,114 +49,64 @@ def generate_questions(argument, number):
 def generate_narrative_choices(
     interest_name, num_narrative_choices, num_words_per_choice
 ):
-    narrative_choices = []
-    for i in range(1, num_narrative_choices + 1):
-        narrative_choice = {
+    return [
+        {
             "name": f"{interest_name}_narrative_choice_{i}",
             "night_number": i,
             "words": generate_words(
                 f"{interest_name}_narrative_choice_{i}", num_words_per_choice
             ),
         }
-        narrative_choices.append(narrative_choice)
-    return narrative_choices
-
-
-def generate_vampire_character():
-    character = {
-        "name": "Vampire",
-        "quality_1_choices": ["Mysterious", "Charming", "Ancient"],
-        "quality_2_choices": ["Nocturnal", "Elegant", "Powerful"],
-        "quality_3_choices": ["Immortal", "Solitary", "Mystical"],
-        "interest_1_choices": ["Gothic Literature", "Classical Music", "History"],
-        "interest_2_choices": ["Mystery", "Romance", "Exploration"],
-        "interest_3_choices": ["Supernatural", "Occult", "Art"],
-        "activity_1_choices": ["Night Stalking", "Castle Dwelling"],
-        "activity_2_choices": ["Socializing", "Animal Transformation"],
-    }
-    qualities = [
-        {"name": "Mysterious", "words": generate_words("Mysterious", 15)},
-        {"name": "Charming", "words": generate_words("Charming", 15)},
-        {"name": "Ancient", "words": generate_words("Ancient", 15)},
-        {"name": "Nocturnal", "words": generate_words("Nocturnal", 15)},
-        {"name": "Elegant", "words": generate_words("Elegant", 15)},
-        {"name": "Powerful", "words": generate_words("Powerful", 15)},
-        {"name": "Immortal", "words": generate_words("Immortal", 15)},
-        {"name": "Solitary", "words": generate_words("Solitary", 15)},
-        {"name": "Mystical", "words": generate_words("Mystical", 15)},
+        for i in range(1, num_narrative_choices + 1)
     ]
 
+
+def generate_character():
+    character = {
+        "name": CHARACTER_NAME,
+        "quality_1_choices": QUALITIES[:3],
+        "quality_2_choices": QUALITIES[3:6],
+        "quality_3_choices": QUALITIES[6:],
+        "interest_1_choices": INTERESTS[:3],
+        "interest_2_choices": INTERESTS[3:6],
+        "interest_3_choices": INTERESTS[6:],
+        "activity_1_choices": ACTIVITIES[:2],
+        "activity_2_choices": ACTIVITIES[2:],
+    }
+
+    qualities = [
+        {"name": quality, "words": generate_words(quality, WORDS_PER_QUALITY)}
+        for quality in QUALITIES
+    ]
     activities = [
         {
-            "name": "Night Stalking",
-            "questions": generate_questions("Night_Stalking", 3),
-        },
-        {
-            "name": "Castle Dwelling",
-            "questions": generate_questions("Castle_Dwelling", 3),
-        },
-        {"name": "Socializing", "questions": generate_questions("Socializing", 3)},
-        {
-            "name": "Animal Transformation",
-            "questions": generate_questions("Animal_Transformation", 3),
-        },
+            "name": activity,
+            "questions": generate_questions(activity, QUESTIONS_PER_ACTIVITY),
+        }
+        for activity in ACTIVITIES
     ]
-
     interests = [
         {
-            "name": "Gothic Literature",
+            "name": interest,
             "narrative_choices": generate_narrative_choices(
-                "Gothic_Literature", 25, 10
+                interest, NARRATIVE_CHOICES_PER_INTEREST, WORDS_PER_NARRATIVE_CHOICE
             ),
-        },
-        {
-            "name": "Classical Music",
-            "narrative_choices": generate_narrative_choices("Classical_Music", 25, 10),
-        },
-        {
-            "name": "History",
-            "narrative_choices": generate_narrative_choices("History", 25, 10),
-        },
-        {
-            "name": "Mystery",
-            "narrative_choices": generate_narrative_choices("Mystery", 25, 10),
-        },
-        {
-            "name": "Romance",
-            "narrative_choices": generate_narrative_choices("Romance", 25, 10),
-        },
-        {
-            "name": "Exploration",
-            "narrative_choices": generate_narrative_choices("Exploration", 25, 10),
-        },
-        {
-            "name": "Supernatural",
-            "narrative_choices": generate_narrative_choices("Supernatural", 25, 10),
-        },
-        {
-            "name": "Occult",
-            "narrative_choices": generate_narrative_choices("Occult", 25, 10),
-        },
-        {
-            "name": "Art",
-            "narrative_choices": generate_narrative_choices("Art", 25, 10),
-        },
+        }
+        for interest in INTERESTS
     ]
 
-    vampire_character = {
+    return {
         "character": character,
         "qualities": qualities,
         "activities": activities,
         "interests": interests,
     }
 
-    return vampire_character
-
 
 def main():
-    vampire_data = generate_vampire_character()
-    with open("vampire_character.json", "w") as file:
-        json.dump(vampire_data, file, indent=4)
+    character_data = generate_character()
+    with open("new_character.json", "w") as file:
+        json.dump(character_data, file, indent=4)
 
 
 if __name__ == "__main__":

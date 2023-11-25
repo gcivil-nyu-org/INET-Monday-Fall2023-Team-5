@@ -307,4 +307,11 @@ a:hover {
     align-self: flex-end;
 }
 
-  
+
+.avatar {
+    width: 30px; /* Adjust the size as needed */
+    height: 30px;
+    border-radius: 50%; /* This creates a circular avatar */
+    margin-right: 10px; /* Adds some space between the avatar and the name */
+    vertical-align: middle; /* Aligns the avatar with the text */
+}
