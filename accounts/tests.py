@@ -1259,3 +1259,37 @@ def test_invalid_method(self):
     # Check if the response indicates an invalid method
     self.assertEqual(response.status_code, 400)
     self.assertEqual(response.content.decode(), "Invalid method")
+
+
+class MatchModelTest(TestCase):
+    def setUp(self):
+        # Create two users
+        self.user1 = User.objects.create_user(username="user1", password="password1")
+        self.user2 = User.objects.create_user(username="user2", password="password2")
+
+    def test_create_match(self):
+        # Test that a match is created
+        match = Match.create_match(user1=self.user1, user2=self.user2)
+        self.assertIsNotNone(match)
+        self.assertEqual(match.user1, self.user1)
+        self.assertEqual(match.user2, self.user2)
+
+        # Test that no duplicate match is created
+        duplicate_match = Match.create_match(user1=self.user1, user2=self.user2)
+        self.assertIsNone(duplicate_match)
+
+        # Check that only one match exists in the database
+        match_count = Match.objects.count()
+        self.assertEqual(match_count, 1)
+
+    def test_create_match_with_swapped_users(self):
+        # Create a match with one set of user order
+        Match.create_match(user1=self.user1, user2=self.user2)
+
+        # Test that no match is created when users are swapped
+        swapped_match = Match.create_match(user1=self.user2, user2=self.user1)
+        self.assertIsNone(swapped_match)
+
+        # Ensure still only one match in the database
+        match_count = Match.objects.count()
+        self.assertEqual(match_count, 1)
