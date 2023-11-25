@@ -180,6 +180,7 @@ class GameTurn(models.Model):
         "Player", on_delete=models.SET_NULL, null=True, blank=True
     )
     turn_number = models.IntegerField(default=1)
+    narrative_nights = models.IntegerField(default=1)
 
     player_a_completed_cycle = models.BooleanField(default=False)
     player_b_completed_cycle = models.BooleanField(default=False)
@@ -306,6 +307,11 @@ class GameTurn(models.Model):
 
         # process the narrative choice here:
         # adding the associated words to the player's word pool
+        selected_narrative_choice = NarrativeChoice.objects.get(id=narrative_choice)
+        if selected_narrative_choice:
+            for word in selected_narrative_choice.words.all():
+                player.character_word_pool.add(word)
+                player.save()
 
         MAX_NUMBER_OF_TURNS = 30
 
@@ -316,6 +322,7 @@ class GameTurn(models.Model):
             self.player_b_narrative_choice_made = False
             # Transition to the SELECT_QUESTION state and add 1 to the turn number
             self.turn_number += 1
+            self.narrative_nights += 1
 
             if self.turn_number >= MAX_NUMBER_OF_TURNS:
                 self.parent_game.set_game_inactive()

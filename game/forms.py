@@ -26,16 +26,23 @@ class EmojiReactForm(forms.Form):
 
 
 class NarrativeChoiceForm(forms.Form):
-    NARRATIVE_CHOICES = (
-        ("choice1", "Choice 1 Description"),
-        ("choice2", "Choice 2 Description"),
-        # ... add other choices as needed
-    )
+    NARRATIVE_CHOICES = ()
     narrative = forms.ChoiceField(
         choices=NARRATIVE_CHOICES,
         widget=forms.RadioSelect(attrs={"class": "narrative-radio"}),
         label="Select a Narrative Choice",
     )
+
+    def __init__(self, *args, **kwargs):
+        character = kwargs.pop("character", None)
+        night = kwargs.pop("night", None)
+        super().__init__(*args, **kwargs)
+
+        if character:
+            self.fields["narrative"].choices = [
+                (n.id, n.name)
+                for n in character.narrative_choices.filter(night_number=night)
+            ]
 
 
 class CharacterSelectionForm(forms.Form):

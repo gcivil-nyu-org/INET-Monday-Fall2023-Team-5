@@ -167,7 +167,9 @@ class GameProgressView(View):
 
                 context.update(
                     {
-                        "narrative_form": NarrativeChoiceForm(),
+                        "narrative_form": NarrativeChoiceForm(
+                            player, turn.night_number
+                        ),
                         "choice_made": choice_made,
                     }
                 )
