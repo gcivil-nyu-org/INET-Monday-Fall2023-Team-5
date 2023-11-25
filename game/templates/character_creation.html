@@ -43,7 +43,12 @@
         color: #fff;
         font-size: 0.7em;
     }
-    
+    .selectable {
+      background-color: #ffc107; /* A yellow background to highlight the text */
+      cursor: pointer; /* Changes the cursor to indicate it's clickable */
+      padding: 2px;
+      border-radius: 5px;
+    }
 </style>
 
 {% if character_creation_state == "CHARACTER_AVATAR_SELECTION" %}
@@ -84,25 +89,22 @@
     <!-- Form for Public Profile Creation -->
     <div class="public-profile-creation">
         <h2>Create Your Public Profile</h2>
-            <form id="publicProfileCreationForm" method="post" action="{% url 'profile_submit_url' %}">
+            <form id="publicProfileCreationForm" method="post" action="{% url 'character_creation' %}">
             {% csrf_token %}
             <!-- The template for the profile text -->
             <p id="profileText">
-
-              <span class="selectable" data-field="quality_1" onclick="showChoices('quality_1');">[quality #1]</span>,
-              <span class="selectable" data-field="quality_2" onclick="showChoices('quality_2');">[quality #2]</span>,
-              <span class="selectable" data-field="quality_3" onclick="showChoices('quality_3');">[quality #3]</span>. I love
-              <span class="selectable" data-field="interest_1" onclick="showChoices('interest_1');">[interest #1]</span>,
-              <span class="selectable" data-field="interest_2" onclick="showChoices('interest_2');">[interest #2]</span>,
+              I am "{{ name }}" a "{{ description }}". I am
+              <span class="selectable" data-field="quality_1" data-choices="{{ form.quality_1.field.choices|safe }}" onclick="showChoices(this);">[quality #1]</span>
+              <span class="selectable" data-field="quality_2" data-choices="{{ form.quality_2.field.choices|safe }}" onclick="showChoices(this);">[quality #2]</span>
+              <span class="selectable" data-field="quality_3" data-choices="{{ form.quality_3.field.choices|safe }}" onclick="showChoices(this);">[quality #3]</span>
+              I love
+              <span class="selectable" data-field="interest_1" data-choices="{{ form.interest_1.field.choices|safe }}" onclick="showChoices(this);">[interest #1]</span>
+              <span class="selectable" data-field="interest_2" data-choices="{{ form.interest_2.field.choices|safe }}" onclick="showChoices(this);">[interest #2]</span>
               and
-              <span class="selectable" data-field="interest_3" onclick="showChoices('interest_3');">[interest #3]</span>.
+              <span class="selectable" data-field="interest_3" data-choices="{{ form.interest_3.field.choices|safe }}" onclick="showChoices(this);">[interest #3]</span>
               Looking for someone to
-              <span class="selectable" data-field="activity_1" onclick="showChoices('activity_1');">[activity #1]</span> or
-              <span class="selectable" data-field="activity_2" onclick="showChoices('activity_2');">[activity #2]</span> with.
-              <span class="selectable" data-field="emoji" onclick="showChoices('emoji');">[emoji]</span>
-              Don't message me if you're
-              <span class="selectable" data-field="dislike_1" onclick="showChoices('dislike_1');">[dislike #1]</span> or
-              <span class="selectable" data-field="dislike_2" onclick="showChoices('dislike_2');">[dislike #2]</span>!
+              <span class="selectable" data-field="activity_1" data-choices="{{ form.activity_1.field.choices|safe }}" onclick="showChoices(this);">[activity #1]</span>,
+              <span class="selectable" data-field="activity_2" data-choices="{{ form.activity_2.field.choices|safe }}" onclick="showChoices(this);">[activity #2]</span> with.
 
               Also, I love the moon. It's really important to me. Don't message me if you hate the moon!
             </p>
@@ -126,3 +128,56 @@
     <p>Unrecognized character creation state.</p>
 {% endif %}
 {% endblock %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Function to show the dropdown for choices
+      window.showChoices = function(element) {
+        // Get the field name and the choices for that field
+        const fieldName = element.getAttribute('data-field');
+        const choices = JSON.parse(element.getAttribute('data-choices'));
+
+        // Create a new select element
+        const select = document.createElement('select');
+        select.setAttribute('name', fieldName);
+        select.classList.add('dynamic-select');
+
+        // Populate the select element with options
+        choices.forEach(function(choice) {
+          const option = document.createElement('option');
+          option.value = choice[0];
+          option.textContent = choice[1];
+          select.appendChild(option);
+        });
+
+        // Position the select element
+        select.style.position = 'absolute';
+        select.style.left = element.getBoundingClientRect().left + 'px';
+        select.style.top = element.getBoundingClientRect().bottom + 'px';
+
+        // Handle selection of an option
+        select.onchange = function() {
+          // Update the display text
+          element.textContent = this.options[this.selectedIndex].text;
+          // Update the value of the corresponding hidden field
+          document.querySelector('input[name="' + fieldName + '"]').value = this.value;
+          // Remove the select element after selection
+          document.body.removeChild(select);
+        };
+
+        // Add the select element to the body and focus it
+        document.body.appendChild(select);
+        select.focus();
+
+        // Remove the select element if we click outside of it
+        document.addEventListener('click', function(event) {
+          if (event.target !== select) {
+            if (select.parentNode) {
+              select.parentNode.removeChild(select);
+            }
+          }
+        }, { once: true });
+      };
+    });
+
+</script>
