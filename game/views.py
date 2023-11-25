@@ -5,6 +5,7 @@ from .forms import (
     EmojiReactForm,
     NarrativeChoiceForm,
     CharacterSelectionForm,
+    MoonSignInterpretationForm
 )
 from .models import Player, GameSession, GameTurn, Word, Question, Character
 from django.shortcuts import redirect, render
@@ -159,10 +160,11 @@ class GameProgressView(View):
                     }
                 )
             elif game_session.current_game_turn.state == GameTurn.MOON_PHASE:
-                turn = game_session.current_game_turn
+                # turn = game_session.current_game_turn
                 context.update(
                     {
-                        "moon_phase": turn.get_moon_phase(),
+                        "moon_sign_form": MoonSignInterpretationForm(),
+                       # "moon_phase": turn.get_moon_phase(),
                     }
                 )
 
@@ -232,10 +234,13 @@ class CharacterCreationView(View):
 
             # Proceed with character creation form since the
             # game is in the correct state
-            form = CharacterSelectionForm()
-            return render(
-                request, self.template_name, {"form": form, "game_id": game_id}
-            )
+            character_form = CharacterSelectionForm()
+            moon_sign_form = MoonSignInterpretationForm()
+            return render(request, self.template_name, {
+                "character_form": character_form,
+                "moon_sign_form": moon_sign_form,
+                "game_id": game_id
+            })
 
         except GameSession.DoesNotExist:
             # Handle the error, e.g., by showing a message or redirecting
@@ -252,15 +257,18 @@ class CharacterCreationView(View):
                 # If the game is not in the character creation state,
                 # redirect to the game progress
                 return redirect(game_session.get_absolute_url())
-
-            form = CharacterSelectionForm(request.POST)
-            if form.is_valid():
+            
+            character_form = CharacterSelectionForm(request.POST)
+            moon_sign_form = MoonSignInterpretationForm(request.POST)
+            if character_form.is_valid() and moon_sign_form.is_valid():
                 # The form is valid, save the character for the player
                 player, _ = Player.objects.get_or_create(
                     user=request.user, defaults={"game_session": game_session}
                 )
-                player.character = form.cleaned_data["character"]
+                player.character = character_form.cleaned_data["character"]
                 player.save()
+
+                interpretations = moon_sign_form.cleaned_data
 
                 # Fetch players associated with this game session
                 players = Player.objects.filter(game_session=game_session)
@@ -285,7 +293,11 @@ class CharacterCreationView(View):
             return redirect("game:game_list")
 
         # Re-render the form with errors if it's not valid
-        return render(request, self.template_name, {"form": form, "game_id": game_id})
+        return render(request, self.template_name, {
+            "character_form": character_form,
+            "moon_sign_form": moon_sign_form,
+            "game_id": game_id
+        })
 
 
 def get_character_details(request):
