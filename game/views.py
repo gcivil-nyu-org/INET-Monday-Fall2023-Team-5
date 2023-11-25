@@ -247,35 +247,37 @@ class CharacterCreationView(View):
                 player = request.user.player
                 context = {"game_id": game_id, "player": player}
 
-            # Proceed with character creation forms since the
-            # game is in the correct state
-            if player.character_creation_state == Player.CHARACTER_AVATAR_SELECTION:
-                form = CharacterSelectionForm()
-                context["form"] = form
-            elif player.character_creation_state == Player.MOON_MEANING_SELECTION:
-                pass  # Moon meaning selection specific logic
-            elif player.character_creation_state == Player.PUBLIC_PROFILE_CREATION:
-                form = PublicProfileCreationForm(character=player.character)
-                form_choices = {
-                    "quality_1": form.fields["quality_1"].choices,
-                    "quality_2": form.fields["quality_2"].choices,
-                    "quality_3": form.fields["quality_3"].choices,
-                    "interest_1": form.fields["interest_1"].choices,
-                    "interest_2": form.fields["interest_2"].choices,
-                    "interest_3": form.fields["interest_3"].choices,
-                    "activity_1": form.fields["activity_1"].choices,
-                    "activity_2": form.fields["activity_2"].choices,
-                }
-
-                context.update(
-                    {
-                        "form": form,
-                        "form_choices_json": json.dumps(form_choices),
+                # Proceed with character creation forms since the
+                # game is in the correct state
+                if player.character_creation_state == Player.CHARACTER_AVATAR_SELECTION:
+                    form = CharacterSelectionForm()
+                    context["form"] = form
+                elif player.character_creation_state == Player.MOON_MEANING_SELECTION:
+                    pass  # Moon meaning selection specific logic
+                elif player.character_creation_state == Player.PUBLIC_PROFILE_CREATION:
+                    form = PublicProfileCreationForm(character=player.character)
+                    form_choices = {
+                        "quality_1": form.fields["quality_1"].choices,
+                        "quality_2": form.fields["quality_2"].choices,
+                        "quality_3": form.fields["quality_3"].choices,
+                        "interest_1": form.fields["interest_1"].choices,
+                        "interest_2": form.fields["interest_2"].choices,
+                        "interest_3": form.fields["interest_3"].choices,
+                        "activity_1": form.fields["activity_1"].choices,
+                        "activity_2": form.fields["activity_2"].choices,
                     }
-                )
 
-            elif player.character_creation_state == Player.CHARACTER_COMPLETE:
-                return redirect(game_session.get_absolute_url())
+                    context.update(
+                        {
+                            "form": form,
+                            "form_choices_json": json.dumps(form_choices),
+                        }
+                    )
+
+                elif player.character_creation_state == Player.CHARACTER_COMPLETE:
+                    return redirect(game_session.get_absolute_url())
+
+                return render(request, self.template_name, context=context)
 
         except GameSession.DoesNotExist:
             # Handle the error, e.g., by showing a message or redirecting
@@ -284,9 +286,6 @@ class CharacterCreationView(View):
         except Exception as e:
             messages.error(request, str(e))
             return redirect("home")
-
-        print(context)
-        return render(request, self.template_name, context=context)
 
     def post(self, request, *args, **kwargs):
         game_id = kwargs["game_id"]

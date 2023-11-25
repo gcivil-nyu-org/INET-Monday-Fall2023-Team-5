@@ -28,7 +28,6 @@ document.addEventListener('DOMContentLoaded', function() {
          if (hiddenInput) {
           //  hiddenInput.value to integer
            hiddenInput.value = parseInt(choice[0], 10);
-           console.log(hiddenInput.value);
          } else {
            console.error('Hidden input not found for id:', hiddenInputId);
          }
