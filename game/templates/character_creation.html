@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 <style>
@@ -43,16 +44,38 @@
         color: #fff;
         font-size: 0.7em;
     }
+    #profileText {
+        background-color: #fabcd7;
+        color: #001474;
+        border-radius: 15px; /* Rounded corners */
+        padding: 20px; /* Space inside the box */
+        border: 5px solid #f406a2; /* Pink border, match this with the exact color from your image */
+        margin: 20px auto; /* Centering the box */
+        width: 80%; /* Adjust the width as needed */
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Box shadow for a slight 3D effect */
+        position: relative; /* For absolute positioning of the dropdown */
+    }
+
     .selectable {
-      background-color: #ffc107; /* A yellow background to highlight the text */
-      cursor: pointer; /* Changes the cursor to indicate it's clickable */
-      padding: 2px;
-      border-radius: 5px;
+        color: #a90771; /* Lighter pink for the clickable options, match with the image */
+        cursor: pointer; /* Change cursor to indicate clickable */
+        border-radius: 5px; /* Rounded corners for clickable options */
+        display: inline-block; /* Ensure it does not take full width */
+    }
+
+    .selectable:hover {
+        color: #001474; /* Slightly darker pink on hover */
+    }
+
+    /* Style for the dynamic select dropdown */
+
+    .dynamic-select {
+        position: absolute; /* Position it over the page content */
+        z-index: 10; /* Ensure it's on top of other elements */
     }
 </style>
 
-{% if character_creation_state == "CHARACTER_AVATAR_SELECTION" %}
-
+{% if player.character_creation_state == "character_avatar_selection" %}
     <div class="character-selection">
     <h2>Select Your Character</h2>
     <form method="post">
@@ -74,26 +97,27 @@
     </form>
     </div>
 
-{% elif character_creation_state == "MOON_MEANING_SELECTION" %}
+{% elif player.character_creation_state == "MOON_MEANING_SELECTION" %}
     <!-- Form for Moon Meaning Selection -->
     <div class="moon-meaning-selection">
         <h2>Select Moon Meaning</h2>
-        <form method="post" action="{% url 'moon_meaning_submit_url' %}">
+        <form method="post">
             {% csrf_token %}
             <!-- Render your moon meaning selection fields here -->
             <input type="submit" value="Confirm Moon Meaning" class="confirm-btn">
         </form>
     </div>
 
-{% elif character_creation_state == "PUBLIC_PROFILE_CREATION" %}
-    <!-- Form for Public Profile Creation -->
+{% elif player.character_creation_state == "public_profile_creation" %}
+
+
     <div class="public-profile-creation">
         <h2>Create Your Public Profile</h2>
-            <form id="publicProfileCreationForm" method="post" action="{% url 'character_creation' %}">
+            <form id="publicProfileCreationForm" method="post">
             {% csrf_token %}
             <!-- The template for the profile text -->
-            <p id="profileText">
-              I am "{{ name }}" a "{{ description }}". I am
+            <div id="profileText">
+              I am "{{ player.character.name }}" a "{{ player.character.description }}". I am
               <span class="selectable" data-field="quality_1" data-choices="{{ form.quality_1.field.choices|safe }}" onclick="showChoices(this);">[quality #1]</span>
               <span class="selectable" data-field="quality_2" data-choices="{{ form.quality_2.field.choices|safe }}" onclick="showChoices(this);">[quality #2]</span>
               <span class="selectable" data-field="quality_3" data-choices="{{ form.quality_3.field.choices|safe }}" onclick="showChoices(this);">[quality #3]</span>
@@ -107,7 +131,7 @@
               <span class="selectable" data-field="activity_2" data-choices="{{ form.activity_2.field.choices|safe }}" onclick="showChoices(this);">[activity #2]</span> with.
 
               Also, I love the moon. It's really important to me. Don't message me if you hate the moon!
-            </p>
+            </div>
 
             <!-- The actual form fields, hidden -->
             {{ form.quality_1.as_hidden }}
@@ -129,55 +153,7 @@
 {% endif %}
 {% endblock %}
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Function to show the dropdown for choices
-      window.showChoices = function(element) {
-        // Get the field name and the choices for that field
-        const fieldName = element.getAttribute('data-field');
-        const choices = JSON.parse(element.getAttribute('data-choices'));
 
-        // Create a new select element
-        const select = document.createElement('select');
-        select.setAttribute('name', fieldName);
-        select.classList.add('dynamic-select');
-
-        // Populate the select element with options
-        choices.forEach(function(choice) {
-          const option = document.createElement('option');
-          option.value = choice[0];
-          option.textContent = choice[1];
-          select.appendChild(option);
-        });
-
-        // Position the select element
-        select.style.position = 'absolute';
-        select.style.left = element.getBoundingClientRect().left + 'px';
-        select.style.top = element.getBoundingClientRect().bottom + 'px';
-
-        // Handle selection of an option
-        select.onchange = function() {
-          // Update the display text
-          element.textContent = this.options[this.selectedIndex].text;
-          // Update the value of the corresponding hidden field
-          document.querySelector('input[name="' + fieldName + '"]').value = this.value;
-          // Remove the select element after selection
-          document.body.removeChild(select);
-        };
-
-        // Add the select element to the body and focus it
-        document.body.appendChild(select);
-        select.focus();
-
-        // Remove the select element if we click outside of it
-        document.addEventListener('click', function(event) {
-          if (event.target !== select) {
-            if (select.parentNode) {
-              select.parentNode.removeChild(select);
-            }
-          }
-        }, { once: true });
-      };
-    });
-
-</script>
+{% block scripts %}
+<script src="{% static 'js/public_profile.js' %}"></script>
+{% endblock %}

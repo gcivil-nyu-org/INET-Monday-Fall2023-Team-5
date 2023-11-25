@@ -233,7 +233,6 @@ class CharacterCreationView(View):
 
             else:
                 player = request.user.player
-
             # Proceed with character creation forms since the
             # game is in the correct state
             if player.character_creation_state == Player.CHARACTER_AVATAR_SELECTION:
@@ -241,21 +240,22 @@ class CharacterCreationView(View):
             elif player.character_creation_state == Player.MOON_MEANING_SELECTION:
                 pass
             elif player.character_creation_state == Player.PUBLIC_PROFILE_CREATION:
-                form = PublicProfileCreationForm(request.user.player.character)
-
+                form = PublicProfileCreationForm(
+                    character=request.user.player.character
+                )
             elif player.character_creation_state == Player.CHARACTER_COMPLETE:
                 return redirect(game_session.get_absolute_url())
 
             return render(
-                request, self.template_name, {"form": form, "game_id": game_id}
+                request,
+                self.template_name,
+                {"form": form, "game_id": game_id, "player": player},
             )
 
         except GameSession.DoesNotExist:
             # Handle the error, e.g., by showing a message or redirecting
             messages.error(request, "Game session not found.")
-            return redirect(
-                "game:game_list"
-            )  # Redirect to a view where the user can see a list of games
+            return redirect("home")
         except Exception as e:
             messages.error(request, str(e))
             return redirect("home")
@@ -271,6 +271,7 @@ class CharacterCreationView(View):
 
             else:
                 player = request.user.player
+
             if player.character_creation_state == Player.CHARACTER_AVATAR_SELECTION:
                 form = CharacterSelectionForm(request.POST)
                 if form.is_valid():
@@ -279,12 +280,12 @@ class CharacterCreationView(View):
                         user=request.user, defaults={"game_session": game_session}
                     )
                     player.character = form.cleaned_data["character"]
-                    player.save()
 
                     # transition to next state
-                    # This should change later to a proper FSM transition
-                    player.character_creation_state = Player.MOON_MEANING_SELECTION
-                    return redirect("character_creation")
+                    # This should change later to a proper FSM transition to Moon Phase
+                    player.character_creation_state = Player.PUBLIC_PROFILE_CREATION
+                    player.save()
+                    return redirect("game:character_creation", game_id=game_id)
             elif player.character_creation_state == Player.MOON_MEANING_SELECTION:
                 pass
             elif player.character_creation_state == Player.PUBLIC_PROFILE_CREATION:
@@ -338,7 +339,9 @@ class CharacterCreationView(View):
                     else:
                         print("There are not 2 players")
 
-                    return redirect(game_session.get_absolute_url())
+                    return render(
+                        request, "character_creation.html", {"game_id": game_id}
+                    )
 
         except GameSession.DoesNotExist:
             # Handle the error, e.g., by showing a message or redirecting

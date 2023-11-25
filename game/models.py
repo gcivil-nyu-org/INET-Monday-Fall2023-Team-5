@@ -479,3 +479,14 @@ class Word(models.Model):
 
     def __str__(self):
         return self.word
+
+
+class PublicProfile(models.Model):
+    quality_1 = models.CharField(max_length=100)
+    quality_2 = models.CharField(max_length=100)
+    quality_3 = models.CharField(max_length=100)
+    interest_1 = models.CharField(max_length=100)
+    interest_2 = models.CharField(max_length=100)
+    interest_3 = models.CharField(max_length=100)
+    activity_1 = models.CharField(max_length=100)
+    activity_2 = models.CharField(max_length=100)
