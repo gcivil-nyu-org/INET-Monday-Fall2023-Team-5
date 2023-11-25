@@ -1196,3 +1196,66 @@ class LikeProfileViewTest(TestCase):
         self.assertEqual(like_count, 1)
         match_count = Match.objects.filter(user1=self.user1, user2=self.user2).count()
         self.assertEqual(match_count, 0)
+
+
+class ResetLikesViewTest(TestCase):
+    def setUp(self):
+        # Set up test data
+        self.client = Client()
+
+        # Create two users
+        self.user1 = User.objects.create_user(username="user1", password="password1")
+        self.user2 = User.objects.create_user(username="user2", password="password2")
+
+        # Create profiles for the users if they don't already exist
+        self.profile1, _ = Profile.objects.get_or_create(user=self.user1)
+        self.profile2, _ = Profile.objects.get_or_create(user=self.user2)
+
+        # Set initial likes_remaining for the profiles
+        self.profile1.likes_remaining = 1  # Set a non-zero initial value
+        self.profile1.save()
+        self.profile2.likes_remaining = 2  # Set a non-zero initial value
+        self.profile2.save()
+
+    def test_reset_likes(self):
+        # Create a staff user and login
+        staff_user = User.objects.create_user(
+            username="staffuser", password="staffpassword", is_staff=True
+        )
+        self.client.login(username="staffuser", password="staffpassword")
+        # Set up initial likes and likes_remaining for test users
+        Like.objects.create(from_user=self.user1, to_user=self.user2)
+        self.profile1.likes_remaining = 1
+        self.profile1.save()
+        self.profile2.likes_remaining = 2
+        self.profile2.save()
+
+        # Make a POST request to reset likes
+        response = self.client.post(reverse("reset_likes_view"))
+
+        # Check if the response is successful
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content.decode(), "Likes have been reset.")
+
+        # Verify that all likes have been cleared
+        self.assertEqual(Like.objects.count(), 0)
+
+        # Verify that likes_remaining is reset to 3 for all users
+        self.profile1.refresh_from_db()
+        self.profile2.refresh_from_db()
+        self.assertEqual(self.profile1.likes_remaining, 3)
+        self.assertEqual(self.profile2.likes_remaining, 3)
+
+
+def test_invalid_method(self):
+    # Create a staff user and login
+    staff_user = User.objects.create_user(
+        username="staffuser", password="staffpassword", is_staff=True
+    )
+    self.client.login(username="staffuser", password="staffpassword")
+    # Make a GET request (or any method other than POST)
+    response = self.client.get(reverse("reset_likes_view"))
+
+    # Check if the response indicates an invalid method
+    self.assertEqual(response.status_code, 400)
+    self.assertEqual(response.content.decode(), "Invalid method")
