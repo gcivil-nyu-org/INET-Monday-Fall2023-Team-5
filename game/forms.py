@@ -34,14 +34,14 @@ class NarrativeChoiceForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
-        character = kwargs.pop("character", None)
+        player = kwargs.pop("player", None)
         night = kwargs.pop("night", None)
         super().__init__(*args, **kwargs)
 
-        if character:
+        if player:
             self.fields["narrative"].choices = [
                 (n.id, n.name)
-                for n in character.narrative_choices.filter(night_number=night)
+                for n in player.narrative_choice_pool.filter(night_number=night)
             ]
 
 

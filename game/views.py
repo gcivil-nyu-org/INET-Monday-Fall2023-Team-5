@@ -55,7 +55,7 @@ def initiate_game_session(request):
         # Initialize the game and redirect to the GameProgressView
         game_session.initialize_game()
         game_session.save()
-        return redirect("game_progress", game_id=game_session.game_id)
+        return redirect("character_creation", game_id=game_session.game_id)
     else:
         # Define a list of the usernames that can be selected
         selectable_usernames = [
@@ -168,7 +168,7 @@ class GameProgressView(View):
                 context.update(
                     {
                         "narrative_form": NarrativeChoiceForm(
-                            player, turn.night_number
+                            player=player, night=turn.narrative_nights
                         ),
                         "choice_made": choice_made,
                     }
@@ -287,7 +287,7 @@ class CharacterCreationView(View):
             return redirect("home")
         except Exception as e:
             messages.error(request, str(e))
-            return redirect("home")
+            return redirect("character_creation", game_id=game_id)
 
     def post(self, request, *args, **kwargs):
         game_id = kwargs["game_id"]
@@ -321,36 +321,16 @@ class CharacterCreationView(View):
                 form = PublicProfileCreationForm(
                     request.POST, character=player.character
                 )
-                print(form.errors)
                 if form.is_valid():
                     qualities = [
                         form.cleaned_data.get("quality_1"),
                         form.cleaned_data.get("quality_2"),
                         form.cleaned_data.get("quality_3"),
                     ]
-
-                    for quality_id in qualities:
-                        if quality_id is not None:  # Check if quality_id is not None
-                            quality = Quality.objects.get(id=quality_id)
-                            words = list(quality.words.all())
-                            random_words = random.sample(words, min(len(words), 15))
-                            for word in random_words:
-                                player.character_word_pool.add(word)
-
                     activities = [
                         form.cleaned_data.get("activity_1"),
                         form.cleaned_data.get("activity_2"),
                     ]
-
-                    for activity_id in activities:
-                        if activity_id is not None:
-                            activity = Activity.objects.get(id=activity_id)
-                            questions = list(activity.questions.all())
-                            random_questions = random.sample(
-                                questions, min(len(questions), 3)
-                            )
-                            for question in random_questions:
-                                player.question_pool.add(question)
 
                     interests = [
                         form.cleaned_data.get("interest_1"),
@@ -358,21 +338,16 @@ class CharacterCreationView(View):
                         form.cleaned_data.get("interest_3"),
                     ]
 
-                    for interest_id in interests:
-                        if interest_id is not None:
-                            interest = Interest.objects.get(id=interest_id)
-                            for narrative_choice in interest.narrative_choices.all():
-                                player.narrative_choice_pool.add(narrative_choice)
-
                     # transition to next state
-                    # This should change later to a proper FSM transition
-                    player.character_creation_state = Player.CHARACTER_COMPLETE
-                    player.save()
+                    player.create_public_profile(
+                        qualities=qualities, activities=activities, interests=interests
+                    )
 
                     messages.success(request, "Your profile has been updated.")
                 else:
                     messages.error(request, "Please complete your character profile.")
                     return redirect("game:character_creation", game_id=game_id)
+
                 # Fetch players associated with this game session
                 players = Player.objects.filter(game_session=game_session)
 

@@ -1,3 +1,5 @@
+import random
+
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import User
@@ -42,6 +44,24 @@ class Player(models.Model):
         default=CHARACTER_AVATAR_SELECTION, choices=CHARACTER_CREATION_STATE_CHOICES
     )
 
+    @transition(
+        field=character_creation_state,
+        source=CHARACTER_AVATAR_SELECTION,
+        target=PUBLIC_PROFILE_CREATION,
+    )
+    def select_character_avatar(self, character):
+        self.character = character
+        self.save()
+
+    @transition(
+        field=character_creation_state,
+        source=PUBLIC_PROFILE_CREATION,
+        target=CHARACTER_COMPLETE,
+    )
+    def create_public_profile(self, qualities, interests, activities):
+        self.populate_character_with_creation_choices(qualities, interests, activities)
+        self.save()
+
     def save(self, *args, **kwargs):
         if not self.game_session:
             raise ValidationError(
@@ -63,7 +83,34 @@ class Player(models.Model):
         self.question_pool.remove(question)
         self.save()
 
+    def populate_character_with_creation_choices(
+        self, qualities, interests, activities
+    ):
+        for quality_id in qualities:
+            if quality_id is not None:
+                quality = Quality.objects.get(id=quality_id)
+                words = list(quality.words.all())
+                random_words = random.sample(words, min(len(words), 15))
+                for word in random_words:
+                    self.character_word_pool.add(word)
 
+        for activity_id in activities:
+            if activity_id is not None:
+                activity = Activity.objects.get(id=activity_id)
+                questions = list(activity.questions.all())
+                random_questions = random.sample(questions, min(len(questions), 3))
+                for question in random_questions:
+                    self.question_pool.add(question)
+
+        for interest_id in interests:
+            if interest_id is not None:
+                interest = Interest.objects.get(id=interest_id)
+                for narrative_choice in interest.narrative_choices.all():
+                    self.narrative_choice_pool.add(narrative_choice)
+        self.save()
+
+
+# Auxiliary functions for game session
 def generate_game_id():
     return str(uuid.uuid4())
 

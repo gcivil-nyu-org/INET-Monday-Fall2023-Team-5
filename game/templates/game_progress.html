@@ -50,7 +50,6 @@
             {% if game_session.current_game_turn.state == 'narrative_choices' %}
                 {% if choice_made == False %}
                     <h3>Select a Narrative Choice</h3>
-                    {{ narrative_form.narrative.label_tag }}
                     {{ narrative_form.narrative }}
                     <button id="submit-narrative-choice" data-action="select_narrative">Submit Choice</button>
                 {% else %}
