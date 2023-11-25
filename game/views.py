@@ -272,7 +272,10 @@ class CharacterCreationView(View):
                         game_session.start_regular_turn()
                         game_session.save()
                 else:
-                    print("There are not 2 players")
+                    print(
+                        "The game session state remains in CHARACTER_CREATION as there "
+                        "are not exactly 2 players to transition to REGULAR_TURN."
+                    )
 
                 return redirect(game_session.get_absolute_url())
 

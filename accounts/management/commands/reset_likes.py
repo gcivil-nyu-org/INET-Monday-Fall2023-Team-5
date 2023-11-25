@@ -12,11 +12,6 @@ class Command(BaseCommand):
         dbname = options.get("dbname")
         if dbname:
             self.stdout.write(f"Using database: {dbname}")
-            # Here you would add logic to switch to the right database if necessary
-            # For example, using Django's database routers or
-            # manually selecting the database
-            # using `using(dbname)` queryset method if
-            # your app handles multiple databases.
 
         # Clear all the likes
         Like.objects.all().delete()
