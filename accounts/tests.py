@@ -1117,3 +1117,82 @@ class EditProfileFormTest(TestCase):
             list(form.fields["open_to_dating"].queryset),
             list(DatingPreference.objects.all()),
         )
+
+
+class LikeProfileViewTest(TestCase):
+    def setUp(self):
+        # Create two users
+        self.user1 = User.objects.create_user(username="user1", password="password1")
+        self.user2 = User.objects.create_user(username="user2", password="password2")
+        # Create profiles for the users if they don't already exist
+        self.profile1, _ = Profile.objects.get_or_create(user=self.user1)
+        self.profile2, _ = Profile.objects.get_or_create(user=self.user2)
+        # Set initial likes_remaining for the profiles
+        self.profile1.likes_remaining = 3
+        self.profile1.save()
+        self.profile2.likes_remaining = 3
+        self.profile2.save()
+
+    def test_like_profile(self):
+        # Ensure there are no existing matches for user1 and user2
+        Match.objects.filter(
+            Q(user1=self.user1, user2=self.user2)
+            | Q(user1=self.user2, user2=self.user1)
+        ).delete()
+
+        # Simulate user2 liking user1
+        self.client.logout()  # Ensure user1 is logged out
+        self.client.login(username="user2", password="password2")
+        self.client.post(reverse("like_profile", args=[self.user1.pk]))
+        self.client.logout()  # Log out user2
+
+        # Login as user1 and like user2's profile
+        self.client.login(username="user1", password="password1")
+        response = self.client.post(reverse("like_profile", args=[self.user2.pk]))
+
+        # Check if the response is as expected
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertTrue(data["success"])
+        self.assertEqual(data["action"], "liked")
+
+        # Check if a Like object was created for user1 liking user2
+        like_exists = Like.objects.filter(
+            from_user=self.user1, to_user=self.user2
+        ).exists()
+        self.assertTrue(like_exists)
+
+        # Check if a Match object was created due to mutual like
+        match_exists = Match.objects.filter(
+            Q(user1=self.user1, user2=self.user2)
+            | Q(user1=self.user2, user2=self.user1)
+        ).exists()
+        self.assertTrue(match_exists)
+
+        # Check if user1's likes_remaining is updated (should be 2 now)
+        self.profile1.refresh_from_db()
+        self.assertEqual(self.profile1.likes_remaining, 2)
+
+    def test_already_liked_profile(self):
+        # Create an existing like
+        Like.objects.create(from_user=self.user1, to_user=self.user2)
+
+        # Login user1
+        self.client.login(username="user1", password="password1")
+
+        # Make a POST request to like user2's profile again
+        response = self.client.post(reverse("like_profile", args=[self.user2.pk]))
+
+        # Check if the response indicates failure due to already liking the profile
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertFalse(data["success"])
+        self.assertEqual(data["error"], "You have already liked this user.")
+
+        # Check if no new Like or Match objects were created
+        like_count = Like.objects.filter(
+            from_user=self.user1, to_user=self.user2
+        ).count()
+        self.assertEqual(like_count, 1)
+        match_count = Match.objects.filter(user1=self.user1, user2=self.user2).count()
+        self.assertEqual(match_count, 0)
