@@ -461,3 +461,15 @@ class Word(models.Model):
 
     def __str__(self):
         return self.word
+
+class MoonSignInterpretation(models.Model):
+    # Assuming you have a Player model that is linked to the User model
+    # player = models.ForeignKey(Player, on_delete=models.CASCADE)
+    first_quarter = models.CharField(max_length=150)
+    first_quarter_reason = models.TextField()
+    full_moon = models.CharField(max_length=150)
+    full_moon_reason = models.TextField()
+    last_quarter = models.CharField(max_length=150)
+    last_quarter_reason = models.TextField()
+    new_moon = models.CharField(max_length=150)
+    new_moon_reason = models.TextField()
