@@ -462,6 +462,7 @@ class Word(models.Model):
     def __str__(self):
         return self.word
 
+
 class MoonSignInterpretation(models.Model):
     # Assuming you have a Player model that is linked to the User model
     # player = models.ForeignKey(Player, on_delete=models.CASCADE)
