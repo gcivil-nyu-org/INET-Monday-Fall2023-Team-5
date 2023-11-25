@@ -46,7 +46,9 @@
     
 </style>
 
-<div class="character-selection">
+{% if character_creation_state == "CHARACTER_AVATAR_SELECTION" %}
+
+    <div class="character-selection">
     <h2>Select Your Character</h2>
     <form method="post">
         {% csrf_token %}
@@ -65,5 +67,62 @@
         <div id="submit"></div>
         <button type="submit" class="confirm-btn">Confirm Selection</button>
     </form>
-</div>
+    </div>
+
+{% elif character_creation_state == "MOON_MEANING_SELECTION" %}
+    <!-- Form for Moon Meaning Selection -->
+    <div class="moon-meaning-selection">
+        <h2>Select Moon Meaning</h2>
+        <form method="post" action="{% url 'moon_meaning_submit_url' %}">
+            {% csrf_token %}
+            <!-- Render your moon meaning selection fields here -->
+            <input type="submit" value="Confirm Moon Meaning" class="confirm-btn">
+        </form>
+    </div>
+
+{% elif character_creation_state == "PUBLIC_PROFILE_CREATION" %}
+    <!-- Form for Public Profile Creation -->
+    <div class="public-profile-creation">
+        <h2>Create Your Public Profile</h2>
+            <form id="publicProfileCreationForm" method="post" action="{% url 'profile_submit_url' %}">
+            {% csrf_token %}
+            <!-- The template for the profile text -->
+            <p id="profileText">
+
+              <span class="selectable" data-field="quality_1" onclick="showChoices('quality_1');">[quality #1]</span>,
+              <span class="selectable" data-field="quality_2" onclick="showChoices('quality_2');">[quality #2]</span>,
+              <span class="selectable" data-field="quality_3" onclick="showChoices('quality_3');">[quality #3]</span>. I love
+              <span class="selectable" data-field="interest_1" onclick="showChoices('interest_1');">[interest #1]</span>,
+              <span class="selectable" data-field="interest_2" onclick="showChoices('interest_2');">[interest #2]</span>,
+              and
+              <span class="selectable" data-field="interest_3" onclick="showChoices('interest_3');">[interest #3]</span>.
+              Looking for someone to
+              <span class="selectable" data-field="activity_1" onclick="showChoices('activity_1');">[activity #1]</span> or
+              <span class="selectable" data-field="activity_2" onclick="showChoices('activity_2');">[activity #2]</span> with.
+              <span class="selectable" data-field="emoji" onclick="showChoices('emoji');">[emoji]</span>
+              Don't message me if you're
+              <span class="selectable" data-field="dislike_1" onclick="showChoices('dislike_1');">[dislike #1]</span> or
+              <span class="selectable" data-field="dislike_2" onclick="showChoices('dislike_2');">[dislike #2]</span>!
+
+              Also, I love the moon. It's really important to me. Don't message me if you hate the moon!
+            </p>
+
+            <!-- The actual form fields, hidden -->
+            {{ form.quality_1.as_hidden }}
+            {{ form.quality_2.as_hidden }}
+            {{ form.quality_3.as_hidden }}
+            {{ form.interest_1.as_hidden }}
+            {{ form.interest_2.as_hidden }}
+            {{ form.interest_3.as_hidden }}
+            {{ form.activity_1.as_hidden }}
+            {{ form.activity_2.as_hidden }}
+
+            <input type="submit" value="Submit" />
+            </form>
+    </div>
+
+{% else %}
+    <!-- Fallback or error message if the state is unrecognized -->
+    <p>Unrecognized character creation state.</p>
+{% endif %}
 {% endblock %}

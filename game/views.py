@@ -5,6 +5,7 @@ from .forms import (
     EmojiReactForm,
     NarrativeChoiceForm,
     CharacterSelectionForm,
+    PublicProfileCreationForm,
 )
 from .models import Player, GameSession, GameTurn, Word, Question, Character
 from django.shortcuts import redirect, render
@@ -230,9 +231,21 @@ class CharacterCreationView(View):
                 # redirect to the game progress
                 return redirect(game_session.get_absolute_url())
 
-            # Proceed with character creation form since the
+            else:
+                player = request.user.player
+
+            # Proceed with character creation forms since the
             # game is in the correct state
-            form = CharacterSelectionForm()
+            if player.character_creation_state == Player.CHARACTER_AVATAR_SELECTION:
+                form = CharacterSelectionForm()
+            elif player.character_creation_state == Player.MOON_MEANING_SELECTION:
+                pass
+            elif player.character_creation_state == Player.PUBLIC_PROFILE_CREATION:
+                form = PublicProfileCreationForm(request.user.player.character)
+
+            elif player.character_creation_state == Player.CHARACTER_COMPLETE:
+                return redirect(game_session.get_absolute_url())
+
             return render(
                 request, self.template_name, {"form": form, "game_id": game_id}
             )
@@ -243,6 +256,9 @@ class CharacterCreationView(View):
             return redirect(
                 "game:game_list"
             )  # Redirect to a view where the user can see a list of games
+        except Exception as e:
+            messages.error(request, str(e))
+            return redirect("home")
 
     def post(self, request, *args, **kwargs):
         game_id = kwargs["game_id"]
@@ -253,36 +269,81 @@ class CharacterCreationView(View):
                 # redirect to the game progress
                 return redirect(game_session.get_absolute_url())
 
-            form = CharacterSelectionForm(request.POST)
-            if form.is_valid():
-                # The form is valid, save the character for the player
-                player, _ = Player.objects.get_or_create(
-                    user=request.user, defaults={"game_session": game_session}
+            else:
+                player = request.user.player
+            if player.character_creation_state == Player.CHARACTER_AVATAR_SELECTION:
+                form = CharacterSelectionForm(request.POST)
+                if form.is_valid():
+                    # The form is valid, save the character for the player
+                    player, _ = Player.objects.get_or_create(
+                        user=request.user, defaults={"game_session": game_session}
+                    )
+                    player.character = form.cleaned_data["character"]
+                    player.save()
+
+                    # transition to next state
+                    # This should change later to a proper FSM transition
+                    player.character_creation_state = Player.MOON_MEANING_SELECTION
+                    return redirect("character_creation")
+            elif player.character_creation_state == Player.MOON_MEANING_SELECTION:
+                pass
+            elif player.character_creation_state == Player.PUBLIC_PROFILE_CREATION:
+                form = PublicProfileCreationForm(
+                    request.POST, character=player.character
                 )
-                player.character = form.cleaned_data["character"]
-                player.save()
+                if form.is_valid():
+                    player.character_word_pool.add(
+                        [
+                            form.cleaned_data.get("quality_1").words.all(),
+                            form.cleaned_data.get("quality_2").words.all(),
+                            form.cleaned_data.get("quality_3").words.all(),
+                        ]
+                    )
+                    player.question_pool.add(
+                        [
+                            form.cleaned_data.get("activity_1").questions.all(),
+                            form.cleaned_data.get("activity_2").questions.all(),
+                        ]
+                    )
+                    player.narrative_choice_pool.add(
+                        [
+                            form.cleaned_data.get("interest_1").narrative_choices.all(),
+                            form.cleaned_data.get("interest_2").narrative_choices.all(),
+                            form.cleaned_data.get("interest_3").narrative_choices.all(),
+                        ]
+                    )
+                    # transition to next state
+                    # This should change later to a proper FSM transition
+                    player.character_creation_state = Player.CHARACTER_COMPLETE
+                    player.save()
 
-                # Fetch players associated with this game session
-                players = Player.objects.filter(game_session=game_session)
+                    messages.success(request, "Your profile has been updated.")
 
-                # Ensure there are exactly two players
-                if players.count() == 2:
-                    playerA, playerB = players.all()
-                    if playerA.character and playerB.character:
-                        game_session.start_regular_turn()
-                        game_session.save()
-                else:
-                    print("There are not 2 players")
+                    # Fetch players associated with this game session
+                    players = Player.objects.filter(game_session=game_session)
 
-                return redirect(game_session.get_absolute_url())
+                    # Ensure there are exactly two players
+                    if players.count() == 2:
+                        playerA, playerB = players.all()
+
+                        if (
+                            playerA.character_creation_state
+                            == Player.CHARACTER_COMPLETE
+                            and playerB.character_creation_state
+                            == Player.CHARACTER_COMPLETE
+                        ):
+                            # Transition the game session to the next state
+                            game_session.start_regular_turn()
+                            game_session.save()
+                    else:
+                        print("There are not 2 players")
+
+                    return redirect(game_session.get_absolute_url())
 
         except GameSession.DoesNotExist:
             # Handle the error, e.g., by showing a message or redirecting
             messages.error(request, "Game session not found.")
             return redirect("game:game_list")
-
-        # Re-render the form with errors if it's not valid
-        return render(request, self.template_name, {"form": form, "game_id": game_id})
 
 
 def get_character_details(request):

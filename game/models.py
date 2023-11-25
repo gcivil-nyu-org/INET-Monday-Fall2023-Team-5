@@ -24,6 +24,24 @@ class Player(models.Model):
         "Character", on_delete=models.SET_NULL, null=True, blank=True
     )
 
+    # Constants for character creation states
+    CHARACTER_AVATAR_SELECTION = "character_avatar_selection"
+    MOON_MEANING_SELECTION = "moon_meaning_selection"
+    PUBLIC_PROFILE_CREATION = "public_profile_creation"
+    CHARACTER_COMPLETE = "character_complete"
+
+    # Choices for character creation states
+    CHARACTER_CREATION_STATE_CHOICES = [
+        (CHARACTER_AVATAR_SELECTION, "Character Avatar Selection"),
+        (MOON_MEANING_SELECTION, "Moon Meaning Selection"),
+        (PUBLIC_PROFILE_CREATION, "Public Profile Creation"),
+        (CHARACTER_COMPLETE, "Character Complete"),
+    ]
+
+    character_creation_state = FSMField(
+        default=CHARACTER_AVATAR_SELECTION, choices=CHARACTER_CREATION_STATE_CHOICES
+    )
+
     def save(self, *args, **kwargs):
         if not self.game_session:
             raise ValidationError(
