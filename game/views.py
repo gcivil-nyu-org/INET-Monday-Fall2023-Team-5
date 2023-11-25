@@ -127,18 +127,19 @@ class GameProgressView(View):
 
             if turn.state == GameTurn.SELECT_QUESTION:
                 # Fetch unasked questions
-                unasked_questions = Question.objects.exclude(
-                    id__in=game_session.asked_questions.values_list("id", flat=True)
-                )
+                questions = player.question_pool.all()
                 # Randomly select 3 questions
                 random_questions = random.sample(
-                    list(unasked_questions), min(len(unasked_questions), 3)
+                    list(questions), min(len(questions), 3)
                 )
                 context.update({"random_questions": random_questions})
 
             elif turn.state == GameTurn.ANSWER_QUESTION:
-                words = Word.objects.all()
+                words = (
+                    player.character_word_pool.all() | player.simple_word_pool.all()
+                )  # this adds the simple words to the pool
                 tags_answer = [word.word for word in words]
+                random.shuffle(tags_answer)
                 context.update({"tags_answer": tags_answer})
                 context.update(
                     {
@@ -368,6 +369,8 @@ class CharacterCreationView(View):
                             "The game session state remains in CHARACTER_CREATION as there "
                             "are not exactly 2 players to transition to REGULAR_TURN."
                         )
+                        other_player = playerA if playerA != player else playerB
+                        game_session.current_game_turn.set_active_player(other_player)
 
                 return redirect("game:character_creation", game_id=game_id)
 

@@ -1,4 +1,5 @@
 import random
+from collections import Counter
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -108,7 +109,53 @@ class Player(models.Model):
                 interest = Interest.objects.get(id=interest_id)
                 for narrative_choice in interest.narrative_choices.all():
                     self.narrative_choice_pool.add(narrative_choice)
+
+        self.replenish_simple_words()
+
+    def replenish_simple_words(self):
+        # Count the current kind_of_words in the pool
+        current_counts = Counter(
+            word.kind_of_word for word in self.simple_word_pool.all()
+        )
+        target_counts = {
+            "verb": 5,
+            "pronoun": 2,
+            "preposition": 5,
+            "conjunction": 5,
+            "article": 4,
+            "determiner": 5,
+            "modifier": 4,
+        }  # Adjust numbers as needed
+
+        simple_words = list(Word.objects.filter(isSimple=True).all())
+        for kind, target_count in target_counts.items():
+            current_count = current_counts[kind]
+            words_to_add_count = target_count - current_count
+
+            # Filter words of this kind
+            words_of_this_kind = [
+                word for word in simple_words if word.kind_of_word == kind
+            ]
+
+            filtered_words = [
+                word
+                for word in words_of_this_kind
+                if word not in self.simple_word_pool.all()
+            ]
+
+            # Randomly select words to add
+            words_to_add = random.sample(
+                filtered_words, k=min(len(words_of_this_kind), words_to_add_count)
+            )
+
+            for word in words_to_add:
+                self.simple_word_pool.add(word)
+
         self.save()
+        current_counts = Counter(
+            word.kind_of_word for word in self.simple_word_pool.all()
+        )
+        print(current_counts.get("verb"))
 
 
 # Auxiliary functions for game session
@@ -196,8 +243,6 @@ class GameSession(models.Model):
         self.current_game_turn.save()
         return True, "Game initialized successfully."
 
-    # This will change later to be a transition to the character creation state
-
     @transition(field=state, source="*", target="inactive")
     def set_game_inactive(self):
         self.is_active = False
@@ -259,6 +304,10 @@ class GameTurn(models.Model):
     def get_active_player(self):
         return self.active_player
 
+    def set_active_player(self, player):
+        self.active_player = player
+        self.save()
+
     def switch_active_player(self):
         if self.active_player == self.parent_game.playerA:
             self.active_player = self.parent_game.playerB
@@ -299,6 +348,21 @@ class GameTurn(models.Model):
             sender=str(player.character_name),
             text=str(answer),
         )
+        print(answer)
+        for word in answer.split():
+            print(word)
+            if player.simple_word_pool.filter(word=word):
+                print("in simple word pool")
+                word = player.simple_word_pool.filter(word=word).first()
+                print(word)
+                player.simple_word_pool.remove(word)
+                player.save()
+            elif player.character_word_pool.filter(word=word):
+                print("in character word pool")
+                word = player.character_word_pool.filter(word=word).first()
+                print(word)
+                player.character_word_pool.remove(word)
+                player.save()
         self.parent_game.gameLog.chat_messages.add(chat_message)
         self.switch_active_player()
 
@@ -362,7 +426,7 @@ class GameTurn(models.Model):
             for word in selected_narrative_choice.words.all():
                 player.character_word_pool.add(word)
                 player.save()
-
+        player.replenish_simple_words()
         MAX_NUMBER_OF_TURNS = 30
 
         # Check if both players have made their choices
@@ -535,9 +599,21 @@ class Question(models.Model):
 class Word(models.Model):
     word = models.CharField(max_length=255)
     isSimple = models.BooleanField(default=False)
+    kind_of_word = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.word
+
+    def __eq__(self, other):
+        if isinstance(other, Word):
+            return self.word == other.word and self.kind_of_word == other.kind_of_word
+        return False
+
+    def __hash__(self):
+        return hash((self.word, self.kind_of_word))
+
+    def __repr__(self):
+        return f"<Word: {self.word}>"
 
 
 class PublicProfile(models.Model):

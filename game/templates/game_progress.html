@@ -48,10 +48,7 @@
 
             <!-- Display actions based on the game phase -->
         <div class="action-section">
-            {% if game_session.state == 'character_creation' %}
-                <h3>Character Creation</h3>
-                <p>Please wait until the other player selects a character. </p>
-            {% elif game_session.current_game_turn.state == 'narrative_choices' %}
+            {% if game_session.current_game_turn.state == 'narrative_choices' %}
                 {% if choice_made == False %}
                     <h3>Select a Narrative Choice</h3>
                     {{ narrative_form.narrative }}
@@ -169,18 +166,31 @@
                             if (narrativeChoiceValue) {
                                 value = narrativeChoiceValue;
                             } else {
-                                console.error('No narrative choice selected.');
+                                alert("Please select a narrative.");
                             }
                             break;
                         case 'moon_phase':
                             value = document.querySelector('#moon-meaning-text').value;
                             break;
                         case 'submit_question':
-                            const selectedQuestion = document.querySelector('input[name="question"]:checked');
-                            value = selectedQuestion ? selectedQuestion.value : null;
+                            var questionValue = document.querySelector('input[name="question"]:checked');
+                            if (questionValue == null) {
+                                alert("Please select a question.");
+                            } else {
+                                value = questionValue.value;
+                            }
                             break;
                         case 'react_emoji':
-                            value = document.querySelector('input[name="emoji"]:checked').value;
+                            var emojiValue = document.querySelector('input[name="emoji"]:checked');
+                            // Check if an emoji was selected
+                            if (emojiValue == null) {
+                                // If no emoji is selected, show an alert or prompt
+                                alert("Please select an emoji.");
+                            } else {
+                                // If an emoji is selected, proceed with your logic
+                                value = emojiValue.value;
+                                // ... your existing logic for when an emoji is selected
+                            }
                             break;
                         case 'end_game':
                             value = gameId;
@@ -190,7 +200,11 @@
                             let answer = Array.from(document.querySelectorAll('#current-sentence'))
                                       .map(tag => tag.textContent.trim())
                                       .join(' ');
-                            value = answer;
+                            if (answer.length === 0) {
+                                alert("Please select at least one word.");
+                            } else {
+                                value = answer;
+                            }
                             break;
                         case 'clear_all':
                             // Clear the current sentence container and the hidden input field
