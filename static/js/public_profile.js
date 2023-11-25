@@ -3,12 +3,11 @@ document.addEventListener('DOMContentLoaded', function() {
   window.showChoices = function(element) {
     // Get the field name and the choices for that field
     const fieldName = element.getAttribute('data-field');
-    const choices = JSON.parse(element.getAttribute('data-choices'));
+    var choices = formChoices[fieldName];
 
     // Create a new select element
     const select = document.createElement('select');
     select.setAttribute('name', fieldName);
-    select.classList.add('dynamic-select');
 
     // Populate the select element with options
     choices.forEach(function(choice) {
@@ -18,32 +17,50 @@ document.addEventListener('DOMContentLoaded', function() {
       select.appendChild(option);
     });
 
+    // Insert the select element temporarily to calculate the position
+    document.body.appendChild(select);
+
+    // Calculate the position relative to the clicked element
+    const elementRect = element.getBoundingClientRect();
+    const selectRect = select.getBoundingClientRect();
+
     // Position the select element
     select.style.position = 'absolute';
-    select.style.left = element.getBoundingClientRect().left + 'px';
-    select.style.top = element.getBoundingClientRect().bottom + 'px';
+    select.style.left = `${elementRect.left + window.scrollX}px`;
+    select.style.top = `${elementRect.bottom + window.scrollY}px`;
+
+    // Move the select back into the clicked element, now properly positioned
+    element.textContent = ''; // Clear the text content
+    element.appendChild(select);
 
     // Handle selection of an option
     select.onchange = function() {
-      // Update the display text
-      element.textContent = this.options[this.selectedIndex].text;
-      // Update the value of the corresponding hidden field
-      document.querySelector('input[name="' + fieldName + '"]').value = this.value;
-      // Remove the select element after selection
-      document.body.removeChild(select);
+      element.textContent = this.options[this.selectedIndex].textContent;
+      document.querySelector(`input[name="${fieldName}"]`).value = this.value;
+      // Remove the select element from the document body if it's appended there
+      if (select.parentNode === document.body) {
+        document.body.removeChild(select);
+      }
     };
 
-    // Add the select element to the body and focus it
-    document.body.appendChild(select);
-    select.focus();
-
-    // Remove the select element if we click outside of it
-    document.addEventListener('click', function(event) {
-      if (event.target !== select) {
-        if (select.parentNode) {
-          select.parentNode.removeChild(select);
-        }
+    // Add a blur event listener to remove the select element when it loses focus
+    select.addEventListener('blur', function() {
+      // Remove the select element from the document body if it's appended there
+      if (select.parentNode === document.body) {
+        document.body.removeChild(select);
       }
-    }, { once: true });
+      // Restore the original text if no option was selected
+      if (!element.textContent.trim()) {
+        element.textContent = `[${fieldName}]`;
+      }
+    });
+
+    // Focus the select element to allow keyboard interaction
+    select.focus();
   };
+
+  // Attach the showChoices function to the clickable elements
+  document.querySelectorAll('[data-field]').forEach(function(element) {
+    element.onclick = function() { showChoices(this); };
+  });
 });

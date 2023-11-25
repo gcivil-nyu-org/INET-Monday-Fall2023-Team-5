@@ -1,4 +1,5 @@
 from django import forms
+from django.core.serializers import json
 
 from .models import (
     Character,
@@ -48,19 +49,15 @@ class CharacterSelectionForm(forms.Form):
     )
 
 
-class PublicProfileCreationForm(forms.ModelForm):
-    class Meta:
-        model = PublicProfile
-        fields = [
-            "quality_1",
-            "quality_2",
-            "quality_3",
-            "interest_1",
-            "interest_2",
-            "interest_3",
-            "activity_1",
-            "activity_2",
-        ]
+class PublicProfileCreationForm(forms.Form):
+    quality_1 = forms.ChoiceField(choices=[])
+    quality_2 = forms.ChoiceField(choices=[])
+    quality_3 = forms.ChoiceField(choices=[])
+    interest_1 = forms.ChoiceField(choices=[])
+    interest_2 = forms.ChoiceField(choices=[])
+    interest_3 = forms.ChoiceField(choices=[])
+    activity_1 = forms.ChoiceField(choices=[])
+    activity_2 = forms.ChoiceField(choices=[])
 
     def __init__(self, *args, **kwargs):
         character = kwargs.pop("character", None)
@@ -77,17 +74,17 @@ class PublicProfileCreationForm(forms.ModelForm):
                 (q.id, q.name) for q in character.quality_3_choices.all()
             ]
             self.fields["interest_1"].choices = [
-                (q.id, q.name) for q in character.interest_1_choices.all()
+                (i.id, i.name) for i in character.interest_1_choices.all()
             ]
             self.fields["interest_2"].choices = [
-                (q.id, q.name) for q in character.interest_2_choices.all()
+                (i.id, i.name) for i in character.interest_2_choices.all()
             ]
             self.fields["interest_3"].choices = [
-                (q.id, q.name) for q in character.interest_3_choices.all()
+                (i.id, i.name) for i in character.interest_3_choices.all()
             ]
             self.fields["activity_1"].choices = [
-                (q.id, q.name) for q in character.activity_1_choices.all()
+                (a.id, a.name) for a in character.activity_1_choices.all()
             ]
             self.fields["activity_2"].choices = [
-                (q.id, q.name) for q in character.activity_2_choices.all()
+                (a.id, a.name) for a in character.activity_2_choices.all()
             ]
