@@ -6,7 +6,7 @@
         <div class="game-info">
             <h2 class="game-id">Game Progress for Game ID: <span>{{ game_session.game_id }}</span></h2>
             <div class="current-turn-box">Current Turn: <span>{{ game_session.current_game_turn.turn_number }}</span></div>
-        </div>
+        </div>-
         <!-- Progress Steps -->
         <ul class="nav nav-pills mb-3">
             <li class="nav-item">
@@ -38,6 +38,7 @@
                     </div>
 
                     <div class="message-info">
+                        <img src="{{ message.avatar_url }}" alt="Avatar" class="avatar">
                         <span class="sender">{{ message.sender }}</span>
                         <span class="timestamp">{{ message.timestamp|date:"F j, Y, g:i a" }}</span>
                     </div>
@@ -47,7 +48,10 @@
 
             <!-- Display actions based on the game phase -->
         <div class="action-section">
-            {% if game_session.current_game_turn.state == 'narrative_choices' %}
+            {% if game_session.state == 'character_creation' %}
+                <h3>Character Creation</h3>
+                <p>Please wait until the other player selects a character. </p>
+            {% elif game_session.current_game_turn.state == 'narrative_choices' %}
                 {% if choice_made == False %}
                     <h3>Select a Narrative Choice</h3>
                     {{ narrative_form.narrative }}

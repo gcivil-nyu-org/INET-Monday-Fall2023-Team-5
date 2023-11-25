@@ -59,6 +59,7 @@ class Player(models.Model):
         target=CHARACTER_COMPLETE,
     )
     def create_public_profile(self, qualities, interests, activities):
+        self.character_name = self.character.name
         self.populate_character_with_creation_choices(qualities, interests, activities)
         self.save()
 
@@ -278,6 +279,7 @@ class GameTurn(models.Model):
 
         # Create a chat message and add it to the log
         chat_message = ChatMessage.objects.create(
+            avatar_url=str(player.character.image.url),
             sender=str(player.character_name),
             text=str(selected_question.text),
         )
@@ -293,6 +295,7 @@ class GameTurn(models.Model):
 
         # Create a chat message and add it to the log
         chat_message = ChatMessage.objects.create(
+            avatar_url=str(player.character.image.url),
             sender=str(player.character_name),
             text=str(answer),
         )
@@ -409,6 +412,7 @@ class GameTurn(models.Model):
         self.save()
         # Create a chat message and add it to the log
         chat_message = ChatMessage.objects.create(
+            avatar_url=str(player.character.image.url),
             sender=str(player.character_name),
             text=str(message),
         )
@@ -439,6 +443,7 @@ class GameLog(models.Model):
 
 
 class ChatMessage(models.Model):
+    avatar_url = models.CharField(max_length=255, null=True, blank=True)
     sender = models.CharField(max_length=255)  # The name of the sender (player)
     text = models.TextField()  # The main content of the message (question/answer)
     reaction = models.CharField(

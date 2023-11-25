@@ -342,8 +342,8 @@ class CharacterCreationView(View):
                     player.create_public_profile(
                         qualities=qualities, activities=activities, interests=interests
                     )
-
-                    messages.success(request, "Your profile has been updated.")
+                    player.save()
+                    messages.success(request, "Your dating profile has been updated.")
                 else:
                     messages.error(request, "Please complete your character profile.")
                     return redirect("game:character_creation", game_id=game_id)
@@ -363,13 +363,13 @@ class CharacterCreationView(View):
                         # Transition the game session to the next state
                         game_session.start_regular_turn()
                         game_session.save()
-                else:
-                    print(
-                        "The game session state remains in CHARACTER_CREATION as there "
-                        "are not exactly 2 players to transition to REGULAR_TURN."
-                    )
+                    else:
+                        print(
+                            "The game session state remains in CHARACTER_CREATION as there "
+                            "are not exactly 2 players to transition to REGULAR_TURN."
+                        )
 
-                return render(request, "character_creation.html", {"game_id": game_id})
+                return redirect("game:character_creation", game_id=game_id)
 
         except GameSession.DoesNotExist:
             # Handle the error, e.g., by showing a message or redirecting

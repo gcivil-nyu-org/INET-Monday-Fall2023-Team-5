@@ -1,66 +1,57 @@
 document.addEventListener('DOMContentLoaded', function() {
-  // Function to show the dropdown for choices
   window.showChoices = function(element) {
-    // Get the field name and the choices for that field
     const fieldName = element.getAttribute('data-field');
     var choices = formChoices[fieldName];
 
-    // Create a new select element
-    const select = document.createElement('select');
-    select.setAttribute('name', fieldName);
+    // Check if a dropdown is already open and remove it
+    const existingDropdown = document.getElementById('customDropdown');
+    if (existingDropdown) {
+      existingDropdown.remove();
+    }
 
-    // Populate the select element with options
+    // Create a new div element to act as the dropdown
+    const dropdown = document.createElement('div');
+    dropdown.setAttribute('id', 'customDropdown');
+    dropdown.className = 'dropdown-content';
+    dropdown.style.display = 'block'; // Ensure the dropdown is visible
+
+    // Populate the dropdown with divs as options
     choices.forEach(function(choice) {
-      const option = document.createElement('option');
-      option.value = choice[0];
-      option.textContent = choice[1];
-      select.appendChild(option);
+      const optionDiv = document.createElement('div');
+      optionDiv.textContent = choice[1];
+
+      optionDiv.onclick = function() {
+        element.textContent = choice[1]; // Replace the clicked text with the choice
+        // Set the value of the hidden chosen form field
+        const hiddenInputId = 'hidden' + fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
+         const hiddenInput = document.getElementById(hiddenInputId);
+         if (hiddenInput) {
+          //  hiddenInput.value to integer
+           hiddenInput.value = parseInt(choice[0], 10);
+         } else {
+           console.error('Hidden input not found for id:', hiddenInputId);
+         }
+         dropdown.remove(); // Remove the dropdown
+        };
+      dropdown.appendChild(optionDiv);
     });
 
-    // Insert the select element temporarily to calculate the position
-    document.body.appendChild(select);
-
-    // Calculate the position relative to the clicked element
+    // Position the dropdown next to the clicked element
     const elementRect = element.getBoundingClientRect();
-    const selectRect = select.getBoundingClientRect();
+    dropdown.style.left = `${elementRect.right + window.scrollX}px`; // Adjusted to right for better positioning
+    dropdown.style.top = `${elementRect.top + window.scrollY}px`;
 
-    // Position the select element
-    select.style.position = 'absolute';
-    select.style.left = `${elementRect.left + window.scrollX}px`;
-    select.style.top = `${elementRect.bottom + window.scrollY}px`;
-
-    // Move the select back into the clicked element, now properly positioned
-    element.textContent = ''; // Clear the text content
-    element.appendChild(select);
-
-    // Handle selection of an option
-    select.onchange = function() {
-      element.textContent = this.options[this.selectedIndex].textContent;
-      document.querySelector(`input[name="${fieldName}"]`).value = this.value;
-      // Remove the select element from the document body if it's appended there
-      if (select.parentNode === document.body) {
-        document.body.removeChild(select);
-      }
-    };
-
-    // Add a blur event listener to remove the select element when it loses focus
-    select.addEventListener('blur', function() {
-      // Remove the select element from the document body if it's appended there
-      if (select.parentNode === document.body) {
-        document.body.removeChild(select);
-      }
-      // Restore the original text if no option was selected
-      if (!element.textContent.trim()) {
-        element.textContent = `[${fieldName}]`;
-      }
-    });
-
-    // Focus the select element to allow keyboard interaction
-    select.focus();
+    // Append the dropdown to the body
+    document.body.appendChild(dropdown);
   };
 
-  // Attach the showChoices function to the clickable elements
-  document.querySelectorAll('[data-field]').forEach(function(element) {
-    element.onclick = function() { showChoices(this); };
-  });
+  // Function to handle clicking outside of dropdown to close it
+  window.addEventListener('click', function(event) {
+    if (!event.target.matches('.selectable')) {
+      const dropdowns = document.getElementsByClassName('dropdown-content');
+      for (let i = 0; i < dropdowns.length; i++) {
+        dropdowns[i].style.display = 'none';
+      }
+    }
+  }, true); // Use capture phase for this event
 });
