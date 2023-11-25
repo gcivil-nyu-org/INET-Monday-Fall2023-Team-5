@@ -1,9 +1,7 @@
 from django import forms
-from django.core.serializers import json
 
 from .models import (
     Character,
-    PublicProfile,
 )  # Ensure this import is correct based on your project structure
 
 
