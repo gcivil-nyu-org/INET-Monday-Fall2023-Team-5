@@ -25,6 +25,11 @@ urlpatterns = [
         name="character_creation",
     ),
     path(
+        "moon_sign_interpretation/<uuid:game_id>/",
+        views.MoonSignInterpretationView.as_view(),
+        name="moon_sign_interpretation",
+    ),
+    path(
         "get_character_details/",
         views.get_character_details,
         name="get_character_details",

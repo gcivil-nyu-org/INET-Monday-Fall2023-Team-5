@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block content %}
-<style>
+<!-- <style>
     .character-selection {
         text-align: center;
     }
@@ -44,8 +44,9 @@
         font-size: 0.7em;
     }
     
-    
-</style>
+
+</style> -->
+
 
 <div class="character-selection">
     <h2>Select Your Character</h2>
@@ -81,4 +82,9 @@
         <button type="submit" class="confirm-btn">Confirm Selection</button>
     </form>
 </div>
+
+{% endblock content%}
+
+{% block styles %}
+<link href="{% static 'css/styles.css' %}" rel="stylesheet">
 {% endblock %}

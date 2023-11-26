@@ -6,8 +6,17 @@ from .forms import (
     NarrativeChoiceForm,
     CharacterSelectionForm,
     MoonSignInterpretationForm,
+
 )
-from .models import Player, GameSession, GameTurn, Word, Question, Character
+from .models import (
+    Player,
+    GameSession,
+    GameTurn,
+    Word,
+    Question,
+    Character,
+    MoonSignInterpretation,
+
 from django.shortcuts import redirect, render
 from django.views import View
 import random
@@ -260,7 +269,7 @@ class CharacterCreationView(View):
             if game_session.state != GameSession.CHARACTER_CREATION:
                 # If the game is not in the character creation state,
                 # redirect to the game progress
-                return redirect(game_session.get_absolute_url())
+                return redirect("moon_sign_interpretation", game_id=game_id)
 
             character_form = CharacterSelectionForm(request.POST)
             moon_sign_form = MoonSignInterpretationForm(request.POST)
@@ -281,15 +290,18 @@ class CharacterCreationView(View):
                 if players.count() == 2:
                     playerA, playerB = players.all()
                     if playerA.character and playerB.character:
-                        game_session.start_regular_turn()
+                        # game_session.start_regular_turn()
+                        # game_session.save()
+                        game_session.start_moon_sign_creation()
                         game_session.save()
+                        return redirect("moon_sign_interpretation", game_id=game_id)
                 else:
                     print(
                         "The game session state remains in CHARACTER_CREATION as there "
-                        "are not exactly 2 players to transition to REGULAR_TURN."
+                        "are not exactly 2 players to transition to MOON_PHASE."
                     )
 
-                return redirect(game_session.get_absolute_url())
+                return redirect("moon_sign_interpretation", game_id=game_id)
 
         except GameSession.DoesNotExist:
             # Handle the error, e.g., by showing a message or redirecting
@@ -324,3 +336,62 @@ def get_character_details(request):
         )
     except Character.DoesNotExist:
         return JsonResponse({"error": "Character not found"}, status=404)
+
+
+class MoonSignInterpretationView(View):
+    template_name = "moon_sign_interpretation.html"
+
+    def get(self, request, *args, **kwargs):
+        game_id = kwargs["game_id"]
+        try:
+            # Ensure the game session is in the right state
+            form = MoonSignInterpretationForm()
+            return render(
+                request, self.template_name, {"form": form, "game_id": game_id}
+            )
+
+        except GameSession.DoesNotExist:
+            messages.error(request, "Game session not found.")
+            return redirect("game:game_list")
+
+    def post(self, request, *args, **kwargs):
+        game_id = kwargs["game_id"]
+        form = MoonSignInterpretationForm(request.POST)
+        if form.is_valid():
+            game_session = GameSession.objects.get(game_id=game_id)
+            player, _ = Player.objects.get_or_create(
+                user=request.user, defaults={"game_session": game_session}
+            )
+            # player.first_quarter = form.cleaned_data['first_quarter']
+            player.save()
+            # Process the form data here
+            moon_sign_interpretation = MoonSignInterpretation(
+                first_quarter=form.cleaned_data["first_quarter"],
+                first_quarter_reason=form.cleaned_data["first_quarter_reason"],
+                full_moon=form.cleaned_data["full_moon"],
+                full_moon_reason=form.cleaned_data["full_moon_reason"],
+                last_quarter=form.cleaned_data["last_quarter"],
+                last_quarter_reason=form.cleaned_data["last_quarter_reason"],
+                new_moon=form.cleaned_data["new_moon"],
+                new_moon_reason=form.cleaned_data["new_moon_reason"],
+            )
+            moon_sign_interpretation.save()
+            # Transition the game session to the regular turn
+            try:
+                players = Player.objects.filter(game_session=game_session)
+
+                # Ensure there are exactly two players
+                if players.count() == 2:
+                    if game_session.state == GameSession.MOON_SIGN_INTERPRETATION:
+                        game_session.start_regular_turn()
+                        game_session.save()
+                        return redirect("game_progress", game_id=game_id)
+
+            except GameSession.DoesNotExist:
+                messages.error(request, "Game session not found.")
+                return redirect("game:game_list")
+
+            return redirect("game_progress", game_id=game_id)
+
+        # Re-render the form with errors if it's not valid
+        return render(request, self.template_name, {"form": form, "game_id": game_id})

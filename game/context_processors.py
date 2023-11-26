@@ -21,6 +21,11 @@ def game_session_processor(request):
             if game_session.state == game_session.CHARACTER_CREATION:
                 if player.character:
                     game_session_url = game_session.get_absolute_url()
+                elif game_session.state == game_session.MOON_SIGN_INTERPRETATION:
+                    game_session_url = reverse(
+                        "game:moon_sign_interpretation",
+                        kwargs={"game_id": game_session.game_id},
+                    )
                 else:
                     game_session_url = reverse(
                         "game:character_creation",
