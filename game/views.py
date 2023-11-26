@@ -312,11 +312,8 @@ class CharacterCreationView(View):
                     player, _ = Player.objects.get_or_create(
                         user=request.user, defaults={"game_session": game_session}
                     )
-                    player.character = form.cleaned_data["character"]
-
-                    # transition to next state
-                    # This should change later to a proper FSM transition to Moon Phase
-                    player.character_creation_state = Player.PUBLIC_PROFILE_CREATION
+                    # select avatar and transition to next state
+                    player.select_character_avatar(form.cleaned_data["character"])
                     player.save()
                     return redirect("game:character_creation", game_id=game_id)
             elif player.character_creation_state == Player.MOON_MEANING_SELECTION:
@@ -325,13 +322,20 @@ class CharacterCreationView(View):
                     # The form is valid, save the character for the player
                     # Here Xinyi will implement the logic for adding the information
                     # to the player's model field.
+                    player, _ = Player.objects.get_or_create(
+                        user=request.user, defaults={"game_session": game_session}
+                    )
+                    # select moon meaning and transition to next state
+                    # Logic to be implemented in the model function
+                    moon_meaning = "Here will be the data for the moon meaning"
+                    player.select_moon_meaning(moon_meaning=moon_meaning)
                     player.save()
                 else:
                     # Stand-in for eventual form invalid behavior
                     messages.error(
                         request, "The MoonSign Interpretation form is invalid."
                     )
-                    return redirect("game:character_creation", game_id=game_id)
+                return redirect("game:character_creation", game_id=game_id)
             elif player.character_creation_state == Player.PUBLIC_PROFILE_CREATION:
                 form = PublicProfileCreationForm(
                     request.POST, character=player.character

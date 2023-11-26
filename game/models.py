@@ -48,11 +48,20 @@ class Player(models.Model):
     @transition(
         field=character_creation_state,
         source=CHARACTER_AVATAR_SELECTION,
-        target=PUBLIC_PROFILE_CREATION,
+        target=MOON_MEANING_SELECTION,
     )
     def select_character_avatar(self, character):
         self.character = character
         self.save()
+
+    @transition(
+        field=character_creation_state,
+        source=MOON_MEANING_SELECTION,
+        target=PUBLIC_PROFILE_CREATION,
+    )
+    def select_moon_meaning(self, moon_meaning):
+        pass
+        # here whatever logic you need to do with the moon meaning
 
     @transition(
         field=character_creation_state,
