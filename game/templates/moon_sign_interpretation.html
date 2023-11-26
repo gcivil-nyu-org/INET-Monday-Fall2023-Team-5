@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="moon-sign-interpretation">
+    <h2>Moon Sign Interpretation</h2>
+    <p>Please fill out your interpretations for each phase of the moon.</p>
+    <form method="post" action="{% url 'moon_sign_interpretation' game_id %}">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <h3>First Quarter</h3>
+            {{ form.first_quarter.label_tag }}<br>
+            {{ form.first_quarter }}
+            {{ form.first_quarter_reason.label_tag }}<br>
+            {{ form.first_quarter_reason }}
+        </div>
+
+        <div class="form-group">
+            <h3>Full Moon</h3>
+            {{ form.full_moon.label_tag }}<br>
+            {{ form.full_moon }}
+            {{ form.full_moon_reason.label_tag }}<br>
+            {{ form.full_moon_reason }}
+        </div>
+
+        <div class="form-group">
+            <h3>Last Quarter</h3>
+            {{ form.last_quarter.label_tag }}<br>
+            {{ form.last_quarter }}
+            {{ form.last_quarter_reason.label_tag }}<br>
+            {{ form.last_quarter_reason }}
+        </div>
+
+        <div class="form-group">
+            <h3>New Moon</h3>
+            {{ form.new_moon.label_tag }}<br>
+            {{ form.new_moon }}
+            {{ form.new_moon_reason.label_tag }}<br>
+            {{ form.new_moon_reason }}
+        </div>
+
+        <button type="submit" class="confirm-btn">Submit Interpretations</button>
+    </form>
+</div>
+{% endblock content %}
+
+{% block styles %}
+<link href="{% static 'css/styles.css' %}" rel="stylesheet">
+{% endblock %}

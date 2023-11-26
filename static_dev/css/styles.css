@@ -307,4 +307,93 @@ a:hover {
     align-self: flex-end;
 }
 
-  
+.character-selection {
+    text-align: center;
+    color: black;
+}
+.character-option {
+    display: inline-block;
+    margin: 10px;
+    vertical-align: top;
+    color: black;
+}
+.character-option img {
+    width: 100px;
+    height: auto;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.character-option input[type="radio"] {
+    display: none;
+}
+.character-option label {
+    cursor: pointer;
+    display: block;
+}
+.character-option input[type="radio"]:checked + label {
+    outline: 2px solid #f00;
+}
+
+.descriptive-tags {
+    color: #fff;
+    font-size: 0.7em;
+}
+
+.moon-sign-interpretation {
+    background-color: #fce4ec; /* Light pink background, adjust color as needed */
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    color:black;
+}
+
+.moon-sign-interpretation p{
+    color: black;
+}
+
+.moon-sign-interpretation h2 {
+color: #ad1457; /* Dark pink color for the heading */
+margin-bottom: 15px;
+}
+
+.form-group {
+margin-bottom: 15px;
+color: black;
+}
+.form-group h3
+.form-group label {
+display: block;
+margin-bottom: 5px;
+color: #4a148c; /* Purple color for labels */
+}
+
+.form-group select,
+.form-group input[type="text"] {
+width: 100%;
+padding: 8px;
+border: 1px solid #ccc;
+border-radius: 4px;
+margin-bottom: 10px;
+color:black
+}
+
+.form-check-inline {
+margin-right: 10px;
+}
+
+.form-check-label {
+margin-left: 5px;
+}
+
+.confirm-btn {
+background-color: #8e24aa; /* Purple color for the button */
+color: white;
+padding: 10px 20px;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+}
+
+.confirm-btn:hover {
+background-color: #7b1fa2;
+}

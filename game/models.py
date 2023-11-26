@@ -61,6 +61,7 @@ class GameSession(models.Model):
     # Constants for game session states
     INITIALIZING = "initializing"
     CHARACTER_CREATION = "character_creation"
+    MOON_SIGN_INTERPRETATION = "moon_sign_interpretation"
     REGULAR_TURN = "regular_turn"
     INACTIVE = "inactive"
     ENDED = "ended"
@@ -69,6 +70,7 @@ class GameSession(models.Model):
     STATE_CHOICES = [
         (INITIALIZING, "Initializing"),
         (CHARACTER_CREATION, "Character Creation"),
+        (MOON_SIGN_INTERPRETATION, "Moon Sign Interpretation"),
         (REGULAR_TURN, "Regular Turn"),
         (INACTIVE, "Inactive"),
         (ENDED, "Ended"),
@@ -152,7 +154,11 @@ class GameSession(models.Model):
     def get_absolute_url(self):
         return reverse("game:game_progress", kwargs={"game_id": self.game_id})
 
-    @transition(field=state, source=CHARACTER_CREATION, target=REGULAR_TURN)
+    @transition(field=state, source=CHARACTER_CREATION, target=MOON_SIGN_INTERPRETATION)
+    def start_moon_sign_creation(self):
+        pass
+
+    @transition(field=state, source=MOON_SIGN_INTERPRETATION, target=REGULAR_TURN)
     def start_regular_turn(self):
         pass
 
@@ -461,3 +467,15 @@ class Word(models.Model):
 
     def __str__(self):
         return self.word
+
+
+class MoonSignInterpretation(models.Model):
+    # Assuming you have a Player model that is linked to the User model
+    first_quarter = models.CharField(max_length=150)
+    first_quarter_reason = models.TextField()
+    full_moon = models.CharField(max_length=150)
+    full_moon_reason = models.TextField()
+    last_quarter = models.CharField(max_length=150)
+    last_quarter_reason = models.TextField()
+    new_moon = models.CharField(max_length=150)
+    new_moon_reason = models.TextField()
