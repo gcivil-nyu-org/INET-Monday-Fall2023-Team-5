@@ -247,7 +247,6 @@ class CharacterCreationView(View):
             else:
                 player = request.user.player
                 context = {"game_id": game_id, "player": player}
-
                 # Proceed with character creation forms since the
                 # game is in the correct state
                 if player.character_creation_state == Player.CHARACTER_AVATAR_SELECTION:

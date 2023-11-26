@@ -14,7 +14,11 @@ from .models import (
     NarrativeChoice,
 )
 from django.core.exceptions import ValidationError
-from .forms import CharacterSelectionForm
+from .forms import (
+    CharacterSelectionForm,
+    MoonSignInterpretationForm,
+    PublicProfileCreationForm,
+)
 from django import forms
 from PIL import Image
 from django.core.files.uploadedfile import InMemoryUploadedFile, SimpleUploadedFile
@@ -499,3 +503,262 @@ class GameProgressViewTestCase(TestCase):
             reverse("game_progress", kwargs={"game_id": self.game_session.game_id})
         )
         self.assertTrue(response.context["moon_phase"])
+
+
+class CharacterCreationViewTestCase(TestCase):
+    def setUp(self):
+        # Create test users
+        self.client = Client()
+        self.user = User.objects.create_user(username="testuser")
+        self.another_user = User.objects.create_user(username="testuser2")
+        self.client.force_login(self.user)
+
+        user1 = self.user
+        user2 = self.another_user
+        # Create a new game session and save it
+        self.game_session = GameSession()
+        game_session = self.game_session
+        game_session.save()
+
+        # Create players for the game session
+        player_A = Player.objects.create(user=user1, game_session=game_session)
+        player_B = Player.objects.create(user=user2, game_session=game_session)
+
+        # Assigning players to the game session
+        game_session.playerA = player_A
+        game_session.playerB = player_B
+        game_session.save()
+
+        # Initialize the game and redirect to the GameProgressView
+        game_session.initialize_game()
+        game_session.save()
+
+        # Create a Sample Character
+
+        # Create instances of Quality, Interest, and Activity for testing as iterables
+        qualities = [Quality.objects.create(name=f"Quality {i}") for i in range(1, 10)]
+        interests = [
+            Interest.objects.create(name=f"Interest {i}") for i in range(1, 10)
+        ]
+        activities = [
+            Activity.objects.create(name=f"Activity {i}") for i in range(1, 5)
+        ]
+
+        # Associate words to qualities
+        for quality in qualities:
+            for i in range(15):
+                quality.words.add(Word.objects.create(word=f"{quality.name} word {i}"))
+
+        # Associate questions to activities
+        for activity in activities:
+            for i in range(3):
+                question = Question.objects.create(
+                    text=f"{activity.name} question {i}", activity=activity
+                )
+                activity.questions.add(question)
+
+        # Associate narrative choices to interests
+        for interest in interests:
+            for i in range(25):
+                NarrativeChoice.objects.create(
+                    name=f"{interest.name} narrative choice {i}",
+                    interest=interest,
+                    night_number=i,
+                )
+
+        # Create a Character instance and add qualities, interests, and activities
+        self.test_character = Character.objects.create(
+            name="Test Character", description="A test description"
+        )
+        self.test_character.quality_1_choices.set(qualities[0:3])
+        self.test_character.quality_2_choices.set(qualities[3:6])
+        self.test_character.quality_3_choices.set(qualities[6:9])
+        self.test_character.interest_1_choices.set(interests[0:3])
+        self.test_character.interest_2_choices.set(interests[3:6])
+        self.test_character.interest_3_choices.set(interests[6:9])
+        self.test_character.activity_1_choices.set(activities[0:2])
+        self.test_character.activity_2_choices.set(activities[2:4])
+        self.test_character.save()
+
+    def test_get_valid_game_id_character_creation(self):
+        # Make the request
+        response = self.client.get(
+            reverse("character_creation", kwargs={"game_id": self.game_session.game_id})
+        )
+        # Assertions
+        self.assertEqual(response.status_code, 302)
+        self.assertTemplateUsed(response, "character_creation.html")
+
+    def test_get_invalid_game_id(self):
+        # Create a game id that does not exist
+        while True:
+            game_id = uuid.uuid4()
+            if not GameSession.objects.filter(game_id=game_id).exists():
+                break
+
+        response = self.client.get(
+            reverse("character_creation", kwargs={"game_id": game_id})
+        )
+
+        # Assertions
+        messages = list(get_messages(response.wsgi_request))
+        self.assertTrue(
+            any(message.message == "Game session not found." for message in messages)
+        )
+
+        self.assertRedirects(
+            response,
+            reverse("home"),
+        )
+
+    def test_get_game_not_in_character_creation(self):
+        # Set the game session state to REGULAR_TURN
+        self.game_session.state = GameSession.REGULAR_TURN
+        self.game_session.save()
+
+        # Test the GET method when the game is not in CHARACTER_CREATION state
+        response = self.client.get(
+            reverse("character_creation", kwargs={"game_id": self.game_session.game_id})
+        )
+
+        # Assertions
+        self.assertRedirects(
+            response,
+            self.game_session.get_absolute_url(),
+        )
+
+    def test_get_form_in_context(self):
+        # Set the game session state to CHARACTER_CREATION
+        self.game_session.state = GameSession.CHARACTER_CREATION
+        self.game_session.save()
+
+        self.user.player.character_creation_state = Player.CHARACTER_AVATAR_SELECTION
+        self.user.player.save()
+
+        # Test the GET method when the player has not selected a character avatar
+        response = self.client.get(
+            reverse("character_creation", kwargs={"game_id": self.game_session.game_id})
+        )
+
+        # Assertions
+        self.assertIsInstance(response.context["form"], CharacterSelectionForm)
+
+        self.user.player.character_creation_state = Player.MOON_MEANING_SELECTION
+        self.user.player.save()
+
+        response = self.client.get(
+            reverse("character_creation", kwargs={"game_id": self.game_session.game_id})
+        )
+
+        self.assertIsInstance(response.context["form"], MoonSignInterpretationForm)
+
+        self.user.player.character_creation_state = Player.PUBLIC_PROFILE_CREATION
+        self.user.player.save()
+
+        response = self.client.get(
+            reverse("character_creation", kwargs={"game_id": self.game_session.game_id})
+        )
+
+        self.assertIsInstance(response.context["form"], PublicProfileCreationForm)
+
+        self.user.player.character_creation_state = Player.CHARACTER_COMPLETE
+        self.user.player.save()
+
+        response = self.client.get(
+            reverse("character_creation", kwargs={"game_id": self.game_session.game_id})
+        )
+
+        self.assertRedirects(
+            response,
+            self.game_session.get_absolute_url(),
+        )
+
+    def test_post_valid_form_submission(self):
+        # Set the game session state to CHARACTER_CREATION
+        self.game_session.state = GameSession.CHARACTER_CREATION
+        self.game_session.save()
+
+        self.user.player.character = self.test_character
+        self.user.player.character_creation_state = Player.PUBLIC_PROFILE_CREATION
+        self.user.player.save()
+
+        # Test the POST method for invalid form submissions
+        response = self.client.post(
+            reverse(
+                "character_creation", kwargs={"game_id": self.game_session.game_id}
+            ),
+            {
+                "invalid_field": "invalid_value",
+            },
+        )
+
+        # Assertions
+        messages = list(get_messages(response.wsgi_request))
+        self.assertTrue(
+            any(
+                message.message == "Please complete your character profile."
+                for message in messages
+            )
+        )
+        self.assertRedirects(
+            response,
+            reverse(
+                "game:character_creation", kwargs={"game_id": self.game_session.game_id}
+            ),
+        )
+
+        # Submit a valid form
+        form_data = {
+            "quality_1": self.test_character.quality_1_choices.first().id,
+            "quality_2": self.test_character.quality_2_choices.first().id,
+            "quality_3": self.test_character.quality_3_choices.first().id,
+            "interest_1": self.test_character.interest_1_choices.first().id,
+            "interest_2": self.test_character.interest_2_choices.first().id,
+            "interest_3": self.test_character.interest_3_choices.first().id,
+            "activity_1": self.test_character.activity_1_choices.first().id,
+            "activity_2": self.test_character.activity_2_choices.first().id,
+        }
+
+        # Send the POST request with the form data
+        response = self.client.post(
+            reverse(
+                "character_creation", kwargs={"game_id": self.game_session.game_id}
+            ),
+            form_data,
+        )
+
+        # Assertions
+        messages = list(get_messages(response.wsgi_request))
+        self.assertTrue(
+            any(
+                message.message == "Your dating profile has been updated."
+                for message in messages
+            )
+        )
+
+        # Assert that the players word pool has been updated with the correct words
+
+        self.assertIn(
+            self.test_character.quality_1_choices.first().words.first(),
+            self.user.player.character_word_pool.all(),
+        )
+        self.assertIn(
+            self.test_character.quality_2_choices.first().words.first(),
+            self.user.player.character_word_pool.all(),
+        )
+        self.assertIn(
+            self.test_character.quality_3_choices.first().words.first(),
+            self.user.player.character_word_pool.all(),
+        )
+
+        # Assert that the players question pool has been updated with the correct question
+        self.assertIn(
+            self.test_character.activity_1_choices.first().questions.first(),
+            self.user.player.question_pool.all(),
+        )
+
+        # Assert that the players narrative choice pool has been updated with the correct narrative choice
+        self.assertIn(
+            self.test_character.interest_3_choices.first().narrative_choices.first(),
+            self.user.player.narrative_choice_pool.all(),
+        )
