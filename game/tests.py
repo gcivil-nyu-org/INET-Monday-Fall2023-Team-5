@@ -208,36 +208,6 @@ class CharacterSelectionFormTest(TestCase):
         form = CharacterSelectionForm(data=form_data)
         self.assertFalse(form.is_valid())
 
-
-class CharacterCreationViewTest(TestCase):
-    def setUp(self):
-        self.client = Client()
-        self.user = User.objects.create_user(username="testuser", password="12345")
-        self.client.login(username="testuser", password="12345")
-
-        # Generate a UUID and convert it to a string for testing
-        test_game_id = str(uuid.uuid4())
-        self.game_session = GameSession.objects.create(
-            game_id=test_game_id, state=GameSession.CHARACTER_CREATION
-        )
-
-        # Create a dummy image
-        image = Image.new("RGB", (100, 100), color="red")
-        image_io = io.BytesIO()
-        image.save(image_io, format="JPEG")
-        image_io.seek(0)
-        image_file = SimpleUploadedFile("test_image.jpg", image_io.read())
-
-        # Create a Character instance with the dummy image
-        self.character = Character.objects.create(
-            name="Test Character", description="Test Description", image=image_file
-        )
-
-        # Create a Player instance and associate it with the user and game_session
-        self.player = Player.objects.create(
-            user=self.user, game_session=self.game_session
-        )
-
     def test_get_request(self):
         """Test the GET request response of the view."""
         response = self.client.get(
