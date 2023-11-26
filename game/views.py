@@ -16,7 +16,7 @@ from .models import (
     Question,
     Character,
     MoonSignInterpretation,
-
+)
 from django.shortcuts import redirect, render
 from django.views import View
 import random
