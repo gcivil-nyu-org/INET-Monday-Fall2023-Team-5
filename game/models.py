@@ -616,6 +616,18 @@ class Word(models.Model):
         return f"<Word: {self.word}>"
 
 
+class MoonSignInterpretation(models.Model):
+    # Assuming you have a Player model that is linked to the User model
+    first_quarter = models.CharField(max_length=150)
+    first_quarter_reason = models.TextField()
+    full_moon = models.CharField(max_length=150)
+    full_moon_reason = models.TextField()
+    last_quarter = models.CharField(max_length=150)
+    last_quarter_reason = models.TextField()
+    new_moon = models.CharField(max_length=150)
+    new_moon_reason = models.TextField()
+
+
 class PublicProfile(models.Model):
     quality_1 = models.CharField(max_length=100)
     quality_2 = models.CharField(max_length=100)

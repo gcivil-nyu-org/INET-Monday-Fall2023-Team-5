@@ -7,6 +7,7 @@ from .forms import (
     EmojiReactForm,
     NarrativeChoiceForm,
     CharacterSelectionForm,
+    MoonSignInterpretationForm,
     PublicProfileCreationForm,
 )
 from .models import (
@@ -19,7 +20,10 @@ from .models import (
     Quality,
     Activity,
     Interest,
+    MoonSignInterpretation,
 )
+
+
 from django.shortcuts import redirect, render
 from django.views import View
 import random
@@ -256,7 +260,8 @@ class CharacterCreationView(View):
                     form = CharacterSelectionForm()
                     context["form"] = form
                 elif player.character_creation_state == Player.MOON_MEANING_SELECTION:
-                    pass  # Moon meaning selection specific logic
+                    form = MoonSignInterpretationForm()
+                    context["form"] = form
                 elif player.character_creation_state == Player.PUBLIC_PROFILE_CREATION:
                     form = PublicProfileCreationForm(character=player.character)
                     form_choices = {
@@ -317,7 +322,16 @@ class CharacterCreationView(View):
                     player.save()
                     return redirect("game:character_creation", game_id=game_id)
             elif player.character_creation_state == Player.MOON_MEANING_SELECTION:
-                pass
+                form = MoonSignInterpretationForm(request.POST)
+                if form.is_valid():
+                    # The form is valid, save the character for the player
+                    # Here Xinyi will implement the logic for adding the information
+                    # to the player's model field.
+                    player.save()
+                else:
+                    # Stand-in for eventual form invalid behavior
+                    messages.error(request, "The MoonSign Interpretation form is invalid.")
+                    return redirect("game:character_creation", game_id=game_id)
             elif player.character_creation_state == Player.PUBLIC_PROFILE_CREATION:
                 form = PublicProfileCreationForm(
                     request.POST, character=player.character
@@ -399,3 +413,67 @@ def get_character_details(request):
         )
     except Character.DoesNotExist:
         return JsonResponse({"error": "Character not found"}, status=404)
+
+'''
+I am keeping Xinyi's MoonSignInterpretationView as it contains logic that might be useful for 
+the post request of the moon sign interpretation phase above.
+
+
+class MoonSignInterpretationView(View):
+    template_name = "moon_sign_interpretation.html"
+
+    def get(self, request, *args, **kwargs):
+        game_id = kwargs["game_id"]
+        try:
+            # Ensure the game session is in the right state
+            form = MoonSignInterpretationForm()
+            return render(
+                request, self.template_name, {"form": form, "game_id": game_id}
+            )
+
+        except GameSession.DoesNotExist:
+            messages.error(request, "Game session not found.")
+            return redirect("game:game_list")
+
+    def post(self, request, *args, **kwargs):
+        game_id = kwargs["game_id"]
+        form = MoonSignInterpretationForm(request.POST)
+        if form.is_valid():
+            game_session = GameSession.objects.get(game_id=game_id)
+            player, _ = Player.objects.get_or_create(
+                user=request.user, defaults={"game_session": game_session}
+            )
+            # player.first_quarter = form.cleaned_data['first_quarter']
+            player.save()
+            # Process the form data here
+            moon_sign_interpretation = MoonSignInterpretation(
+                first_quarter=form.cleaned_data["first_quarter"],
+                first_quarter_reason=form.cleaned_data["first_quarter_reason"],
+                full_moon=form.cleaned_data["full_moon"],
+                full_moon_reason=form.cleaned_data["full_moon_reason"],
+                last_quarter=form.cleaned_data["last_quarter"],
+                last_quarter_reason=form.cleaned_data["last_quarter_reason"],
+                new_moon=form.cleaned_data["new_moon"],
+                new_moon_reason=form.cleaned_data["new_moon_reason"],
+            )
+            moon_sign_interpretation.save()
+            # Transition the game session to the regular turn
+            try:
+                players = Player.objects.filter(game_session=game_session)
+
+                # Ensure there are exactly two players
+                if players.count() == 2:
+                    if game_session.state == GameSession.MOON_SIGN_INTERPRETATION:
+                        game_session.start_regular_turn()
+                        game_session.save()
+                        return redirect("game_progress", game_id=game_id)
+
+            except GameSession.DoesNotExist:
+                messages.error(request, "Game session not found.")
+                return redirect("game:game_list")
+
+            return redirect("game_progress", game_id=game_id)
+
+        # Re-render the form with errors if it's not valid
+        return render(request, self.template_name, {"form": form, "game_id": game_id})
+'''
