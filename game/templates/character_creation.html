@@ -1,103 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-<style>
-    .character-selection {
-        text-align: center;
-    }
-    .character-option {
-        display: inline-block;
-        margin: 10px;
-        vertical-align: top;
-    }
-    .character-option img {
-        width: 100px;
-        height: auto;
-        border-radius: 50%;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    .character-option input[type="radio"] {
-        display: none;
-    }
-    .character-option label {
-        cursor: pointer;
-        display: block;
-    }
-    .character-option input[type="radio"]:checked + label {
-        outline: 2px solid #f00;
-    }
-    .confirm-btn {
-        background-color: #6200ee;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        font-size: 1em;
-        cursor: pointer;
-        border-radius: 5px;
-        margin-top: 10px;
-    }
-    .confirm-btn:hover {
-        background-color: #3700b3;
-    }
-    .descriptive-tags {
-        color: #fff;
-        font-size: 0.7em;
-    }
-    #profileText {
-        background-color: #fabcd7;
-        color: #001474;
-        border-radius: 15px; /* Rounded corners */
-        padding: 20px; /* Space inside the box */
-        border: 5px solid #f406a2; /* Pink border, match this with the exact color from your image */
-        margin: 20px auto; /* Centering the box */
-        width: 80%; /* Adjust the width as needed */
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Box shadow for a slight 3D effect */
-        position: relative; /* For absolute positioning of the dropdown */
-    }
-
-    .selectable {
-        color: #a90771; /* Lighter pink for the clickable options, match with the image */
-        cursor: pointer; /* Change cursor to indicate clickable */
-        border-radius: 5px; /* Rounded corners for clickable options */
-        display: inline-block; /* Ensure it does not take full width */
-    }
-
-    .selectable:hover {
-        color: #001474; /* Slightly darker pink on hover */
-    }
-
-    .dropdown-content {
-      display: block;
-      position: absolute;
-      background-color: #0d034a; /* Hot pink background to match the image */
-      color: #ffffff; /* White text color */
-      min-width: 160px;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Slightly softer shadow */
-      border-radius: 8px; /* Rounded corners */
-      margin-top: 5px; /* Add a little space above the dropdown */
-      font-family: Luminari, sans-serif; /* Specify a font */
-      z-index: 100; /* Ensure it's above other elements */
-    }
-
-    /* Style the dropdown options */
-    .dropdown-content div {
-      padding: 12px 16px;
-      text-decoration: none;
-      display: block;
-    }
-
-    /* Last child should not have a border-bottom */
-    .dropdown-content div:last-child {
-      border-bottom: none;
-    }
-
-    /* Change color of dropdown options on hover */
-    .dropdown-content div:hover {
-      background-color: #ff1493; /* Deeper pink on hover */
-      border-radius: 8px; /* Rounded corners */
-    }
-
-</style>
 
 {% if player.character_creation_state == "character_avatar_selection" %}
     <div class="character-selection">
@@ -122,16 +25,8 @@
     </div>
 
 {% elif player.character_creation_state == "MOON_MEANING_SELECTION" %}
-    <!-- Form for Moon Meaning Selection -->
-    <div class="moon-meaning-selection">
-        <h2>Select Moon Meaning</h2>
-        <form method="post">
-            {% csrf_token %}
-            <!-- Render your moon meaning selection fields here -->
-            <input type="submit" value="Confirm Moon Meaning" class="confirm-btn">
-        </form>
-    </div>
-
+    <!-- separate template file for modularity -->
+    {% include "moon_sign_interpretation.html" %}
 {% elif player.character_creation_state == "public_profile_creation" %}
 
     <div class="public-profile-creation">
@@ -184,4 +79,8 @@
     var formChoices = {{ form_choices_json|safe }};
 </script>
 <script src="{% static 'js/public_profile.js' %}"></script>
+{% endblock %}
+
+{% block styles %}
+<link href="{% static 'css/styles.css' %}" rel="stylesheet">
 {% endblock %}

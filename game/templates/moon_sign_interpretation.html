@@ -1,13 +1,8 @@
-{% extends "base.html" %}
-{% load static %}
-
-{% block content %}
 <div class="moon-sign-interpretation">
     <h2>Moon Sign Interpretation</h2>
     <p>Please fill out your interpretations for each phase of the moon.</p>
     <form method="post" action="{% url 'moon_sign_interpretation' game_id %}">
         {% csrf_token %}
-        
         <div class="form-group">
             <h3>First Quarter</h3>
             {{ form.first_quarter.label_tag }}<br>
@@ -43,8 +38,4 @@
         <button type="submit" class="confirm-btn">Submit Interpretations</button>
     </form>
 </div>
-{% endblock content %}
 
-{% block styles %}
-<link href="{% static 'css/styles.css' %}" rel="stylesheet">
-{% endblock %}
