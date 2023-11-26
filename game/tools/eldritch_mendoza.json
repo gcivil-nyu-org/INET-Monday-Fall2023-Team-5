@@ -1,0 +1,3911 @@
+{
+    "character": {
+        "name": "Eldritch Mendoza",
+        "quality_1_choices": [
+            "Decisive",
+            "Intense",
+            "Protective"
+        ],
+        "quality_2_choices": [
+            "Intellectual",
+            "Resourceful",
+            "Clever Manipulator"
+        ],
+        "quality_3_choices": [
+            "Familial",
+            "Loyal",
+            "Protective"
+        ],
+        "interest_1_choices": [
+            "Dancing",
+            "Concerts",
+            "Community Building"
+        ],
+        "interest_2_choices": [
+            "Business",
+            "Fashion",
+            "Social Justice"
+        ],
+        "interest_3_choices": [
+            "Alien Lore",
+            "Deep Conversations",
+            "Good Cuisine"
+        ],
+        "activity_1_choices": [
+            "Watch the Skies",
+            "Go Cafe Hopping"
+        ],
+        "activity_2_choices": [
+            "Hack the Planet",
+            "Work Out"
+        ]
+    },
+    "qualities": [
+        {
+            "name": "Decisive",
+            "words": [
+                "conviction",
+                "now",
+                "right",
+                "just",
+                "forward",
+                "firmly",
+                "final",
+                "decide",
+                "close",
+                "momentum",
+                "action",
+                "hammer",
+                "brave",
+                "observe",
+                "contrarian"
+            ]
+        },
+        {
+            "name": "Intense",
+            "words": [
+                "explode",
+                "yell",
+                "love",
+                "passion",
+                "hate",
+                "emotionally",
+                "fireworks",
+                "vibrant",
+                "colorful",
+                "connection",
+                "sexy",
+                "powerful",
+                "drums",
+                "telenovela",
+                "melodramatic"
+            ]
+        },
+        {
+            "name": "Protective",
+            "words": [
+                "scare",
+                "push",
+                "deny",
+                "care",
+                "provide",
+                "meditate",
+                "enemy",
+                "cousin",
+                "stone",
+                "nations",
+                "peaceful",
+                "eviction",
+                "police",
+                "guard",
+                "hard"
+            ]
+        },
+        {
+            "name": "Intellectual",
+            "words": [
+                "strategize",
+                "resources",
+                "risk",
+                "taking",
+                "bookworm",
+                "chess",
+                "predict",
+                "law",
+                "economize",
+                "beat",
+                "outsmart",
+                "debate",
+                "analysis",
+                "professor",
+                "research"
+            ]
+        },
+        {
+            "name": "Resourceful",
+            "words": [
+                "change",
+                "transform",
+                "penny",
+                "manage",
+                "ability",
+                "community",
+                "make-shift",
+                "dolls",
+                "orphans",
+                "oldest",
+                "mature",
+                "grow",
+                "brokovich",
+                "enough",
+                "water"
+            ]
+        },
+        {
+            "name": "Clever Manipulator",
+            "words": [
+                "smartypants",
+                "jurisprudence",
+                "fools",
+                "make",
+                "believe",
+                "parties",
+                "trick",
+                "maquiavelo",
+                "party",
+                "philosophy",
+                "vision",
+                "elections",
+                "ahead",
+                "steps",
+                "two"
+            ]
+        },
+        {
+            "name": "Familial",
+            "words": [
+                "brothers",
+                "small",
+                "mexico",
+                "forget",
+                "remember",
+                "grandmother",
+                "songs",
+                "ball",
+                "running",
+                "playful",
+                "childish",
+                "innocent",
+                "return",
+                "past",
+                "closeness"
+            ]
+        },
+        {
+            "name": "Loyal",
+            "words": [
+                "fierce",
+                "steadfast",
+                "let",
+                "down",
+                "willing",
+                "fight",
+                "stay",
+                "forever",
+                "patient",
+                "marry",
+                "ring",
+                "kept",
+                "promise",
+                "years",
+                "together"
+            ]
+        },
+        {
+            "name": "Cultist",
+            "words": [
+                "outside",
+                "hallucinate",
+                "ancient",
+                "formal",
+                "students",
+                "gods",
+                "treasury",
+                "contact",
+                "unknown",
+                "disappear",
+                "missing",
+                "unlock",
+                "secrets",
+                "gate",
+                "whisper"
+            ]
+        }
+    ],
+    "activities": [
+        {
+            "name": "Watch the Skies",
+            "questions": [
+                "Who is watching us from the skies?",
+                "What would you do if you saw strange lights in the sky?",
+                "What do you think the government is hiding from us?"
+            ]
+        },
+        {
+            "name": "Go Cafe Hopping",
+            "questions": [
+                "What's your favorite coffe drink?",
+                "Would you rather have a coffee or a tea?",
+                "How do you feel about morning people?"
+            ]
+        },
+        {
+            "name": "Hack the Planet",
+            "questions": [
+                "How can we make the world a better place?",
+                "What's your favorite conspiracy theory?",
+                "How can we beat big corporations?"
+            ]
+        },
+        {
+            "name": "Work Out",
+            "questions": [
+                "What's your favorite workout?",
+                "What would be a good workout song?",
+                "Would you rather work out alone or with a group?"
+            ]
+        }
+    ],
+    "interests": [
+        {
+            "name": "Dancing",
+            "narrative_choices": [
+                {
+                    "name": "I dance alone under the moon...",
+                    "night_number": 1,
+                    "words": [
+                        "awe",
+                        "solitude",
+                        "cold",
+                        "lonely",
+                        "watched",
+                        "protected",
+                        "unseen",
+                        "grass",
+                        "feet",
+                        "spin"
+                    ]
+                },
+                {
+                    "name": "I dance to the beat of the cuban salsa...",
+                    "night_number": 2,
+                    "words": [
+                        "latin",
+                        "music",
+                        "salsa",
+                        "rhythmic",
+                        "trumpets",
+                        "glass",
+                        "toast",
+                        "70's",
+                        "revolution",
+                        "newspaper"
+                    ]
+                },
+                {
+                    "name": "I dance to the beat of electronic music...",
+                    "night_number": 3,
+                    "words": [
+                        "synth",
+                        "modulate",
+                        "mix",
+                        "jump",
+                        "arms",
+                        "speed",
+                        "quickly",
+                        "intense",
+                        "sweat",
+                        "slow-down"
+                    ]
+                },
+                {
+                    "name": "I buy new dance shoes...",
+                    "night_number": 4,
+                    "words": [
+                        "heels",
+                        "mall",
+                        "treat",
+                        "myself",
+                        "indulge",
+                        "sparkle",
+                        "glitter",
+                        "tap",
+                        "floor",
+                        "rhythmically"
+                    ]
+                },
+                {
+                    "name": "",
+                    "night_number": 5,
+                    "words": [
+                        "dance_clubs_narrative_choice_5_word_1",
+                        "dance_clubs_narrative_choice_5_word_2",
+                        "dance_clubs_narrative_choice_5_word_3",
+                        "dance_clubs_narrative_choice_5_word_4",
+                        "dance_clubs_narrative_choice_5_word_5",
+                        "dance_clubs_narrative_choice_5_word_6",
+                        "dance_clubs_narrative_choice_5_word_7",
+                        "dance_clubs_narrative_choice_5_word_8",
+                        "dance_clubs_narrative_choice_5_word_9",
+                        "dance_clubs_narrative_choice_5_word_10"
+                    ]
+                },
+                {
+                    "name": "Dance Clubs_narrative_choice_6",
+                    "night_number": 6,
+                    "words": [
+                        "dance_clubs_narrative_choice_6_word_1",
+                        "dance_clubs_narrative_choice_6_word_2",
+                        "dance_clubs_narrative_choice_6_word_3",
+                        "dance_clubs_narrative_choice_6_word_4",
+                        "dance_clubs_narrative_choice_6_word_5",
+                        "dance_clubs_narrative_choice_6_word_6",
+                        "dance_clubs_narrative_choice_6_word_7",
+                        "dance_clubs_narrative_choice_6_word_8",
+                        "dance_clubs_narrative_choice_6_word_9",
+                        "dance_clubs_narrative_choice_6_word_10"
+                    ]
+                },
+                {
+                    "name": "Dance Clubs_narrative_choice_7",
+                    "night_number": 7,
+                    "words": [
+                        "dance_clubs_narrative_choice_7_word_1",
+                        "dance_clubs_narrative_choice_7_word_2",
+                        "dance_clubs_narrative_choice_7_word_3",
+                        "dance_clubs_narrative_choice_7_word_4",
+                        "dance_clubs_narrative_choice_7_word_5",
+                        "dance_clubs_narrative_choice_7_word_6",
+                        "dance_clubs_narrative_choice_7_word_7",
+                        "dance_clubs_narrative_choice_7_word_8",
+                        "dance_clubs_narrative_choice_7_word_9",
+                        "dance_clubs_narrative_choice_7_word_10"
+                    ]
+                },
+                {
+                    "name": "Dance Clubs_narrative_choice_8",
+                    "night_number": 8,
+                    "words": [
+                        "dance_clubs_narrative_choice_8_word_1",
+                        "dance_clubs_narrative_choice_8_word_2",
+                        "dance_clubs_narrative_choice_8_word_3",
+                        "dance_clubs_narrative_choice_8_word_4",
+                        "dance_clubs_narrative_choice_8_word_5",
+                        "dance_clubs_narrative_choice_8_word_6",
+                        "dance_clubs_narrative_choice_8_word_7",
+                        "dance_clubs_narrative_choice_8_word_8",
+                        "dance_clubs_narrative_choice_8_word_9",
+                        "dance_clubs_narrative_choice_8_word_10"
+                    ]
+                },
+                {
+                    "name": "Dance Clubs_narrative_choice_9",
+                    "night_number": 9,
+                    "words": [
+                        "dance_clubs_narrative_choice_9_word_1",
+                        "dance_clubs_narrative_choice_9_word_2",
+                        "dance_clubs_narrative_choice_9_word_3",
+                        "dance_clubs_narrative_choice_9_word_4",
+                        "dance_clubs_narrative_choice_9_word_5",
+                        "dance_clubs_narrative_choice_9_word_6",
+                        "dance_clubs_narrative_choice_9_word_7",
+                        "dance_clubs_narrative_choice_9_word_8",
+                        "dance_clubs_narrative_choice_9_word_9",
+                        "dance_clubs_narrative_choice_9_word_10"
+                    ]
+                },
+                {
+                    "name": "Dance Clubs_narrative_choice_10",
+                    "night_number": 10,
+                    "words": [
+                        "dance_clubs_narrative_choice_10_word_1",
+                        "dance_clubs_narrative_choice_10_word_2",
+                        "dance_clubs_narrative_choice_10_word_3",
+                        "dance_clubs_narrative_choice_10_word_4",
+                        "dance_clubs_narrative_choice_10_word_5",
+                        "dance_clubs_narrative_choice_10_word_6",
+                        "dance_clubs_narrative_choice_10_word_7",
+                        "dance_clubs_narrative_choice_10_word_8",
+                        "dance_clubs_narrative_choice_10_word_9",
+                        "dance_clubs_narrative_choice_10_word_10"
+                    ]
+                },
+                {
+                    "name": "Dance Clubs_narrative_choice_11",
+                    "night_number": 11,
+                    "words": [
+                        "dance_clubs_narrative_choice_11_word_1",
+                        "dance_clubs_narrative_choice_11_word_2",
+                        "dance_clubs_narrative_choice_11_word_3",
+                        "dance_clubs_narrative_choice_11_word_4",
+                        "dance_clubs_narrative_choice_11_word_5",
+                        "dance_clubs_narrative_choice_11_word_6",
+                        "dance_clubs_narrative_choice_11_word_7",
+                        "dance_clubs_narrative_choice_11_word_8",
+                        "dance_clubs_narrative_choice_11_word_9",
+                        "dance_clubs_narrative_choice_11_word_10"
+                    ]
+                },
+                {
+                    "name": "Dance Clubs_narrative_choice_12",
+                    "night_number": 12,
+                    "words": [
+                        "dance_clubs_narrative_choice_12_word_1",
+                        "dance_clubs_narrative_choice_12_word_2",
+                        "dance_clubs_narrative_choice_12_word_3",
+                        "dance_clubs_narrative_choice_12_word_4",
+                        "dance_clubs_narrative_choice_12_word_5",
+                        "dance_clubs_narrative_choice_12_word_6",
+                        "dance_clubs_narrative_choice_12_word_7",
+                        "dance_clubs_narrative_choice_12_word_8",
+                        "dance_clubs_narrative_choice_12_word_9",
+                        "dance_clubs_narrative_choice_12_word_10"
+                    ]
+                },
+                {
+                    "name": "Dance Clubs_narrative_choice_13",
+                    "night_number": 13,
+                    "words": [
+                        "dance_clubs_narrative_choice_13_word_1",
+                        "dance_clubs_narrative_choice_13_word_2",
+                        "dance_clubs_narrative_choice_13_word_3",
+                        "dance_clubs_narrative_choice_13_word_4",
+                        "dance_clubs_narrative_choice_13_word_5",
+                        "dance_clubs_narrative_choice_13_word_6",
+                        "dance_clubs_narrative_choice_13_word_7",
+                        "dance_clubs_narrative_choice_13_word_8",
+                        "dance_clubs_narrative_choice_13_word_9",
+                        "dance_clubs_narrative_choice_13_word_10"
+                    ]
+                },
+                {
+                    "name": "Dance Clubs_narrative_choice_14",
+                    "night_number": 14,
+                    "words": [
+                        "dance_clubs_narrative_choice_14_word_1",
+                        "dance_clubs_narrative_choice_14_word_2",
+                        "dance_clubs_narrative_choice_14_word_3",
+                        "dance_clubs_narrative_choice_14_word_4",
+                        "dance_clubs_narrative_choice_14_word_5",
+                        "dance_clubs_narrative_choice_14_word_6",
+                        "dance_clubs_narrative_choice_14_word_7",
+                        "dance_clubs_narrative_choice_14_word_8",
+                        "dance_clubs_narrative_choice_14_word_9",
+                        "dance_clubs_narrative_choice_14_word_10"
+                    ]
+                },
+                {
+                    "name": "Dance Clubs_narrative_choice_15",
+                    "night_number": 15,
+                    "words": [
+                        "dance_clubs_narrative_choice_15_word_1",
+                        "dance_clubs_narrative_choice_15_word_2",
+                        "dance_clubs_narrative_choice_15_word_3",
+                        "dance_clubs_narrative_choice_15_word_4",
+                        "dance_clubs_narrative_choice_15_word_5",
+                        "dance_clubs_narrative_choice_15_word_6",
+                        "dance_clubs_narrative_choice_15_word_7",
+                        "dance_clubs_narrative_choice_15_word_8",
+                        "dance_clubs_narrative_choice_15_word_9",
+                        "dance_clubs_narrative_choice_15_word_10"
+                    ]
+                },
+                {
+                    "name": "Dance Clubs_narrative_choice_16",
+                    "night_number": 16,
+                    "words": [
+                        "dance_clubs_narrative_choice_16_word_1",
+                        "dance_clubs_narrative_choice_16_word_2",
+                        "dance_clubs_narrative_choice_16_word_3",
+                        "dance_clubs_narrative_choice_16_word_4",
+                        "dance_clubs_narrative_choice_16_word_5",
+                        "dance_clubs_narrative_choice_16_word_6",
+                        "dance_clubs_narrative_choice_16_word_7",
+                        "dance_clubs_narrative_choice_16_word_8",
+                        "dance_clubs_narrative_choice_16_word_9",
+                        "dance_clubs_narrative_choice_16_word_10"
+                    ]
+                },
+                {
+                    "name": "Dance Clubs_narrative_choice_17",
+                    "night_number": 17,
+                    "words": [
+                        "dance_clubs_narrative_choice_17_word_1",
+                        "dance_clubs_narrative_choice_17_word_2",
+                        "dance_clubs_narrative_choice_17_word_3",
+                        "dance_clubs_narrative_choice_17_word_4",
+                        "dance_clubs_narrative_choice_17_word_5",
+                        "dance_clubs_narrative_choice_17_word_6",
+                        "dance_clubs_narrative_choice_17_word_7",
+                        "dance_clubs_narrative_choice_17_word_8",
+                        "dance_clubs_narrative_choice_17_word_9",
+                        "dance_clubs_narrative_choice_17_word_10"
+                    ]
+                },
+                {
+                    "name": "Dance Clubs_narrative_choice_18",
+                    "night_number": 18,
+                    "words": [
+                        "dance_clubs_narrative_choice_18_word_1",
+                        "dance_clubs_narrative_choice_18_word_2",
+                        "dance_clubs_narrative_choice_18_word_3",
+                        "dance_clubs_narrative_choice_18_word_4",
+                        "dance_clubs_narrative_choice_18_word_5",
+                        "dance_clubs_narrative_choice_18_word_6",
+                        "dance_clubs_narrative_choice_18_word_7",
+                        "dance_clubs_narrative_choice_18_word_8",
+                        "dance_clubs_narrative_choice_18_word_9",
+                        "dance_clubs_narrative_choice_18_word_10"
+                    ]
+                },
+                {
+                    "name": "Dance Clubs_narrative_choice_19",
+                    "night_number": 19,
+                    "words": [
+                        "dance_clubs_narrative_choice_19_word_1",
+                        "dance_clubs_narrative_choice_19_word_2",
+                        "dance_clubs_narrative_choice_19_word_3",
+                        "dance_clubs_narrative_choice_19_word_4",
+                        "dance_clubs_narrative_choice_19_word_5",
+                        "dance_clubs_narrative_choice_19_word_6",
+                        "dance_clubs_narrative_choice_19_word_7",
+                        "dance_clubs_narrative_choice_19_word_8",
+                        "dance_clubs_narrative_choice_19_word_9",
+                        "dance_clubs_narrative_choice_19_word_10"
+                    ]
+                },
+                {
+                    "name": "Dance Clubs_narrative_choice_20",
+                    "night_number": 20,
+                    "words": [
+                        "dance_clubs_narrative_choice_20_word_1",
+                        "dance_clubs_narrative_choice_20_word_2",
+                        "dance_clubs_narrative_choice_20_word_3",
+                        "dance_clubs_narrative_choice_20_word_4",
+                        "dance_clubs_narrative_choice_20_word_5",
+                        "dance_clubs_narrative_choice_20_word_6",
+                        "dance_clubs_narrative_choice_20_word_7",
+                        "dance_clubs_narrative_choice_20_word_8",
+                        "dance_clubs_narrative_choice_20_word_9",
+                        "dance_clubs_narrative_choice_20_word_10"
+                    ]
+                },
+                {
+                    "name": "Dance Clubs_narrative_choice_21",
+                    "night_number": 21,
+                    "words": [
+                        "dance_clubs_narrative_choice_21_word_1",
+                        "dance_clubs_narrative_choice_21_word_2",
+                        "dance_clubs_narrative_choice_21_word_3",
+                        "dance_clubs_narrative_choice_21_word_4",
+                        "dance_clubs_narrative_choice_21_word_5",
+                        "dance_clubs_narrative_choice_21_word_6",
+                        "dance_clubs_narrative_choice_21_word_7",
+                        "dance_clubs_narrative_choice_21_word_8",
+                        "dance_clubs_narrative_choice_21_word_9",
+                        "dance_clubs_narrative_choice_21_word_10"
+                    ]
+                },
+                {
+                    "name": "Dance Clubs_narrative_choice_22",
+                    "night_number": 22,
+                    "words": [
+                        "dance_clubs_narrative_choice_22_word_1",
+                        "dance_clubs_narrative_choice_22_word_2",
+                        "dance_clubs_narrative_choice_22_word_3",
+                        "dance_clubs_narrative_choice_22_word_4",
+                        "dance_clubs_narrative_choice_22_word_5",
+                        "dance_clubs_narrative_choice_22_word_6",
+                        "dance_clubs_narrative_choice_22_word_7",
+                        "dance_clubs_narrative_choice_22_word_8",
+                        "dance_clubs_narrative_choice_22_word_9",
+                        "dance_clubs_narrative_choice_22_word_10"
+                    ]
+                },
+                {
+                    "name": "Dance Clubs_narrative_choice_23",
+                    "night_number": 23,
+                    "words": [
+                        "dance_clubs_narrative_choice_23_word_1",
+                        "dance_clubs_narrative_choice_23_word_2",
+                        "dance_clubs_narrative_choice_23_word_3",
+                        "dance_clubs_narrative_choice_23_word_4",
+                        "dance_clubs_narrative_choice_23_word_5",
+                        "dance_clubs_narrative_choice_23_word_6",
+                        "dance_clubs_narrative_choice_23_word_7",
+                        "dance_clubs_narrative_choice_23_word_8",
+                        "dance_clubs_narrative_choice_23_word_9",
+                        "dance_clubs_narrative_choice_23_word_10"
+                    ]
+                },
+                {
+                    "name": "Dance Clubs_narrative_choice_24",
+                    "night_number": 24,
+                    "words": [
+                        "dance_clubs_narrative_choice_24_word_1",
+                        "dance_clubs_narrative_choice_24_word_2",
+                        "dance_clubs_narrative_choice_24_word_3",
+                        "dance_clubs_narrative_choice_24_word_4",
+                        "dance_clubs_narrative_choice_24_word_5",
+                        "dance_clubs_narrative_choice_24_word_6",
+                        "dance_clubs_narrative_choice_24_word_7",
+                        "dance_clubs_narrative_choice_24_word_8",
+                        "dance_clubs_narrative_choice_24_word_9",
+                        "dance_clubs_narrative_choice_24_word_10"
+                    ]
+                },
+                {
+                    "name": "Dance Clubs_narrative_choice_25",
+                    "night_number": 25,
+                    "words": [
+                        "dance_clubs_narrative_choice_25_word_1",
+                        "dance_clubs_narrative_choice_25_word_2",
+                        "dance_clubs_narrative_choice_25_word_3",
+                        "dance_clubs_narrative_choice_25_word_4",
+                        "dance_clubs_narrative_choice_25_word_5",
+                        "dance_clubs_narrative_choice_25_word_6",
+                        "dance_clubs_narrative_choice_25_word_7",
+                        "dance_clubs_narrative_choice_25_word_8",
+                        "dance_clubs_narrative_choice_25_word_9",
+                        "dance_clubs_narrative_choice_25_word_10"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Concerts",
+            "narrative_choices": [
+                {
+                    "name": "Concerts_narrative_choice_1",
+                    "night_number": 1,
+                    "words": [
+                        "concerts_narrative_choice_1_word_1",
+                        "concerts_narrative_choice_1_word_2",
+                        "concerts_narrative_choice_1_word_3",
+                        "concerts_narrative_choice_1_word_4",
+                        "concerts_narrative_choice_1_word_5",
+                        "concerts_narrative_choice_1_word_6",
+                        "concerts_narrative_choice_1_word_7",
+                        "concerts_narrative_choice_1_word_8",
+                        "concerts_narrative_choice_1_word_9",
+                        "concerts_narrative_choice_1_word_10"
+                    ]
+                },
+                {
+                    "name": "Concerts_narrative_choice_2",
+                    "night_number": 2,
+                    "words": [
+                        "concerts_narrative_choice_2_word_1",
+                        "concerts_narrative_choice_2_word_2",
+                        "concerts_narrative_choice_2_word_3",
+                        "concerts_narrative_choice_2_word_4",
+                        "concerts_narrative_choice_2_word_5",
+                        "concerts_narrative_choice_2_word_6",
+                        "concerts_narrative_choice_2_word_7",
+                        "concerts_narrative_choice_2_word_8",
+                        "concerts_narrative_choice_2_word_9",
+                        "concerts_narrative_choice_2_word_10"
+                    ]
+                },
+                {
+                    "name": "Concerts_narrative_choice_3",
+                    "night_number": 3,
+                    "words": [
+                        "concerts_narrative_choice_3_word_1",
+                        "concerts_narrative_choice_3_word_2",
+                        "concerts_narrative_choice_3_word_3",
+                        "concerts_narrative_choice_3_word_4",
+                        "concerts_narrative_choice_3_word_5",
+                        "concerts_narrative_choice_3_word_6",
+                        "concerts_narrative_choice_3_word_7",
+                        "concerts_narrative_choice_3_word_8",
+                        "concerts_narrative_choice_3_word_9",
+                        "concerts_narrative_choice_3_word_10"
+                    ]
+                },
+                {
+                    "name": "Concerts_narrative_choice_4",
+                    "night_number": 4,
+                    "words": [
+                        "concerts_narrative_choice_4_word_1",
+                        "concerts_narrative_choice_4_word_2",
+                        "concerts_narrative_choice_4_word_3",
+                        "concerts_narrative_choice_4_word_4",
+                        "concerts_narrative_choice_4_word_5",
+                        "concerts_narrative_choice_4_word_6",
+                        "concerts_narrative_choice_4_word_7",
+                        "concerts_narrative_choice_4_word_8",
+                        "concerts_narrative_choice_4_word_9",
+                        "concerts_narrative_choice_4_word_10"
+                    ]
+                },
+                {
+                    "name": "Concerts_narrative_choice_5",
+                    "night_number": 5,
+                    "words": [
+                        "concerts_narrative_choice_5_word_1",
+                        "concerts_narrative_choice_5_word_2",
+                        "concerts_narrative_choice_5_word_3",
+                        "concerts_narrative_choice_5_word_4",
+                        "concerts_narrative_choice_5_word_5",
+                        "concerts_narrative_choice_5_word_6",
+                        "concerts_narrative_choice_5_word_7",
+                        "concerts_narrative_choice_5_word_8",
+                        "concerts_narrative_choice_5_word_9",
+                        "concerts_narrative_choice_5_word_10"
+                    ]
+                },
+                {
+                    "name": "Concerts_narrative_choice_6",
+                    "night_number": 6,
+                    "words": [
+                        "concerts_narrative_choice_6_word_1",
+                        "concerts_narrative_choice_6_word_2",
+                        "concerts_narrative_choice_6_word_3",
+                        "concerts_narrative_choice_6_word_4",
+                        "concerts_narrative_choice_6_word_5",
+                        "concerts_narrative_choice_6_word_6",
+                        "concerts_narrative_choice_6_word_7",
+                        "concerts_narrative_choice_6_word_8",
+                        "concerts_narrative_choice_6_word_9",
+                        "concerts_narrative_choice_6_word_10"
+                    ]
+                },
+                {
+                    "name": "Concerts_narrative_choice_7",
+                    "night_number": 7,
+                    "words": [
+                        "concerts_narrative_choice_7_word_1",
+                        "concerts_narrative_choice_7_word_2",
+                        "concerts_narrative_choice_7_word_3",
+                        "concerts_narrative_choice_7_word_4",
+                        "concerts_narrative_choice_7_word_5",
+                        "concerts_narrative_choice_7_word_6",
+                        "concerts_narrative_choice_7_word_7",
+                        "concerts_narrative_choice_7_word_8",
+                        "concerts_narrative_choice_7_word_9",
+                        "concerts_narrative_choice_7_word_10"
+                    ]
+                },
+                {
+                    "name": "Concerts_narrative_choice_8",
+                    "night_number": 8,
+                    "words": [
+                        "concerts_narrative_choice_8_word_1",
+                        "concerts_narrative_choice_8_word_2",
+                        "concerts_narrative_choice_8_word_3",
+                        "concerts_narrative_choice_8_word_4",
+                        "concerts_narrative_choice_8_word_5",
+                        "concerts_narrative_choice_8_word_6",
+                        "concerts_narrative_choice_8_word_7",
+                        "concerts_narrative_choice_8_word_8",
+                        "concerts_narrative_choice_8_word_9",
+                        "concerts_narrative_choice_8_word_10"
+                    ]
+                },
+                {
+                    "name": "Concerts_narrative_choice_9",
+                    "night_number": 9,
+                    "words": [
+                        "concerts_narrative_choice_9_word_1",
+                        "concerts_narrative_choice_9_word_2",
+                        "concerts_narrative_choice_9_word_3",
+                        "concerts_narrative_choice_9_word_4",
+                        "concerts_narrative_choice_9_word_5",
+                        "concerts_narrative_choice_9_word_6",
+                        "concerts_narrative_choice_9_word_7",
+                        "concerts_narrative_choice_9_word_8",
+                        "concerts_narrative_choice_9_word_9",
+                        "concerts_narrative_choice_9_word_10"
+                    ]
+                },
+                {
+                    "name": "Concerts_narrative_choice_10",
+                    "night_number": 10,
+                    "words": [
+                        "concerts_narrative_choice_10_word_1",
+                        "concerts_narrative_choice_10_word_2",
+                        "concerts_narrative_choice_10_word_3",
+                        "concerts_narrative_choice_10_word_4",
+                        "concerts_narrative_choice_10_word_5",
+                        "concerts_narrative_choice_10_word_6",
+                        "concerts_narrative_choice_10_word_7",
+                        "concerts_narrative_choice_10_word_8",
+                        "concerts_narrative_choice_10_word_9",
+                        "concerts_narrative_choice_10_word_10"
+                    ]
+                },
+                {
+                    "name": "Concerts_narrative_choice_11",
+                    "night_number": 11,
+                    "words": [
+                        "concerts_narrative_choice_11_word_1",
+                        "concerts_narrative_choice_11_word_2",
+                        "concerts_narrative_choice_11_word_3",
+                        "concerts_narrative_choice_11_word_4",
+                        "concerts_narrative_choice_11_word_5",
+                        "concerts_narrative_choice_11_word_6",
+                        "concerts_narrative_choice_11_word_7",
+                        "concerts_narrative_choice_11_word_8",
+                        "concerts_narrative_choice_11_word_9",
+                        "concerts_narrative_choice_11_word_10"
+                    ]
+                },
+                {
+                    "name": "Concerts_narrative_choice_12",
+                    "night_number": 12,
+                    "words": [
+                        "concerts_narrative_choice_12_word_1",
+                        "concerts_narrative_choice_12_word_2",
+                        "concerts_narrative_choice_12_word_3",
+                        "concerts_narrative_choice_12_word_4",
+                        "concerts_narrative_choice_12_word_5",
+                        "concerts_narrative_choice_12_word_6",
+                        "concerts_narrative_choice_12_word_7",
+                        "concerts_narrative_choice_12_word_8",
+                        "concerts_narrative_choice_12_word_9",
+                        "concerts_narrative_choice_12_word_10"
+                    ]
+                },
+                {
+                    "name": "Concerts_narrative_choice_13",
+                    "night_number": 13,
+                    "words": [
+                        "concerts_narrative_choice_13_word_1",
+                        "concerts_narrative_choice_13_word_2",
+                        "concerts_narrative_choice_13_word_3",
+                        "concerts_narrative_choice_13_word_4",
+                        "concerts_narrative_choice_13_word_5",
+                        "concerts_narrative_choice_13_word_6",
+                        "concerts_narrative_choice_13_word_7",
+                        "concerts_narrative_choice_13_word_8",
+                        "concerts_narrative_choice_13_word_9",
+                        "concerts_narrative_choice_13_word_10"
+                    ]
+                },
+                {
+                    "name": "Concerts_narrative_choice_14",
+                    "night_number": 14,
+                    "words": [
+                        "concerts_narrative_choice_14_word_1",
+                        "concerts_narrative_choice_14_word_2",
+                        "concerts_narrative_choice_14_word_3",
+                        "concerts_narrative_choice_14_word_4",
+                        "concerts_narrative_choice_14_word_5",
+                        "concerts_narrative_choice_14_word_6",
+                        "concerts_narrative_choice_14_word_7",
+                        "concerts_narrative_choice_14_word_8",
+                        "concerts_narrative_choice_14_word_9",
+                        "concerts_narrative_choice_14_word_10"
+                    ]
+                },
+                {
+                    "name": "Concerts_narrative_choice_15",
+                    "night_number": 15,
+                    "words": [
+                        "concerts_narrative_choice_15_word_1",
+                        "concerts_narrative_choice_15_word_2",
+                        "concerts_narrative_choice_15_word_3",
+                        "concerts_narrative_choice_15_word_4",
+                        "concerts_narrative_choice_15_word_5",
+                        "concerts_narrative_choice_15_word_6",
+                        "concerts_narrative_choice_15_word_7",
+                        "concerts_narrative_choice_15_word_8",
+                        "concerts_narrative_choice_15_word_9",
+                        "concerts_narrative_choice_15_word_10"
+                    ]
+                },
+                {
+                    "name": "Concerts_narrative_choice_16",
+                    "night_number": 16,
+                    "words": [
+                        "concerts_narrative_choice_16_word_1",
+                        "concerts_narrative_choice_16_word_2",
+                        "concerts_narrative_choice_16_word_3",
+                        "concerts_narrative_choice_16_word_4",
+                        "concerts_narrative_choice_16_word_5",
+                        "concerts_narrative_choice_16_word_6",
+                        "concerts_narrative_choice_16_word_7",
+                        "concerts_narrative_choice_16_word_8",
+                        "concerts_narrative_choice_16_word_9",
+                        "concerts_narrative_choice_16_word_10"
+                    ]
+                },
+                {
+                    "name": "Concerts_narrative_choice_17",
+                    "night_number": 17,
+                    "words": [
+                        "concerts_narrative_choice_17_word_1",
+                        "concerts_narrative_choice_17_word_2",
+                        "concerts_narrative_choice_17_word_3",
+                        "concerts_narrative_choice_17_word_4",
+                        "concerts_narrative_choice_17_word_5",
+                        "concerts_narrative_choice_17_word_6",
+                        "concerts_narrative_choice_17_word_7",
+                        "concerts_narrative_choice_17_word_8",
+                        "concerts_narrative_choice_17_word_9",
+                        "concerts_narrative_choice_17_word_10"
+                    ]
+                },
+                {
+                    "name": "Concerts_narrative_choice_18",
+                    "night_number": 18,
+                    "words": [
+                        "concerts_narrative_choice_18_word_1",
+                        "concerts_narrative_choice_18_word_2",
+                        "concerts_narrative_choice_18_word_3",
+                        "concerts_narrative_choice_18_word_4",
+                        "concerts_narrative_choice_18_word_5",
+                        "concerts_narrative_choice_18_word_6",
+                        "concerts_narrative_choice_18_word_7",
+                        "concerts_narrative_choice_18_word_8",
+                        "concerts_narrative_choice_18_word_9",
+                        "concerts_narrative_choice_18_word_10"
+                    ]
+                },
+                {
+                    "name": "Concerts_narrative_choice_19",
+                    "night_number": 19,
+                    "words": [
+                        "concerts_narrative_choice_19_word_1",
+                        "concerts_narrative_choice_19_word_2",
+                        "concerts_narrative_choice_19_word_3",
+                        "concerts_narrative_choice_19_word_4",
+                        "concerts_narrative_choice_19_word_5",
+                        "concerts_narrative_choice_19_word_6",
+                        "concerts_narrative_choice_19_word_7",
+                        "concerts_narrative_choice_19_word_8",
+                        "concerts_narrative_choice_19_word_9",
+                        "concerts_narrative_choice_19_word_10"
+                    ]
+                },
+                {
+                    "name": "Concerts_narrative_choice_20",
+                    "night_number": 20,
+                    "words": [
+                        "concerts_narrative_choice_20_word_1",
+                        "concerts_narrative_choice_20_word_2",
+                        "concerts_narrative_choice_20_word_3",
+                        "concerts_narrative_choice_20_word_4",
+                        "concerts_narrative_choice_20_word_5",
+                        "concerts_narrative_choice_20_word_6",
+                        "concerts_narrative_choice_20_word_7",
+                        "concerts_narrative_choice_20_word_8",
+                        "concerts_narrative_choice_20_word_9",
+                        "concerts_narrative_choice_20_word_10"
+                    ]
+                },
+                {
+                    "name": "Concerts_narrative_choice_21",
+                    "night_number": 21,
+                    "words": [
+                        "concerts_narrative_choice_21_word_1",
+                        "concerts_narrative_choice_21_word_2",
+                        "concerts_narrative_choice_21_word_3",
+                        "concerts_narrative_choice_21_word_4",
+                        "concerts_narrative_choice_21_word_5",
+                        "concerts_narrative_choice_21_word_6",
+                        "concerts_narrative_choice_21_word_7",
+                        "concerts_narrative_choice_21_word_8",
+                        "concerts_narrative_choice_21_word_9",
+                        "concerts_narrative_choice_21_word_10"
+                    ]
+                },
+                {
+                    "name": "Concerts_narrative_choice_22",
+                    "night_number": 22,
+                    "words": [
+                        "concerts_narrative_choice_22_word_1",
+                        "concerts_narrative_choice_22_word_2",
+                        "concerts_narrative_choice_22_word_3",
+                        "concerts_narrative_choice_22_word_4",
+                        "concerts_narrative_choice_22_word_5",
+                        "concerts_narrative_choice_22_word_6",
+                        "concerts_narrative_choice_22_word_7",
+                        "concerts_narrative_choice_22_word_8",
+                        "concerts_narrative_choice_22_word_9",
+                        "concerts_narrative_choice_22_word_10"
+                    ]
+                },
+                {
+                    "name": "Concerts_narrative_choice_23",
+                    "night_number": 23,
+                    "words": [
+                        "concerts_narrative_choice_23_word_1",
+                        "concerts_narrative_choice_23_word_2",
+                        "concerts_narrative_choice_23_word_3",
+                        "concerts_narrative_choice_23_word_4",
+                        "concerts_narrative_choice_23_word_5",
+                        "concerts_narrative_choice_23_word_6",
+                        "concerts_narrative_choice_23_word_7",
+                        "concerts_narrative_choice_23_word_8",
+                        "concerts_narrative_choice_23_word_9",
+                        "concerts_narrative_choice_23_word_10"
+                    ]
+                },
+                {
+                    "name": "Concerts_narrative_choice_24",
+                    "night_number": 24,
+                    "words": [
+                        "concerts_narrative_choice_24_word_1",
+                        "concerts_narrative_choice_24_word_2",
+                        "concerts_narrative_choice_24_word_3",
+                        "concerts_narrative_choice_24_word_4",
+                        "concerts_narrative_choice_24_word_5",
+                        "concerts_narrative_choice_24_word_6",
+                        "concerts_narrative_choice_24_word_7",
+                        "concerts_narrative_choice_24_word_8",
+                        "concerts_narrative_choice_24_word_9",
+                        "concerts_narrative_choice_24_word_10"
+                    ]
+                },
+                {
+                    "name": "Concerts_narrative_choice_25",
+                    "night_number": 25,
+                    "words": [
+                        "concerts_narrative_choice_25_word_1",
+                        "concerts_narrative_choice_25_word_2",
+                        "concerts_narrative_choice_25_word_3",
+                        "concerts_narrative_choice_25_word_4",
+                        "concerts_narrative_choice_25_word_5",
+                        "concerts_narrative_choice_25_word_6",
+                        "concerts_narrative_choice_25_word_7",
+                        "concerts_narrative_choice_25_word_8",
+                        "concerts_narrative_choice_25_word_9",
+                        "concerts_narrative_choice_25_word_10"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Community Building",
+            "narrative_choices": [
+                {
+                    "name": "Community Building_narrative_choice_1",
+                    "night_number": 1,
+                    "words": [
+                        "community_building_narrative_choice_1_word_1",
+                        "community_building_narrative_choice_1_word_2",
+                        "community_building_narrative_choice_1_word_3",
+                        "community_building_narrative_choice_1_word_4",
+                        "community_building_narrative_choice_1_word_5",
+                        "community_building_narrative_choice_1_word_6",
+                        "community_building_narrative_choice_1_word_7",
+                        "community_building_narrative_choice_1_word_8",
+                        "community_building_narrative_choice_1_word_9",
+                        "community_building_narrative_choice_1_word_10"
+                    ]
+                },
+                {
+                    "name": "Community Building_narrative_choice_2",
+                    "night_number": 2,
+                    "words": [
+                        "community_building_narrative_choice_2_word_1",
+                        "community_building_narrative_choice_2_word_2",
+                        "community_building_narrative_choice_2_word_3",
+                        "community_building_narrative_choice_2_word_4",
+                        "community_building_narrative_choice_2_word_5",
+                        "community_building_narrative_choice_2_word_6",
+                        "community_building_narrative_choice_2_word_7",
+                        "community_building_narrative_choice_2_word_8",
+                        "community_building_narrative_choice_2_word_9",
+                        "community_building_narrative_choice_2_word_10"
+                    ]
+                },
+                {
+                    "name": "Community Building_narrative_choice_3",
+                    "night_number": 3,
+                    "words": [
+                        "community_building_narrative_choice_3_word_1",
+                        "community_building_narrative_choice_3_word_2",
+                        "community_building_narrative_choice_3_word_3",
+                        "community_building_narrative_choice_3_word_4",
+                        "community_building_narrative_choice_3_word_5",
+                        "community_building_narrative_choice_3_word_6",
+                        "community_building_narrative_choice_3_word_7",
+                        "community_building_narrative_choice_3_word_8",
+                        "community_building_narrative_choice_3_word_9",
+                        "community_building_narrative_choice_3_word_10"
+                    ]
+                },
+                {
+                    "name": "Community Building_narrative_choice_4",
+                    "night_number": 4,
+                    "words": [
+                        "community_building_narrative_choice_4_word_1",
+                        "community_building_narrative_choice_4_word_2",
+                        "community_building_narrative_choice_4_word_3",
+                        "community_building_narrative_choice_4_word_4",
+                        "community_building_narrative_choice_4_word_5",
+                        "community_building_narrative_choice_4_word_6",
+                        "community_building_narrative_choice_4_word_7",
+                        "community_building_narrative_choice_4_word_8",
+                        "community_building_narrative_choice_4_word_9",
+                        "community_building_narrative_choice_4_word_10"
+                    ]
+                },
+                {
+                    "name": "Community Building_narrative_choice_5",
+                    "night_number": 5,
+                    "words": [
+                        "community_building_narrative_choice_5_word_1",
+                        "community_building_narrative_choice_5_word_2",
+                        "community_building_narrative_choice_5_word_3",
+                        "community_building_narrative_choice_5_word_4",
+                        "community_building_narrative_choice_5_word_5",
+                        "community_building_narrative_choice_5_word_6",
+                        "community_building_narrative_choice_5_word_7",
+                        "community_building_narrative_choice_5_word_8",
+                        "community_building_narrative_choice_5_word_9",
+                        "community_building_narrative_choice_5_word_10"
+                    ]
+                },
+                {
+                    "name": "Community Building_narrative_choice_6",
+                    "night_number": 6,
+                    "words": [
+                        "community_building_narrative_choice_6_word_1",
+                        "community_building_narrative_choice_6_word_2",
+                        "community_building_narrative_choice_6_word_3",
+                        "community_building_narrative_choice_6_word_4",
+                        "community_building_narrative_choice_6_word_5",
+                        "community_building_narrative_choice_6_word_6",
+                        "community_building_narrative_choice_6_word_7",
+                        "community_building_narrative_choice_6_word_8",
+                        "community_building_narrative_choice_6_word_9",
+                        "community_building_narrative_choice_6_word_10"
+                    ]
+                },
+                {
+                    "name": "Community Building_narrative_choice_7",
+                    "night_number": 7,
+                    "words": [
+                        "community_building_narrative_choice_7_word_1",
+                        "community_building_narrative_choice_7_word_2",
+                        "community_building_narrative_choice_7_word_3",
+                        "community_building_narrative_choice_7_word_4",
+                        "community_building_narrative_choice_7_word_5",
+                        "community_building_narrative_choice_7_word_6",
+                        "community_building_narrative_choice_7_word_7",
+                        "community_building_narrative_choice_7_word_8",
+                        "community_building_narrative_choice_7_word_9",
+                        "community_building_narrative_choice_7_word_10"
+                    ]
+                },
+                {
+                    "name": "Community Building_narrative_choice_8",
+                    "night_number": 8,
+                    "words": [
+                        "community_building_narrative_choice_8_word_1",
+                        "community_building_narrative_choice_8_word_2",
+                        "community_building_narrative_choice_8_word_3",
+                        "community_building_narrative_choice_8_word_4",
+                        "community_building_narrative_choice_8_word_5",
+                        "community_building_narrative_choice_8_word_6",
+                        "community_building_narrative_choice_8_word_7",
+                        "community_building_narrative_choice_8_word_8",
+                        "community_building_narrative_choice_8_word_9",
+                        "community_building_narrative_choice_8_word_10"
+                    ]
+                },
+                {
+                    "name": "Community Building_narrative_choice_9",
+                    "night_number": 9,
+                    "words": [
+                        "community_building_narrative_choice_9_word_1",
+                        "community_building_narrative_choice_9_word_2",
+                        "community_building_narrative_choice_9_word_3",
+                        "community_building_narrative_choice_9_word_4",
+                        "community_building_narrative_choice_9_word_5",
+                        "community_building_narrative_choice_9_word_6",
+                        "community_building_narrative_choice_9_word_7",
+                        "community_building_narrative_choice_9_word_8",
+                        "community_building_narrative_choice_9_word_9",
+                        "community_building_narrative_choice_9_word_10"
+                    ]
+                },
+                {
+                    "name": "Community Building_narrative_choice_10",
+                    "night_number": 10,
+                    "words": [
+                        "community_building_narrative_choice_10_word_1",
+                        "community_building_narrative_choice_10_word_2",
+                        "community_building_narrative_choice_10_word_3",
+                        "community_building_narrative_choice_10_word_4",
+                        "community_building_narrative_choice_10_word_5",
+                        "community_building_narrative_choice_10_word_6",
+                        "community_building_narrative_choice_10_word_7",
+                        "community_building_narrative_choice_10_word_8",
+                        "community_building_narrative_choice_10_word_9",
+                        "community_building_narrative_choice_10_word_10"
+                    ]
+                },
+                {
+                    "name": "Community Building_narrative_choice_11",
+                    "night_number": 11,
+                    "words": [
+                        "community_building_narrative_choice_11_word_1",
+                        "community_building_narrative_choice_11_word_2",
+                        "community_building_narrative_choice_11_word_3",
+                        "community_building_narrative_choice_11_word_4",
+                        "community_building_narrative_choice_11_word_5",
+                        "community_building_narrative_choice_11_word_6",
+                        "community_building_narrative_choice_11_word_7",
+                        "community_building_narrative_choice_11_word_8",
+                        "community_building_narrative_choice_11_word_9",
+                        "community_building_narrative_choice_11_word_10"
+                    ]
+                },
+                {
+                    "name": "Community Building_narrative_choice_12",
+                    "night_number": 12,
+                    "words": [
+                        "community_building_narrative_choice_12_word_1",
+                        "community_building_narrative_choice_12_word_2",
+                        "community_building_narrative_choice_12_word_3",
+                        "community_building_narrative_choice_12_word_4",
+                        "community_building_narrative_choice_12_word_5",
+                        "community_building_narrative_choice_12_word_6",
+                        "community_building_narrative_choice_12_word_7",
+                        "community_building_narrative_choice_12_word_8",
+                        "community_building_narrative_choice_12_word_9",
+                        "community_building_narrative_choice_12_word_10"
+                    ]
+                },
+                {
+                    "name": "Community Building_narrative_choice_13",
+                    "night_number": 13,
+                    "words": [
+                        "community_building_narrative_choice_13_word_1",
+                        "community_building_narrative_choice_13_word_2",
+                        "community_building_narrative_choice_13_word_3",
+                        "community_building_narrative_choice_13_word_4",
+                        "community_building_narrative_choice_13_word_5",
+                        "community_building_narrative_choice_13_word_6",
+                        "community_building_narrative_choice_13_word_7",
+                        "community_building_narrative_choice_13_word_8",
+                        "community_building_narrative_choice_13_word_9",
+                        "community_building_narrative_choice_13_word_10"
+                    ]
+                },
+                {
+                    "name": "Community Building_narrative_choice_14",
+                    "night_number": 14,
+                    "words": [
+                        "community_building_narrative_choice_14_word_1",
+                        "community_building_narrative_choice_14_word_2",
+                        "community_building_narrative_choice_14_word_3",
+                        "community_building_narrative_choice_14_word_4",
+                        "community_building_narrative_choice_14_word_5",
+                        "community_building_narrative_choice_14_word_6",
+                        "community_building_narrative_choice_14_word_7",
+                        "community_building_narrative_choice_14_word_8",
+                        "community_building_narrative_choice_14_word_9",
+                        "community_building_narrative_choice_14_word_10"
+                    ]
+                },
+                {
+                    "name": "Community Building_narrative_choice_15",
+                    "night_number": 15,
+                    "words": [
+                        "community_building_narrative_choice_15_word_1",
+                        "community_building_narrative_choice_15_word_2",
+                        "community_building_narrative_choice_15_word_3",
+                        "community_building_narrative_choice_15_word_4",
+                        "community_building_narrative_choice_15_word_5",
+                        "community_building_narrative_choice_15_word_6",
+                        "community_building_narrative_choice_15_word_7",
+                        "community_building_narrative_choice_15_word_8",
+                        "community_building_narrative_choice_15_word_9",
+                        "community_building_narrative_choice_15_word_10"
+                    ]
+                },
+                {
+                    "name": "Community Building_narrative_choice_16",
+                    "night_number": 16,
+                    "words": [
+                        "community_building_narrative_choice_16_word_1",
+                        "community_building_narrative_choice_16_word_2",
+                        "community_building_narrative_choice_16_word_3",
+                        "community_building_narrative_choice_16_word_4",
+                        "community_building_narrative_choice_16_word_5",
+                        "community_building_narrative_choice_16_word_6",
+                        "community_building_narrative_choice_16_word_7",
+                        "community_building_narrative_choice_16_word_8",
+                        "community_building_narrative_choice_16_word_9",
+                        "community_building_narrative_choice_16_word_10"
+                    ]
+                },
+                {
+                    "name": "Community Building_narrative_choice_17",
+                    "night_number": 17,
+                    "words": [
+                        "community_building_narrative_choice_17_word_1",
+                        "community_building_narrative_choice_17_word_2",
+                        "community_building_narrative_choice_17_word_3",
+                        "community_building_narrative_choice_17_word_4",
+                        "community_building_narrative_choice_17_word_5",
+                        "community_building_narrative_choice_17_word_6",
+                        "community_building_narrative_choice_17_word_7",
+                        "community_building_narrative_choice_17_word_8",
+                        "community_building_narrative_choice_17_word_9",
+                        "community_building_narrative_choice_17_word_10"
+                    ]
+                },
+                {
+                    "name": "Community Building_narrative_choice_18",
+                    "night_number": 18,
+                    "words": [
+                        "community_building_narrative_choice_18_word_1",
+                        "community_building_narrative_choice_18_word_2",
+                        "community_building_narrative_choice_18_word_3",
+                        "community_building_narrative_choice_18_word_4",
+                        "community_building_narrative_choice_18_word_5",
+                        "community_building_narrative_choice_18_word_6",
+                        "community_building_narrative_choice_18_word_7",
+                        "community_building_narrative_choice_18_word_8",
+                        "community_building_narrative_choice_18_word_9",
+                        "community_building_narrative_choice_18_word_10"
+                    ]
+                },
+                {
+                    "name": "Community Building_narrative_choice_19",
+                    "night_number": 19,
+                    "words": [
+                        "community_building_narrative_choice_19_word_1",
+                        "community_building_narrative_choice_19_word_2",
+                        "community_building_narrative_choice_19_word_3",
+                        "community_building_narrative_choice_19_word_4",
+                        "community_building_narrative_choice_19_word_5",
+                        "community_building_narrative_choice_19_word_6",
+                        "community_building_narrative_choice_19_word_7",
+                        "community_building_narrative_choice_19_word_8",
+                        "community_building_narrative_choice_19_word_9",
+                        "community_building_narrative_choice_19_word_10"
+                    ]
+                },
+                {
+                    "name": "Community Building_narrative_choice_20",
+                    "night_number": 20,
+                    "words": [
+                        "community_building_narrative_choice_20_word_1",
+                        "community_building_narrative_choice_20_word_2",
+                        "community_building_narrative_choice_20_word_3",
+                        "community_building_narrative_choice_20_word_4",
+                        "community_building_narrative_choice_20_word_5",
+                        "community_building_narrative_choice_20_word_6",
+                        "community_building_narrative_choice_20_word_7",
+                        "community_building_narrative_choice_20_word_8",
+                        "community_building_narrative_choice_20_word_9",
+                        "community_building_narrative_choice_20_word_10"
+                    ]
+                },
+                {
+                    "name": "Community Building_narrative_choice_21",
+                    "night_number": 21,
+                    "words": [
+                        "community_building_narrative_choice_21_word_1",
+                        "community_building_narrative_choice_21_word_2",
+                        "community_building_narrative_choice_21_word_3",
+                        "community_building_narrative_choice_21_word_4",
+                        "community_building_narrative_choice_21_word_5",
+                        "community_building_narrative_choice_21_word_6",
+                        "community_building_narrative_choice_21_word_7",
+                        "community_building_narrative_choice_21_word_8",
+                        "community_building_narrative_choice_21_word_9",
+                        "community_building_narrative_choice_21_word_10"
+                    ]
+                },
+                {
+                    "name": "Community Building_narrative_choice_22",
+                    "night_number": 22,
+                    "words": [
+                        "community_building_narrative_choice_22_word_1",
+                        "community_building_narrative_choice_22_word_2",
+                        "community_building_narrative_choice_22_word_3",
+                        "community_building_narrative_choice_22_word_4",
+                        "community_building_narrative_choice_22_word_5",
+                        "community_building_narrative_choice_22_word_6",
+                        "community_building_narrative_choice_22_word_7",
+                        "community_building_narrative_choice_22_word_8",
+                        "community_building_narrative_choice_22_word_9",
+                        "community_building_narrative_choice_22_word_10"
+                    ]
+                },
+                {
+                    "name": "Community Building_narrative_choice_23",
+                    "night_number": 23,
+                    "words": [
+                        "community_building_narrative_choice_23_word_1",
+                        "community_building_narrative_choice_23_word_2",
+                        "community_building_narrative_choice_23_word_3",
+                        "community_building_narrative_choice_23_word_4",
+                        "community_building_narrative_choice_23_word_5",
+                        "community_building_narrative_choice_23_word_6",
+                        "community_building_narrative_choice_23_word_7",
+                        "community_building_narrative_choice_23_word_8",
+                        "community_building_narrative_choice_23_word_9",
+                        "community_building_narrative_choice_23_word_10"
+                    ]
+                },
+                {
+                    "name": "Community Building_narrative_choice_24",
+                    "night_number": 24,
+                    "words": [
+                        "community_building_narrative_choice_24_word_1",
+                        "community_building_narrative_choice_24_word_2",
+                        "community_building_narrative_choice_24_word_3",
+                        "community_building_narrative_choice_24_word_4",
+                        "community_building_narrative_choice_24_word_5",
+                        "community_building_narrative_choice_24_word_6",
+                        "community_building_narrative_choice_24_word_7",
+                        "community_building_narrative_choice_24_word_8",
+                        "community_building_narrative_choice_24_word_9",
+                        "community_building_narrative_choice_24_word_10"
+                    ]
+                },
+                {
+                    "name": "Community Building_narrative_choice_25",
+                    "night_number": 25,
+                    "words": [
+                        "community_building_narrative_choice_25_word_1",
+                        "community_building_narrative_choice_25_word_2",
+                        "community_building_narrative_choice_25_word_3",
+                        "community_building_narrative_choice_25_word_4",
+                        "community_building_narrative_choice_25_word_5",
+                        "community_building_narrative_choice_25_word_6",
+                        "community_building_narrative_choice_25_word_7",
+                        "community_building_narrative_choice_25_word_8",
+                        "community_building_narrative_choice_25_word_9",
+                        "community_building_narrative_choice_25_word_10"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Business",
+            "narrative_choices": [
+                {
+                    "name": "A promotion...",
+                    "night_number": 1,
+                    "words": [
+                        "responsibility",
+                        "new",
+                        "fired",
+                        "deliver",
+                        "execute",
+                        "expertise",
+                        "experience",
+                        "cold-headed",
+                        "direction",
+                        "decision"
+                    ]
+                },
+                {
+                    "name": "A friend in financial need...",
+                    "night_number": 2,
+                    "words": [
+                        "loan",
+                        "pay",
+                        "balance",
+                        "interest",
+                        "bank",
+                        "generous",
+                        "promise",
+                        "payback",
+                        "trust",
+                        "friendship"
+                    ]
+                },
+                {
+                    "name": "Opening a new branch...",
+                    "night_number": 3,
+                    "words": [
+                        "travel",
+                        "business-class",
+                        "hotels",
+                        "champagne",
+                        "football",
+                        "buffet",
+                        "company-card",
+                        "start",
+                        "new",
+                        "adventure"
+                    ]
+                },
+                {
+                    "name": "A new business partner...",
+                    "night_number": 4,
+                    "words": [
+                        "difficult",
+                        "clash",
+                        "opinion",
+                        "fight",
+                        "disagreement",
+                        "compromise",
+                        "complain",
+                        "sacrifice",
+                        "leave",
+                        "collaborate"
+                    ]
+                },
+                {
+                    "name": "A great presentation...",
+                    "night_number": 5,
+                    "words": [
+                        "communicate",
+                        "convince",
+                        "investors",
+                        "money",
+                        "impactful",
+                        "impressive",
+                        "yourself",
+                        "reputation",
+                        "motivate",
+                        "inspire"
+                    ]
+                },
+                {
+                    "name": "Firing an employee...",
+                    "night_number": 6,
+                    "words": [
+                        "bad",
+                        "felt",
+                        "guilty",
+                        "unfair",
+                        "filthy",
+                        "rich",
+                        "arrogant",
+                        "boss",
+                        "power",
+                        "money"
+                    ]
+                },
+                {
+                    "name": "Negotiating an international deal...",
+                    "night_number": 7,
+                    "words": [
+                        "translate",
+                        "important",
+                        "international",
+                        "deal",
+                        "terms",
+                        "partnership",
+                        "leverage",
+                        "offer",
+                        "bargain",
+                        "slowly"
+                    ]
+                },
+                {
+                    "name": "Launching a new product...",
+                    "night_number": 8,
+                    "words": [
+                        "innovate",
+                        "launch",
+                        "market",
+                        "shoes",
+                        "brand",
+                        "demand",
+                        "research",
+                        "development",
+                        "advertising",
+                        "sales"
+                    ]
+                },
+                {
+                    "name": "Handling a PR crisis...",
+                    "night_number": 9,
+                    "words": [
+                        "crisis",
+                        "management",
+                        "public",
+                        "image",
+                        "damage",
+                        "control",
+                        "statement",
+                        "apologize",
+                        "media",
+                        "upsetting"
+                    ]
+                },
+                {
+                    "name": "A corporate retreat...",
+                    "night_number": 10,
+                    "words": [
+                        "teamwork",
+                        "spa",
+                        "bonding",
+                        "relax",
+                        "workshop",
+                        "cooperation",
+                        "fun",
+                        "leadership",
+                        "plan",
+                        "engage"
+                    ]
+                },
+                {
+                    "name": "Implementing new technology...",
+                    "night_number": 11,
+                    "words": [
+                        "AI",
+                        "upgrade",
+                        "displacement",
+                        "efficient",
+                        "train",
+                        "adoption",
+                        "investment",
+                        "automation",
+                        "cost",
+                        "future"
+                    ]
+                },
+                {
+                    "name": "Overcoming a sales slump...",
+                    "night_number": 12,
+                    "words": [
+                        "reorganize",
+                        "inflation",
+                        "recovery",
+                        "reassessment",
+                        "kickstart",
+                        "team",
+                        "perform",
+                        "target",
+                        "goals",
+                        "resilience"
+                    ]
+                },
+                {
+                    "name": "Keeping up with the competition...",
+                    "night_number": 13,
+                    "words": [
+                        "spy",
+                        "observation",
+                        "share",
+                        "gala",
+                        "network",
+                        "dress",
+                        "social",
+                        "status",
+                        "unique",
+                        "red"
+                    ]
+                },
+                {
+                    "name": "A major audit...",
+                    "night_number": 14,
+                    "words": [
+                        "screw-up",
+                        "compliance",
+                        "finance",
+                        "scrutinize",
+                        "accuracy",
+                        "records",
+                        "caught",
+                        "lie",
+                        "taxes",
+                        "cheat"
+                    ]
+                },
+                {
+                    "name": "Developing a sustainability plan...",
+                    "night_number": 15,
+                    "words": [
+                        "divide",
+                        "environment",
+                        "reduce",
+                        "green",
+                        "innovation",
+                        "green-washing",
+                        "waste",
+                        "eco-friendly",
+                        "investment",
+                        "legacy"
+                    ]
+                },
+                {
+                    "name": "Renegotiating supplier contracts...",
+                    "night_number": 16,
+                    "words": [
+                        "trucks",
+                        "strike",
+                        "morals",
+                        "cost",
+                        "terms",
+                        "relationships",
+                        "tough",
+                        "efficient",
+                        "quality",
+                        "partnership"
+                    ]
+                },
+                {
+                    "name": "A breakthrough idea...",
+                    "night_number": 17,
+                    "words": [
+                        "breakthrough",
+                        "idea",
+                        "innovation",
+                        "creativity",
+                        "game-changer",
+                        "development",
+                        "vision",
+                        "impact",
+                        "revolutionize",
+                        "success"
+                    ]
+                },
+                {
+                    "name": "Resolving a legal dispute...",
+                    "night_number": 18,
+                    "words": [
+                        "embarrassing",
+                        "damage",
+                        "woman",
+                        "lawyer",
+                        "settlement",
+                        "harassment",
+                        "court",
+                        "convicted",
+                        "court",
+                        "rights"
+                    ]
+                },
+                {
+                    "name": "Managing remote teams...",
+                    "night_number": 19,
+                    "words": [
+                        "plane",
+                        "hours",
+                        "time-zone",
+                        "video",
+                        "pajamas",
+                        "window",
+                        "penthouse",
+                        "flexibility",
+                        "collaboration",
+                        "culture"
+                    ]
+                },
+                {
+                    "name": "Closing a failing division...",
+                    "night_number": 20,
+                    "words": [
+                        "friends",
+                        "best",
+                        "loss",
+                        "cry",
+                        "hurt",
+                        "restructuring",
+                        "cost-saving",
+                        "excuse",
+                        "always",
+                        "me"
+                    ]
+                },
+                {
+                    "name": "Launching a CSR initiative...",
+                    "night_number": 21,
+                    "words": [
+                        "uncomfortable",
+                        "weird",
+                        "different",
+                        "community",
+                        "humble",
+                        "poor",
+                        "dirty",
+                        "learn",
+                        "appreciate",
+                        "glad"
+                    ]
+                },
+                {
+                    "name": "Dealing with a hostile takeover...",
+                    "night_number": 22,
+                    "words": [
+                        "fast",
+                        "react",
+                        "buy",
+                        "shares",
+                        "stock",
+                        "outbid",
+                        "ally",
+                        "serious",
+                        "survival",
+                        "power"
+                    ]
+                },
+                {
+                    "name": "Getting a new suit...",
+                    "night_number": 23,
+                    "words": [
+                        "yellow",
+                        "tailor",
+                        "expensive",
+                        "luxury",
+                        "hand-made",
+                        "fabric",
+                        "stylish",
+                        "classy",
+                        "elegant",
+                        "sophisticated"
+                    ]
+                },
+                {
+                    "name": "Adapting to new regulations...",
+                    "night_number": 24,
+                    "words": [
+                        "finally",
+                        "common-sense",
+                        "adapt",
+                        "uncomfortable",
+                        "quickly",
+                        "loss",
+                        "risk",
+                        "policy",
+                        "governance",
+                        "standards"
+                    ]
+                },
+                {
+                    "name": "Self-employment...",
+                    "night_number": 25,
+                    "words": [
+                        "freedom",
+                        "independence",
+                        "myself",
+                        "own",
+                        "start-up",
+                        "entrepreneur",
+                        "charisma",
+                        "mentor",
+                        "action",
+                        "risky"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Fashion",
+            "narrative_choices": [
+                {
+                    "name": "Fashion_narrative_choice_1",
+                    "night_number": 1,
+                    "words": [
+                        "fashion_narrative_choice_1_word_1",
+                        "fashion_narrative_choice_1_word_2",
+                        "fashion_narrative_choice_1_word_3",
+                        "fashion_narrative_choice_1_word_4",
+                        "fashion_narrative_choice_1_word_5",
+                        "fashion_narrative_choice_1_word_6",
+                        "fashion_narrative_choice_1_word_7",
+                        "fashion_narrative_choice_1_word_8",
+                        "fashion_narrative_choice_1_word_9",
+                        "fashion_narrative_choice_1_word_10"
+                    ]
+                },
+                {
+                    "name": "Fashion_narrative_choice_2",
+                    "night_number": 2,
+                    "words": [
+                        "fashion_narrative_choice_2_word_1",
+                        "fashion_narrative_choice_2_word_2",
+                        "fashion_narrative_choice_2_word_3",
+                        "fashion_narrative_choice_2_word_4",
+                        "fashion_narrative_choice_2_word_5",
+                        "fashion_narrative_choice_2_word_6",
+                        "fashion_narrative_choice_2_word_7",
+                        "fashion_narrative_choice_2_word_8",
+                        "fashion_narrative_choice_2_word_9",
+                        "fashion_narrative_choice_2_word_10"
+                    ]
+                },
+                {
+                    "name": "Fashion_narrative_choice_3",
+                    "night_number": 3,
+                    "words": [
+                        "fashion_narrative_choice_3_word_1",
+                        "fashion_narrative_choice_3_word_2",
+                        "fashion_narrative_choice_3_word_3",
+                        "fashion_narrative_choice_3_word_4",
+                        "fashion_narrative_choice_3_word_5",
+                        "fashion_narrative_choice_3_word_6",
+                        "fashion_narrative_choice_3_word_7",
+                        "fashion_narrative_choice_3_word_8",
+                        "fashion_narrative_choice_3_word_9",
+                        "fashion_narrative_choice_3_word_10"
+                    ]
+                },
+                {
+                    "name": "Fashion_narrative_choice_4",
+                    "night_number": 4,
+                    "words": [
+                        "fashion_narrative_choice_4_word_1",
+                        "fashion_narrative_choice_4_word_2",
+                        "fashion_narrative_choice_4_word_3",
+                        "fashion_narrative_choice_4_word_4",
+                        "fashion_narrative_choice_4_word_5",
+                        "fashion_narrative_choice_4_word_6",
+                        "fashion_narrative_choice_4_word_7",
+                        "fashion_narrative_choice_4_word_8",
+                        "fashion_narrative_choice_4_word_9",
+                        "fashion_narrative_choice_4_word_10"
+                    ]
+                },
+                {
+                    "name": "Fashion_narrative_choice_5",
+                    "night_number": 5,
+                    "words": [
+                        "fashion_narrative_choice_5_word_1",
+                        "fashion_narrative_choice_5_word_2",
+                        "fashion_narrative_choice_5_word_3",
+                        "fashion_narrative_choice_5_word_4",
+                        "fashion_narrative_choice_5_word_5",
+                        "fashion_narrative_choice_5_word_6",
+                        "fashion_narrative_choice_5_word_7",
+                        "fashion_narrative_choice_5_word_8",
+                        "fashion_narrative_choice_5_word_9",
+                        "fashion_narrative_choice_5_word_10"
+                    ]
+                },
+                {
+                    "name": "Fashion_narrative_choice_6",
+                    "night_number": 6,
+                    "words": [
+                        "fashion_narrative_choice_6_word_1",
+                        "fashion_narrative_choice_6_word_2",
+                        "fashion_narrative_choice_6_word_3",
+                        "fashion_narrative_choice_6_word_4",
+                        "fashion_narrative_choice_6_word_5",
+                        "fashion_narrative_choice_6_word_6",
+                        "fashion_narrative_choice_6_word_7",
+                        "fashion_narrative_choice_6_word_8",
+                        "fashion_narrative_choice_6_word_9",
+                        "fashion_narrative_choice_6_word_10"
+                    ]
+                },
+                {
+                    "name": "Fashion_narrative_choice_7",
+                    "night_number": 7,
+                    "words": [
+                        "fashion_narrative_choice_7_word_1",
+                        "fashion_narrative_choice_7_word_2",
+                        "fashion_narrative_choice_7_word_3",
+                        "fashion_narrative_choice_7_word_4",
+                        "fashion_narrative_choice_7_word_5",
+                        "fashion_narrative_choice_7_word_6",
+                        "fashion_narrative_choice_7_word_7",
+                        "fashion_narrative_choice_7_word_8",
+                        "fashion_narrative_choice_7_word_9",
+                        "fashion_narrative_choice_7_word_10"
+                    ]
+                },
+                {
+                    "name": "Fashion_narrative_choice_8",
+                    "night_number": 8,
+                    "words": [
+                        "fashion_narrative_choice_8_word_1",
+                        "fashion_narrative_choice_8_word_2",
+                        "fashion_narrative_choice_8_word_3",
+                        "fashion_narrative_choice_8_word_4",
+                        "fashion_narrative_choice_8_word_5",
+                        "fashion_narrative_choice_8_word_6",
+                        "fashion_narrative_choice_8_word_7",
+                        "fashion_narrative_choice_8_word_8",
+                        "fashion_narrative_choice_8_word_9",
+                        "fashion_narrative_choice_8_word_10"
+                    ]
+                },
+                {
+                    "name": "Fashion_narrative_choice_9",
+                    "night_number": 9,
+                    "words": [
+                        "fashion_narrative_choice_9_word_1",
+                        "fashion_narrative_choice_9_word_2",
+                        "fashion_narrative_choice_9_word_3",
+                        "fashion_narrative_choice_9_word_4",
+                        "fashion_narrative_choice_9_word_5",
+                        "fashion_narrative_choice_9_word_6",
+                        "fashion_narrative_choice_9_word_7",
+                        "fashion_narrative_choice_9_word_8",
+                        "fashion_narrative_choice_9_word_9",
+                        "fashion_narrative_choice_9_word_10"
+                    ]
+                },
+                {
+                    "name": "Fashion_narrative_choice_10",
+                    "night_number": 10,
+                    "words": [
+                        "fashion_narrative_choice_10_word_1",
+                        "fashion_narrative_choice_10_word_2",
+                        "fashion_narrative_choice_10_word_3",
+                        "fashion_narrative_choice_10_word_4",
+                        "fashion_narrative_choice_10_word_5",
+                        "fashion_narrative_choice_10_word_6",
+                        "fashion_narrative_choice_10_word_7",
+                        "fashion_narrative_choice_10_word_8",
+                        "fashion_narrative_choice_10_word_9",
+                        "fashion_narrative_choice_10_word_10"
+                    ]
+                },
+                {
+                    "name": "Fashion_narrative_choice_11",
+                    "night_number": 11,
+                    "words": [
+                        "fashion_narrative_choice_11_word_1",
+                        "fashion_narrative_choice_11_word_2",
+                        "fashion_narrative_choice_11_word_3",
+                        "fashion_narrative_choice_11_word_4",
+                        "fashion_narrative_choice_11_word_5",
+                        "fashion_narrative_choice_11_word_6",
+                        "fashion_narrative_choice_11_word_7",
+                        "fashion_narrative_choice_11_word_8",
+                        "fashion_narrative_choice_11_word_9",
+                        "fashion_narrative_choice_11_word_10"
+                    ]
+                },
+                {
+                    "name": "Fashion_narrative_choice_12",
+                    "night_number": 12,
+                    "words": [
+                        "fashion_narrative_choice_12_word_1",
+                        "fashion_narrative_choice_12_word_2",
+                        "fashion_narrative_choice_12_word_3",
+                        "fashion_narrative_choice_12_word_4",
+                        "fashion_narrative_choice_12_word_5",
+                        "fashion_narrative_choice_12_word_6",
+                        "fashion_narrative_choice_12_word_7",
+                        "fashion_narrative_choice_12_word_8",
+                        "fashion_narrative_choice_12_word_9",
+                        "fashion_narrative_choice_12_word_10"
+                    ]
+                },
+                {
+                    "name": "Fashion_narrative_choice_13",
+                    "night_number": 13,
+                    "words": [
+                        "fashion_narrative_choice_13_word_1",
+                        "fashion_narrative_choice_13_word_2",
+                        "fashion_narrative_choice_13_word_3",
+                        "fashion_narrative_choice_13_word_4",
+                        "fashion_narrative_choice_13_word_5",
+                        "fashion_narrative_choice_13_word_6",
+                        "fashion_narrative_choice_13_word_7",
+                        "fashion_narrative_choice_13_word_8",
+                        "fashion_narrative_choice_13_word_9",
+                        "fashion_narrative_choice_13_word_10"
+                    ]
+                },
+                {
+                    "name": "Fashion_narrative_choice_14",
+                    "night_number": 14,
+                    "words": [
+                        "fashion_narrative_choice_14_word_1",
+                        "fashion_narrative_choice_14_word_2",
+                        "fashion_narrative_choice_14_word_3",
+                        "fashion_narrative_choice_14_word_4",
+                        "fashion_narrative_choice_14_word_5",
+                        "fashion_narrative_choice_14_word_6",
+                        "fashion_narrative_choice_14_word_7",
+                        "fashion_narrative_choice_14_word_8",
+                        "fashion_narrative_choice_14_word_9",
+                        "fashion_narrative_choice_14_word_10"
+                    ]
+                },
+                {
+                    "name": "Fashion_narrative_choice_15",
+                    "night_number": 15,
+                    "words": [
+                        "fashion_narrative_choice_15_word_1",
+                        "fashion_narrative_choice_15_word_2",
+                        "fashion_narrative_choice_15_word_3",
+                        "fashion_narrative_choice_15_word_4",
+                        "fashion_narrative_choice_15_word_5",
+                        "fashion_narrative_choice_15_word_6",
+                        "fashion_narrative_choice_15_word_7",
+                        "fashion_narrative_choice_15_word_8",
+                        "fashion_narrative_choice_15_word_9",
+                        "fashion_narrative_choice_15_word_10"
+                    ]
+                },
+                {
+                    "name": "Fashion_narrative_choice_16",
+                    "night_number": 16,
+                    "words": [
+                        "fashion_narrative_choice_16_word_1",
+                        "fashion_narrative_choice_16_word_2",
+                        "fashion_narrative_choice_16_word_3",
+                        "fashion_narrative_choice_16_word_4",
+                        "fashion_narrative_choice_16_word_5",
+                        "fashion_narrative_choice_16_word_6",
+                        "fashion_narrative_choice_16_word_7",
+                        "fashion_narrative_choice_16_word_8",
+                        "fashion_narrative_choice_16_word_9",
+                        "fashion_narrative_choice_16_word_10"
+                    ]
+                },
+                {
+                    "name": "Fashion_narrative_choice_17",
+                    "night_number": 17,
+                    "words": [
+                        "fashion_narrative_choice_17_word_1",
+                        "fashion_narrative_choice_17_word_2",
+                        "fashion_narrative_choice_17_word_3",
+                        "fashion_narrative_choice_17_word_4",
+                        "fashion_narrative_choice_17_word_5",
+                        "fashion_narrative_choice_17_word_6",
+                        "fashion_narrative_choice_17_word_7",
+                        "fashion_narrative_choice_17_word_8",
+                        "fashion_narrative_choice_17_word_9",
+                        "fashion_narrative_choice_17_word_10"
+                    ]
+                },
+                {
+                    "name": "Fashion_narrative_choice_18",
+                    "night_number": 18,
+                    "words": [
+                        "fashion_narrative_choice_18_word_1",
+                        "fashion_narrative_choice_18_word_2",
+                        "fashion_narrative_choice_18_word_3",
+                        "fashion_narrative_choice_18_word_4",
+                        "fashion_narrative_choice_18_word_5",
+                        "fashion_narrative_choice_18_word_6",
+                        "fashion_narrative_choice_18_word_7",
+                        "fashion_narrative_choice_18_word_8",
+                        "fashion_narrative_choice_18_word_9",
+                        "fashion_narrative_choice_18_word_10"
+                    ]
+                },
+                {
+                    "name": "Fashion_narrative_choice_19",
+                    "night_number": 19,
+                    "words": [
+                        "fashion_narrative_choice_19_word_1",
+                        "fashion_narrative_choice_19_word_2",
+                        "fashion_narrative_choice_19_word_3",
+                        "fashion_narrative_choice_19_word_4",
+                        "fashion_narrative_choice_19_word_5",
+                        "fashion_narrative_choice_19_word_6",
+                        "fashion_narrative_choice_19_word_7",
+                        "fashion_narrative_choice_19_word_8",
+                        "fashion_narrative_choice_19_word_9",
+                        "fashion_narrative_choice_19_word_10"
+                    ]
+                },
+                {
+                    "name": "Fashion_narrative_choice_20",
+                    "night_number": 20,
+                    "words": [
+                        "fashion_narrative_choice_20_word_1",
+                        "fashion_narrative_choice_20_word_2",
+                        "fashion_narrative_choice_20_word_3",
+                        "fashion_narrative_choice_20_word_4",
+                        "fashion_narrative_choice_20_word_5",
+                        "fashion_narrative_choice_20_word_6",
+                        "fashion_narrative_choice_20_word_7",
+                        "fashion_narrative_choice_20_word_8",
+                        "fashion_narrative_choice_20_word_9",
+                        "fashion_narrative_choice_20_word_10"
+                    ]
+                },
+                {
+                    "name": "Fashion_narrative_choice_21",
+                    "night_number": 21,
+                    "words": [
+                        "fashion_narrative_choice_21_word_1",
+                        "fashion_narrative_choice_21_word_2",
+                        "fashion_narrative_choice_21_word_3",
+                        "fashion_narrative_choice_21_word_4",
+                        "fashion_narrative_choice_21_word_5",
+                        "fashion_narrative_choice_21_word_6",
+                        "fashion_narrative_choice_21_word_7",
+                        "fashion_narrative_choice_21_word_8",
+                        "fashion_narrative_choice_21_word_9",
+                        "fashion_narrative_choice_21_word_10"
+                    ]
+                },
+                {
+                    "name": "Fashion_narrative_choice_22",
+                    "night_number": 22,
+                    "words": [
+                        "fashion_narrative_choice_22_word_1",
+                        "fashion_narrative_choice_22_word_2",
+                        "fashion_narrative_choice_22_word_3",
+                        "fashion_narrative_choice_22_word_4",
+                        "fashion_narrative_choice_22_word_5",
+                        "fashion_narrative_choice_22_word_6",
+                        "fashion_narrative_choice_22_word_7",
+                        "fashion_narrative_choice_22_word_8",
+                        "fashion_narrative_choice_22_word_9",
+                        "fashion_narrative_choice_22_word_10"
+                    ]
+                },
+                {
+                    "name": "Fashion_narrative_choice_23",
+                    "night_number": 23,
+                    "words": [
+                        "fashion_narrative_choice_23_word_1",
+                        "fashion_narrative_choice_23_word_2",
+                        "fashion_narrative_choice_23_word_3",
+                        "fashion_narrative_choice_23_word_4",
+                        "fashion_narrative_choice_23_word_5",
+                        "fashion_narrative_choice_23_word_6",
+                        "fashion_narrative_choice_23_word_7",
+                        "fashion_narrative_choice_23_word_8",
+                        "fashion_narrative_choice_23_word_9",
+                        "fashion_narrative_choice_23_word_10"
+                    ]
+                },
+                {
+                    "name": "Fashion_narrative_choice_24",
+                    "night_number": 24,
+                    "words": [
+                        "fashion_narrative_choice_24_word_1",
+                        "fashion_narrative_choice_24_word_2",
+                        "fashion_narrative_choice_24_word_3",
+                        "fashion_narrative_choice_24_word_4",
+                        "fashion_narrative_choice_24_word_5",
+                        "fashion_narrative_choice_24_word_6",
+                        "fashion_narrative_choice_24_word_7",
+                        "fashion_narrative_choice_24_word_8",
+                        "fashion_narrative_choice_24_word_9",
+                        "fashion_narrative_choice_24_word_10"
+                    ]
+                },
+                {
+                    "name": "Fashion_narrative_choice_25",
+                    "night_number": 25,
+                    "words": [
+                        "fashion_narrative_choice_25_word_1",
+                        "fashion_narrative_choice_25_word_2",
+                        "fashion_narrative_choice_25_word_3",
+                        "fashion_narrative_choice_25_word_4",
+                        "fashion_narrative_choice_25_word_5",
+                        "fashion_narrative_choice_25_word_6",
+                        "fashion_narrative_choice_25_word_7",
+                        "fashion_narrative_choice_25_word_8",
+                        "fashion_narrative_choice_25_word_9",
+                        "fashion_narrative_choice_25_word_10"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Social Justice",
+            "narrative_choices": [
+                {
+                    "name": "Social Justice_narrative_choice_1",
+                    "night_number": 1,
+                    "words": [
+                        "social_justice_narrative_choice_1_word_1",
+                        "social_justice_narrative_choice_1_word_2",
+                        "social_justice_narrative_choice_1_word_3",
+                        "social_justice_narrative_choice_1_word_4",
+                        "social_justice_narrative_choice_1_word_5",
+                        "social_justice_narrative_choice_1_word_6",
+                        "social_justice_narrative_choice_1_word_7",
+                        "social_justice_narrative_choice_1_word_8",
+                        "social_justice_narrative_choice_1_word_9",
+                        "social_justice_narrative_choice_1_word_10"
+                    ]
+                },
+                {
+                    "name": "Social Justice_narrative_choice_2",
+                    "night_number": 2,
+                    "words": [
+                        "social_justice_narrative_choice_2_word_1",
+                        "social_justice_narrative_choice_2_word_2",
+                        "social_justice_narrative_choice_2_word_3",
+                        "social_justice_narrative_choice_2_word_4",
+                        "social_justice_narrative_choice_2_word_5",
+                        "social_justice_narrative_choice_2_word_6",
+                        "social_justice_narrative_choice_2_word_7",
+                        "social_justice_narrative_choice_2_word_8",
+                        "social_justice_narrative_choice_2_word_9",
+                        "social_justice_narrative_choice_2_word_10"
+                    ]
+                },
+                {
+                    "name": "Social Justice_narrative_choice_3",
+                    "night_number": 3,
+                    "words": [
+                        "social_justice_narrative_choice_3_word_1",
+                        "social_justice_narrative_choice_3_word_2",
+                        "social_justice_narrative_choice_3_word_3",
+                        "social_justice_narrative_choice_3_word_4",
+                        "social_justice_narrative_choice_3_word_5",
+                        "social_justice_narrative_choice_3_word_6",
+                        "social_justice_narrative_choice_3_word_7",
+                        "social_justice_narrative_choice_3_word_8",
+                        "social_justice_narrative_choice_3_word_9",
+                        "social_justice_narrative_choice_3_word_10"
+                    ]
+                },
+                {
+                    "name": "Social Justice_narrative_choice_4",
+                    "night_number": 4,
+                    "words": [
+                        "social_justice_narrative_choice_4_word_1",
+                        "social_justice_narrative_choice_4_word_2",
+                        "social_justice_narrative_choice_4_word_3",
+                        "social_justice_narrative_choice_4_word_4",
+                        "social_justice_narrative_choice_4_word_5",
+                        "social_justice_narrative_choice_4_word_6",
+                        "social_justice_narrative_choice_4_word_7",
+                        "social_justice_narrative_choice_4_word_8",
+                        "social_justice_narrative_choice_4_word_9",
+                        "social_justice_narrative_choice_4_word_10"
+                    ]
+                },
+                {
+                    "name": "Social Justice_narrative_choice_5",
+                    "night_number": 5,
+                    "words": [
+                        "social_justice_narrative_choice_5_word_1",
+                        "social_justice_narrative_choice_5_word_2",
+                        "social_justice_narrative_choice_5_word_3",
+                        "social_justice_narrative_choice_5_word_4",
+                        "social_justice_narrative_choice_5_word_5",
+                        "social_justice_narrative_choice_5_word_6",
+                        "social_justice_narrative_choice_5_word_7",
+                        "social_justice_narrative_choice_5_word_8",
+                        "social_justice_narrative_choice_5_word_9",
+                        "social_justice_narrative_choice_5_word_10"
+                    ]
+                },
+                {
+                    "name": "Social Justice_narrative_choice_6",
+                    "night_number": 6,
+                    "words": [
+                        "social_justice_narrative_choice_6_word_1",
+                        "social_justice_narrative_choice_6_word_2",
+                        "social_justice_narrative_choice_6_word_3",
+                        "social_justice_narrative_choice_6_word_4",
+                        "social_justice_narrative_choice_6_word_5",
+                        "social_justice_narrative_choice_6_word_6",
+                        "social_justice_narrative_choice_6_word_7",
+                        "social_justice_narrative_choice_6_word_8",
+                        "social_justice_narrative_choice_6_word_9",
+                        "social_justice_narrative_choice_6_word_10"
+                    ]
+                },
+                {
+                    "name": "Social Justice_narrative_choice_7",
+                    "night_number": 7,
+                    "words": [
+                        "social_justice_narrative_choice_7_word_1",
+                        "social_justice_narrative_choice_7_word_2",
+                        "social_justice_narrative_choice_7_word_3",
+                        "social_justice_narrative_choice_7_word_4",
+                        "social_justice_narrative_choice_7_word_5",
+                        "social_justice_narrative_choice_7_word_6",
+                        "social_justice_narrative_choice_7_word_7",
+                        "social_justice_narrative_choice_7_word_8",
+                        "social_justice_narrative_choice_7_word_9",
+                        "social_justice_narrative_choice_7_word_10"
+                    ]
+                },
+                {
+                    "name": "Social Justice_narrative_choice_8",
+                    "night_number": 8,
+                    "words": [
+                        "social_justice_narrative_choice_8_word_1",
+                        "social_justice_narrative_choice_8_word_2",
+                        "social_justice_narrative_choice_8_word_3",
+                        "social_justice_narrative_choice_8_word_4",
+                        "social_justice_narrative_choice_8_word_5",
+                        "social_justice_narrative_choice_8_word_6",
+                        "social_justice_narrative_choice_8_word_7",
+                        "social_justice_narrative_choice_8_word_8",
+                        "social_justice_narrative_choice_8_word_9",
+                        "social_justice_narrative_choice_8_word_10"
+                    ]
+                },
+                {
+                    "name": "Social Justice_narrative_choice_9",
+                    "night_number": 9,
+                    "words": [
+                        "social_justice_narrative_choice_9_word_1",
+                        "social_justice_narrative_choice_9_word_2",
+                        "social_justice_narrative_choice_9_word_3",
+                        "social_justice_narrative_choice_9_word_4",
+                        "social_justice_narrative_choice_9_word_5",
+                        "social_justice_narrative_choice_9_word_6",
+                        "social_justice_narrative_choice_9_word_7",
+                        "social_justice_narrative_choice_9_word_8",
+                        "social_justice_narrative_choice_9_word_9",
+                        "social_justice_narrative_choice_9_word_10"
+                    ]
+                },
+                {
+                    "name": "Social Justice_narrative_choice_10",
+                    "night_number": 10,
+                    "words": [
+                        "social_justice_narrative_choice_10_word_1",
+                        "social_justice_narrative_choice_10_word_2",
+                        "social_justice_narrative_choice_10_word_3",
+                        "social_justice_narrative_choice_10_word_4",
+                        "social_justice_narrative_choice_10_word_5",
+                        "social_justice_narrative_choice_10_word_6",
+                        "social_justice_narrative_choice_10_word_7",
+                        "social_justice_narrative_choice_10_word_8",
+                        "social_justice_narrative_choice_10_word_9",
+                        "social_justice_narrative_choice_10_word_10"
+                    ]
+                },
+                {
+                    "name": "Social Justice_narrative_choice_11",
+                    "night_number": 11,
+                    "words": [
+                        "social_justice_narrative_choice_11_word_1",
+                        "social_justice_narrative_choice_11_word_2",
+                        "social_justice_narrative_choice_11_word_3",
+                        "social_justice_narrative_choice_11_word_4",
+                        "social_justice_narrative_choice_11_word_5",
+                        "social_justice_narrative_choice_11_word_6",
+                        "social_justice_narrative_choice_11_word_7",
+                        "social_justice_narrative_choice_11_word_8",
+                        "social_justice_narrative_choice_11_word_9",
+                        "social_justice_narrative_choice_11_word_10"
+                    ]
+                },
+                {
+                    "name": "Social Justice_narrative_choice_12",
+                    "night_number": 12,
+                    "words": [
+                        "social_justice_narrative_choice_12_word_1",
+                        "social_justice_narrative_choice_12_word_2",
+                        "social_justice_narrative_choice_12_word_3",
+                        "social_justice_narrative_choice_12_word_4",
+                        "social_justice_narrative_choice_12_word_5",
+                        "social_justice_narrative_choice_12_word_6",
+                        "social_justice_narrative_choice_12_word_7",
+                        "social_justice_narrative_choice_12_word_8",
+                        "social_justice_narrative_choice_12_word_9",
+                        "social_justice_narrative_choice_12_word_10"
+                    ]
+                },
+                {
+                    "name": "Social Justice_narrative_choice_13",
+                    "night_number": 13,
+                    "words": [
+                        "social_justice_narrative_choice_13_word_1",
+                        "social_justice_narrative_choice_13_word_2",
+                        "social_justice_narrative_choice_13_word_3",
+                        "social_justice_narrative_choice_13_word_4",
+                        "social_justice_narrative_choice_13_word_5",
+                        "social_justice_narrative_choice_13_word_6",
+                        "social_justice_narrative_choice_13_word_7",
+                        "social_justice_narrative_choice_13_word_8",
+                        "social_justice_narrative_choice_13_word_9",
+                        "social_justice_narrative_choice_13_word_10"
+                    ]
+                },
+                {
+                    "name": "Social Justice_narrative_choice_14",
+                    "night_number": 14,
+                    "words": [
+                        "social_justice_narrative_choice_14_word_1",
+                        "social_justice_narrative_choice_14_word_2",
+                        "social_justice_narrative_choice_14_word_3",
+                        "social_justice_narrative_choice_14_word_4",
+                        "social_justice_narrative_choice_14_word_5",
+                        "social_justice_narrative_choice_14_word_6",
+                        "social_justice_narrative_choice_14_word_7",
+                        "social_justice_narrative_choice_14_word_8",
+                        "social_justice_narrative_choice_14_word_9",
+                        "social_justice_narrative_choice_14_word_10"
+                    ]
+                },
+                {
+                    "name": "Social Justice_narrative_choice_15",
+                    "night_number": 15,
+                    "words": [
+                        "social_justice_narrative_choice_15_word_1",
+                        "social_justice_narrative_choice_15_word_2",
+                        "social_justice_narrative_choice_15_word_3",
+                        "social_justice_narrative_choice_15_word_4",
+                        "social_justice_narrative_choice_15_word_5",
+                        "social_justice_narrative_choice_15_word_6",
+                        "social_justice_narrative_choice_15_word_7",
+                        "social_justice_narrative_choice_15_word_8",
+                        "social_justice_narrative_choice_15_word_9",
+                        "social_justice_narrative_choice_15_word_10"
+                    ]
+                },
+                {
+                    "name": "Social Justice_narrative_choice_16",
+                    "night_number": 16,
+                    "words": [
+                        "social_justice_narrative_choice_16_word_1",
+                        "social_justice_narrative_choice_16_word_2",
+                        "social_justice_narrative_choice_16_word_3",
+                        "social_justice_narrative_choice_16_word_4",
+                        "social_justice_narrative_choice_16_word_5",
+                        "social_justice_narrative_choice_16_word_6",
+                        "social_justice_narrative_choice_16_word_7",
+                        "social_justice_narrative_choice_16_word_8",
+                        "social_justice_narrative_choice_16_word_9",
+                        "social_justice_narrative_choice_16_word_10"
+                    ]
+                },
+                {
+                    "name": "Social Justice_narrative_choice_17",
+                    "night_number": 17,
+                    "words": [
+                        "social_justice_narrative_choice_17_word_1",
+                        "social_justice_narrative_choice_17_word_2",
+                        "social_justice_narrative_choice_17_word_3",
+                        "social_justice_narrative_choice_17_word_4",
+                        "social_justice_narrative_choice_17_word_5",
+                        "social_justice_narrative_choice_17_word_6",
+                        "social_justice_narrative_choice_17_word_7",
+                        "social_justice_narrative_choice_17_word_8",
+                        "social_justice_narrative_choice_17_word_9",
+                        "social_justice_narrative_choice_17_word_10"
+                    ]
+                },
+                {
+                    "name": "Social Justice_narrative_choice_18",
+                    "night_number": 18,
+                    "words": [
+                        "social_justice_narrative_choice_18_word_1",
+                        "social_justice_narrative_choice_18_word_2",
+                        "social_justice_narrative_choice_18_word_3",
+                        "social_justice_narrative_choice_18_word_4",
+                        "social_justice_narrative_choice_18_word_5",
+                        "social_justice_narrative_choice_18_word_6",
+                        "social_justice_narrative_choice_18_word_7",
+                        "social_justice_narrative_choice_18_word_8",
+                        "social_justice_narrative_choice_18_word_9",
+                        "social_justice_narrative_choice_18_word_10"
+                    ]
+                },
+                {
+                    "name": "Social Justice_narrative_choice_19",
+                    "night_number": 19,
+                    "words": [
+                        "social_justice_narrative_choice_19_word_1",
+                        "social_justice_narrative_choice_19_word_2",
+                        "social_justice_narrative_choice_19_word_3",
+                        "social_justice_narrative_choice_19_word_4",
+                        "social_justice_narrative_choice_19_word_5",
+                        "social_justice_narrative_choice_19_word_6",
+                        "social_justice_narrative_choice_19_word_7",
+                        "social_justice_narrative_choice_19_word_8",
+                        "social_justice_narrative_choice_19_word_9",
+                        "social_justice_narrative_choice_19_word_10"
+                    ]
+                },
+                {
+                    "name": "Social Justice_narrative_choice_20",
+                    "night_number": 20,
+                    "words": [
+                        "social_justice_narrative_choice_20_word_1",
+                        "social_justice_narrative_choice_20_word_2",
+                        "social_justice_narrative_choice_20_word_3",
+                        "social_justice_narrative_choice_20_word_4",
+                        "social_justice_narrative_choice_20_word_5",
+                        "social_justice_narrative_choice_20_word_6",
+                        "social_justice_narrative_choice_20_word_7",
+                        "social_justice_narrative_choice_20_word_8",
+                        "social_justice_narrative_choice_20_word_9",
+                        "social_justice_narrative_choice_20_word_10"
+                    ]
+                },
+                {
+                    "name": "Social Justice_narrative_choice_21",
+                    "night_number": 21,
+                    "words": [
+                        "social_justice_narrative_choice_21_word_1",
+                        "social_justice_narrative_choice_21_word_2",
+                        "social_justice_narrative_choice_21_word_3",
+                        "social_justice_narrative_choice_21_word_4",
+                        "social_justice_narrative_choice_21_word_5",
+                        "social_justice_narrative_choice_21_word_6",
+                        "social_justice_narrative_choice_21_word_7",
+                        "social_justice_narrative_choice_21_word_8",
+                        "social_justice_narrative_choice_21_word_9",
+                        "social_justice_narrative_choice_21_word_10"
+                    ]
+                },
+                {
+                    "name": "Social Justice_narrative_choice_22",
+                    "night_number": 22,
+                    "words": [
+                        "social_justice_narrative_choice_22_word_1",
+                        "social_justice_narrative_choice_22_word_2",
+                        "social_justice_narrative_choice_22_word_3",
+                        "social_justice_narrative_choice_22_word_4",
+                        "social_justice_narrative_choice_22_word_5",
+                        "social_justice_narrative_choice_22_word_6",
+                        "social_justice_narrative_choice_22_word_7",
+                        "social_justice_narrative_choice_22_word_8",
+                        "social_justice_narrative_choice_22_word_9",
+                        "social_justice_narrative_choice_22_word_10"
+                    ]
+                },
+                {
+                    "name": "Social Justice_narrative_choice_23",
+                    "night_number": 23,
+                    "words": [
+                        "social_justice_narrative_choice_23_word_1",
+                        "social_justice_narrative_choice_23_word_2",
+                        "social_justice_narrative_choice_23_word_3",
+                        "social_justice_narrative_choice_23_word_4",
+                        "social_justice_narrative_choice_23_word_5",
+                        "social_justice_narrative_choice_23_word_6",
+                        "social_justice_narrative_choice_23_word_7",
+                        "social_justice_narrative_choice_23_word_8",
+                        "social_justice_narrative_choice_23_word_9",
+                        "social_justice_narrative_choice_23_word_10"
+                    ]
+                },
+                {
+                    "name": "Social Justice_narrative_choice_24",
+                    "night_number": 24,
+                    "words": [
+                        "social_justice_narrative_choice_24_word_1",
+                        "social_justice_narrative_choice_24_word_2",
+                        "social_justice_narrative_choice_24_word_3",
+                        "social_justice_narrative_choice_24_word_4",
+                        "social_justice_narrative_choice_24_word_5",
+                        "social_justice_narrative_choice_24_word_6",
+                        "social_justice_narrative_choice_24_word_7",
+                        "social_justice_narrative_choice_24_word_8",
+                        "social_justice_narrative_choice_24_word_9",
+                        "social_justice_narrative_choice_24_word_10"
+                    ]
+                },
+                {
+                    "name": "Social Justice_narrative_choice_25",
+                    "night_number": 25,
+                    "words": [
+                        "social_justice_narrative_choice_25_word_1",
+                        "social_justice_narrative_choice_25_word_2",
+                        "social_justice_narrative_choice_25_word_3",
+                        "social_justice_narrative_choice_25_word_4",
+                        "social_justice_narrative_choice_25_word_5",
+                        "social_justice_narrative_choice_25_word_6",
+                        "social_justice_narrative_choice_25_word_7",
+                        "social_justice_narrative_choice_25_word_8",
+                        "social_justice_narrative_choice_25_word_9",
+                        "social_justice_narrative_choice_25_word_10"
+                    ]
+                }
+            ]
+        },
+        {
+                    "name": "Alien Lore",
+                    "narrative_choices": [
+                        {
+                            "name": "Discovering a hidden alien temple...",
+                            "night_number": 1,
+                            "words": [
+                                "explore",
+                                "hide",
+                                "advanced",
+                                "civilization",
+                                "technology",
+                                "savvy",
+                                "sacred",
+                                "grounds",
+                                "cult",
+                                "mystical"
+                            ]
+                        },
+                        {
+                            "name": "Convincing others of an alien threat...",
+                            "night_number": 2,
+                            "words": [
+                                "hostile",
+                                "invade",
+                                "attack",
+                                "fear",
+                                "panic",
+                                "preparedness",
+                                "defend",
+                                "military",
+                                "best",
+                                "safe"
+                            ]
+                        },
+                        {
+                            "name": "Witnessing a cosmic event...",
+                            "night_number": 3,
+                            "words": [
+                                "stellar",
+                                "eclipse",
+                                "galactic",
+                                "dimension",
+                                "otherworldly",
+                                "spectate",
+                                "phenomenon",
+                                "celestial",
+                                "universal",
+                                "conscious"
+                            ]
+                        },
+                        {
+                            "name": "Exploring an abandoned alien spacecraft...",
+                            "night_number": 4,
+                            "words": [
+                                "belief",
+                                "lies",
+                                "dreams",
+                                "see",
+                                "conspiracy",
+                                "missing",
+                                "child",
+                                "brothers",
+                                "obsession",
+                                "therapist"
+                            ]
+                        },
+                        {
+                            "name": "Meeting a secret society of UFO enthusiasts...",
+                            "night_number": 5,
+                            "words": [
+                                "geeks",
+                                "scary",
+                                "relate",
+                                "share",
+                                "community",
+                                "approach",
+                                "wrong",
+                                "mistake",
+                                "misunderstood",
+                                "misguided"
+                            ]
+                        },
+                        {
+                            "name": "Investigating old reports of alien abductions...",
+                            "night_number": 6,
+                            "words": [
+                                "news",
+                                "internet",
+                                "interview",
+                                "skeptical",
+                                "journalist",
+                                "evidence",
+                                "proof",
+                                "convinced",
+                                "missing",
+                                "person"
+                            ]
+                        },
+                        {
+                            "name": "Reading key documents from the Majestic 12...",
+                            "night_number": 7,
+                            "words": [
+                                "fictions",
+                                "files",
+                                "old",
+                                "computer",
+                                "government",
+                                "question",
+                                "truth",
+                                "rogue",
+                                "agent",
+                                "draw",
+                            ]
+                        },
+
+                        {
+                            "name": "Egyptian artifacts that predate the pyramids...",
+                            "night_number": 8,
+                            "words": [
+                                "museum",
+                                "archaeologist",
+                                "dig",
+                                "crazy",
+                                "secluded",
+                                "discover",
+                                "uncover",
+                                "reveal",
+                                "history",
+                                "ancient"
+                            ]
+                        },
+
+                        {
+                            "name": "Northern Lights...",
+                            "night_number": 9,
+                            "words": [
+                                "aurora",
+                                "arctic",
+                                "freeze",
+                                "white",
+                                "polar",
+                                "iceland",
+                                "fish",
+                                "boat",
+                                "sail",
+                                "ocean"
+                            ]
+
+                        },
+                        {
+                            "name": "Encountering a cosmic horror...",
+                            "night_number": 10,
+                            "words": [
+                                "terrifying",
+                                "mind",
+                                "alter",
+                                "incomprehensible",
+                                "dread",
+                                "unspeakable",
+                                "mute",
+                                "thrill",
+                                "insane",
+                                "excited"
+                            ]
+                        },
+                        {
+                            "name": "Hearing the whispers of Carcosa...",
+                            "night_number": 11,
+                            "words": [
+                                "silent",
+                                "lost",
+                                "city",
+                                "echo",
+                                "forget",
+                                "otherworldly",
+                                "haunt",
+                                "veil",
+                                "pitch",
+                                "black"
+                            ]
+                        },
+                        {
+                            "name": "A ritual to the moon...",
+                            "night_number": 12,
+                            "words": [
+                                "enigma",
+                                "cult",
+                                "moon",
+                                "worship",
+                                "arcane",
+                                "obscure",
+                                "lake",
+                                "unspeakable",
+                                "cleanse",
+                                "clear"
+                            ]
+                        },
+                        {
+                            "name": "Encountering a Yellow King...",
+                            "night_number": 13,
+                            "words": [
+                                "yellow",
+                                "regal",
+                                "dominate",
+                                "decay",
+                                "corrupt",
+                                "sick",
+                                "influence",
+                                "power",
+                                "control",
+                                "manipulate"
+                            ]
+                        },
+                        {
+                            "name": "Dreams of the Lake...",
+                            "night_number": 14,
+                            "words": [
+                                "labyrinth",
+                                "underwater",
+                                "illusion",
+                                "drown",
+                                "wet",
+                                "water",
+                                "whirlpool",
+                                "mental",
+                                "focus",
+                                "cold"
+                            ]
+                        },
+                        {
+                            "name": "Visit to the Roman catacombs...",
+                            "night_number": 15,
+                            "words": [
+                                "underground",
+                                "skeleton",
+                                "maze",
+                                "lost",
+                                "confuse",
+                                "fear",
+                                "panic",
+                                "escape",
+                                "run",
+                                "laugh"
+                            ]
+                        },
+                        {
+                            "name": "Attending a conference on Western Esotericism...",
+                            "night_number": 16,
+                            "words": [
+                                "temple",
+                                "city",
+                                "outside",
+                                "painting",
+                                "psychedelic",
+                                "hallucination",
+                                "trip",
+                                "mushroom",
+                                "acid",
+                                "magic"
+                            ]
+                        },
+                        {
+                            "name": "A strange encounter in the woods...",
+                            "night_number": 17,
+                            "words": [
+                                "night",
+                                "nature",
+                                "fluorescent",
+                                "glow",
+                                "ship",
+                                "move",
+                                "rush",
+                                "wind",
+                                "creak",
+                                "gone"
+                            ]
+                        },
+                        {
+                            "name": "Mexican folklore...",
+                            "night_number": 18,
+                            "words": [
+                                "chupacabra",
+                                "brothers",
+                                "stories",
+                                "grandmother",
+                                "desert",
+                                "cactus",
+                                "tell",
+                                "see",
+                                "believe",
+                                "fear"
+                            ]
+                        },
+                        {
+                            "name": "A town in New England...",
+                            "night_number": 19,
+                            "words": [
+                                "salem",
+                                "fascinate",
+                                "burnt",
+                                "distinguish",
+                                "witch",
+                                "trial",
+                                "hang",
+                                "rope",
+                                "roleplay",
+                                "game"
+                            ]
+                        },
+                        {
+                            "name": "Weird objects in the morning sky...",
+                            "night_number": 20,
+                            "words": [
+                                "telescope",
+                                "star",
+                                "satellite",
+                                "radio",
+                                "signal",
+                                "send",
+                                "secretly",
+                                "listen",
+                                "tune",
+                                "frequency"
+                            ]
+                        },
+                        {
+                            "name": "The lost city of Atlantis...",
+                            "night_number": 21,
+                            "words": [
+                                "book",
+                                "storytelling",
+                                "truth",
+                                "seek",
+                                "difficult",
+                                "crystal",
+                                "technology",
+                                "advance",
+                                "knowledge",
+                                "wisdom"
+                            ]
+                        },
+                        {
+                            "name": "Airplane flight over the Bermuda Triangle...",
+                            "night_number": 22,
+                            "words": [
+                                "vision",
+                                "scary",
+                                "thrill",
+                                "excite",
+                                "brothers",
+                                "window",
+                                "voice",
+                                "few",
+                                "hours",
+                                "gone"
+                            ]
+                        },
+                        {
+                            "name": "Initiation into a secret society...",
+                            "night_number": 23,
+                            "words": [
+                                "scar",
+                                "symbolic",
+                                "tatoo",
+                                "drink",
+                                "join",
+                                "brothers",
+                                "question",
+                                "answer",
+                                "badge",
+                                "ring"
+                            ]
+                        },
+                        {
+                            "name": "Interviewing with the local news...",
+                            "night_number": 24,
+                            "words": [
+                                "host",
+                                "distortion",
+                                "microphone",
+                                "camera",
+                                "propaganda",
+                                "lie",
+                                "report",
+                                "public",
+                                "opinion",
+                                "spread"
+                            ]
+                        },
+                        {
+                            "name": "Out of body experience...",
+                            "night_number": 25,
+                            "words": [
+                                "fly",
+                                "project",
+                                "soul",
+                                "leave",
+                                "body",
+                                "ghost",
+                                "visit",
+                                "strange",
+                                "place",
+                                "return"
+                            ]
+                        }
+                    ]
+                },
+
+        {
+            "name": "Deep Conversations",
+            "narrative_choices": [
+                {
+                    "name": "Deep Conversations_narrative_choice_1",
+                    "night_number": 1,
+                    "words": [
+                        "deep_conversations_narrative_choice_1_word_1",
+                        "deep_conversations_narrative_choice_1_word_2",
+                        "deep_conversations_narrative_choice_1_word_3",
+                        "deep_conversations_narrative_choice_1_word_4",
+                        "deep_conversations_narrative_choice_1_word_5",
+                        "deep_conversations_narrative_choice_1_word_6",
+                        "deep_conversations_narrative_choice_1_word_7",
+                        "deep_conversations_narrative_choice_1_word_8",
+                        "deep_conversations_narrative_choice_1_word_9",
+                        "deep_conversations_narrative_choice_1_word_10"
+                    ]
+                },
+                {
+                    "name": "Deep Conversations_narrative_choice_2",
+                    "night_number": 2,
+                    "words": [
+                        "deep_conversations_narrative_choice_2_word_1",
+                        "deep_conversations_narrative_choice_2_word_2",
+                        "deep_conversations_narrative_choice_2_word_3",
+                        "deep_conversations_narrative_choice_2_word_4",
+                        "deep_conversations_narrative_choice_2_word_5",
+                        "deep_conversations_narrative_choice_2_word_6",
+                        "deep_conversations_narrative_choice_2_word_7",
+                        "deep_conversations_narrative_choice_2_word_8",
+                        "deep_conversations_narrative_choice_2_word_9",
+                        "deep_conversations_narrative_choice_2_word_10"
+                    ]
+                },
+                {
+                    "name": "Deep Conversations_narrative_choice_3",
+                    "night_number": 3,
+                    "words": [
+                        "deep_conversations_narrative_choice_3_word_1",
+                        "deep_conversations_narrative_choice_3_word_2",
+                        "deep_conversations_narrative_choice_3_word_3",
+                        "deep_conversations_narrative_choice_3_word_4",
+                        "deep_conversations_narrative_choice_3_word_5",
+                        "deep_conversations_narrative_choice_3_word_6",
+                        "deep_conversations_narrative_choice_3_word_7",
+                        "deep_conversations_narrative_choice_3_word_8",
+                        "deep_conversations_narrative_choice_3_word_9",
+                        "deep_conversations_narrative_choice_3_word_10"
+                    ]
+                },
+                {
+                    "name": "Deep Conversations_narrative_choice_4",
+                    "night_number": 4,
+                    "words": [
+                        "deep_conversations_narrative_choice_4_word_1",
+                        "deep_conversations_narrative_choice_4_word_2",
+                        "deep_conversations_narrative_choice_4_word_3",
+                        "deep_conversations_narrative_choice_4_word_4",
+                        "deep_conversations_narrative_choice_4_word_5",
+                        "deep_conversations_narrative_choice_4_word_6",
+                        "deep_conversations_narrative_choice_4_word_7",
+                        "deep_conversations_narrative_choice_4_word_8",
+                        "deep_conversations_narrative_choice_4_word_9",
+                        "deep_conversations_narrative_choice_4_word_10"
+                    ]
+                },
+                {
+                    "name": "Deep Conversations_narrative_choice_5",
+                    "night_number": 5,
+                    "words": [
+                        "deep_conversations_narrative_choice_5_word_1",
+                        "deep_conversations_narrative_choice_5_word_2",
+                        "deep_conversations_narrative_choice_5_word_3",
+                        "deep_conversations_narrative_choice_5_word_4",
+                        "deep_conversations_narrative_choice_5_word_5",
+                        "deep_conversations_narrative_choice_5_word_6",
+                        "deep_conversations_narrative_choice_5_word_7",
+                        "deep_conversations_narrative_choice_5_word_8",
+                        "deep_conversations_narrative_choice_5_word_9",
+                        "deep_conversations_narrative_choice_5_word_10"
+                    ]
+                },
+                {
+                    "name": "Deep Conversations_narrative_choice_6",
+                    "night_number": 6,
+                    "words": [
+                        "deep_conversations_narrative_choice_6_word_1",
+                        "deep_conversations_narrative_choice_6_word_2",
+                        "deep_conversations_narrative_choice_6_word_3",
+                        "deep_conversations_narrative_choice_6_word_4",
+                        "deep_conversations_narrative_choice_6_word_5",
+                        "deep_conversations_narrative_choice_6_word_6",
+                        "deep_conversations_narrative_choice_6_word_7",
+                        "deep_conversations_narrative_choice_6_word_8",
+                        "deep_conversations_narrative_choice_6_word_9",
+                        "deep_conversations_narrative_choice_6_word_10"
+                    ]
+                },
+                {
+                    "name": "Deep Conversations_narrative_choice_7",
+                    "night_number": 7,
+                    "words": [
+                        "deep_conversations_narrative_choice_7_word_1",
+                        "deep_conversations_narrative_choice_7_word_2",
+                        "deep_conversations_narrative_choice_7_word_3",
+                        "deep_conversations_narrative_choice_7_word_4",
+                        "deep_conversations_narrative_choice_7_word_5",
+                        "deep_conversations_narrative_choice_7_word_6",
+                        "deep_conversations_narrative_choice_7_word_7",
+                        "deep_conversations_narrative_choice_7_word_8",
+                        "deep_conversations_narrative_choice_7_word_9",
+                        "deep_conversations_narrative_choice_7_word_10"
+                    ]
+                },
+                {
+                    "name": "Deep Conversations_narrative_choice_8",
+                    "night_number": 8,
+                    "words": [
+                        "deep_conversations_narrative_choice_8_word_1",
+                        "deep_conversations_narrative_choice_8_word_2",
+                        "deep_conversations_narrative_choice_8_word_3",
+                        "deep_conversations_narrative_choice_8_word_4",
+                        "deep_conversations_narrative_choice_8_word_5",
+                        "deep_conversations_narrative_choice_8_word_6",
+                        "deep_conversations_narrative_choice_8_word_7",
+                        "deep_conversations_narrative_choice_8_word_8",
+                        "deep_conversations_narrative_choice_8_word_9",
+                        "deep_conversations_narrative_choice_8_word_10"
+                    ]
+                },
+                {
+                    "name": "Deep Conversations_narrative_choice_9",
+                    "night_number": 9,
+                    "words": [
+                        "deep_conversations_narrative_choice_9_word_1",
+                        "deep_conversations_narrative_choice_9_word_2",
+                        "deep_conversations_narrative_choice_9_word_3",
+                        "deep_conversations_narrative_choice_9_word_4",
+                        "deep_conversations_narrative_choice_9_word_5",
+                        "deep_conversations_narrative_choice_9_word_6",
+                        "deep_conversations_narrative_choice_9_word_7",
+                        "deep_conversations_narrative_choice_9_word_8",
+                        "deep_conversations_narrative_choice_9_word_9",
+                        "deep_conversations_narrative_choice_9_word_10"
+                    ]
+                },
+                {
+                    "name": "Deep Conversations_narrative_choice_10",
+                    "night_number": 10,
+                    "words": [
+                        "deep_conversations_narrative_choice_10_word_1",
+                        "deep_conversations_narrative_choice_10_word_2",
+                        "deep_conversations_narrative_choice_10_word_3",
+                        "deep_conversations_narrative_choice_10_word_4",
+                        "deep_conversations_narrative_choice_10_word_5",
+                        "deep_conversations_narrative_choice_10_word_6",
+                        "deep_conversations_narrative_choice_10_word_7",
+                        "deep_conversations_narrative_choice_10_word_8",
+                        "deep_conversations_narrative_choice_10_word_9",
+                        "deep_conversations_narrative_choice_10_word_10"
+                    ]
+                },
+                {
+                    "name": "Deep Conversations_narrative_choice_11",
+                    "night_number": 11,
+                    "words": [
+                        "deep_conversations_narrative_choice_11_word_1",
+                        "deep_conversations_narrative_choice_11_word_2",
+                        "deep_conversations_narrative_choice_11_word_3",
+                        "deep_conversations_narrative_choice_11_word_4",
+                        "deep_conversations_narrative_choice_11_word_5",
+                        "deep_conversations_narrative_choice_11_word_6",
+                        "deep_conversations_narrative_choice_11_word_7",
+                        "deep_conversations_narrative_choice_11_word_8",
+                        "deep_conversations_narrative_choice_11_word_9",
+                        "deep_conversations_narrative_choice_11_word_10"
+                    ]
+                },
+                {
+                    "name": "Deep Conversations_narrative_choice_12",
+                    "night_number": 12,
+                    "words": [
+                        "deep_conversations_narrative_choice_12_word_1",
+                        "deep_conversations_narrative_choice_12_word_2",
+                        "deep_conversations_narrative_choice_12_word_3",
+                        "deep_conversations_narrative_choice_12_word_4",
+                        "deep_conversations_narrative_choice_12_word_5",
+                        "deep_conversations_narrative_choice_12_word_6",
+                        "deep_conversations_narrative_choice_12_word_7",
+                        "deep_conversations_narrative_choice_12_word_8",
+                        "deep_conversations_narrative_choice_12_word_9",
+                        "deep_conversations_narrative_choice_12_word_10"
+                    ]
+                },
+                {
+                    "name": "Deep Conversations_narrative_choice_13",
+                    "night_number": 13,
+                    "words": [
+                        "deep_conversations_narrative_choice_13_word_1",
+                        "deep_conversations_narrative_choice_13_word_2",
+                        "deep_conversations_narrative_choice_13_word_3",
+                        "deep_conversations_narrative_choice_13_word_4",
+                        "deep_conversations_narrative_choice_13_word_5",
+                        "deep_conversations_narrative_choice_13_word_6",
+                        "deep_conversations_narrative_choice_13_word_7",
+                        "deep_conversations_narrative_choice_13_word_8",
+                        "deep_conversations_narrative_choice_13_word_9",
+                        "deep_conversations_narrative_choice_13_word_10"
+                    ]
+                },
+                {
+                    "name": "Deep Conversations_narrative_choice_14",
+                    "night_number": 14,
+                    "words": [
+                        "deep_conversations_narrative_choice_14_word_1",
+                        "deep_conversations_narrative_choice_14_word_2",
+                        "deep_conversations_narrative_choice_14_word_3",
+                        "deep_conversations_narrative_choice_14_word_4",
+                        "deep_conversations_narrative_choice_14_word_5",
+                        "deep_conversations_narrative_choice_14_word_6",
+                        "deep_conversations_narrative_choice_14_word_7",
+                        "deep_conversations_narrative_choice_14_word_8",
+                        "deep_conversations_narrative_choice_14_word_9",
+                        "deep_conversations_narrative_choice_14_word_10"
+                    ]
+                },
+                {
+                    "name": "Deep Conversations_narrative_choice_15",
+                    "night_number": 15,
+                    "words": [
+                        "deep_conversations_narrative_choice_15_word_1",
+                        "deep_conversations_narrative_choice_15_word_2",
+                        "deep_conversations_narrative_choice_15_word_3",
+                        "deep_conversations_narrative_choice_15_word_4",
+                        "deep_conversations_narrative_choice_15_word_5",
+                        "deep_conversations_narrative_choice_15_word_6",
+                        "deep_conversations_narrative_choice_15_word_7",
+                        "deep_conversations_narrative_choice_15_word_8",
+                        "deep_conversations_narrative_choice_15_word_9",
+                        "deep_conversations_narrative_choice_15_word_10"
+                    ]
+                },
+                {
+                    "name": "Deep Conversations_narrative_choice_16",
+                    "night_number": 16,
+                    "words": [
+                        "deep_conversations_narrative_choice_16_word_1",
+                        "deep_conversations_narrative_choice_16_word_2",
+                        "deep_conversations_narrative_choice_16_word_3",
+                        "deep_conversations_narrative_choice_16_word_4",
+                        "deep_conversations_narrative_choice_16_word_5",
+                        "deep_conversations_narrative_choice_16_word_6",
+                        "deep_conversations_narrative_choice_16_word_7",
+                        "deep_conversations_narrative_choice_16_word_8",
+                        "deep_conversations_narrative_choice_16_word_9",
+                        "deep_conversations_narrative_choice_16_word_10"
+                    ]
+                },
+                {
+                    "name": "Deep Conversations_narrative_choice_17",
+                    "night_number": 17,
+                    "words": [
+                        "deep_conversations_narrative_choice_17_word_1",
+                        "deep_conversations_narrative_choice_17_word_2",
+                        "deep_conversations_narrative_choice_17_word_3",
+                        "deep_conversations_narrative_choice_17_word_4",
+                        "deep_conversations_narrative_choice_17_word_5",
+                        "deep_conversations_narrative_choice_17_word_6",
+                        "deep_conversations_narrative_choice_17_word_7",
+                        "deep_conversations_narrative_choice_17_word_8",
+                        "deep_conversations_narrative_choice_17_word_9",
+                        "deep_conversations_narrative_choice_17_word_10"
+                    ]
+                },
+                {
+                    "name": "Deep Conversations_narrative_choice_18",
+                    "night_number": 18,
+                    "words": [
+                        "deep_conversations_narrative_choice_18_word_1",
+                        "deep_conversations_narrative_choice_18_word_2",
+                        "deep_conversations_narrative_choice_18_word_3",
+                        "deep_conversations_narrative_choice_18_word_4",
+                        "deep_conversations_narrative_choice_18_word_5",
+                        "deep_conversations_narrative_choice_18_word_6",
+                        "deep_conversations_narrative_choice_18_word_7",
+                        "deep_conversations_narrative_choice_18_word_8",
+                        "deep_conversations_narrative_choice_18_word_9",
+                        "deep_conversations_narrative_choice_18_word_10"
+                    ]
+                },
+                {
+                    "name": "Deep Conversations_narrative_choice_19",
+                    "night_number": 19,
+                    "words": [
+                        "deep_conversations_narrative_choice_19_word_1",
+                        "deep_conversations_narrative_choice_19_word_2",
+                        "deep_conversations_narrative_choice_19_word_3",
+                        "deep_conversations_narrative_choice_19_word_4",
+                        "deep_conversations_narrative_choice_19_word_5",
+                        "deep_conversations_narrative_choice_19_word_6",
+                        "deep_conversations_narrative_choice_19_word_7",
+                        "deep_conversations_narrative_choice_19_word_8",
+                        "deep_conversations_narrative_choice_19_word_9",
+                        "deep_conversations_narrative_choice_19_word_10"
+                    ]
+                },
+                {
+                    "name": "Deep Conversations_narrative_choice_20",
+                    "night_number": 20,
+                    "words": [
+                        "deep_conversations_narrative_choice_20_word_1",
+                        "deep_conversations_narrative_choice_20_word_2",
+                        "deep_conversations_narrative_choice_20_word_3",
+                        "deep_conversations_narrative_choice_20_word_4",
+                        "deep_conversations_narrative_choice_20_word_5",
+                        "deep_conversations_narrative_choice_20_word_6",
+                        "deep_conversations_narrative_choice_20_word_7",
+                        "deep_conversations_narrative_choice_20_word_8",
+                        "deep_conversations_narrative_choice_20_word_9",
+                        "deep_conversations_narrative_choice_20_word_10"
+                    ]
+                },
+                {
+                    "name": "Deep Conversations_narrative_choice_21",
+                    "night_number": 21,
+                    "words": [
+                        "deep_conversations_narrative_choice_21_word_1",
+                        "deep_conversations_narrative_choice_21_word_2",
+                        "deep_conversations_narrative_choice_21_word_3",
+                        "deep_conversations_narrative_choice_21_word_4",
+                        "deep_conversations_narrative_choice_21_word_5",
+                        "deep_conversations_narrative_choice_21_word_6",
+                        "deep_conversations_narrative_choice_21_word_7",
+                        "deep_conversations_narrative_choice_21_word_8",
+                        "deep_conversations_narrative_choice_21_word_9",
+                        "deep_conversations_narrative_choice_21_word_10"
+                    ]
+                },
+                {
+                    "name": "Deep Conversations_narrative_choice_22",
+                    "night_number": 22,
+                    "words": [
+                        "deep_conversations_narrative_choice_22_word_1",
+                        "deep_conversations_narrative_choice_22_word_2",
+                        "deep_conversations_narrative_choice_22_word_3",
+                        "deep_conversations_narrative_choice_22_word_4",
+                        "deep_conversations_narrative_choice_22_word_5",
+                        "deep_conversations_narrative_choice_22_word_6",
+                        "deep_conversations_narrative_choice_22_word_7",
+                        "deep_conversations_narrative_choice_22_word_8",
+                        "deep_conversations_narrative_choice_22_word_9",
+                        "deep_conversations_narrative_choice_22_word_10"
+                    ]
+                },
+                {
+                    "name": "Deep Conversations_narrative_choice_23",
+                    "night_number": 23,
+                    "words": [
+                        "deep_conversations_narrative_choice_23_word_1",
+                        "deep_conversations_narrative_choice_23_word_2",
+                        "deep_conversations_narrative_choice_23_word_3",
+                        "deep_conversations_narrative_choice_23_word_4",
+                        "deep_conversations_narrative_choice_23_word_5",
+                        "deep_conversations_narrative_choice_23_word_6",
+                        "deep_conversations_narrative_choice_23_word_7",
+                        "deep_conversations_narrative_choice_23_word_8",
+                        "deep_conversations_narrative_choice_23_word_9",
+                        "deep_conversations_narrative_choice_23_word_10"
+                    ]
+                },
+                {
+                    "name": "Deep Conversations_narrative_choice_24",
+                    "night_number": 24,
+                    "words": [
+                        "deep_conversations_narrative_choice_24_word_1",
+                        "deep_conversations_narrative_choice_24_word_2",
+                        "deep_conversations_narrative_choice_24_word_3",
+                        "deep_conversations_narrative_choice_24_word_4",
+                        "deep_conversations_narrative_choice_24_word_5",
+                        "deep_conversations_narrative_choice_24_word_6",
+                        "deep_conversations_narrative_choice_24_word_7",
+                        "deep_conversations_narrative_choice_24_word_8",
+                        "deep_conversations_narrative_choice_24_word_9",
+                        "deep_conversations_narrative_choice_24_word_10"
+                    ]
+                },
+                {
+                    "name": "Deep Conversations_narrative_choice_25",
+                    "night_number": 25,
+                    "words": [
+                        "deep_conversations_narrative_choice_25_word_1",
+                        "deep_conversations_narrative_choice_25_word_2",
+                        "deep_conversations_narrative_choice_25_word_3",
+                        "deep_conversations_narrative_choice_25_word_4",
+                        "deep_conversations_narrative_choice_25_word_5",
+                        "deep_conversations_narrative_choice_25_word_6",
+                        "deep_conversations_narrative_choice_25_word_7",
+                        "deep_conversations_narrative_choice_25_word_8",
+                        "deep_conversations_narrative_choice_25_word_9",
+                        "deep_conversations_narrative_choice_25_word_10"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Good Cuisine",
+            "narrative_choices": [
+                {
+                    "name": "Hosting a gourmet dinner party...",
+                    "night_number": 1,
+                    "words": [
+                        "guests",
+                        "posh",
+                        "fancy",
+                        "atmosphere",
+                        "pairing",
+                        "wine",
+                        "menu",
+                        "delicacy",
+                        "taste",
+                        "elegance"
+                    ]
+                },
+                {
+                    "name": "Exploring street food in a new city...",
+                    "night_number": 2,
+                    "words": [
+                        "cart",
+                        "local",
+                        "authentic",
+                        "tacos",
+                        "spices",
+                        "bad",
+                        "upsetting",
+                        "savor",
+                        "flavorful",
+                        "halal"
+                    ]
+                },
+                {
+                    "name": "Attending a cooking class...",
+                    "night_number": 3,
+                    "words": [
+                        "chef",
+                        "techniques",
+                        "ingredients",
+                        "learn",
+                        "cut",
+                        "knife",
+                        "slice",
+                        "hands-on",
+                        "kitchen",
+                        "creativity"
+                    ]
+                },
+                {
+                    "name": "Discovering a hidden culinary gem...",
+                    "night_number": 4,
+                    "words": [
+                        "invest",
+                        "young",
+                        "patron",
+                        "stake",
+                        "restaurant",
+                        "delight",
+                        "charm",
+                        "unforgettable",
+                        "delicious",
+                        "underground"
+                    ]
+                },
+                {
+                    "name": "Trying a new recipe...",
+                    "night_number": 5,
+                    "words": [
+                        "chocolate",
+                        "heat",
+                        "minutes",
+                        "oven",
+                        "prepare",
+                        "sweet",
+                        "mix",
+                        "easy",
+                        "satisfied",
+                        "proud"
+                    ]
+                },
+                {
+                    "name": "Visiting a renowned Michelin-star restaurant...",
+                    "night_number": 6,
+                    "words": [
+                        "michelin-star",
+                        "lobster",
+                        "caviar",
+                        "gourmet",
+                        "expensive",
+                        "prestigious",
+                        "exquisite",
+                        "fine",
+                        "dine",
+                        "art"
+                    ]
+                },
+                {
+                    "name": "Trying a new exotic ingredient...",
+                    "night_number": 7,
+                    "words": [
+                        "republic",
+                        "kingdom",
+                        "coconut",
+                        "based",
+                        "creamy",
+                        "beige",
+                        "spongy",
+                        "tooth",
+                        "sweeter",
+                        "natural"
+                    ]
+                },
+                {
+                    "name": "Baking a complex dessert...",
+                    "night_number": 8,
+                    "words": [
+                        "layers",
+                        "flavors",
+                        "texture",
+                        "sweet",
+                        "precise",
+                        "artistry",
+                        "timing",
+                        "challenge",
+                        "invent",
+                        "indulge"
+                    ]
+                },
+                {
+                    "name": "Organizing a food festival...",
+                    "night_number": 9,
+                    "words": [
+                        "money",
+                        "diverse",
+                        "harvest",
+                        "community",
+                        "tastes",
+                        "finances",
+                        "feast",
+                        "street",
+                        "invitations",
+                        "publicity"
+                    ]
+                },
+                {
+                    "name": "Creating a signature dish...",
+                    "night_number": 10,
+                    "words": [
+                        "loved",
+                        "ones",
+                        "personal",
+                        "family",
+                        "identity",
+                        "home",
+                        "brothers",
+                        "memory",
+                        "pride",
+                        "mexican"
+                    ]
+                },
+                {
+                    "name": "Mastering a regional recipe...",
+                    "night_number": 11,
+                    "words": [
+                        "regional",
+                        "authentic",
+                        "tradition",
+                        "heritage",
+                        "flavor",
+                        "local",
+                        "craft",
+                        "recipe",
+                        "culture",
+                        "specialty"
+                    ]
+                },
+                {
+                    "name": "Participating in a cooking competition...",
+                    "night_number": 12,
+                    "words": [
+                        "rivals",
+                        "challenging",
+                        "skills",
+                        "clock",
+                        "three",
+                        "judges",
+                        "clock",
+                        "press",
+                        "white",
+                        "winner"
+                    ]
+                },
+                {
+                    "name": "Pairing wine with meals...",
+                    "night_number": 13,
+                    "words": [
+                        "book",
+                        "aged",
+                        "quality",
+                        "complement",
+                        "sommelier",
+                        "varietals",
+                        "scent",
+                        "meal",
+                        "balanced",
+                        "fruitful"
+                    ]
+                },
+                {
+                    "name": "Joining a food tour...",
+                    "night_number": 14,
+                    "words": [
+                        "foreign",
+                        "cobblestone",
+                        "city",
+                        "walk",
+                        "history",
+                        "spots",
+                        "local",
+                        "group",
+                        "alone",
+                        "bliss"
+                    ]
+
+                },
+                {
+                    "name": "Hosting a barbecue night...",
+                    "night_number": 15,
+                    "words": [
+                        "grill",
+                        "outdoors",
+                        "smoky",
+                        "salt",
+                        "meat",
+                        "vegetables",
+                        "beer",
+                        "football",
+                        "shirt",
+                        "grease"
+                    ]
+                },
+                {
+                    "name": "Learning sushi preparation...",
+                    "night_number": 16,
+                    "words": [
+                        "sensei",
+                        "japanese",
+                        "precise",
+                        "fresh",
+                        "rice",
+                        "seaweed",
+                        "salmon",
+                        "roll",
+                        "calm",
+                        "traditional"
+                    ]
+                },
+                {
+                    "name": "Sampling international street food...",
+                    "night_number": 17,
+                    "words": [
+                        "try",
+                        "bit",
+                        "small",
+                        "world",
+                        "quick",
+                        "cheap",
+                        "surprise",
+                        "event",
+                        "poorly",
+                        "planned"
+                    ]
+                },
+                {
+                    "name": "Discovering a new favorite restaurant...",
+                    "night_number": 18,
+                    "words": [
+                        "first",
+                        "time",
+                        "sit",
+                        "down",
+                        "chairs",
+                        "piano",
+                        "jazz",
+                        "offer",
+                        "view",
+                        "stir"
+                    ]
+                },
+                {
+                    "name": "Bringing a dish to a potluck...",
+                    "night_number": 19,
+                    "words": [
+                        "cousin",
+                        "compete",
+                        "harvesting",
+                        "pass",
+                        "share",
+                        "around",
+                        "portion",
+                        "jealous",
+                        "look",
+                        "uninvited"
+                    ]
+                },
+                {
+                    "name": "Picnicking in the park...",
+                    "night_number": 20,
+                    "words": [
+                        "blanket",
+                        "athletic",
+                        "sport",
+                        "cheese",
+                        "run",
+                        "space",
+                        "open",
+                        "sunglasses",
+                        "children",
+                        "annoying"
+                    ]
+                },
+                {
+                    "name": "Making homemade pasta...",
+                    "night_number": 21,
+                    "words": [
+                        "flour",
+                        "eggs",
+                        "movies",
+                        "night",
+                        "date",
+                        "pin",
+                        "form",
+                        "tomatoes",
+                        "options",
+                        "utensils"
+                    ]
+                },
+                {
+                    "name": "Exploring farm-to-table dining...",
+                    "night_number": 22,
+                    "words": [
+                        "intelligent",
+                        "self-sufficient",
+                        "low",
+                        "margin",
+                        "fresh",
+                        "juicy",
+                        "fruits",
+                        "nourish",
+                        "soul",
+                        "body"
+                    ]
+                },
+                {
+                    "name": "Creating a themed dinner menu...",
+                    "night_number": 23,
+                    "words": [
+                        "office",
+                        "corporate",
+                        "event",
+                        "planner",
+                        "coordinate",
+                        "catering",
+                        "menu",
+                        "appeal",
+                        "up",
+                        "party"
+                    ]
+                },
+                {
+                    "name": "Meeting a celebrity chef...",
+                    "night_number": 24,
+                    "words": [
+                        "admire",
+                        "famous",
+                        "cook",
+                        "teach",
+                        "technique",
+                        "inspire",
+                        "passion",
+                        "dream",
+                        "moved",
+                        "eat"
+                    ]
+                },
+                {
+                    "name": "Joining a chocolate tasting tour...",
+                    "night_number": 25,
+                    "words": [
+                        "cacao",
+                        "bitter",
+                        "mix",
+                        "shake",
+                        "tip",
+                        "tongue",
+                        "laugh",
+                        "jungle",
+                        "leaves",
+                        "potent"
+                    ]
+                }
+                ]
+            }
+    ]
+}

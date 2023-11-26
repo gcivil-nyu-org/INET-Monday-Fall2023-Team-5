@@ -1,35 +1,35 @@
 import json
 
-CHARACTER_NAME = "Witch"
+CHARACTER_NAME = "Eldritch Mendoza"
 QUALITIES = [
-    "Wise",
-    "Intuitive",
-    "Enigmatic",
-    "Spiritual",
+    "Decisive",
+    "Intense",
+    "Protective",
+    "Intellectual",
     "Resourceful",
-    "Mystical",
-    "Alchemy Expert",
-    "Nature-Bound",
-    "Herbalist",
+    "Clever Manipulator",
+    "Familial",
+    "Loyal",
+    "Protective",
 ]
 
 INTERESTS = [
-    "Herbology",
-    "Astrology",
-    "Ancient Runes",
-    "Potion Brewing",
-    "Divination",
-    "Nature Lore",
-    "Ceremonial Magic",
-    "Elemental Control",
-    "Shapeshifting",
+    "Dance Clubs",
+    "Concerts",
+    "Community Building",
+    "Business",
+    "Fashion",
+    "Social Justice",
+    "Alien Lore",
+    "Deep Conversations",
+    "Good Cuisine",
 ]
 
 ACTIVITIES = [
-    "Potion Crafting",
-    "Crystal Scrying",
-    "Spellcasting",
-    "Tarot Reading",
+    "Watch the Skies",
+    "Go Cafe Hopping",
+    "Hack the Planet",
+    "Work Out",
 ]
 WORDS_PER_QUALITY = 15
 QUESTIONS_PER_ACTIVITY = 3
