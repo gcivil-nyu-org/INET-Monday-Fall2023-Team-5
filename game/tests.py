@@ -1,3 +1,4 @@
+from django.contrib.messages import get_messages
 from django.test import TestCase, RequestFactory, Client
 from .models import Character, Quality, Interest, Activity, GameSession, Player
 from django.core.exceptions import ValidationError
@@ -9,7 +10,7 @@ from django.core.files.storage import default_storage
 import io, os, uuid
 from roleplaydate import settings
 from django.urls import reverse
-from .views import CharacterCreationView
+from .views import CharacterCreationView, GameProgressView, end_game_session
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 from .context_processors import game_session_processor
@@ -240,3 +241,109 @@ class GameSessionProcessorTest(TestCase):
         request.user = User()  # User instance not saved to the database
         context = game_session_processor(request)
         self.assertEqual(context, {"game_session_url": None})
+
+
+class GameProgressViewTestCase(TestCase):
+    def setUp(self):
+        # Create test users
+        self.client = Client()
+        self.user = User.objects.create_user(username="testuser")
+        self.another_user = User.objects.create_user(username="testuser2")
+        self.client.force_login(self.user)
+
+        user1 = self.user
+        user2 = self.another_user
+        # Create a new game session and save it
+        self.game_session = GameSession()
+        game_session = self.game_session
+        game_session.save()
+
+        # Create players for the game session
+        player_A = Player.objects.create(user=user1, game_session=game_session)
+        player_B = Player.objects.create(user=user2, game_session=game_session)
+
+        # Assigning players to the game session
+        game_session.playerA = player_A
+        game_session.playerB = player_B
+        game_session.save()
+
+        # Initialize the game and redirect to the GameProgressView
+        game_session.initialize_game()
+        game_session.save()
+
+    def test_get_request_valid_game_id(self):
+        # Make the request
+        response = self.client.get(
+            reverse("game_progress", kwargs={"game_id": self.game_session.game_id})
+        )
+        # Assertions
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "game_progress.html")
+        self.assertIn("game_session", response.context)
+
+    def test_get_request_invalid_game_id(self):
+        # Create a game id that does not exist
+        while True:
+            game_id = uuid.uuid4()
+            if not GameSession.objects.filter(game_id=game_id).exists():
+                break
+
+        response = self.client.get(
+            reverse("game_progress", kwargs={"game_id": game_id})
+        )
+
+        # Assertions
+        messages = list(get_messages(response.wsgi_request))
+        self.assertTrue(
+            any(message.message == "Game session not found." for message in messages)
+        )
+        # redirects to initiate game session page is currently the normal behavior, later when we
+        # remove initiate game session page, we can change this to home page
+
+        self.assertRedirects(
+            response,
+            reverse("end_game_session", kwargs={"game_id": game_id}),
+            status_code=302,
+            target_status_code=302,
+        )
+
+
+"""
+
+    @patch("yourapp.models.GameSession.objects.get")
+    def test_get_request_game_session_ended(self, mock_get):
+        # Mock a game session that has ended
+        mock_session = MagicMock(game_id=1, state=GameSession.ENDED)
+        mock_get.return_value = mock_session
+        response = self.client.get(reverse("game_progress", kwargs={"game_id": 1}))
+
+        # Assertions
+        self.assertTemplateUsed(response, "end_game_session.html")
+
+    @patch("yourapp.models.GameSession.objects.get")
+    def test_get_request_non_participant_user(self, mock_get):
+        # Mock a game session and player
+        mock_session = MagicMock(game_id=1, state=GameSession.ACTIVE)
+        mock_session.playerA = MagicMock(user=self.user)
+        mock_session.playerB = MagicMock(user=MagicMock(username="another_user"))
+        mock_get.return_value = mock_session
+
+        # Create a player object for a different user
+        another_user = User.objects.create_user(username="another_user")
+        Player.objects.create(user=another_user, game_session=mock_session)
+
+        # Make the request as the non-participant user
+        response = self.client.get(reverse("game_progress", kwargs={"game_id": 1}))
+
+        # Assertions
+        messages = list(get_messages(response.wsgi_request))
+        self.assertTrue(
+            any(
+                message.message == "You are not a participant of this game session."
+                for message in messages
+            )
+        )
+        self.assertRedirects(response, reverse("home"))
+
+    # Add additional tests for specific game turn states
+"""
