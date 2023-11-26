@@ -8,6 +8,10 @@ from .models import (
     GameSession,
     Player,
     ChatMessage,
+    GameTurn,
+    Question,
+    Word,
+    NarrativeChoice,
 )
 from django.core.exceptions import ValidationError
 from .forms import CharacterSelectionForm
@@ -380,3 +384,118 @@ class GameProgressViewTestCase(TestCase):
             )
         )
         self.assertRedirects(response, reverse("home"))
+
+    def test_game_turn_select_question(self):
+        self.game_session.current_game_turn.state = GameTurn.SELECT_QUESTION
+        self.game_session.current_game_turn.save()
+
+        # Add a question to the player's question pool
+        question = Question.objects.create(text="test question")
+        self.user.player.question_pool.add(question)
+
+        response = self.client.get(
+            reverse("game_progress", kwargs={"game_id": self.game_session.game_id})
+        )
+
+        # Assertions
+        self.assertIn("random_questions", response.context)
+        self.assertIn("test question", response.context["random_questions"][0].text)
+        self.assertTrue(len(response.context["random_questions"]) == 1)
+        self.assertTemplateUsed(response, "game_progress.html")
+
+    def test_game_turn_answer_question(self):
+        # Set the game turn state to ANSWER_QUESTION
+        self.game_session.current_game_turn.state = GameTurn.ANSWER_QUESTION
+        self.game_session.current_game_turn.save()
+
+        # Add words to the player's word pool
+        word1 = Word.objects.create(word="Uno")
+        word2 = Word.objects.create(word="Dos")
+        word3 = Word.objects.create(word="Tres")
+        self.user.player.simple_word_pool.add(word1)
+        self.user.player.character_word_pool.add(word2)
+        self.user.player.simple_word_pool.add(word3)
+        self.user.player.save()
+        # Assertions
+
+        response = self.client.get(
+            reverse("game_progress", kwargs={"game_id": self.game_session.game_id})
+        )
+
+        # test that the context contains the correct words
+        self.assertIn("Uno", response.context["tags_answer"])
+        self.assertIn("Dos", response.context["tags_answer"])
+        self.assertIn("Tres", response.context["tags_answer"])
+        self.assertIn("answer_form", response.context)
+        self.assertIsInstance(response.context["answer_form"], forms.Form)
+        self.assertTemplateUsed(response, "game_progress.html")
+
+    def test_game_turn_react_emoji(self):
+        # Set the game turn state to REACT_EMOJI
+        self.game_session.current_game_turn.state = GameTurn.REACT_EMOJI
+        self.game_session.current_game_turn.save()
+
+        response = self.client.get(
+            reverse("game_progress", kwargs={"game_id": self.game_session.game_id})
+        )
+
+        # Assertions
+        self.assertIn("emoji_form", response.context)
+        self.assertIsInstance(response.context["emoji_form"], forms.Form)
+        self.assertTemplateUsed(response, "game_progress.html")
+
+    def test_game_turn_narrative_choices(self):
+        # Set the game turn state to NARRATIVE_CHOICES
+        self.game_session.current_game_turn.state = GameTurn.NARRATIVE_CHOICES
+        self.game_session.current_game_turn.save()
+
+        # When the narrative choice is not made the game should send context with a false value
+        if self.game_session.playerA.user == self.user:
+            self.game_session.current_game_turn.player_a_narrative_choice_made = False
+        elif self.game_session.playerB.user == self.user:
+            self.game_session.current_game_turn.player_b_narrative_choice_made = False
+        self.game_session.current_game_turn.save()
+
+        response = self.client.get(
+            reverse("game_progress", kwargs={"game_id": self.game_session.game_id})
+        )
+
+        self.assertFalse(response.context["choice_made"])
+        self.assertIsInstance(response.context["narrative_form"], forms.Form)
+        self.assertTemplateUsed(response, "game_progress.html")
+
+        # When the narrative choice is made
+        if self.game_session.playerA.user == self.user:
+            self.game_session.current_game_turn.player_a_narrative_choice_made = True
+        elif self.game_session.playerB.user == self.user:
+            self.game_session.current_game_turn.player_b_narrative_choice_made = True
+        self.game_session.current_game_turn.save()
+
+        response2 = self.client.get(
+            reverse("game_progress", kwargs={"game_id": self.game_session.game_id})
+        )
+        # Assertions
+        self.assertTrue(response2.context["choice_made"])
+
+    def test_game_turn_moon_phase(self):
+        # RETIRE this unit test when we rewrite the moon phase turn to not be hard coded
+
+        self.game_session.current_game_turn.state = GameTurn.MOON_PHASE
+        self.game_session.current_game_turn.save()
+
+        response = self.client.get(
+            reverse("game_progress", kwargs={"game_id": self.game_session.game_id})
+        )
+
+        # Assertions
+        self.assertFalse(response.context["moon_phase"])
+        self.assertTemplateUsed(response, "game_progress.html")
+
+        # Set the game turn to #3 which is hard coded to be a moon phase turn
+        self.game_session.current_game_turn.turn_number = 3
+        self.game_session.current_game_turn.save()
+
+        response = self.client.get(
+            reverse("game_progress", kwargs={"game_id": self.game_session.game_id})
+        )
+        self.assertTrue(response.context["moon_phase"])
