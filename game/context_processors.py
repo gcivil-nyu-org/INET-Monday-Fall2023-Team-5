@@ -19,7 +19,7 @@ def game_session_processor(request):
             player = Player.objects.get(user=request.user)
             print("Game session state: " + game_session.state)
             if game_session.state == game_session.CHARACTER_CREATION:
-                if player.character:
+                if player.character_creation_state == player.CHARACTER_COMPLETE:
                     game_session_url = game_session.get_absolute_url()
                 else:
                     game_session_url = reverse(

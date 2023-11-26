@@ -20,18 +20,19 @@ from accounts.views import home
 from django.conf import settings  # Import settings
 from django.conf.urls.static import static  # Import static
 from django.http import HttpResponse
+from django.contrib.admin.views.decorators import staff_member_required
 from django.core.management import call_command
 
 # from django.contrib.admin.views.decorators import staff_member_required
 
 
-# @staff_member_required
+@staff_member_required
 def notify_matches(request):
     call_command("notify_matches")
     return HttpResponse("Match notifications have been sent.")
 
 
-# @staff_member_required
+@staff_member_required
 def reset_likes(request):
     call_command("reset_likes")
     return HttpResponse("Likes have been reset.")
@@ -42,7 +43,7 @@ urlpatterns = [
     path("accounts/", include("accounts.urls")),
     path("game/", include("game.urls")),
     path("", home, name="home"),
-    path("api/reset-likes/", reset_likes),
+    path("api/reset-likes/", reset_likes, name="reset_likes_view"),
     path("tags/", include("tags.urls")),
     path("api/notify-matches/", notify_matches),
     path("game/", include(("game.urls", "game"), namespace="game")),
