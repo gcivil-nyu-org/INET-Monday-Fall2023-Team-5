@@ -44,13 +44,15 @@
         font-size: 0.7em;
     }
     
+
 </style> -->
+
 
 <div class="character-selection">
     <h2>Select Your Character</h2>
     <form method="post">
         {% csrf_token %}
-        {% for choice in form.character.field.queryset %}
+        {% for choice in character_form.character.field.queryset %}
             <div class="character-option">
                 <input type="radio" id="id_character_{{ forloop.counter0 }}" name="character" value="{{ choice.id }}" hidden>
                 <label for="id_character_{{ forloop.counter0 }}">
@@ -61,6 +63,20 @@
                 </label>
             </div>
         {% endfor %}
+        <!-- Moon Sign Interpretation Form Fields -->
+        <div class="moon-sign-fields">
+            <!-- Loop through each field in the moon sign form -->
+            {% for field in moon_sign_form %}
+                <div class="form-group">
+                    {{ field.errors }}
+                    {{ field.label_tag }} {{ field }}
+                    {% if field.help_text %}
+                        <p class="help-text">{{ field.help_text }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
 
         <div id="submit"></div>
         <button type="submit" class="confirm-btn">Confirm Selection</button>
