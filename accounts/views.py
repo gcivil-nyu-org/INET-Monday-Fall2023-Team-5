@@ -15,6 +15,7 @@ from django.urls import reverse_lazy
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth import update_session_auth_hash
 from django.views.decorators.csrf import csrf_exempt
+from django.core.management import call_command
 from django.db.models import Q
 
 
@@ -295,9 +296,6 @@ def like_profile(request, user_id):
 @csrf_exempt
 def reset_likes_view(request):
     if request.method == "POST":
-        # Call your management command here
-        from django.core.management import call_command
-
         call_command("resetlikes")
         return HttpResponse("Likes reset and cleared.", status=200)
     else:

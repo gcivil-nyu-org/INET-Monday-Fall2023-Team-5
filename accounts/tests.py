@@ -1117,3 +1117,179 @@ class EditProfileFormTest(TestCase):
             list(form.fields["open_to_dating"].queryset),
             list(DatingPreference.objects.all()),
         )
+
+
+class LikeProfileViewTest(TestCase):
+    def setUp(self):
+        # Create two users
+        self.user1 = User.objects.create_user(username="user1", password="password1")
+        self.user2 = User.objects.create_user(username="user2", password="password2")
+        # Create profiles for the users if they don't already exist
+        self.profile1, _ = Profile.objects.get_or_create(user=self.user1)
+        self.profile2, _ = Profile.objects.get_or_create(user=self.user2)
+        # Set initial likes_remaining for the profiles
+        self.profile1.likes_remaining = 3
+        self.profile1.save()
+        self.profile2.likes_remaining = 3
+        self.profile2.save()
+
+    def test_like_profile(self):
+        # Ensure there are no existing matches for user1 and user2
+        Match.objects.filter(
+            Q(user1=self.user1, user2=self.user2)
+            | Q(user1=self.user2, user2=self.user1)
+        ).delete()
+
+        # Simulate user2 liking user1
+        self.client.logout()  # Ensure user1 is logged out
+        self.client.login(username="user2", password="password2")
+        self.client.post(reverse("like_profile", args=[self.user1.pk]))
+        self.client.logout()  # Log out user2
+
+        # Login as user1 and like user2's profile
+        self.client.login(username="user1", password="password1")
+        response = self.client.post(reverse("like_profile", args=[self.user2.pk]))
+
+        # Check if the response is as expected
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertTrue(data["success"])
+        self.assertEqual(data["action"], "liked")
+
+        # Check if a Like object was created for user1 liking user2
+        like_exists = Like.objects.filter(
+            from_user=self.user1, to_user=self.user2
+        ).exists()
+        self.assertTrue(like_exists)
+
+        # Check if a Match object was created due to mutual like
+        match_exists = Match.objects.filter(
+            Q(user1=self.user1, user2=self.user2)
+            | Q(user1=self.user2, user2=self.user1)
+        ).exists()
+        self.assertTrue(match_exists)
+
+        # Check if user1's likes_remaining is updated (should be 2 now)
+        self.profile1.refresh_from_db()
+        self.assertEqual(self.profile1.likes_remaining, 2)
+
+    def test_already_liked_profile(self):
+        # Create an existing like
+        Like.objects.create(from_user=self.user1, to_user=self.user2)
+
+        # Login user1
+        self.client.login(username="user1", password="password1")
+
+        # Make a POST request to like user2's profile again
+        response = self.client.post(reverse("like_profile", args=[self.user2.pk]))
+
+        # Check if the response indicates failure due to already liking the profile
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertFalse(data["success"])
+        self.assertEqual(data["error"], "You have already liked this user.")
+
+        # Check if no new Like or Match objects were created
+        like_count = Like.objects.filter(
+            from_user=self.user1, to_user=self.user2
+        ).count()
+        self.assertEqual(like_count, 1)
+        match_count = Match.objects.filter(user1=self.user1, user2=self.user2).count()
+        self.assertEqual(match_count, 0)
+
+
+class ResetLikesViewTest(TestCase):
+    def setUp(self):
+        # Set up test data
+        self.client = Client()
+
+        # Create two users
+        self.user1 = User.objects.create_user(username="user1", password="password1")
+        self.user2 = User.objects.create_user(username="user2", password="password2")
+
+        # Create profiles for the users if they don't already exist
+        self.profile1, _ = Profile.objects.get_or_create(user=self.user1)
+        self.profile2, _ = Profile.objects.get_or_create(user=self.user2)
+
+        # Set initial likes_remaining for the profiles
+        self.profile1.likes_remaining = 1  # Set a non-zero initial value
+        self.profile1.save()
+        self.profile2.likes_remaining = 2  # Set a non-zero initial value
+        self.profile2.save()
+
+    def test_reset_likes(self):
+        # Create a staff user and login
+        staff_user = User.objects.create_user(
+            username="staffuser", password="staffpassword", is_staff=True
+        )
+        self.client.login(username="staffuser", password="staffpassword")
+        # Set up initial likes and likes_remaining for test users
+        Like.objects.create(from_user=self.user1, to_user=self.user2)
+        self.profile1.likes_remaining = 1
+        self.profile1.save()
+        self.profile2.likes_remaining = 2
+        self.profile2.save()
+
+        # Make a POST request to reset likes
+        response = self.client.post(reverse("reset_likes_view"))
+
+        # Check if the response is successful
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content.decode(), "Likes have been reset.")
+
+        # Verify that all likes have been cleared
+        self.assertEqual(Like.objects.count(), 0)
+
+        # Verify that likes_remaining is reset to 3 for all users
+        self.profile1.refresh_from_db()
+        self.profile2.refresh_from_db()
+        self.assertEqual(self.profile1.likes_remaining, 3)
+        self.assertEqual(self.profile2.likes_remaining, 3)
+
+
+def test_invalid_method(self):
+    # Create a staff user and login
+    staff_user = User.objects.create_user(
+        username="staffuser", password="staffpassword", is_staff=True
+    )
+    self.client.login(username="staffuser", password="staffpassword")
+    # Make a GET request (or any method other than POST)
+    response = self.client.get(reverse("reset_likes_view"))
+
+    # Check if the response indicates an invalid method
+    self.assertEqual(response.status_code, 400)
+    self.assertEqual(response.content.decode(), "Invalid method")
+
+
+class MatchModelTest(TestCase):
+    def setUp(self):
+        # Create two users
+        self.user1 = User.objects.create_user(username="user1", password="password1")
+        self.user2 = User.objects.create_user(username="user2", password="password2")
+
+    def test_create_match(self):
+        # Test that a match is created
+        match = Match.create_match(user1=self.user1, user2=self.user2)
+        self.assertIsNotNone(match)
+        self.assertEqual(match.user1, self.user1)
+        self.assertEqual(match.user2, self.user2)
+
+        # Test that no duplicate match is created
+        duplicate_match = Match.create_match(user1=self.user1, user2=self.user2)
+        self.assertIsNone(duplicate_match)
+
+        # Check that only one match exists in the database
+        match_count = Match.objects.count()
+        self.assertEqual(match_count, 1)
+
+    def test_create_match_with_swapped_users(self):
+        # Create a match with one set of user order
+        Match.create_match(user1=self.user1, user2=self.user2)
+
+        # Test that no match is created when users are swapped
+        swapped_match = Match.create_match(user1=self.user2, user2=self.user1)
+        self.assertIsNone(swapped_match)
+
+        # Ensure still only one match in the database
+        match_count = Match.objects.count()
+        self.assertEqual(match_count, 1)
