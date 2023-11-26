@@ -6,7 +6,7 @@
         <div class="game-info">
             <h2 class="game-id">Game Progress for Game ID: <span>{{ game_session.game_id }}</span></h2>
             <div class="current-turn-box">Current Turn: <span>{{ game_session.current_game_turn.turn_number }}</span></div>
-        </div>
+        </div>-
         <!-- Progress Steps -->
         <ul class="nav nav-pills mb-3">
             <li class="nav-item">
@@ -38,6 +38,7 @@
                     </div>
 
                     <div class="message-info">
+                        <img src="{{ message.avatar_url }}" alt="Avatar" class="avatar">
                         <span class="sender">{{ message.sender }}</span>
                         <span class="timestamp">{{ message.timestamp|date:"F j, Y, g:i a" }}</span>
                     </div>
@@ -50,7 +51,6 @@
             {% if game_session.current_game_turn.state == 'narrative_choices' %}
                 {% if choice_made == False %}
                     <h3>Select a Narrative Choice</h3>
-                    {{ narrative_form.narrative.label_tag }}
                     {{ narrative_form.narrative }}
                     <button id="submit-narrative-choice" data-action="select_narrative">Submit Choice</button>
                 {% else %}
@@ -166,18 +166,31 @@
                             if (narrativeChoiceValue) {
                                 value = narrativeChoiceValue;
                             } else {
-                                console.error('No narrative choice selected.');
+                                alert("Please select a narrative.");
                             }
                             break;
                         case 'moon_phase':
                             value = document.querySelector('#moon-meaning-text').value;
                             break;
                         case 'submit_question':
-                            const selectedQuestion = document.querySelector('input[name="question"]:checked');
-                            value = selectedQuestion ? selectedQuestion.value : null;
+                            var questionValue = document.querySelector('input[name="question"]:checked');
+                            if (questionValue == null) {
+                                alert("Please select a question.");
+                            } else {
+                                value = questionValue.value;
+                            }
                             break;
                         case 'react_emoji':
-                            value = document.querySelector('input[name="emoji"]:checked').value;
+                            var emojiValue = document.querySelector('input[name="emoji"]:checked');
+                            // Check if an emoji was selected
+                            if (emojiValue == null) {
+                                // If no emoji is selected, show an alert or prompt
+                                alert("Please select an emoji.");
+                            } else {
+                                // If an emoji is selected, proceed with your logic
+                                value = emojiValue.value;
+                                // ... your existing logic for when an emoji is selected
+                            }
                             break;
                         case 'end_game':
                             value = gameId;
@@ -187,7 +200,11 @@
                             let answer = Array.from(document.querySelectorAll('#current-sentence'))
                                       .map(tag => tag.textContent.trim())
                                       .join(' ');
-                            value = answer;
+                            if (answer.length === 0) {
+                                alert("Please select at least one word.");
+                            } else {
+                                value = answer;
+                            }
                             break;
                         case 'clear_all':
                             // Clear the current sentence container and the hidden input field

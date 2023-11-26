@@ -1,3 +1,6 @@
+import random
+from collections import Counter
+
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import User
@@ -24,6 +27,52 @@ class Player(models.Model):
         "Character", on_delete=models.SET_NULL, null=True, blank=True
     )
 
+    # Constants for character creation states
+    CHARACTER_AVATAR_SELECTION = "character_avatar_selection"
+    MOON_MEANING_SELECTION = "moon_meaning_selection"
+    PUBLIC_PROFILE_CREATION = "public_profile_creation"
+    CHARACTER_COMPLETE = "character_complete"
+
+    # Choices for character creation states
+    CHARACTER_CREATION_STATE_CHOICES = [
+        (CHARACTER_AVATAR_SELECTION, "Character Avatar Selection"),
+        (MOON_MEANING_SELECTION, "Moon Meaning Selection"),
+        (PUBLIC_PROFILE_CREATION, "Public Profile Creation"),
+        (CHARACTER_COMPLETE, "Character Complete"),
+    ]
+
+    character_creation_state = FSMField(
+        default=CHARACTER_AVATAR_SELECTION, choices=CHARACTER_CREATION_STATE_CHOICES
+    )
+
+    @transition(
+        field=character_creation_state,
+        source=CHARACTER_AVATAR_SELECTION,
+        target=MOON_MEANING_SELECTION,
+    )
+    def select_character_avatar(self, character):
+        self.character = character
+        self.save()
+
+    @transition(
+        field=character_creation_state,
+        source=MOON_MEANING_SELECTION,
+        target=PUBLIC_PROFILE_CREATION,
+    )
+    def select_moon_meaning(self, moon_meaning):
+        pass
+        # here whatever logic you need to do with the moon meaning
+
+    @transition(
+        field=character_creation_state,
+        source=PUBLIC_PROFILE_CREATION,
+        target=CHARACTER_COMPLETE,
+    )
+    def create_public_profile(self, qualities, interests, activities):
+        self.character_name = self.character.name
+        self.populate_character_with_creation_choices(qualities, interests, activities)
+        self.save()
+
     def save(self, *args, **kwargs):
         if not self.game_session:
             raise ValidationError(
@@ -45,7 +94,80 @@ class Player(models.Model):
         self.question_pool.remove(question)
         self.save()
 
+    def populate_character_with_creation_choices(
+        self, qualities, interests, activities
+    ):
+        for quality_id in qualities:
+            if quality_id is not None:
+                quality = Quality.objects.get(id=quality_id)
+                words = list(quality.words.all())
+                random_words = random.sample(words, min(len(words), 15))
+                for word in random_words:
+                    self.character_word_pool.add(word)
 
+        for activity_id in activities:
+            if activity_id is not None:
+                activity = Activity.objects.get(id=activity_id)
+                questions = list(activity.questions.all())
+                random_questions = random.sample(questions, min(len(questions), 3))
+                for question in random_questions:
+                    self.question_pool.add(question)
+
+        for interest_id in interests:
+            if interest_id is not None:
+                interest = Interest.objects.get(id=interest_id)
+                for narrative_choice in interest.narrative_choices.all():
+                    self.narrative_choice_pool.add(narrative_choice)
+
+        self.replenish_simple_words()
+
+    def replenish_simple_words(self):
+        # Count the current kind_of_words in the pool
+        current_counts = Counter(
+            word.kind_of_word for word in self.simple_word_pool.all()
+        )
+        target_counts = {
+            "verb": 5,
+            "pronoun": 2,
+            "preposition": 5,
+            "conjunction": 5,
+            "article": 4,
+            "determiner": 5,
+            "modifier": 4,
+        }  # Adjust numbers as needed
+
+        simple_words = list(Word.objects.filter(isSimple=True).all())
+        for kind, target_count in target_counts.items():
+            current_count = current_counts[kind]
+            words_to_add_count = target_count - current_count
+
+            # Filter words of this kind
+            words_of_this_kind = [
+                word for word in simple_words if word.kind_of_word == kind
+            ]
+
+            filtered_words = [
+                word
+                for word in words_of_this_kind
+                if word not in self.simple_word_pool.all()
+            ]
+
+            # Randomly select words to add
+            words_to_add = random.sample(
+                filtered_words, k=min(len(words_of_this_kind), words_to_add_count)
+            )
+
+            for word in words_to_add:
+                self.simple_word_pool.add(word)
+
+        self.save()
+        current_counts = Counter(
+            word.kind_of_word for word in self.simple_word_pool.all()
+        )
+        print(current_counts.get("verb"))
+
+
+# Auxiliary functions for game session
 def generate_game_id():
     return str(uuid.uuid4())
 
@@ -130,8 +252,6 @@ class GameSession(models.Model):
         self.current_game_turn.save()
         return True, "Game initialized successfully."
 
-    # This will change later to be a transition to the character creation state
-
     @transition(field=state, source="*", target="inactive")
     def set_game_inactive(self):
         self.is_active = False
@@ -162,6 +282,7 @@ class GameTurn(models.Model):
         "Player", on_delete=models.SET_NULL, null=True, blank=True
     )
     turn_number = models.IntegerField(default=1)
+    narrative_nights = models.IntegerField(default=1)
 
     player_a_completed_cycle = models.BooleanField(default=False)
     player_b_completed_cycle = models.BooleanField(default=False)
@@ -192,6 +313,10 @@ class GameTurn(models.Model):
     def get_active_player(self):
         return self.active_player
 
+    def set_active_player(self, player):
+        self.active_player = player
+        self.save()
+
     def switch_active_player(self):
         if self.active_player == self.parent_game.playerA:
             self.active_player = self.parent_game.playerB
@@ -212,6 +337,7 @@ class GameTurn(models.Model):
 
         # Create a chat message and add it to the log
         chat_message = ChatMessage.objects.create(
+            avatar_url=str(player.character.image.url),
             sender=str(player.character_name),
             text=str(selected_question.text),
         )
@@ -227,9 +353,25 @@ class GameTurn(models.Model):
 
         # Create a chat message and add it to the log
         chat_message = ChatMessage.objects.create(
+            avatar_url=str(player.character.image.url),
             sender=str(player.character_name),
             text=str(answer),
         )
+        print(answer)
+        for word in answer.split():
+            print(word)
+            if player.simple_word_pool.filter(word=word):
+                print("in simple word pool")
+                word = player.simple_word_pool.filter(word=word).first()
+                print(word)
+                player.simple_word_pool.remove(word)
+                player.save()
+            elif player.character_word_pool.filter(word=word):
+                print("in character word pool")
+                word = player.character_word_pool.filter(word=word).first()
+                print(word)
+                player.character_word_pool.remove(word)
+                player.save()
         self.parent_game.gameLog.chat_messages.add(chat_message)
         self.switch_active_player()
 
@@ -288,7 +430,12 @@ class GameTurn(models.Model):
 
         # process the narrative choice here:
         # adding the associated words to the player's word pool
-
+        selected_narrative_choice = NarrativeChoice.objects.get(id=narrative_choice)
+        if selected_narrative_choice:
+            for word in selected_narrative_choice.words.all():
+                player.character_word_pool.add(word)
+                player.save()
+        player.replenish_simple_words()
         MAX_NUMBER_OF_TURNS = 30
 
         # Check if both players have made their choices
@@ -298,6 +445,7 @@ class GameTurn(models.Model):
             self.player_b_narrative_choice_made = False
             # Transition to the SELECT_QUESTION state and add 1 to the turn number
             self.turn_number += 1
+            self.narrative_nights += 1
 
             if self.turn_number >= MAX_NUMBER_OF_TURNS:
                 self.parent_game.set_game_inactive()
@@ -337,6 +485,7 @@ class GameTurn(models.Model):
         self.save()
         # Create a chat message and add it to the log
         chat_message = ChatMessage.objects.create(
+            avatar_url=str(player.character.image.url),
             sender=str(player.character_name),
             text=str(message),
         )
@@ -367,6 +516,7 @@ class GameLog(models.Model):
 
 
 class ChatMessage(models.Model):
+    avatar_url = models.CharField(max_length=255, null=True, blank=True)
     sender = models.CharField(max_length=255)  # The name of the sender (player)
     text = models.TextField()  # The main content of the message (question/answer)
     reaction = models.CharField(
@@ -458,6 +608,41 @@ class Question(models.Model):
 class Word(models.Model):
     word = models.CharField(max_length=255)
     isSimple = models.BooleanField(default=False)
+    kind_of_word = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.word
+
+    def __eq__(self, other):
+        if isinstance(other, Word):
+            return self.word == other.word and self.kind_of_word == other.kind_of_word
+        return False
+
+    def __hash__(self):
+        return hash((self.word, self.kind_of_word))
+
+    def __repr__(self):
+        return f"<Word: {self.word}>"
+
+
+class MoonSignInterpretation(models.Model):
+    # Assuming you have a Player model that is linked to the User model
+    first_quarter = models.CharField(max_length=150)
+    first_quarter_reason = models.TextField()
+    full_moon = models.CharField(max_length=150)
+    full_moon_reason = models.TextField()
+    last_quarter = models.CharField(max_length=150)
+    last_quarter_reason = models.TextField()
+    new_moon = models.CharField(max_length=150)
+    new_moon_reason = models.TextField()
+
+
+class PublicProfile(models.Model):
+    quality_1 = models.CharField(max_length=100)
+    quality_2 = models.CharField(max_length=100)
+    quality_3 = models.CharField(max_length=100)
+    interest_1 = models.CharField(max_length=100)
+    interest_2 = models.CharField(max_length=100)
+    interest_3 = models.CharField(max_length=100)
+    activity_1 = models.CharField(max_length=100)
+    activity_2 = models.CharField(max_length=100)
