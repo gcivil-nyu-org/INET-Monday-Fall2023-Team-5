@@ -14,13 +14,7 @@ from .models import (
     Player,
     GameSession,
     GameTurn,
-    Word,
-    Question,
     Character,
-    Quality,
-    Activity,
-    Interest,
-    MoonSignInterpretation,
 )
 
 
@@ -384,7 +378,8 @@ class CharacterCreationView(View):
                         game_session.save()
                     else:
                         print(
-                            "The game session state remains in CHARACTER_CREATION as there "
+                            "The game session state remains in "
+                            "CHARACTER_CREATION as there "
                             "are not exactly 2 players to transition to REGULAR_TURN."
                         )
                         other_player = playerA if playerA != player else playerB
@@ -420,7 +415,8 @@ def get_character_details(request):
 
 
 """
-I am keeping Xinyi's MoonSignInterpretationView as it contains logic that might be useful for 
+I am keeping Xinyi's MoonSignInterpretationView as it contains
+logic that might be useful for
 the post request of the moon sign interpretation phase above.
 
 
