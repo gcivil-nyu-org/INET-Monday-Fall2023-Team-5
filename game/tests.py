@@ -354,22 +354,22 @@ class GameProgressViewTestCase(TestCase):
             chat_message2, response.context["messages_by_sender"]["testuser2"]
         )
 
-
-"""
-    @patch("yourapp.models.GameSession.objects.get")
-    def test_get_request_non_participant_user(self, mock_get):
-        # Mock a game session and player
-        mock_session = MagicMock(game_id=1, state=GameSession.ACTIVE)
-        mock_session.playerA = MagicMock(user=self.user)
-        mock_session.playerB = MagicMock(user=MagicMock(username="another_user"))
-        mock_get.return_value = mock_session
+    def test_get_request_non_participant_user(self):
+        self.game_session.state = GameSession.REGULAR_TURN
 
         # Create a player object for a different user
         another_user = User.objects.create_user(username="another_user")
-        Player.objects.create(user=another_user, game_session=mock_session)
+        new_game_session = GameSession()
+        new_game_session.save()
+        Player.objects.create(user=another_user, game_session=new_game_session)
+
+        new_client = Client()
+        new_client.force_login(another_user)
 
         # Make the request as the non-participant user
-        response = self.client.get(reverse("game_progress", kwargs={"game_id": 1}))
+        response = new_client.get(
+            reverse("game_progress", kwargs={"game_id": self.game_session.game_id})
+        )
 
         # Assertions
         messages = list(get_messages(response.wsgi_request))
@@ -380,6 +380,3 @@ class GameProgressViewTestCase(TestCase):
             )
         )
         self.assertRedirects(response, reverse("home"))
-
-    # Add additional tests for specific game turn states
-"""
