@@ -284,7 +284,6 @@ class CharacterCreationView(View):
 
                 elif player.character_creation_state == Player.CHARACTER_COMPLETE:
                     return redirect(game_session.get_absolute_url())
-
                 return render(request, self.template_name, context=context)
 
         except GameSession.DoesNotExist:
@@ -303,7 +302,6 @@ class CharacterCreationView(View):
                 # If the game is not in the character creation state,
                 # redirect to the game progress
                 return redirect(game_session.get_absolute_url())
-
             else:
                 player = request.user.player
 
@@ -330,7 +328,9 @@ class CharacterCreationView(View):
                     player.save()
                 else:
                     # Stand-in for eventual form invalid behavior
-                    messages.error(request, "The MoonSign Interpretation form is invalid.")
+                    messages.error(
+                        request, "The MoonSign Interpretation form is invalid."
+                    )
                     return redirect("game:character_creation", game_id=game_id)
             elif player.character_creation_state == Player.PUBLIC_PROFILE_CREATION:
                 form = PublicProfileCreationForm(
@@ -414,7 +414,8 @@ def get_character_details(request):
     except Character.DoesNotExist:
         return JsonResponse({"error": "Character not found"}, status=404)
 
-'''
+
+"""
 I am keeping Xinyi's MoonSignInterpretationView as it contains logic that might be useful for 
 the post request of the moon sign interpretation phase above.
 
@@ -476,4 +477,4 @@ class MoonSignInterpretationView(View):
 
         # Re-render the form with errors if it's not valid
         return render(request, self.template_name, {"form": form, "game_id": game_id})
-'''
+"""

@@ -24,11 +24,10 @@
     </form>
     </div>
 
-{% elif player.character_creation_state == "MOON_MEANING_SELECTION" %}
+{% elif player.character_creation_state == "moon_meaning_selection" %}
     <!-- separate template file for modularity -->
     {% include "moon_sign_interpretation.html" %}
 {% elif player.character_creation_state == "public_profile_creation" %}
-
     <div class="public-profile-creation">
         <h2>Create Your Public Profile</h2>
             <form id="publicProfileCreationForm" method="post">
