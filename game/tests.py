@@ -1,6 +1,14 @@
 from django.contrib.messages import get_messages
 from django.test import TestCase, RequestFactory, Client
-from .models import Character, Quality, Interest, Activity, GameSession, Player
+from .models import (
+    Character,
+    Quality,
+    Interest,
+    Activity,
+    GameSession,
+    Player,
+    ChatMessage,
+)
 from django.core.exceptions import ValidationError
 from .forms import CharacterSelectionForm
 from django import forms
@@ -307,19 +315,47 @@ class GameProgressViewTestCase(TestCase):
             target_status_code=302,
         )
 
+    def test_get_request_game_session_ended(self):
+        self.game_session.state = GameSession.ENDED
 
-"""
-
-    @patch("yourapp.models.GameSession.objects.get")
-    def test_get_request_game_session_ended(self, mock_get):
-        # Mock a game session that has ended
-        mock_session = MagicMock(game_id=1, state=GameSession.ENDED)
-        mock_get.return_value = mock_session
-        response = self.client.get(reverse("game_progress", kwargs={"game_id": 1}))
+        self.game_session.save()
+        response = self.client.get(
+            reverse("game_progress", kwargs={"game_id": self.game_session.game_id})
+        )
 
         # Assertions
         self.assertTemplateUsed(response, "end_game_session.html")
 
+    def test_get_chat_messages_after_game_session_ended(self):
+        self.game_session.state = GameSession.ENDED
+
+        chat_message = ChatMessage.objects.create(
+            sender="testuser",
+            text="test message",
+        )
+        chat_message2 = ChatMessage.objects.create(
+            sender="testuser2",
+            text="test message2",
+        )
+
+        self.game_session.gameLog.chat_messages.add(chat_message)
+        self.game_session.gameLog.chat_messages.add(chat_message2)
+        self.game_session.save()
+
+        response = self.client.get(
+            reverse("game_progress", kwargs={"game_id": self.game_session.game_id})
+        )
+
+        # Assertions
+        self.assertTemplateUsed(response, "end_game_session.html")
+
+        self.assertIn(chat_message, response.context["messages_by_sender"]["testuser"])
+        self.assertIn(
+            chat_message2, response.context["messages_by_sender"]["testuser2"]
+        )
+
+
+"""
     @patch("yourapp.models.GameSession.objects.get")
     def test_get_request_non_participant_user(self, mock_get):
         # Mock a game session and player
