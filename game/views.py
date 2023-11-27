@@ -222,7 +222,7 @@ def end_game_session(request, game_id):
 
     except GameSession.DoesNotExist:
         messages.error(request, "Game session not found.")
-        return redirect("initiate_game_session")
+        return redirect("home")
 
 
 def retrieve_messages_from_log(game_log):

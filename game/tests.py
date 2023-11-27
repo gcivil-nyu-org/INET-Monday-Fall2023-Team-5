@@ -762,3 +762,90 @@ class CharacterCreationViewTestCase(TestCase):
             self.test_character.interest_3_choices.first().narrative_choices.first(),
             self.user.player.narrative_choice_pool.all(),
         )
+
+
+class EndGameSessionViewTestCase(TestCase):
+    def setUp(self):
+        # Create test users
+        self.client = Client()
+        self.user = User.objects.create_user(username="testuser")
+        self.another_user = User.objects.create_user(username="testuser2")
+        self.client.force_login(self.user)
+
+        user1 = self.user
+        user2 = self.another_user
+        # Create a new game session and save it
+        self.game_session = GameSession()
+        game_session = self.game_session
+        game_session.save()
+
+        # Create players for the game session
+        player_A = Player.objects.create(user=user1, game_session=game_session)
+        player_B = Player.objects.create(user=user2, game_session=game_session)
+
+        # Assigning players to the game session
+        game_session.playerA = player_A
+        game_session.playerB = player_B
+        game_session.save()
+
+        # Initialize the game and redirect to the GameProgressView
+        game_session.initialize_game()
+        game_session.save()
+
+    def test_get_valid_game_id_and_delete_successful(self):
+        # Make the request
+        response = self.client.get(
+            reverse("end_game_session", kwargs={"game_id": self.game_session.game_id})
+        )
+        self.game_session.refresh_from_db()
+        # Assertions
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "end_game_session.html")
+        self.assertEqual(self.game_session.state, GameSession.ENDED)
+
+    def test_get_invalid_game_id(self):
+        # Create a game id that does not exist
+        while True:
+            game_id = uuid.uuid4()
+            if not GameSession.objects.filter(game_id=game_id).exists():
+                break
+
+        response = self.client.get(
+            reverse("end_game_session", kwargs={"game_id": game_id})
+        )
+
+        # Assertions
+        messages = list(get_messages(response.wsgi_request))
+        self.assertTrue(
+            any(message.message == "Game session not found." for message in messages)
+        )
+
+        self.assertRedirects(
+            response,
+            reverse("home"),
+        )
+
+    def test_invalid_player(self):
+        # Create a player object for a different user
+        another_user = User.objects.create_user(username="another_user")
+        new_game_session = GameSession()
+        new_game_session.save()
+        Player.objects.create(user=another_user, game_session=new_game_session)
+
+        new_client = Client()
+        new_client.force_login(another_user)
+
+        # Make the request as the non-participant user
+        response = new_client.get(
+            reverse("end_game_session", kwargs={"game_id": self.game_session.game_id})
+        )
+
+        # Assertions
+        messages = list(get_messages(response.wsgi_request))
+        self.assertTrue(
+            any(
+                message.message == "You are not a participant of this game session."
+                for message in messages
+            )
+        )
+        self.assertRedirects(response, reverse("home"))
