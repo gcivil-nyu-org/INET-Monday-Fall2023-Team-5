@@ -90,10 +90,6 @@ class Player(models.Model):
         # Now, actually delete the player
         super(Player, self).delete(*args, **kwargs)
 
-    def remove_specific_question_from_pool(self, question):
-        self.question_pool.remove(question)
-        self.save()
-
     def populate_character_with_creation_choices(
         self, qualities, interests, activities
     ):
