@@ -1101,8 +1101,16 @@ class CharacterCreationViewTest(TestCase):
                 post_data,
             )
 
-        # Check that the response is as expected
-        self.assertEqual(response.status_code, 302)  # or other expected behavior
+            # Check that the select_moon_meaning method was called
+            mock_select_moon_meaning.assert_called_once_with(
+                moon_meaning="Here will be the data for the moon meaning"
+            )
+
+            # You can add more assertions here based on the expected behavior of your code
+            # For example, you can check that the response is a redirect or other expected behavior.
+
+            # Check that the response status code is 302 (or other expected status code)
+            self.assertEqual(response.status_code, 302)
 
     def test_game_session_does_not_exist(self):
         # Simulate a non-existent game session by using a random UUID
