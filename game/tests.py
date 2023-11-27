@@ -1020,3 +1020,71 @@ class CharacterCreationViewTest(TestCase):
             post_data,
         )
         self.assertEqual(response.status_code, 302)  # or other expected behavior
+
+
+def test_post_character_avatar_selection_invalid(self):
+    self.player.character_creation_state = Player.CHARACTER_AVATAR_SELECTION
+    self.player.save()
+
+    invalid_post_data = {"character": ""}  # Empty or invalid character selection
+
+    response = self.client.post(
+        reverse("character_creation", kwargs={"game_id": self.game_session.game_id}),
+        invalid_post_data,
+    )
+    self.assertEqual(
+        response.status_code, 200
+    )  # Expecting the same page with form errors
+    self.assertFormError(
+        response, "form", "character", "This field is required."
+    )  # Check for specific form error
+
+
+def test_post_moon_meaning_selection_invalid(self):
+    self.player.character_creation_state = Player.MOON_MEANING_SELECTION
+    self.player.save()
+
+    invalid_post_data = {
+        "first_quarter": "",  # Empty or invalid selection
+        # ... other fields
+    }
+
+    response = self.client.post(
+        reverse("character_creation", kwargs={"game_id": self.game_session.game_id}),
+        invalid_post_data,
+    )
+    self.assertEqual(response.status_code, 200)
+    self.assertFormError(response, "form", "first_quarter", "This field is required.")
+
+
+def test_post_public_profile_creation_invalid(self):
+    self.player.character = (
+        self.create_character_with_choices()
+    )  # Assume this method creates a character with choices
+    self.player.character_creation_state = Player.PUBLIC_PROFILE_CREATION
+    self.player.save()
+
+    invalid_post_data = {
+        "quality_1": "",  # Empty or invalid selection
+        # ... other fields
+    }
+
+    response = self.client.post(
+        reverse("character_creation", kwargs={"game_id": self.game_session.game_id}),
+        invalid_post_data,
+    )
+    self.assertEqual(response.status_code, 200)
+    self.assertFormError(response, "form", "quality_1", "This field is required.")
+
+
+def test_post_nonexistent_game_session(self):
+    non_existent_game_id = uuid4()  # Generate a random UUID
+    post_data = {}  # Assuming some default post data
+
+    response = self.client.post(
+        reverse("character_creation", kwargs={"game_id": non_existent_game_id}),
+        post_data,
+    )
+    self.assertRedirects(
+        response, reverse("game:game_list")
+    )  # Update this to your error handling URL
