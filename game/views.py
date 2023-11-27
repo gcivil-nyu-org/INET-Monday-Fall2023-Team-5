@@ -222,7 +222,7 @@ def end_game_session(request, game_id):
 
     except GameSession.DoesNotExist:
         messages.error(request, "Game session not found.")
-        return redirect("initiate_game_session")
+        return redirect("home")
 
 
 def retrieve_messages_from_log(game_log):
@@ -247,7 +247,6 @@ class CharacterCreationView(View):
             else:
                 player = request.user.player
                 context = {"game_id": game_id, "player": player}
-
                 # Proceed with character creation forms since the
                 # game is in the correct state
                 if player.character_creation_state == Player.CHARACTER_AVATAR_SELECTION:
