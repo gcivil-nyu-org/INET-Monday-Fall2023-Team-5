@@ -1104,6 +1104,21 @@ class CharacterCreationViewTest(TestCase):
         # Check that the response is as expected
         self.assertEqual(response.status_code, 302)  # or other expected behavior
 
+    def test_game_session_does_not_exist(self):
+        # Simulate a non-existent game session by using a random UUID
+        non_existent_game_id = uuid4()
+
+        # Make a GET request to the view
+        response = self.client.get(
+            reverse("character_creation", kwargs={"game_id": non_existent_game_id})
+        )
+
+        # Check that the response is a redirect
+        self.assertEqual(response.status_code, 302)
+
+        # Check that it redirects to the game list URL
+        self.assertRedirects(response, reverse("home"))
+
 
 class CharacterDetailsTest(TestCase):
     def setUp(self):
