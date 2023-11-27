@@ -875,7 +875,6 @@ class InitiateGameSessionTestCase(TestCase):
         self.assertEqual(game_session.playerA.user, self.user1)
         self.assertEqual(game_session.playerB.user, self.user2)
 
-
     def test_get_initiate_game_session(self):
         # Test GET request scenario
         url = reverse("initiate_game_session")  # Replace with your actual URL name
