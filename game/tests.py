@@ -1081,18 +1081,19 @@ class CharacterCreationViewTest(TestCase):
         self.player.character_creation_state = Player.MOON_MEANING_SELECTION
         self.player.save()
 
-        # Mock the select_moon_meaning method and set the desired "moon meaning"
-        with patch.object(Player, "select_moon_meaning") as mock_select_moon_meaning:
-            mock_select_moon_meaning.return_value = (
-                "Here will be the data for the moon meaning"
-            )
+        post_data = {
+            "first_quarter": "positive",
+            "first_quarter_reason": "Some reason",
+            "full_moon": "negative",
+            "full_moon_reason": "Another reason",
+            "last_quarter": "ambiguous1",
+            "last_quarter_reason": "Yet another reason",
+            "new_moon": "ambiguous2",
+            "new_moon_reason": "Different reason",
+        }
 
-            post_data = {
-                "first_quarter": "positive",
-                "first_quarter_reason": "Some reason",
-                "full_moon": "negative",
-                "full_moon_reason": "Another reason",
-            }
+        with patch.object(Player, "select_moon_meaning") as mock_select_moon_meaning:
+            mock_select_moon_meaning.return_value = None
 
             response = self.client.post(
                 reverse(
@@ -1101,16 +1102,38 @@ class CharacterCreationViewTest(TestCase):
                 post_data,
             )
 
+            # Check response and form validity
+            if response.context:
+                form = response.context.get("form")
+                if form and not form.is_valid():
+                    print("Form errors:", form.errors)
+
+            # Refresh the player instance to ensure it's up to date
+            self.player.refresh_from_db()
+
             # Check that the select_moon_meaning method was called
             mock_select_moon_meaning.assert_called_once_with(
                 moon_meaning="Here will be the data for the moon meaning"
             )
 
-            # You can add more assertions here based on the expected behavior of your code
-            # For example, you can check that the response is a redirect or other expected behavior.
-
-            # Check that the response status code is 302 (or other expected status code)
             self.assertEqual(response.status_code, 302)
+
+    def test_direct_select_moon_meaning_call(self):
+        player, created = Player.objects.get_or_create(
+            user=self.user, defaults={"game_session": self.game_session}
+        )
+
+        # Set the player to the correct state before calling select_moon_meaning
+        player.character_creation_state = Player.MOON_MEANING_SELECTION
+        player.save()
+
+        moon_meaning = "Test moon meaning"
+
+        # Directly call the method
+        player.select_moon_meaning(moon_meaning=moon_meaning)
+
+        # Add assertions as needed to check the result of the method call
+        # For example, check the state of the player or other side effects
 
     def test_game_session_does_not_exist(self):
         # Simulate a non-existent game session by using a random UUID
