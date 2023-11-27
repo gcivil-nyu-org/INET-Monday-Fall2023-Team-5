@@ -1147,8 +1147,16 @@ class CharacterCreationViewTest(TestCase):
         # Check that the response is a redirect
         self.assertEqual(response.status_code, 302)
 
-        # Check that it redirects to the game list URL
+        # Check that it redirects to the home URL
         self.assertRedirects(response, reverse("home"))
+
+        # Extract messages from the response
+        messages = list(get_messages(response.wsgi_request))
+
+        # Check if the specific error message is present
+        self.assertTrue(
+            any(msg.message == "Game session not found." for msg in messages)
+        )
 
 
 class CharacterDetailsTest(TestCase):
