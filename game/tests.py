@@ -1022,69 +1022,57 @@ class CharacterCreationViewTest(TestCase):
         self.assertEqual(response.status_code, 302)  # or other expected behavior
 
 
-def test_post_character_avatar_selection_invalid(self):
-    self.player.character_creation_state = Player.CHARACTER_AVATAR_SELECTION
-    self.player.save()
+class CharacterDetailsTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        # Create a sample character for testing
+        self.character = Character.objects.create(
+            name="Test Character",
+            description="Test Description",
+            # If your Character model has an image field, handle it accordingly
+            image=SimpleUploadedFile(
+                name="test_image.jpg", content=b"", content_type="image/jpeg"
+            ),
+        )
 
-    invalid_post_data = {"character": ""}  # Empty or invalid character selection
+    def tearDown(self):
+        # Clean up the test image file
+        if self.character.image:
+            self.character.image.delete(
+                save=False
+            )  # Delete the image file, but don't save the model
 
-    response = self.client.post(
-        reverse("character_creation", kwargs={"game_id": self.game_session.game_id}),
-        invalid_post_data,
-    )
-    self.assertEqual(
-        response.status_code, 200
-    )  # Expecting the same page with form errors
-    self.assertFormError(
-        response, "form", "character", "This field is required."
-    )  # Check for specific form error
+        # Optionally, delete the character object itself
+        self.character.delete()
 
+    def test_no_character_id_provided(self):
+        response = self.client.get(
+            reverse("get_character_details")
+        )  # Update with your actual URL name
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {"error": "No character ID provided"})
 
-def test_post_moon_meaning_selection_invalid(self):
-    self.player.character_creation_state = Player.MOON_MEANING_SELECTION
-    self.player.save()
+    def test_character_found(self):
+        response = self.client.get(
+            reverse("get_character_details"), {"id": self.character.id}
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.json(),
+            {
+                "name": self.character.name,
+                "description": self.character.description,
+                "image_url": self.character.image.url if self.character.image else "",
+            },
+        )
 
-    invalid_post_data = {
-        "first_quarter": "",  # Empty or invalid selection
-        # ... other fields
-    }
+    def test_character_not_found(self):
+        non_existent_character_id = 999999  # An ID unlikely to exist
 
-    response = self.client.post(
-        reverse("character_creation", kwargs={"game_id": self.game_session.game_id}),
-        invalid_post_data,
-    )
-    self.assertEqual(response.status_code, 200)
-    self.assertFormError(response, "form", "first_quarter", "This field is required.")
+        response = self.client.get(
+            reverse("get_character_details"),  # Replace with your actual URL name
+            {"id": non_existent_character_id},
+        )
 
-
-def test_post_public_profile_creation_invalid(self):
-    self.player.character = (
-        self.create_character_with_choices()
-    )  # Assume this method creates a character with choices
-    self.player.character_creation_state = Player.PUBLIC_PROFILE_CREATION
-    self.player.save()
-
-    invalid_post_data = {
-        "quality_1": "",  # Empty or invalid selection
-        # ... other fields
-    }
-
-    response = self.client.post(
-        reverse("character_creation", kwargs={"game_id": self.game_session.game_id}),
-        invalid_post_data,
-    )
-    self.assertEqual(response.status_code, 200)
-    self.assertFormError(response, "form", "quality_1", "This field is required.")
-
-
-def test_post_nonexistent_game_session(self):
-    non_existent_game_id = uuid4()  # Generate a random UUID
-    post_data = {}  # Assuming some default post data
-
-    response = self.client.post(
-        reverse("character_creation", kwargs={"game_id": non_existent_game_id}),
-        post_data,
-    )
-    self.assertRedirects(
-        response, reverse("game:game_list")
-    )  # Update this to your error handling URL
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.json(), {"error": "Character not found"})
