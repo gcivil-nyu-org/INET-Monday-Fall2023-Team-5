@@ -31,6 +31,7 @@ from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 from .context_processors import game_session_processor
 from uuid import uuid4
+from unittest.mock import patch
 
 
 class CharacterModelTest(TestCase):
@@ -1020,6 +1021,32 @@ class CharacterCreationViewTest(TestCase):
             post_data,
         )
         self.assertEqual(response.status_code, 302)  # or other expected behavior
+
+    def test_general_exception_handling(self):
+        # Mock a method in the view that could raise an exception
+        with patch("game.models.GameSession.objects.get") as mock_get:
+            mock_get.side_effect = Exception("Test exception")
+
+            # Perform the POST request
+            response = self.client.post(
+                reverse(
+                    "character_creation", kwargs={"game_id": self.game_session.game_id}
+                ),
+                {"dummy_key": "dummy_value"},
+            )
+
+            # Check if the response is a correct redirect but don't follow it
+            self.assertRedirects(
+                response,
+                reverse("home"),
+                status_code=302,
+                target_status_code=200,
+                fetch_redirect_response=False,
+            )
+
+            # Check if the correct error message is set
+            messages = list(get_messages(response.wsgi_request))
+            self.assertIn("Test exception", [str(message) for message in messages])
 
 
 class CharacterDetailsTest(TestCase):
