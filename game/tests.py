@@ -1048,6 +1048,62 @@ class CharacterCreationViewTest(TestCase):
             messages = list(get_messages(response.wsgi_request))
             self.assertIn("Test exception", [str(message) for message in messages])
 
+    def test_redirect_non_character_creation_state_post(self):
+        # Set up a game session in a state other than CHARACTER_CREATION
+        game_session_different_state = GameSession.objects.create(
+            state=GameSession.REGULAR_TURN
+        )
+        self.player.game_session = game_session_different_state
+        self.player.save()
+
+        # Create minimal post data for the request
+        post_data = {
+            "dummy_key": "dummy_value"
+        }  # Adjust based on what your view might expect
+
+        # Make a POST request to the view
+        response = self.client.post(
+            reverse(
+                "character_creation",
+                kwargs={"game_id": game_session_different_state.game_id},
+            ),
+            post_data,
+        )
+
+        # Check that the response is a redirect to the game progress URL
+        self.assertRedirects(
+            response,
+            game_session_different_state.get_absolute_url(),
+            fetch_redirect_response=False,
+        )
+
+    def test_valid_moon_meaning_selection_post(self):
+        self.player.character_creation_state = Player.MOON_MEANING_SELECTION
+        self.player.save()
+
+        # Mock the select_moon_meaning method and set the desired "moon meaning"
+        with patch.object(Player, "select_moon_meaning") as mock_select_moon_meaning:
+            mock_select_moon_meaning.return_value = (
+                "Here will be the data for the moon meaning"
+            )
+
+            post_data = {
+                "first_quarter": "positive",
+                "first_quarter_reason": "Some reason",
+                "full_moon": "negative",
+                "full_moon_reason": "Another reason",
+            }
+
+            response = self.client.post(
+                reverse(
+                    "character_creation", kwargs={"game_id": self.game_session.game_id}
+                ),
+                post_data,
+            )
+
+        # Check that the response is as expected
+        self.assertEqual(response.status_code, 302)  # or other expected behavior
+
 
 class CharacterDetailsTest(TestCase):
     def setUp(self):
