@@ -849,3 +849,41 @@ class EndGameSessionViewTestCase(TestCase):
             )
         )
         self.assertRedirects(response, reverse("home"))
+
+
+class InitiateGameSessionTestCase(TestCase):
+    # Probably will delete when we remove the initiate game session page
+    def setUp(self):
+        # Set up test environment
+        self.client = Client()
+        self.user1 = User.objects.create_user("test1", "test1@example.com", "password")
+        self.user2 = User.objects.create_user("test5", "prof@example.com", "password")
+        # Create additional users for selectable users in GET request
+        for i in range(2, 5):
+            User.objects.create_user(f"test{i}", f"test{i}@example.com", "password")
+        self.client.force_login(self.user1)
+
+    def test_post_initiate_game_session(self):
+        # Test POST request scenario
+        url = reverse("initiate_game_session")  # Replace with your actual URL name
+        response = self.client.post(url, {"selected_user": "test5"})
+
+        # Assertions
+        self.assertEqual(response.status_code, 302)  # Redirect status code
+        game_session = GameSession.objects.first()
+        self.assertIsNotNone(game_session)
+        self.assertEqual(game_session.playerA.user, self.user1)
+        self.assertEqual(game_session.playerB.user, self.user2)
+
+
+    def test_get_initiate_game_session(self):
+        # Test GET request scenario
+        url = reverse("initiate_game_session")  # Replace with your actual URL name
+        response = self.client.get(url)
+
+        # Assertions
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "initiate_game_session.html")
+        self.assertIn("selectable_users", response.context)
+        # Ensure the logged-in user is not in selectable_users
+        self.assertNotIn(self.user1, response.context["selectable_users"])
