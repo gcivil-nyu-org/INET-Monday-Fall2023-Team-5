@@ -1,91 +1,81 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-<!-- <style>
-    .character-selection {
-        text-align: center;
-    }
-    .character-option {
-        display: inline-block;
-        margin: 10px;
-        vertical-align: top;
-    }
-    .character-option img {
-        width: 100px;
-        height: auto;
-        border-radius: 50%;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    .character-option input[type="radio"] {
-        display: none;
-    }
-    .character-option label {
-        cursor: pointer;
-        display: block;
-    }
-    .character-option input[type="radio"]:checked + label {
-        outline: 2px solid #f00;
-    }
-    .confirm-btn {
-        background-color: #6200ee;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        font-size: 1em;
-        cursor: pointer;
-        border-radius: 5px;
-        margin-top: 10px;
-    }
-    .confirm-btn:hover {
-        background-color: #3700b3;
-    }
-    .descriptive-tags {
-        color: #fff;
-        font-size: 0.7em;
-    }
-    
 
-</style> -->
-
-
-<div class="character-selection">
-<div class="character-selection">
-    <h2>Select Your Character</h2>
-    <form method="post">
-        {% csrf_token %}
-        {% for choice in character_form.character.field.queryset %}
-            <div class="character-option">
-                <input type="radio" id="id_character_{{ forloop.counter0 }}" name="character" value="{{ choice.id }}" hidden>
-                <label for="id_character_{{ forloop.counter0 }}">
-                    <img src="{{ choice.image.url }}" alt="{{ choice }}">
-                    <div>{{ choice }}</div> <!-- This will call the __str__ method of the Character model -->
-                    <!-- Static descriptive tags displayed here -->
-                    <div class="descriptive-tags">{{ choice.description }}</div>
-                </label>
-            </div>
-        {% endfor %}
-        <!-- Moon Sign Interpretation Form Fields -->
-        <div class="moon-sign-fields">
-            <!-- Loop through each field in the moon sign form -->
-            {% for field in moon_sign_form %}
-                <div class="form-group">
-                    {{ field.errors }}
-                    {{ field.label_tag }} {{ field }}
-                    {% if field.help_text %}
-                        <p class="help-text">{{ field.help_text }}</p>
-                    {% endif %}
+{% if player.character_creation_state == "character_avatar_selection" %}
+    <div class="character-selection">
+        <h2>Select Your Character</h2>
+        <form method="post">
+            {% csrf_token %}
+            {% for choice in form.character.field.queryset %}
+                <div class="character-option">
+                    <input type="radio" id="id_character_{{ forloop.counter0 }}" name="character" value="{{ choice.id }}" hidden>
+                    <label for="id_character_{{ forloop.counter0 }}">
+                        <img src="{{ choice.image.url }}" alt="{{ choice }}">
+                        <div>{{ choice }}</div> <!-- This will call the __str__ method of the Character model -->
+                        <!-- Static descriptive tags displayed here -->
+                        <div class="descriptive-tags">{{ choice.description }}</div>
+                    </label>
                 </div>
             {% endfor %}
+
+            <div id="submit"></div>
+            <button type="submit" class="confirm-btn">Confirm Selection</button>
+        </form>
+    </div>
+
+    {% elif player.character_creation_state == "moon_meaning_selection" %}
+        <!-- separate template file for modularity -->
+        {% include "moon_sign_interpretation.html" %}
+    {% elif player.character_creation_state == "public_profile_creation" %}
+        <div class="public-profile-creation">
+            <h2>Create Your Public Profile</h2>
+                <form id="publicProfileCreationForm" method="post">
+                {% csrf_token %}
+                <!-- The template for the profile text -->
+                <div id="profileText">
+                  I am {{ player.character.name }} a {{ player.character.description }}. I am
+                  <span class="selectable" data-field="quality_1" onclick="showChoices(this);">[quality #1]</span>,
+                  <span class="selectable" data-field="quality_2" onclick="showChoices(this);">[quality #2]</span>,
+                  <span class="selectable" data-field="quality_3" onclick="showChoices(this);">[quality #3]</span>.
+                  I love
+                  <span class="selectable" data-field="interest_1" onclick="showChoices(this);">[interest #1]</span>,
+                  <span class="selectable" data-field="interest_2" onclick="showChoices(this);">[interest #2]</span>,
+                  and
+                  <span class="selectable" data-field="interest_3" onclick="showChoices(this);">[interest #3]</span>.
+                  Looking for someone to
+                  <span class="selectable" data-field="activity_1" onclick="showChoices(this);">[activity #1]</span>,
+                  <span class="selectable" data-field="activity_2" onclick="showChoices(this);">[activity #2]</span>.
+                  Also, I love the moon. It's really important to me. Don't message me if you hate the moon!
+                </div>
+    
+                <!-- The actual form fields, hidden -->
+    
+                <input type="hidden" id="hiddenQuality_1" name="{{ form.quality_1.html_name }}" value="{{ form.quality_1.value }}">
+                <input type="hidden" id="hiddenQuality_2" name="{{ form.quality_2.html_name }}" value="{{ form.quality_2.value }}">
+                <input type="hidden" id="hiddenQuality_3" name="{{ form.quality_3.html_name }}" value="{{ form.quality_3.value }}">
+                <input type="hidden" id="hiddenInterest_1" name="{{ form.interest_1.html_name }}" value="{{ form.interest_1.value }}">
+                <input type="hidden" id="hiddenInterest_2" name="{{ form.interest_2.html_name }}" value="{{ form.interest_2.value }}">
+                <input type="hidden" id="hiddenInterest_3" name="{{ form.interest_3.html_name }}" value="{{ form.interest_3.value }}">
+                <input type="hidden" id="hiddenActivity_1" name="{{ form.activity_1.html_name }}" value="{{ form.activity_1.value }}">
+                <input type="hidden" id="hiddenActivity_2" name="{{ form.activity_2.html_name }}" value="{{ form.activity_2.value }}">
+    
+    
+                <input type="submit" value="Submit" />
+                </form>
         </div>
-
-
-        <div id="submit"></div>
-        <button type="submit" class="confirm-btn">Confirm Selection</button>
-    </form>
-</div>
-
+    
+    {% else %}
+        <!-- Fallback or error message if the state is unrecognized -->
+        <p>Unrecognized character creation state.</p>
+{% endif %}
 {% endblock content%}
 
-{% block styles %}
-<link href="{% static 'css/styles.css' %}" rel="stylesheet">
-{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    // Define the formChoices variable with the JSON data from your Django context
+    var formChoices = {{ form_choices_json|safe }};
+</script>
+<script src="{% static 'js/public_profile.js' %}"></script>
+{% endblock script%}
