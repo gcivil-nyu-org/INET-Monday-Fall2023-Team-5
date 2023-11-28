@@ -242,7 +242,9 @@ class CharacterCreationView(View):
                 return redirect(game_session.get_absolute_url())
 
             # Proceed with character creation form since the
+            # Proceed with character creation form since the
             # game is in the correct state
+            form = CharacterSelectionForm()
             character_form = CharacterSelectionForm()
             moon_sign_form = MoonSignInterpretationForm()
             return render(
@@ -269,6 +271,16 @@ class CharacterCreationView(View):
             if game_session.state != GameSession.CHARACTER_CREATION:
                 # If the game is not in the character creation state,
                 # redirect to the game progress
+                return redirect(game_session.get_absolute_url())
+
+            form = CharacterSelectionForm(request.POST)
+            if form.is_valid():
+                # The form is valid, save the character for the player
+                player, _ = Player.objects.get_or_create(
+                    user=request.user, defaults={"game_session": game_session}
+                )
+                player.character = form.cleaned_data["character"]
+                player.save()
                 return redirect("moon_sign_interpretation", game_id=game_id)
 
             character_form = CharacterSelectionForm(request.POST)
@@ -285,7 +297,17 @@ class CharacterCreationView(View):
 
                 # Fetch players associated with this game session
                 players = Player.objects.filter(game_session=game_session)
+                # Fetch players associated with this game session
+                players = Player.objects.filter(game_session=game_session)
 
+                # Ensure there are exactly two players
+                if players.count() == 2:
+                    playerA, playerB = players.all()
+                    if playerA.character and playerB.character:
+                        game_session.start_regular_turn()
+                        game_session.save()
+                else:
+                    print("There are not 2 players")
                 # Ensure there are exactly two players
                 if players.count() == 2:
                     playerA, playerB = players.all()
@@ -301,6 +323,7 @@ class CharacterCreationView(View):
                         "are not exactly 2 players to transition to MOON_PHASE."
                     )
 
+                return redirect(game_session.get_absolute_url())
                 return redirect("moon_sign_interpretation", game_id=game_id)
 
         except GameSession.DoesNotExist:
@@ -311,6 +334,9 @@ class CharacterCreationView(View):
         except Exception as e:
             messages.error(request, str(e))
             return redirect("home")
+
+        # Re-render the form with errors if it's not valid
+        return render(request, self.template_name, {"form": form, "game_id": game_id})
 
 
 def get_character_details(request):
