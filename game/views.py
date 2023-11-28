@@ -306,18 +306,11 @@ class CharacterCreationView(View):
         except GameSession.DoesNotExist:
             # Handle the error, e.g., by showing a message or redirecting
             messages.error(request, "Game session not found.")
-            return redirect("game:game_list")
-
-        # Re-render the form with errors if it's not valid
-        return render(
-            request,
-            self.template_name,
-            {
-                "character_form": character_form,
-                "moon_sign_form": moon_sign_form,
-                "game_id": game_id,
-            },
-        )
+            # return redirect("game:game_list")
+            return redirect("home")
+        except Exception as e:
+            messages.error(request, str(e))
+            return redirect("home")
 
 
 def get_character_details(request):
