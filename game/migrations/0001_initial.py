@@ -284,6 +284,22 @@ class Migration(migrations.Migration):
                 ),
                 ("character_name", models.CharField(blank=True, max_length=255)),
                 (
+                    "character_creation_state",
+                    django_fsm.FSMField(
+                        choices=[
+                            (
+                                "character_avatar_selection",
+                                "Character Avatar Selection",
+                            ),
+                            ("moon_meaning_selection", "Moon Meaning Selection"),
+                            ("public_profile_creation", "Public Profile Creation"),
+                            ("character_complete", "Character Complete"),
+                        ],
+                        default="character_avatar_selection",
+                        max_length=50,
+                    ),
+                ),
+                (
                     "character",
                     models.ForeignKey(
                         blank=True,
@@ -347,6 +363,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("turn_number", models.IntegerField(default=1)),
+                ("narrative_nights", models.IntegerField(default=1)),
                 ("player_a_completed_cycle", models.BooleanField(default=False)),
                 ("player_b_completed_cycle", models.BooleanField(default=False)),
                 ("player_a_narrative_choice_made", models.BooleanField(default=False)),

@@ -1,3 +1,6 @@
+import random
+from collections import Counter
+
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import User
@@ -23,6 +26,52 @@ class Player(models.Model):
     character = models.ForeignKey(
         "Character", on_delete=models.SET_NULL, null=True, blank=True
     )
+
+    # Constants for character creation states
+    CHARACTER_AVATAR_SELECTION = "character_avatar_selection"
+    MOON_MEANING_SELECTION = "moon_meaning_selection"
+    PUBLIC_PROFILE_CREATION = "public_profile_creation"
+    CHARACTER_COMPLETE = "character_complete"
+
+    # Choices for character creation states
+    CHARACTER_CREATION_STATE_CHOICES = [
+        (CHARACTER_AVATAR_SELECTION, "Character Avatar Selection"),
+        (MOON_MEANING_SELECTION, "Moon Meaning Selection"),
+        (PUBLIC_PROFILE_CREATION, "Public Profile Creation"),
+        (CHARACTER_COMPLETE, "Character Complete"),
+    ]
+
+    character_creation_state = FSMField(
+        default=CHARACTER_AVATAR_SELECTION, choices=CHARACTER_CREATION_STATE_CHOICES
+    )
+
+    @transition(
+        field=character_creation_state,
+        source=CHARACTER_AVATAR_SELECTION,
+        target=MOON_MEANING_SELECTION,
+    )
+    def select_character_avatar(self, character):
+        self.character = character
+        self.save()
+
+    @transition(
+        field=character_creation_state,
+        source=MOON_MEANING_SELECTION,
+        target=PUBLIC_PROFILE_CREATION,
+    )
+    def select_moon_meaning(self, moon_meaning):
+        pass
+        # here whatever logic you need to do with the moon meaning
+
+    @transition(
+        field=character_creation_state,
+        source=PUBLIC_PROFILE_CREATION,
+        target=CHARACTER_COMPLETE,
+    )
+    def create_public_profile(self, qualities, interests, activities):
+        self.character_name = self.character.name
+        self.populate_character_with_creation_choices(qualities, interests, activities)
+        self.save()
 
     def save(self, *args, **kwargs):
         if not self.game_session:
