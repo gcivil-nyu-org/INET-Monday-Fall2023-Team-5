@@ -30,6 +30,8 @@ from .views import CharacterCreationView, GameProgressView, end_game_session
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 from .context_processors import game_session_processor
+from uuid import uuid4
+from unittest.mock import patch
 
 
 class CharacterModelTest(TestCase):
@@ -886,3 +888,328 @@ class InitiateGameSessionTestCase(TestCase):
         self.assertIn("selectable_users", response.context)
         # Ensure the logged-in user is not in selectable_users
         self.assertNotIn(self.user1, response.context["selectable_users"])
+
+
+class CharacterCreationViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username="testuser", password="12345")
+        self.game_session = GameSession.objects.create(
+            state=GameSession.CHARACTER_CREATION
+        )
+        self.player = Player.objects.create(
+            user=self.user,
+            game_session=self.game_session,
+            character_creation_state=Player.CHARACTER_AVATAR_SELECTION,
+        )
+        self.client.force_login(self.user)
+
+    def test_character_avatar_selection_get(self):
+        response = self.client.get(
+            reverse("character_creation", kwargs={"game_id": self.game_session.game_id})
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "character_creation.html")
+
+    def test_redirect_when_not_in_character_creation_state(self):
+        # Fetch the existing player object
+        player = Player.objects.get(user=self.user)
+
+        # Set up a game session in a different state
+        game_session = GameSession.objects.create(state=GameSession.REGULAR_TURN)
+        player.game_session = game_session
+        player.save()
+
+        # Make a GET request to the view
+        response = self.client.get(
+            reverse("character_creation", kwargs={"game_id": game_session.game_id}),
+            follow=False,
+        )
+
+        # Check that the response is a redirect
+        self.assertEqual(response.status_code, 302)
+
+        # Check the URL of the redirect without following it
+        expected_url = game_session.get_absolute_url()
+        self.assertTrue(response["Location"].endswith(expected_url))
+
+    def test_game_session_does_not_exist(self):
+        non_existent_game_id = uuid4()  # Generate a random UUID
+        response = self.client.get(
+            reverse("character_creation", kwargs={"game_id": non_existent_game_id})
+        )
+        self.assertRedirects(
+            response, reverse("home")
+        )  # Update 'home' to your home URL name
+
+    def test_post_character_avatar_selection(self):
+        self.player.character_creation_state = Player.CHARACTER_AVATAR_SELECTION
+        self.player.save()
+
+        # Create a Character object for the test
+        character = Character.objects.create(
+            # Set the necessary fields for your Character model
+            name="Test Character",
+            description="Test Description",
+        )
+
+        post_data = {"character": character.id}
+
+        response = self.client.post(
+            reverse(
+                "character_creation", kwargs={"game_id": self.game_session.game_id}
+            ),
+            post_data,
+        )
+        self.assertEqual(response.status_code, 302)  # or other expected behavior
+
+    def test_post_moon_meaning_selection(self):
+        self.player.character_creation_state = Player.MOON_MEANING_SELECTION
+        self.player.save()
+
+        post_data = {
+            "first_quarter": "positive",
+            "first_quarter_reason": "Some reason",
+            "full_moon": "negative",
+            "full_moon_reason": "Another reason",
+        }
+
+        response = self.client.post(
+            reverse(
+                "character_creation", kwargs={"game_id": self.game_session.game_id}
+            ),
+            post_data,
+        )
+        self.assertEqual(response.status_code, 302)  # or other expected behavior
+
+    def test_post_public_profile_creation(self):
+        # Create a Character instance for the test
+        character = Character.objects.create(
+            # Set the necessary fields for your Character model
+            name="Test Character",
+            description="Test Description",
+        )
+
+        # Associate the character with the player
+        self.player.character = character
+        self.player.character_creation_state = Player.PUBLIC_PROFILE_CREATION
+        self.player.save()
+
+        # Create necessary instances for the test
+        quality1 = Quality.objects.create(name="Quality 1")
+        quality2 = Quality.objects.create(name="Quality 2")
+        quality3 = Quality.objects.create(name="Quality 3")
+        interest1 = Interest.objects.create(name="Interest 1")
+        # ... similarly create instances for other fields
+
+        # Update your character instance to include these choices
+        character.quality_1_choices.add(quality1, quality2, quality3)
+        character.interest_1_choices.add(interest1)
+        # ... similarly add instances to other choice fields
+        character.save()
+
+        post_data = {
+            "quality_1": quality1.id,
+            "quality_2": quality2.id,
+            "quality_3": quality3.id,
+            "interest_1": interest1.id,
+        }
+
+        response = self.client.post(
+            reverse(
+                "character_creation", kwargs={"game_id": self.game_session.game_id}
+            ),
+            post_data,
+        )
+        self.assertEqual(response.status_code, 302)  # or other expected behavior
+
+    def test_general_exception_handling(self):
+        # Mock a method in the view that could raise an exception
+        with patch("game.models.GameSession.objects.get") as mock_get:
+            mock_get.side_effect = Exception("Test exception")
+
+            # Perform the POST request
+            response = self.client.post(
+                reverse(
+                    "character_creation", kwargs={"game_id": self.game_session.game_id}
+                ),
+                {"dummy_key": "dummy_value"},
+            )
+
+            # Check if the response is a correct redirect but don't follow it
+            self.assertRedirects(
+                response,
+                reverse("home"),
+                status_code=302,
+                target_status_code=200,
+                fetch_redirect_response=False,
+            )
+
+            # Check if the correct error message is set
+            messages = list(get_messages(response.wsgi_request))
+            self.assertIn("Test exception", [str(message) for message in messages])
+
+    def test_redirect_non_character_creation_state_post(self):
+        # Set up a game session in a state other than CHARACTER_CREATION
+        game_session_different_state = GameSession.objects.create(
+            state=GameSession.REGULAR_TURN
+        )
+        self.player.game_session = game_session_different_state
+        self.player.save()
+
+        # Create minimal post data for the request
+        post_data = {
+            "dummy_key": "dummy_value"
+        }  # Adjust based on what your view might expect
+
+        # Make a POST request to the view
+        response = self.client.post(
+            reverse(
+                "character_creation",
+                kwargs={"game_id": game_session_different_state.game_id},
+            ),
+            post_data,
+        )
+
+        # Check that the response is a redirect to the game progress URL
+        self.assertRedirects(
+            response,
+            game_session_different_state.get_absolute_url(),
+            fetch_redirect_response=False,
+        )
+
+    def test_valid_moon_meaning_selection_post(self):
+        self.player.character_creation_state = Player.MOON_MEANING_SELECTION
+        self.player.save()
+
+        post_data = {
+            "first_quarter": "positive",
+            "first_quarter_reason": "Some reason",
+            "full_moon": "negative",
+            "full_moon_reason": "Another reason",
+            "last_quarter": "ambiguous1",
+            "last_quarter_reason": "Yet another reason",
+            "new_moon": "ambiguous2",
+            "new_moon_reason": "Different reason",
+        }
+
+        with patch.object(Player, "select_moon_meaning") as mock_select_moon_meaning:
+            mock_select_moon_meaning.return_value = None
+
+            response = self.client.post(
+                reverse(
+                    "character_creation", kwargs={"game_id": self.game_session.game_id}
+                ),
+                post_data,
+            )
+
+            # Check response and form validity
+            if response.context:
+                form = response.context.get("form")
+                if form and not form.is_valid():
+                    print("Form errors:", form.errors)
+
+            # Refresh the player instance to ensure it's up to date
+            self.player.refresh_from_db()
+
+            # Check that the select_moon_meaning method was called
+            mock_select_moon_meaning.assert_called_once_with(
+                moon_meaning="Here will be the data for the moon meaning"
+            )
+
+            self.assertEqual(response.status_code, 302)
+
+    def test_direct_select_moon_meaning_call(self):
+        player, created = Player.objects.get_or_create(
+            user=self.user, defaults={"game_session": self.game_session}
+        )
+
+        # Set the player to the correct state before calling select_moon_meaning
+        player.character_creation_state = Player.MOON_MEANING_SELECTION
+        player.save()
+
+        moon_meaning = "Test moon meaning"
+
+        # Directly call the method
+        player.select_moon_meaning(moon_meaning=moon_meaning)
+
+        # Add assertions as needed to check the result of the method call
+        # For example, check the state of the player or other side effects
+
+    def test_game_session_does_not_exist(self):
+        # Simulate a non-existent game session by using a random UUID
+        non_existent_game_id = uuid4()
+
+        # Make a GET request to the view
+        response = self.client.get(
+            reverse("character_creation", kwargs={"game_id": non_existent_game_id})
+        )
+
+        # Check that the response is a redirect
+        self.assertEqual(response.status_code, 302)
+
+        # Check that it redirects to the home URL
+        self.assertRedirects(response, reverse("home"))
+
+        # Extract messages from the response
+        messages = list(get_messages(response.wsgi_request))
+
+        # Check if the specific error message is present
+        self.assertTrue(
+            any(msg.message == "Game session not found." for msg in messages)
+        )
+
+
+class CharacterDetailsTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        # Create a sample character for testing
+        self.character = Character.objects.create(
+            name="Test Character",
+            description="Test Description",
+            # If your Character model has an image field, handle it accordingly
+            image=SimpleUploadedFile(
+                name="test_image.jpg", content=b"", content_type="image/jpeg"
+            ),
+        )
+
+    def tearDown(self):
+        # Clean up the test image file
+        if self.character.image:
+            self.character.image.delete(
+                save=False
+            )  # Delete the image file, but don't save the model
+
+        # Optionally, delete the character object itself
+        self.character.delete()
+
+    def test_no_character_id_provided(self):
+        response = self.client.get(
+            reverse("get_character_details")
+        )  # Update with your actual URL name
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {"error": "No character ID provided"})
+
+    def test_character_found(self):
+        response = self.client.get(
+            reverse("get_character_details"), {"id": self.character.id}
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.json(),
+            {
+                "name": self.character.name,
+                "description": self.character.description,
+                "image_url": self.character.image.url if self.character.image else "",
+            },
+        )
+
+    def test_character_not_found(self):
+        non_existent_character_id = 999999  # An ID unlikely to exist
+
+        response = self.client.get(
+            reverse("get_character_details"),  # Replace with your actual URL name
+            {"id": non_existent_character_id},
+        )
+
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.json(), {"error": "Character not found"})
