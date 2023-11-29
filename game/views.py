@@ -402,7 +402,8 @@ class CharacterCreationView(View):
         except GameSession.DoesNotExist:
             # Handle the error, e.g., by showing a message or redirecting
             messages.error(request, "Game session not found.")
-            return redirect("game:game_list")
+            # return redirect("game:game_list")
+            return redirect("home")
         except Exception as e:
             messages.error(request, str(e))
             return redirect("home")
