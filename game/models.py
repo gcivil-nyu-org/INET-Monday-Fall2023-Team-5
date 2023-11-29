@@ -156,7 +156,7 @@ class Player(models.Model):
             for word in words_to_add:
                 self.simple_word_pool.add(word)
 
-
+        self.save()
         current_counts = Counter(
             word.kind_of_word for word in self.simple_word_pool.all()
         )

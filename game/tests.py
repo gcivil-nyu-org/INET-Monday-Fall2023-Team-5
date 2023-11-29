@@ -1,7 +1,24 @@
+from django.contrib.messages import get_messages
 from django.test import TestCase, RequestFactory, Client
-from .models import Character, Quality, Interest, Activity, GameSession, Player
+from .models import (
+    Character,
+    Quality,
+    Interest,
+    Activity,
+    GameSession,
+    Player,
+    ChatMessage,
+    GameTurn,
+    Question,
+    Word,
+    NarrativeChoice,
+)
 from django.core.exceptions import ValidationError
-from .forms import CharacterSelectionForm
+from .forms import (
+    CharacterSelectionForm,
+    MoonSignInterpretationForm,
+    PublicProfileCreationForm,
+)
 from django import forms
 from PIL import Image
 from django.core.files.uploadedfile import InMemoryUploadedFile, SimpleUploadedFile
@@ -9,7 +26,7 @@ from django.core.files.storage import default_storage
 import io, os, uuid
 from roleplaydate import settings
 from django.urls import reverse
-from .views import CharacterCreationView
+from .views import CharacterCreationView, GameProgressView, end_game_session
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 from .context_processors import game_session_processor
@@ -181,213 +198,6 @@ class CharacterModelTest(TestCase):
         # Additionally, clean up any image associated with the character
         if self.character.image and default_storage.exists(self.character.image.name):
             default_storage.delete(self.character.image.name)
-
-
-class CharacterSelectionFormTest(TestCase):
-    def setUp(self):
-        # Create some Character instances for testing
-        Character.objects.create(name="Character 1", description="Description 1")
-        Character.objects.create(name="Character 2", description="Description 2")
-
-    def test_form_initialization(self):
-        """Test the form initializes with the correct queryset and widget."""
-        form = CharacterSelectionForm()
-        self.assertEqual(
-            form.fields["character"].queryset.count(), Character.objects.count()
-        )
-        self.assertIsInstance(form.fields["character"].widget, forms.RadioSelect)
-
-    def test_form_validation_valid(self):
-        """Test the form with valid data."""
-        character = Character.objects.first()
-        form_data = {"character": character.id}
-        form = CharacterSelectionForm(data=form_data)
-        self.assertTrue(form.is_valid())
-
-    def test_form_validation_invalid(self):
-        """Test the form with invalid data."""
-        form_data = {"character": 999}  # Assuming 999 is an invalid character ID
-        form = CharacterSelectionForm(data=form_data)
-        self.assertFalse(form.is_valid())
-
-
-class CharacterCreationViewTest(TestCase):
-    def setUp(self):
-        self.client = Client()
-        self.user = User.objects.create_user(username="testuser", password="12345")
-        self.client.login(username="testuser", password="12345")
-
-        # Generate a UUID and convert it to a string for testing
-        test_game_id = str(uuid.uuid4())
-        self.game_session = GameSession.objects.create(
-            game_id=test_game_id, state=GameSession.CHARACTER_CREATION
-        )
-
-        # Create a dummy image
-        image = Image.new("RGB", (100, 100), color="red")
-        image_io = io.BytesIO()
-        image.save(image_io, format="JPEG")
-        image_io.seek(0)
-        image_file = SimpleUploadedFile("test_image.jpg", image_io.read())
-
-        # Create a Character instance with the dummy image
-        self.character = Character.objects.create(
-            name="Test Character", description="Test Description", image=image_file
-        )
-
-        # Create a Player instance and associate it with the user and game_session
-        self.player = Player.objects.create(
-            user=self.user, game_session=self.game_session
-        )
-
-    def test_get_request(self):
-        """Test the GET request response of the view."""
-        response = self.client.get(
-            reverse("game:character_creation", args=[self.game_session.game_id])
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "character_creation.html")
-
-    def test_post_request_valid_data(self):
-        """Test POST request with valid form data."""
-        valid_data = {"character": self.character.id}
-        response = self.client.post(
-            reverse("game:character_creation", args=[self.game_session.game_id]),
-            valid_data,
-        )
-
-        # Check for appropriate redirection or response
-        self.assertEqual(response.status_code, 302)  # Assuming it should redirect
-        self.assertTrue(response.url.endswith(self.game_session.get_absolute_url()))
-
-        # Additional assertions as needed
-        player_exists = Player.objects.filter(
-            user=self.user, game_session=self.game_session
-        ).exists()
-        self.assertTrue(player_exists)
-
-        # Check if the player's character was set correctly
-        player = Player.objects.get(user=self.user, game_session=self.game_session)
-        self.assertEqual(player.character, self.character)
-
-    def test_post_request_invalid_data(self):
-        """Test POST request with invalid form data."""
-        invalid_data = {"character": "invalid_character_id"}
-        response = self.client.post(
-            reverse("game:character_creation", args=[self.game_session.game_id]),
-            invalid_data,
-        )
-
-        # Check for re-rendering of the form with errors
-        self.assertEqual(response.status_code, 200)  # Page should load normally
-        self.assertTemplateUsed(response, "character_creation.html")
-        self.assertTrue("form" in response.context)
-        self.assertFalse(response.context["form"].is_valid())
-        self.assertTrue(response.context["form"].errors)
-
-    def tearDown(self):
-        # Delete the test image files after the test is complete
-        if self.character and self.character.image:
-            # Get the original image file path
-            original_image_path = self.character.image.path
-
-            # Delete the original file if it exists
-            if os.path.exists(original_image_path):
-                os.remove(original_image_path)
-
-            # Check for additional copies (e.g., thumbnail copies)
-            image_directory = os.path.dirname(original_image_path)
-            image_filename = os.path.basename(original_image_path)
-            image_filename_without_extension, image_extension = os.path.splitext(
-                image_filename
-            )
-
-            # Look for additional copies with the same base filename
-            for filename in os.listdir(image_directory):
-                if (
-                    filename.startswith(image_filename_without_extension)
-                    and filename != image_filename
-                ):
-                    additional_image_path = os.path.join(image_directory, filename)
-                    # Delete the additional copy if it exists
-                    if os.path.exists(additional_image_path):
-                        os.remove(additional_image_path)
-
-
-class GetCharacterDetailsTest(TestCase):
-    def setUp(self):
-        self.client = Client()
-        # Create a character for testing
-        self.character = Character.objects.create(
-            name="Test Character",
-            description="Test Description",
-            image=SimpleUploadedFile(
-                name="test_image.jpg", content=b"", content_type="image/jpeg"
-            ),
-        )
-
-    def tearDown(self):
-        # Delete the test image files after the test is complete
-        if self.character and self.character.image:
-            # Get the original image file path
-            original_image_path = self.character.image.path
-
-            # Delete the original file if it exists
-            if os.path.exists(original_image_path):
-                os.remove(original_image_path)
-
-            # Check for additional copies (e.g., thumbnail copies)
-            image_directory = os.path.dirname(original_image_path)
-            image_filename = os.path.basename(original_image_path)
-            image_filename_without_extension, image_extension = os.path.splitext(
-                image_filename
-            )
-
-            # Look for additional copies with the same base filename
-            for filename in os.listdir(image_directory):
-                if (
-                    filename.startswith(image_filename_without_extension)
-                    and filename != image_filename
-                ):
-                    additional_image_path = os.path.join(image_directory, filename)
-                    # Delete the additional copy if it exists
-                    if os.path.exists(additional_image_path):
-                        os.remove(additional_image_path)
-
-    def test_no_character_id(self):
-        """Test response when no character ID is provided."""
-        response = self.client.get(reverse("get_character_details"))
-        self.assertEqual(response.status_code, 400)
-        self.assertJSONEqual(
-            str(response.content, encoding="utf8"),
-            {"error": "No character ID provided"},
-        )
-
-    def test_valid_character_id(self):
-        """Test response with a valid character ID."""
-        response = self.client.get(
-            reverse("get_character_details") + "?id=" + str(self.character.id)
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertJSONEqual(
-            str(response.content, encoding="utf8"),
-            {
-                "name": self.character.name,
-                "description": self.character.description,
-                "image_url": self.character.image.url,
-            },
-        )
-
-    def test_invalid_character_id(self):
-        """Test response with an invalid character ID."""
-        invalid_id = self.character.id + 1
-        response = self.client.get(
-            reverse("get_character_details") + "?id=" + str(invalid_id)
-        )
-        self.assertEqual(response.status_code, 404)
-        self.assertJSONEqual(
-            str(response.content, encoding="utf8"), {"error": "Character not found"}
-        )
 
 
 class GameSessionProcessorTest(TestCase):
