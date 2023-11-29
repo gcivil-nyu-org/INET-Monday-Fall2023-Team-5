@@ -1,7 +1,7 @@
 <div class="moon-sign-interpretation">
     <h2>Moon Sign Interpretation</h2>
     <p>Please fill out your interpretations for each phase of the moon.</p>
-    <form method="post" action="{% url 'character_creation' game_id %}"></form>
+    <form method="post" action="{% url 'character_creation' game_id %}">
         {% csrf_token %}
         <div class="form-group">
             <h3>First Quarter</h3>
