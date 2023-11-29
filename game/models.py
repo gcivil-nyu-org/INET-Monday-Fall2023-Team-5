@@ -470,36 +470,34 @@ class GameTurn(models.Model):
         return moon_phases.get(self.turn_number)
 
     @transition(field=state, source=MOON_PHASE, target=SELECT_QUESTION)
-    def write_message_about_moon_phase(self, message, player):
-        # Update the moon message for the player
-        if player == self.parent_game.playerA:
-            self.player_a_moon_phase_message_written = True
-        elif player == self.parent_game.playerB:
-            self.player_b_moon_phase_message_written = True
-        else:
-            raise ValueError("Invalid player.")
-        self.save()
+    def write_message_about_moon_phase(self, answer, player):
+        # Check if the current user is the active player
+        if player != self.active_player:
+            raise ValueError("It's not your turn.")
+
         # Create a chat message and add it to the log
         chat_message = ChatMessage.objects.create(
             avatar_url=str(player.character.image.url),
             sender=str(player.character_name),
-            text=str(message),
+            text=str(answer),
         )
+        print(answer)
+        for word in answer.split():
+            print(word)
+            if player.simple_word_pool.filter(word=word):
+                print("in simple word pool")
+                word = player.simple_word_pool.filter(word=word).first()
+                print(word)
+                player.simple_word_pool.remove(word)
+                player.save()
+            elif player.character_word_pool.filter(word=word):
+                print("in character word pool")
+                word = player.character_word_pool.filter(word=word).first()
+                print(word)
+                player.character_word_pool.remove(word)
+                player.save()
         self.parent_game.gameLog.chat_messages.add(chat_message)
-
-        self.switch_active_player()
-        # Check if both players have written their messages
-        if (
-            self.player_a_moon_phase_message_written
-            and self.player_b_moon_phase_message_written
-        ):
-            # Reset the flags for the next turn
-            self.player_a_moon_phase_message_written = False
-            self.player_b_moon_phase_message_written = False
-            # Transition to the SELECT_QUESTION state and add 1 to the turn number
-            self.turn_number += 1
-        else:
-            raise ValueError("Not both players have written their messages.")
+        # self.swi
 
 
 class GameLog(models.Model):

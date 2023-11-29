@@ -29,7 +29,9 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def get_game_session(self, game_id):
-        return GameSession.objects.get(id=game_id)
+        # return GameSession.objects.get(GameSessionid=game_id)
+        return GameSession.objects.get(game_id=game_id)
+        # return GameSession.objects.get(id=game_id)
 
     @database_sync_to_async
     def save_game_turn(self, game_turn):
@@ -41,6 +43,21 @@ class GameConsumer(AsyncWebsocketConsumer):
         data_json = json.loads(text_data)
         action = data_json["action"]
         value = data_json["value"]
+
+        user = self.scope["user"]
+        if not user.is_authenticated:
+            await self.send_json(
+                {"error": "You must be logged in to perform this action."}
+            )
+            return
+
+        player = await database_sync_to_async(Player.objects.get)(user=user)
+        game_session = await self.get_game_session(
+            self.game_id
+        )  # Wrapped with database_sync_to_async already
+        game_turn = await database_sync_to_async(
+            lambda: game_session.current_game_turn
+        )()
 
         # Map the action to a handler function
         if action == "select_narrative":

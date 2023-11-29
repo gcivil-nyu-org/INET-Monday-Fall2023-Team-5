@@ -60,9 +60,25 @@
                 {% if game_session.current_game_turn.state == 'moon_phase' %}
                     <h3>Moon Sign Phase: {{ moon_phase }}</h3>
                     <p>The Moon is currently in its {{ moon_phase }} phase. Share your personal meaning of the moon phase:</p>
-                    <textarea id="moon-meaning-text" rows="1" cols="140" placeholder="Share your personal meaning..."></textarea><br>
-                    <button id="share-moon-meaning" data-action="moon_phase">Share</button>
-                    <!-- You can add any additional Moon Sign Phases related content or actions here. -->
+                    <!-- <textarea id="moon-meaning-text" rows="1" cols="140" placeholder="Share your personal meaning..."></textarea><br>
+                    <button id="share-moon-meaning" data-action="moon_phase">Share</button> -->
+                    <div id="interactive-container">
+                        <div id="tag-container">
+                          <!-- Tags will be generated here -->
+                          {% for tag in tags_answer %}
+                            <div class="draggable" draggable="true" id="tag-{{ forloop.counter }}">{{ tag }}</div>
+                          {% endfor %}
+                        </div>
+                        <div id="answer-section">
+                          <div id="current-sentence" class="droppable">
+                            <!-- Tags will be dragged here -->
+                          </div>
+                          <input type="hidden" name="answer" id="hidden-answer-field">
+                          <button id="clear-all" data-action="'clear_all">Clear All</button>
+                          <button id="share-moon-meaningr" data-action = "moon_phase">Submit Answer</button>
+                        </div>
+                      </div>
+                    </div>
                 {% else %}
                     {% if game_session.current_game_turn.state == 'select_question' %}
                         <h3>Select a Question</h3>
@@ -170,7 +186,17 @@
                             }
                             break;
                         case 'moon_phase':
-                            value = document.querySelector('#moon-meaning-text').value;
+                            // value = document.querySelector('#moon-meaning-text').value;
+                            // break;                        case 'submit_answer':
+                            // Collect the text from each tag and join them into a single string
+                            let moon_answer = Array.from(document.querySelectorAll('#current-sentence'))
+                                      .map(tag => tag.textContent.trim())
+                                      .join(' ');
+                            if (moon_answer.length === 0) {
+                                alert("Please select at least one word.");
+                            } else {
+                                value = moon_answer;
+                            }
                             break;
                         case 'submit_question':
                             var questionValue = document.querySelector('input[name="question"]:checked');
