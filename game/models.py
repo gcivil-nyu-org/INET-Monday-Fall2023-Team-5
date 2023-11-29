@@ -499,6 +499,7 @@ class GameTurn(models.Model):
         self.parent_game.gameLog.chat_messages.add(chat_message)
         # self.swi
 
+
 class GameLog(models.Model):
     chat_messages = models.ManyToManyField(
         "ChatMessage", blank=True, related_name="game_log"

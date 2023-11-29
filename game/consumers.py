@@ -7,7 +7,6 @@ from channels.layers import get_channel_layer
 from game.models import GameSession, Player, GameTurn
 
 
-
 class GameConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.game_id = self.scope["url_route"]["kwargs"]["game_id"]
@@ -53,8 +52,12 @@ class GameConsumer(AsyncWebsocketConsumer):
             return
 
         player = await database_sync_to_async(Player.objects.get)(user=user)
-        game_session = await self.get_game_session(self.game_id)  # Wrapped with database_sync_to_async already
-        game_turn = await database_sync_to_async(lambda: game_session.current_game_turn)()
+        game_session = await self.get_game_session(
+            self.game_id
+        )  # Wrapped with database_sync_to_async already
+        game_turn = await database_sync_to_async(
+            lambda: game_session.current_game_turn
+        )()
 
         # Map the action to a handler function
         if action == "select_narrative":

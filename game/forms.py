@@ -9,10 +9,12 @@ class AnswerForm(forms.Form):
         widget=forms.HiddenInput(),
     )
 
+
 class AnswerFormMoon(forms.Form):
     moon_answer = forms.CharField(
         widget=forms.HiddenInput(),
     )
+
 
 class EmojiReactForm(forms.Form):
     EMOJI_CHOICES = (
