@@ -9,6 +9,7 @@ from .forms import (
     CharacterSelectionForm,
     MoonSignInterpretationForm,
     PublicProfileCreationForm,
+    AnswerFormMoon,
 )
 from .models import (
     Player,
@@ -172,13 +173,25 @@ class GameProgressView(View):
                         "choice_made": choice_made,
                     }
                 )
-            elif game_session.current_game_turn.state == GameTurn.MOON_PHASE:
-                turn = game_session.current_game_turn
+            elif turn.state == GameTurn.MOON_PHASE:
+                words = (
+                    player.character_word_pool.all() | player.simple_word_pool.all()
+                )  # this adds the simple words to the pool
+                tags_answer = [word.word for word in words]
+                random.shuffle(tags_answer)
+                context.update({"tags_answer": tags_answer})
                 context.update(
                     {
-                        "moon_phase": turn.get_moon_phase(),
+                        "answer_moon_form": AnswerFormMoon(),
                     }
                 )
+
+                # turn = game_session.current_game_turn
+                # context.update(
+                #     {
+                #         "moon_phase": turn.get_moon_phase(),
+                #     }
+                # )
 
             return render(request, self.template_name, context)
 
