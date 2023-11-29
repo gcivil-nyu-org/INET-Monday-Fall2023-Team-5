@@ -4,7 +4,7 @@ import json
 
 from channels.layers import get_channel_layer
 
-from game.models import GameSession, Player, GameTurn
+from game.models import GameSession, Player
 
 
 class GameConsumer(AsyncWebsocketConsumer):
