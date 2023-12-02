@@ -1,3 +1,4 @@
+
 body {
     padding-top: 100px;
     background-image: url('../images/background.png');
@@ -180,14 +181,6 @@ a:hover {
     background-color: #ff1493; /* vivid pink */
 }
 
-/* .chat-box {
-    background-color: #f5f5f5;
-    padding: 10px;
-    border-radius: 8px;
-    max-height: 400px;
-    overflow-y: auto;
-    color: #000;
-} */
 .chat-box {
     background-color: rgba(218, 232, 255, 0.8);
     border-radius: 15px;
@@ -396,4 +389,520 @@ cursor: pointer;
 
 .confirm-btn:hover {
 background-color: #7b1fa2;
+}
+.avatar {
+    width: 30px; /* Adjust the size as needed */
+    height: 30px;
+    border-radius: 50%; /* This creates a circular avatar */
+    margin-right: 10px; /* Adds some space between the avatar and the name */
+    vertical-align: middle; /* Aligns the avatar with the text */
+}
+
+a {
+    color: #dcb5ff; /* Lighter shade of purple for links */
+}
+a:hover {
+    color: #fff; /* White color on hover for better contrast */
+}
+
+/* .content-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #8763a7;
+    border-radius: 5px;
+    background-color: rgba(44, 24, 74, 0.8);
+    text-align: center;
+} */
+
+.bg-steel .nav-link {
+    color: rgba(255, 255, 255, 0.5); /* Adjust this value as needed */
+}
+
+.bg-steel .nav-link:hover {
+    color: rgba(255, 255, 255, 0.75); /* Adjust this value for the hover state */
+}
+
+/* Custom Vertical Sidebar Styling */
+.custom-sidebar {
+    background-color: rgba(44, 24, 74, 0.8); /* Semi-transparent purple background */
+    border: 1px solid #8763a7; /* Purple border */
+    margin-top: 20px; /* Added margin to give some space from the top */
+}
+
+.custom-sidebar .card-header {
+    background-color: rgba(44, 24, 74, 0.9); /* Slightly less transparent purple for the header */
+    color: #eee; /* Changed text color to light for consistency */
+    font-weight: bold; /* Make the header text bold */
+    border: none; /* Remove any default borders */
+    text-align: center; /* Center align the header text */
+}
+
+.custom-sidebar .card-body {
+    padding: 0; /* Remove default padding */
+}
+
+.custom-sidebar .card-body .nav-link {
+    display: block; /* Make links block elements */
+    color: #dcb5ff; /* Lighter shade of purple for links */
+    padding: 10px 15px; /* Add some padding around links */
+}
+
+.custom-sidebar .card-body .nav-link:hover {
+    background-color: rgba(44, 24, 74, 0.7); /* Slightly transparent purple on hover */
+    color: #fff; /* White color on hover for better contrast */
+}
+
+.custom-sidebar .card-body .nav-link.active {
+    background-color: #8763a7; /* Purple background for the active link */
+    color: #fff; /* White color for the active link */
+}
+
+.profile-img {
+    max-width: 150px; /* Adjust the desired maximum width */
+    max-height: 150px; /* Adjust the desired maximum height */
+    width: auto;
+    height: auto;
+  }
+
+.draggable {
+    cursor: pointer;
+    border: 1px solid #ccc;
+    margin: 5px;
+    padding: 5px;
+    display: inline-block;
+    background-color: #ffc0cb; /* This sets the background to a light pink color */
+    color: #333; /* This sets the text color to a dark grey for contrast */
+    border-radius: 8px; /* This adds rounded corners to the divs */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* This adds a subtle shadow for a 3D effect */
+    transition: transform 0.2s; /* Smooth transition for clicking and dragging */
+}
+
+.draggable:hover {
+    transform: translateY(-2px); /* Slight raise effect when hovered */
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15); /* Increased shadow when hovered for a lifting effect */
+}
+
+#current-sentence {
+    border: 1px dashed #ccc;
+    min-height: 40px;
+    padding: 10px;
+    background-color: #fff; /* This will set the background color to white */
+    color: #333; /* Sets the text color to a dark grey, assuming you want this for contrast */
+}
+
+#current-sentence .selected-word {
+    background-color: #e6e6e6; /* A light gray background for the selected word */
+    color: #333; /* Dark grey text color for contrast */
+    margin-right: 5px; /* Adds spacing between words */
+    padding: 3px 6px; /* Padding inside the word boxes */
+    border-radius: 4px; /* Rounded corners for the word boxes */
+    display: inline-block; /* Ensures that span behaves like a word block */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Optional: Adds a subtle shadow to make the words 'pop' */
+}
+
+.dragged {
+    background-color: #d3d3d3; /* This sets the background to a different color */
+    color: #555; /* Change the text color if necessary */
+}
+
+.btn-like {
+    background-color: #ffc0cb; /* light pink */
+}
+
+.btn-like:hover {
+    background-color: #ff69b4; /* light vivid pink */
+}
+
+.btn-like.liked {
+    background-color: #ff1493; /* vivid pink */
+}
+
+.chat-box {
+    background-color: rgba(218, 232, 255, 0.8);
+    border-radius: 15px;
+
+    max-height: 600px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 30px;
+    margin-bottom: 20px;
+    color: #000;
+}
+
+.emoji {
+    font-size: 1.5em;
+}
+
+.sender {
+    font-weight: bold;
+    font-size: 1em;
+}
+
+.timestamp {
+    display: block;
+    font-size: 1em;
+    color: #669;
+    margin-top: 5px;
+    opacity: 0.8;
+}
+
+.chat-message {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Aligns children to the start of the cross axis */
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.chat-message.right {
+    align-items: flex-end; /* Aligns children to the end of the cross axis for the current user */
+}
+
+.chat-message .message-bubble {
+    background-color: rgb(252, 202, 235); /* Example background color */
+    padding:10px 20px;
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 18px;
+    margin-bottom: 5px; /* Creates space between the message bubble and info */
+    max-width: 70%;
+    align-self: flex-start; /* Aligns the bubble to the start */
+    font-size: 1.1em;
+}
+
+.chat-message.right .message-bubble {
+    background-color: #ffffff; /* Example background color for the current user */
+    align-self: flex-end; /* Aligns the bubble to the end for the current user */
+}
+
+.chat-message .message-info {
+    align-self: flex-start; /* Aligns info to the start */
+    font-size: 0.8em;
+}
+
+.chat-message.right .message-info {
+    align-self: flex-end; /* Aligns info to the end for the current user */
+}
+
+.game-info {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.game-id {
+    font-size: 1.5em;
+    color: #fff; /* Adjust color as needed */
+    text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5); /* Optional shadow for better readability */
+}
+
+.current-turn-box {
+    display: inline-block;
+    background: #ffffff;
+    color: #333; /* Adjust text color as needed */
+    padding: 5px 10px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    font-weight: bold;
+}
+
+.action-section {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background: white;
+    border-radius: 20px;
+    margin-top: 10px;
+    color: black;
+}
+
+.action-section .input {
+    flex-grow: 1;
+    border-radius: 15px;
+    border: none;
+    padding: 10px;
+    margin-right: 10px;
+}
+
+.action-section button {
+    padding: 10px 20px;
+    border-radius: 15px;
+    border: none;
+    background-color: Purple;
+    color: white;
+    cursor: pointer;
+}
+
+.end-button button {
+    margin-top: 20px;
+    align-self: flex-end;
+}
+
+.character-selection {
+    text-align: center;
+    color: black;
+}
+.character-option {
+    display: inline-block;
+    margin: 10px;
+    vertical-align: top;
+    color: black;
+}
+.character-option img {
+    width: 100px;
+    height: auto;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.character-option input[type="radio"] {
+    display: none;
+}
+.character-option label {
+    cursor: pointer;
+    display: block;
+}
+.character-option input[type="radio"]:checked + label {
+    outline: 2px solid #f00;
+}
+
+.descriptive-tags {
+    color: #fff;
+    font-size: 0.7em;
+}
+
+.moon-sign-interpretation {
+    background-color: #fce4ec; /* Light pink background, adjust color as needed */
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    color:black;
+    font-family: "Trebuchet MS, sans-serif";
+}
+
+
+.moon-sign-interpretation p{
+    color: black;
+    font-family: "Trebuchet MS, sans-serif";
+}
+
+.moon-sign-interpretation h2 {
+color: #ad1457; /* Dark pink color for the heading */
+margin-bottom: 15px;
+}
+
+.moon-sign-interpretation .form {
+margin-bottom: 15px;
+}
+
+.moon-sign-interpretation span {
+    color: floralwhite
+}
+.moon-sign-interpretation .form h3,
+.moon-sign-interpretation .form label {
+display: block;
+margin-bottom: 5px;
+color: #4a148c; /* Purple color for labels */
+}
+
+.moon-sign-interpretation form select,
+.moon-sign-interpretation .form input[type="text"] {
+width: 100%;
+padding: 8px;
+border: 1px solid #ccc;
+border-radius: 4px;
+margin-bottom: 10px;
+color:black
+}
+
+.moon-sign-interpretation input[type="text"] {
+    font-family: sans-serif;
+    width: 30%; /* Adjust as needed */
+    border: none;
+    border-bottom: 1px solid #001474; /* Create an underline */
+    margin: 10px 0; /* Space out elements */
+    padding: 5px; /* Padding for aesthetics */
+    background-color: transparent;
+    /* Additional styles to match your design */
+    font-size: 16px; /* Example font size */
+    color: rgb(217, 28, 192); /* Example text color */
+}
+
+.moon-sign-interpretation input[type="text"]::placeholder {
+    color: #ffffff; /* Example placeholder text color */
+    font-family: "Trebuchet MS, sans-serif";
+}
+
+.disabled {
+    pointer-events: none;
+    color: #aaa; /* Grey out the text */
+    cursor: not-allowed;
+}
+
+.form-check-inline {
+margin-right: 10px;
+}
+
+.form-check-label {
+margin-left: 5px;
+}
+
+.confirm-btn {
+background-color: #8e24aa; /* Purple color for the button */
+color: white;
+padding: 10px 20px;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+}
+
+.confirm-btn:hover {
+background-color: #7b1fa2;
+}
+
+.character-selection {
+    text-align: center;
+}
+.character-option {
+    display: inline-block;
+    margin: 10px;
+    vertical-align: top;
+}
+.character-option img {
+    width: 100px;
+    height: auto;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.character-option input[type="radio"] {
+    display: none;
+}
+.character-option label {
+    cursor: pointer;
+    display: block;
+}
+.character-option input[type="radio"]:checked + label {
+    outline: 2px solid #f00;
+}
+.confirm-btn {
+    background-color: #6200ee;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+.confirm-btn:hover {
+    background-color: #3700b3;
+}
+.descriptive-tags {
+    color: #fff;
+    font-size: 0.7em;
+}
+#profileText {
+    background-color: #fabcd7;
+    color: #001474;
+    border-radius: 15px; /* Rounded corners */
+    padding: 20px; /* Space inside the box */
+    border: 5px solid #f406a2; /* Pink border, match this with the exact color from your image */
+    margin: 20px auto; /* Centering the box */
+    width: 80%; /* Adjust the width as needed */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Box shadow for a slight 3D effect */
+    position: relative; /* For absolute positioning of the dropdown */
+}
+
+.selectable {
+    color: #a90771; /* Lighter pink for the clickable options, match with the image */
+    cursor: pointer; /* Change cursor to indicate clickable */
+    border-radius: 5px; /* Rounded corners for clickable options */
+    display: inline-block; /* Ensure it does not take full width */
+}
+
+.selectable:hover {
+    color: #001474; /* Slightly darker pink on hover */
+}
+
+.dropdown-content {
+  display: block;
+  position: absolute;
+  background-color: #0d034a; /* Hot pink background to match the image */
+  color: #ffffff; /* White text color */
+  min-width: 160px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Slightly softer shadow */
+  border-radius: 8px; /* Rounded corners */
+  margin-top: 5px; /* Add a little space above the dropdown */
+  font-family: Luminari, sans-serif; /* Specify a font */
+  z-index: 100; /* Ensure it's above other elements */
+}
+
+/* Style the dropdown options */
+.dropdown-content div {
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Last child should not have a border-bottom */
+.dropdown-content div:last-child {
+  border-bottom: none;
+}
+
+/* Change color of dropdown options on hover */
+.dropdown-content div:hover {
+  background-color: #ff1493; /* Deeper pink on hover */
+  border-radius: 8px; /* Rounded corners */
+}
+
+.moon-sign-form {
+    background-color: #fabcd7;
+    color: #001474;
+    border-radius: 15px; /* Rounded corners */
+    padding: 20px; /* Space inside the box */
+    border: 5px solid #f406a2; /* Pink border, match this with the exact color from your image */
+    margin: 20px auto; /* Centering the box */
+    width: 80%; /* Adjust the width as needed */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Box shadow for a slight 3D effect */
+    position: relative; /* For absolute positioning of the dropdown */
+    font-family: Garamond;
+
+}
+.moon-sign-form .form-group {
+    background-color: #f3e5f5; /* Light purple background */
+    border-radius: 15px; /* Rounded corners for the form groups */
+    margin-bottom: 10px; /* Space between form groups */
+    padding: 10px; /* Padding inside form groups */
+    border: none; /* No border for form groups */
+}
+
+.moon-sign-form .form-group label {
+    font-weight: bold; /* Bold font for labels */
+    color: #4a148c; /* Purple color for labels */
+    margin-bottom: 5px; /* Space below the label */
+}
+
+/* Make the inputs read-only with a different style */
+.moon-sign-form .profileText input[type="text"][readonly] {
+    background-color: #fabcd7;
+    color: #001474;
+    border-radius: 15px; /* Rounded corners */
+    padding: 20px; /* Space inside the box */
+    border: 5px solid #f406a2; /* Pink border, match this with the exact color from your image */
+    margin: 20px auto; /* Centering the box */
+    width: 80%; /* Adjust the width as needed */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Box shadow for a slight 3D effect */
+    position: relative; /* For absolute positioning of the dropdown */
+}
+
+.moon-sign-form .form-group textarea[type="text"] {
+    background-color: #e0e0e0; /* Light grey background for readonly inputs */
+    color: #9e9e9e; /* Lighter text color for readonly inputs */
+    cursor: not-allowed; /* Show that the field is not editable */
+}
+
+.moon-sign-form ul {
+    list-style-type: none; /* Removes the default bullet points */
+}
+
+.moon-sign-form li {
+    padding: 0.5em 0; /* Adds spacing above and below each line */
 }

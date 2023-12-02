@@ -17,15 +17,10 @@ def game_session_processor(request):
             ).latest("id")
             # Check if the player has a character
             player = Player.objects.get(user=request.user)
-            print("Game session state: " + game_session.state)
+            # print("Game session state: " + game_session.state)
             if game_session.state == game_session.CHARACTER_CREATION:
-                if player.character:
+                if player.character_creation_state == player.CHARACTER_COMPLETE:
                     game_session_url = game_session.get_absolute_url()
-                elif game_session.state == game_session.MOON_SIGN_INTERPRETATION:
-                    game_session_url = reverse(
-                        "game:moon_sign_interpretation",
-                        kwargs={"game_id": game_session.game_id},
-                    )
                 else:
                     game_session_url = reverse(
                         "game:character_creation",

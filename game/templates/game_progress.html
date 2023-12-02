@@ -38,6 +38,7 @@
                     </div>
 
                     <div class="message-info">
+                        <img src="{{ message.avatar_url }}" alt="Avatar" class="avatar">
                         <span class="sender">{{ message.sender }}</span>
                         <span class="timestamp">{{ message.timestamp|date:"F j, Y, g:i a" }}</span>
                     </div>
@@ -50,7 +51,7 @@
             {% if game_session.current_game_turn.state == 'narrative_choices' %}
                 {% if choice_made == False %}
                     <h3>Select a Narrative Choice</h3>
-                    {{ narrative_form.narrative.label_tag }}
+                    <!-- {{ narrative_form.narrative.label_tag }} -->
                     {{ narrative_form.narrative }}
                     <button id="submit-narrative-choice" data-action="select_narrative">Submit Choice</button>
                 {% else %}
@@ -58,10 +59,43 @@
                 {% endif %}
             {% elif active_player == request.user.player %}
                 {% if game_session.current_game_turn.state == 'moon_phase' %}
-                    <h3>Moon Sign Phase: {{ moon_phase }}</h3>
-                    <p>The Moon is currently in its {{ moon_phase }} phase. Share your personal meaning of the moon phase:</p>
-                    <textarea id="moon-meaning-text" rows="1" cols="140" placeholder="Share your personal meaning..."></textarea><br>
-                    <button id="share-moon-meaning" data-action="moon_phase">Share</button>
+                    <div class = "moon-sign-class">
+                        <textarea id="moon-meaning-text" rows="1" cols="60" placeholder="Share your personal meaning..."></textarea><br>
+                        <form id="moon-sign-form">
+                            {% csrf_token %}
+                            <div id="profileText">
+                                Your current moon meanings are:
+                                <ul>
+                                    <li>
+                                        The First Quarter is a <u>{{ moon_sign_interpretation.first_quarter }}</u> Sign because <u>{{ moon_sign_interpretation.first_quarter_reason }}</u>.
+                                    </li>
+                                    <li>
+                                        The Full Moon is a <u>{{ moon_sign_interpretation.full_moon }}</u> Sign because <u>{{ moon_sign_interpretation.full_moon_reason }}</u>.
+                                    </li>
+                                    <li>
+                                        The Last Quarter is a <u>{{ moon_sign_interpretation.last_quarter }}</u> Sign because <u>{{ moon_sign_interpretation.last_quarter_reason }}</u>.
+                                    </li>
+                                    <li>
+                                        The New Moon is a <u>{{ moon_sign_interpretation.new_moon }}</u> Sign because <u>{{ moon_sign_interpretation.new_moon_reason }}</u>.
+                                    </li>
+                                </ul>
+                            </div>
+                            <h4>Moon Phase: {{ moon_phase }}</h4>
+                            <h4>Your current interpretation: {{ current_value }}</h4> 
+                            {% if current_value == 'ambiguous1' or current_value == 'ambiguous2' %}
+                                <h3>Edit Moon Phase Interpretation</h3>
+                                <div class="form-group">
+                                    <label>Interpretation</label>
+                                        {{ moon_sign_interpretation.moon_phase }}<br>
+                                        {{ moon_sign_interpretation.moon_phase.label_tag }} 
+                                    <textarea id="interpretation_value" rows="1" cols="60" placeholder="must be positive or negative..."></textarea><br>
+                                    <label>because</label>
+                                    <textarea id="reason_value" rows="1" cols="60" placeholder="Share your personal meaning..."></textarea><br>
+                                </div>
+                            {% endif %}
+                        </form>
+                        <button id="share-moon-meaning" data-action="moon_phase">Share</button>
+                    </div>
                     <!-- You can add any additional Moon Sign Phases related content or actions here. -->
                 {% else %}
                     {% if game_session.current_game_turn.state == 'select_question' %}
@@ -147,6 +181,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             document.body.addEventListener('click', function(e) {
                 if (e.target.dataset.action) {
+                    // print(e.target.dataset.action)
                     e.preventDefault();
                     const actionType = e.target.dataset.action;
                     let value;
@@ -166,18 +201,40 @@
                             if (narrativeChoiceValue) {
                                 value = narrativeChoiceValue;
                             } else {
-                                console.error('No narrative choice selected.');
+                                alert("Please select a narrative.");
                             }
                             break;
                         case 'moon_phase':
-                            value = document.querySelector('#moon-meaning-text').value;
+                            const moonMeaningText = document.querySelector('#moon-meaning-text')==null ? '' : document.querySelector('#moon-meaning-text').value;
+                            const interpretation = document.querySelector('#interpretation_value')==null ? '' : document.querySelector('#interpretation_value').value;
+                            const reason = document.querySelector('#reason_value')==null ? '' : document.querySelector('#reason_value').value;
+                            value = {
+                                message: moonMeaningText,
+                                moon_data: {
+                                    interpretation: interpretation,
+                                    reason: reason
+                                }
+                            };
                             break;
                         case 'submit_question':
-                            const selectedQuestion = document.querySelector('input[name="question"]:checked');
-                            value = selectedQuestion ? selectedQuestion.value : null;
+                            var questionValue = document.querySelector('input[name="question"]:checked');
+                            if (questionValue == null) {
+                                alert("Please select a question.");
+                            } else {
+                                value = questionValue.value;
+                            }
                             break;
                         case 'react_emoji':
-                            value = document.querySelector('input[name="emoji"]:checked').value;
+                            var emojiValue = document.querySelector('input[name="emoji"]:checked');
+                            // Check if an emoji was selected
+                            if (emojiValue == null) {
+                                // If no emoji is selected, show an alert or prompt
+                                alert("Please select an emoji.");
+                            } else {
+                                // If an emoji is selected, proceed with your logic
+                                value = emojiValue.value;
+                                // ... your existing logic for when an emoji is selected
+                            }
                             break;
                         case 'end_game':
                             value = gameId;
@@ -187,7 +244,11 @@
                             let answer = Array.from(document.querySelectorAll('#current-sentence'))
                                       .map(tag => tag.textContent.trim())
                                       .join(' ');
-                            value = answer;
+                            if (answer.length === 0) {
+                                alert("Please select at least one word.");
+                            } else {
+                                value = answer;
+                            }
                             break;
                         case 'clear_all':
                             // Clear the current sentence container and the hidden input field
@@ -195,6 +256,8 @@
                             document.querySelector('#hidden-answer-field').value = '';
                             break;
                     }
+                    console.log("Value: ", value);
+                    console.log("Action Type: ", actionType);
                     if (value) {
                         gameSocket.send(JSON.stringify({ action: actionType, value: value }));
                     }
