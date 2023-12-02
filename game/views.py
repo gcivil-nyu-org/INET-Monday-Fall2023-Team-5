@@ -1,5 +1,5 @@
 import json
-
+from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib import messages
 from django.db import transaction
 from .forms import (
@@ -15,6 +15,7 @@ from .models import (
     GameSession,
     GameTurn,
     Character,
+    MoonSignInterpretation,
 )
 
 
@@ -174,11 +175,19 @@ class GameProgressView(View):
                 )
             elif game_session.current_game_turn.state == GameTurn.MOON_PHASE:
                 turn = game_session.current_game_turn
-                context.update(
-                    {
-                        "moon_phase": turn.get_moon_phase(),
-                    }
-                )
+                moon_phase = game_session.current_game_turn.get_moon_phase()
+                moon_sign_interpretation = MoonSignInterpretation.objects.filter(on_player=player).first() or MoonSignInterpretation()
+                
+                current_value = moon_sign_interpretation.get_moon_sign(moon_phase)
+                # choices = MoonSignInterpretationForm.MOON_SIGN_CHOICES
+                if moon_sign_interpretation:
+                    moon_sign_form = MoonSignInterpretationForm.MOON_SIGN_CHOICES
+                context.update({
+                    "moon_phase": moon_phase,
+                    "moon_sign_new" : moon_sign_form,
+                    "moon_sign_interpretation": moon_sign_interpretation,
+                    "current_value": current_value,
+                })
 
             return render(request, self.template_name, context)
 
@@ -284,7 +293,9 @@ class CharacterCreationView(View):
             messages.error(request, "Game session not found.")
             return redirect("home")
         except Exception as e:
+            # print(player.character_creation_state)
             messages.error(request, str(e))
+            print("error!")
             return redirect("character_creation", game_id=game_id)
 
     def post(self, request, *args, **kwargs):
@@ -312,19 +323,29 @@ class CharacterCreationView(View):
             elif player.character_creation_state == Player.MOON_MEANING_SELECTION:
                 form = MoonSignInterpretationForm(request.POST)
                 if form.is_valid():
+                    print('yes')
                     # The form is valid, save the character for the player
                     # Here Xinyi will implement the logic for adding the information
                     # to the player's model field.
-                    player, _ = Player.objects.get_or_create(
-                        user=request.user, defaults={"game_session": game_session}
-                    )
                     # select moon meaning and transition to next state
                     # Logic to be implemented in the model function
-                    moon_meaning = "Here will be the data for the moon meaning"
+                    # Process the form data here
+                    moon_meaning, _ = MoonSignInterpretation.objects.get_or_create(
+                        on_player=player,
+                        first_quarter=form.cleaned_data["first_quarter"],
+                        first_quarter_reason=form.cleaned_data["first_quarter_reason"],
+                        full_moon=form.cleaned_data["full_moon"],
+                        full_moon_reason=form.cleaned_data["full_moon_reason"],
+                        last_quarter=form.cleaned_data["last_quarter"],
+                        last_quarter_reason=form.cleaned_data["last_quarter_reason"],
+                        new_moon=form.cleaned_data["new_moon"],
+                        new_moon_reason=form.cleaned_data["new_moon_reason"],
+                    )
                     player.select_moon_meaning(moon_meaning=moon_meaning)
                     player.save()
                 else:
                     # Stand-in for eventual form invalid behavior
+                    print("err")
                     messages.error(
                         request, "The MoonSign Interpretation form is invalid."
                     )
@@ -413,7 +434,7 @@ def get_character_details(request):
     except Character.DoesNotExist:
         return JsonResponse({"error": "Character not found"}, status=404)
 
-
+        
 """
 I am keeping Xinyi's MoonSignInterpretationView as it contains
 logic that might be useful for

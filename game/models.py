@@ -26,6 +26,7 @@ class Player(models.Model):
     character = models.ForeignKey(
         "Character", on_delete=models.SET_NULL, null=True, blank=True
     )
+    MoonSignInterpretation = models.ForeignKey("MoonSignInterpretation", on_delete=models.SET_NULL, null=True, blank=True)
 
     # Constants for character creation states
     CHARACTER_AVATAR_SELECTION = "character_avatar_selection"
@@ -60,8 +61,10 @@ class Player(models.Model):
         target=PUBLIC_PROFILE_CREATION,
     )
     def select_moon_meaning(self, moon_meaning):
+        self.MoonSignInterpretation = moon_meaning 
+        self.save()
         pass
-        # here whatever logic you need to do with the moon meaning
+
 
     @transition(
         field=character_creation_state,
@@ -414,6 +417,7 @@ class GameTurn(models.Model):
         target=None,
     )
     def make_narrative_choice(self, narrative_choice, player):
+        print(narrative_choice)
         # Update the narrative choice for the player
         if player == self.parent_game.playerA:
             self.player_a_narrative_choice_made = True
@@ -462,15 +466,15 @@ class GameTurn(models.Model):
 
     def get_moon_phase(self):
         moon_phases = {
-            3: "new moon",
-            7: "first quarter",
-            11: "full",
-            15: "last quarter",
+            3: "new_moon",
+            7: "first_quarter",
+            11: "full_moon",
+            15: "last_quarter",
         }
         return moon_phases.get(self.turn_number)
 
     @transition(field=state, source=MOON_PHASE, target=SELECT_QUESTION)
-    def write_message_about_moon_phase(self, message, player):
+    def write_message_about_moon_phase(self, message, player, moon_data):
         # Update the moon message for the player
         if player == self.parent_game.playerA:
             self.player_a_moon_phase_message_written = True
@@ -478,7 +482,7 @@ class GameTurn(models.Model):
             self.player_b_moon_phase_message_written = True
         else:
             raise ValueError("Invalid player.")
-        self.save()
+        # self.save()
         # Create a chat message and add it to the log
         chat_message = ChatMessage.objects.create(
             avatar_url=str(player.character.image.url),
@@ -486,8 +490,17 @@ class GameTurn(models.Model):
             text=str(message),
         )
         self.parent_game.gameLog.chat_messages.add(chat_message)
+        moon_phase = self.get_moon_phase()
+        form = player.MoonSignInterpretation
+        if moon_data:
+            form.cleaned_data[moon_phase] = moon_data['interpretation']
+            form.cleaned_data[f"{moon_phase}_reason"] = moon_data['reason']
+        print(form[moon_phase])
+        player.MoonSignInterpretation = form
+        player.save()
 
         self.switch_active_player()
+        self.save()
         # Check if both players have written their messages
         if (
             self.player_a_moon_phase_message_written
@@ -623,6 +636,9 @@ class Word(models.Model):
 
 class MoonSignInterpretation(models.Model):
     # Assuming you have a Player model that is linked to the User model
+    on_player = models.ForeignKey(
+        "Player", on_delete=models.SET_NULL, null=True, blank=True
+    )
     first_quarter = models.CharField(max_length=150)
     first_quarter_reason = models.TextField()
     full_moon = models.CharField(max_length=150)
@@ -631,6 +647,16 @@ class MoonSignInterpretation(models.Model):
     last_quarter_reason = models.TextField()
     new_moon = models.CharField(max_length=150)
     new_moon_reason = models.TextField()
+    # def get_moon_sign(self, moon_phase):
+    #     for i in [on_player, first_quarter, full_moon, last_quarter, new_moon]:
+    #         if i == moon_phase:
+    #             return i
+    # def get_on_player(self):
+    #     return self.on_player
+
+    # def set_on_player(self, player):
+    #     self.on_player = player
+    #     self.save()
 
 
 class PublicProfile(models.Model):

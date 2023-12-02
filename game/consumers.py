@@ -4,7 +4,7 @@ import json
 
 from channels.layers import get_channel_layer
 
-from game.models import GameSession, Player
+from game.models import GameSession, Player, MoonSignInterpretation
 
 
 class GameConsumer(AsyncWebsocketConsumer):
@@ -41,7 +41,8 @@ class GameConsumer(AsyncWebsocketConsumer):
         data_json = json.loads(text_data)
         action = data_json["action"]
         value = data_json["value"]
-
+        print(action + " ~ ")
+        print(value)
         # Map the action to a handler function
         if action == "select_narrative":
             await self.make_narrative_choice(value)
@@ -57,6 +58,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             await self.end_game(value)
 
     def make_narrative_choice_sync(self, narrative, player):
+        print(narrative + " _" + player.character_name + "_")
         game_id = self.game_id
         game_session = GameSession.objects.get(game_id=game_id)
         game_turn = game_session.current_game_turn
@@ -64,6 +66,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         game_turn.save()
 
     async def make_narrative_choice(self, narrative):
+        print("enter narrative choice")
         user = self.scope["user"]
         if not user.is_authenticated:
             await self.send_json(
@@ -152,14 +155,14 @@ class GameConsumer(AsyncWebsocketConsumer):
         except ValueError as e:
             await self.send_json({"error": str(e)})
 
-    def write_message_about_moon_phase_sync(self, message, player):
+    def write_message_about_moon_phase_sync(self, message, player, moon_data):
         game_id = self.game_id
         game_session = GameSession.objects.get(game_id=game_id)
         game_turn = game_session.current_game_turn
-        game_turn.write_message_about_moon_phase(message, player)
+        game_turn.write_message_about_moon_phase(message, moon_data, player)
         game_turn.save()
 
-    async def moon_phase(self, moon_meaning):
+    async def moon_phase(self, message, moon_data):
         user = self.scope["user"]
         if not user.is_authenticated:
             await self.send_json(
@@ -168,10 +171,9 @@ class GameConsumer(AsyncWebsocketConsumer):
             return
 
         player = await database_sync_to_async(Player.objects.get)(user=user)
-
         try:
             await database_sync_to_async(self.write_message_about_moon_phase_sync)(
-                moon_meaning, player
+                message, moon_data, player
             )
             # Broadcast the new state
             await self.broadcast_game_state()
@@ -179,6 +181,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             await self.send_json({"error": str(e)})
             # There were partial changes to the game state, so broadcast the new state
             await self.broadcast_game_state()
+
 
     async def end_game(self, game_id):
         try:
@@ -222,3 +225,5 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def game_state_update(self, event):
         # Send the refresh command and game state to the WebSocket
         await self.send_json(event["content"])
+
+

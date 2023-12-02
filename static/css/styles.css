@@ -1,3 +1,4 @@
+
 body {
     padding-top: 100px;
     background-image: url('../images/background.png');
@@ -674,10 +675,13 @@ a:hover {
     border-radius: 8px;
     margin-bottom: 20px;
     color:black;
+    font-family: "Trebuchet MS, sans-serif";
 }
+
 
 .moon-sign-interpretation p{
     color: black;
+    font-family: "Trebuchet MS, sans-serif";
 }
 
 .moon-sign-interpretation h2 {
@@ -685,25 +689,52 @@ color: #ad1457; /* Dark pink color for the heading */
 margin-bottom: 15px;
 }
 
-.form-group {
+.moon-sign-interpretation .form {
 margin-bottom: 15px;
-color: black;
 }
-.form-group h3,
-.form-group label {
+
+.moon-sign-interpretation span {
+    color: floralwhite
+}
+.moon-sign-interpretation .form h3,
+.moon-sign-interpretation .form label {
 display: block;
 margin-bottom: 5px;
 color: #4a148c; /* Purple color for labels */
 }
 
-.form-group select,
-.form-group input[type="text"] {
+.moon-sign-interpretation form select,
+.moon-sign-interpretation .form input[type="text"] {
 width: 100%;
 padding: 8px;
 border: 1px solid #ccc;
 border-radius: 4px;
 margin-bottom: 10px;
 color:black
+}
+
+.moon-sign-interpretation input[type="text"] {
+    font-family: sans-serif;
+    width: 30%; /* Adjust as needed */
+    border: none;
+    border-bottom: 1px solid #001474; /* Create an underline */
+    margin: 10px 0; /* Space out elements */
+    padding: 5px; /* Padding for aesthetics */
+    background-color: transparent;
+    /* Additional styles to match your design */
+    font-size: 16px; /* Example font size */
+    color: rgb(217, 28, 192); /* Example text color */
+}
+
+.moon-sign-interpretation input[type="text"]::placeholder {
+    color: #ffffff; /* Example placeholder text color */
+    font-family: "Trebuchet MS, sans-serif";
+}
+
+.disabled {
+    pointer-events: none;
+    color: #aaa; /* Grey out the text */
+    cursor: not-allowed;
 }
 
 .form-check-inline {
@@ -820,4 +851,58 @@ background-color: #7b1fa2;
 .dropdown-content div:hover {
   background-color: #ff1493; /* Deeper pink on hover */
   border-radius: 8px; /* Rounded corners */
+}
+
+.moon-sign-form {
+    background-color: #fabcd7;
+    color: #001474;
+    border-radius: 15px; /* Rounded corners */
+    padding: 20px; /* Space inside the box */
+    border: 5px solid #f406a2; /* Pink border, match this with the exact color from your image */
+    margin: 20px auto; /* Centering the box */
+    width: 80%; /* Adjust the width as needed */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Box shadow for a slight 3D effect */
+    position: relative; /* For absolute positioning of the dropdown */
+    font-family: Garamond;
+
+}
+.moon-sign-form .form-group {
+    background-color: #f3e5f5; /* Light purple background */
+    border-radius: 15px; /* Rounded corners for the form groups */
+    margin-bottom: 10px; /* Space between form groups */
+    padding: 10px; /* Padding inside form groups */
+    border: none; /* No border for form groups */
+}
+
+.moon-sign-form .form-group label {
+    font-weight: bold; /* Bold font for labels */
+    color: #4a148c; /* Purple color for labels */
+    margin-bottom: 5px; /* Space below the label */
+}
+
+/* Make the inputs read-only with a different style */
+.moon-sign-form .profileText input[type="text"][readonly] {
+    background-color: #fabcd7;
+    color: #001474;
+    border-radius: 15px; /* Rounded corners */
+    padding: 20px; /* Space inside the box */
+    border: 5px solid #f406a2; /* Pink border, match this with the exact color from your image */
+    margin: 20px auto; /* Centering the box */
+    width: 80%; /* Adjust the width as needed */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Box shadow for a slight 3D effect */
+    position: relative; /* For absolute positioning of the dropdown */
+}
+
+.moon-sign-form .form-group textarea[type="text"] {
+    background-color: #e0e0e0; /* Light grey background for readonly inputs */
+    color: #9e9e9e; /* Lighter text color for readonly inputs */
+    cursor: not-allowed; /* Show that the field is not editable */
+}
+
+.moon-sign-form ul {
+    list-style-type: none; /* Removes the default bullet points */
+}
+
+.moon-sign-form li {
+    padding: 0.5em 0; /* Adds spacing above and below each line */
 }

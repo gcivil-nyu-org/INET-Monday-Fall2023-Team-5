@@ -1,3 +1,42 @@
+<!-- Include this at the beginning of your HTML file -->
+<script>
+    function updateMoonSignChoices() {
+        let choices = ["positive", "negative", "ambiguous1", "ambiguous2"];
+    
+        // Mapping of IDs to their current values
+        let currentValues = {
+            'first_quarter': document.getElementById('id_first_quarter').value,
+            'full_moon': document.getElementById('id_full_moon').value,
+            'last_quarter': document.getElementById('id_last_quarter').value,
+            'new_moon': document.getElementById('id_new_moon').value,
+        };
+    
+        // Loop through all choices and disable them in other selects if they are already selected
+        for (let choice of choices) {
+            for (let key in currentValues) {
+                if (currentValues[key] !== choice) {
+                    let selects = document.querySelectorAll(`select:not(#id_${key}) option[value="${choice}"]`);
+                    for (let select of selects) {
+                        select.disabled = currentValues[key] !== "";
+                    }
+                }
+            }
+        }
+    }
+    
+    window.onload = function() {
+        // Attach the function to each select element's onchange event
+        document.getElementById('id_first_quarter').onchange = updateMoonSignChoices;
+        document.getElementById('id_full_moon').onchange = updateMoonSignChoices;
+        document.getElementById('id_last_quarter').onchange = updateMoonSignChoices;
+        document.getElementById('id_new_moon').onchange = updateMoonSignChoices;
+    
+        // Initialize once on page load
+        updateMoonSignChoices();
+    };
+    </script>
+    
+
 <div class="moon-sign-interpretation">
     <h2>Moon Sign Interpretation</h2>
     <p>Please fill out your interpretations for each phase of the moon.</p>
