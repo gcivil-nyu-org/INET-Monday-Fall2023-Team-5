@@ -26,7 +26,9 @@ class Player(models.Model):
     character = models.ForeignKey(
         "Character", on_delete=models.SET_NULL, null=True, blank=True
     )
-    MoonSignInterpretation = models.ForeignKey("MoonSignInterpretation", on_delete=models.SET_NULL, null=True, blank=True)
+    MoonSignInterpretation = models.ForeignKey(
+        "MoonSignInterpretation", on_delete=models.SET_NULL, null=True, blank=True
+    )
 
     # Constants for character creation states
     CHARACTER_AVATAR_SELECTION = "character_avatar_selection"
@@ -61,10 +63,9 @@ class Player(models.Model):
         target=PUBLIC_PROFILE_CREATION,
     )
     def select_moon_meaning(self, moon_meaning):
-        self.MoonSignInterpretation = moon_meaning 
+        self.MoonSignInterpretation = moon_meaning
         self.save()
         pass
-
 
     @transition(
         field=character_creation_state,
@@ -144,20 +145,22 @@ class Player(models.Model):
             words_of_this_kind = [
                 word for word in simple_words if word.kind_of_word == kind
             ]
+            print(f"Total simple words of kind '{kind}': {len(words_of_this_kind)}")
+            print(f"Words to add for kind '{kind}': {words_to_add_count}")
+            if words_to_add_count > 0 and len(words_of_this_kind) >= words_to_add_count:
+                filtered_words = [
+                    word
+                    for word in words_of_this_kind
+                    if word not in self.simple_word_pool.all()
+                ]
 
-            filtered_words = [
-                word
-                for word in words_of_this_kind
-                if word not in self.simple_word_pool.all()
-            ]
+                # Randomly select words to add
+                words_to_add = random.sample(
+                    filtered_words, k=min(len(words_of_this_kind), words_to_add_count)
+                )
 
-            # Randomly select words to add
-            words_to_add = random.sample(
-                filtered_words, k=min(len(words_of_this_kind), words_to_add_count)
-            )
-
-            for word in words_to_add:
-                self.simple_word_pool.add(word)
+                for word in words_to_add:
+                    self.simple_word_pool.add(word)
 
         self.save()
         current_counts = Counter(
@@ -251,7 +254,6 @@ class GameSession(models.Model):
         self.current_game_turn.save()
         return True, "Game initialized successfully."
 
-
     @transition(field=state, source="*", target="inactive")
     def set_game_inactive(self):
         self.is_active = False
@@ -271,7 +273,7 @@ class GameSession(models.Model):
 
     def get_absolute_url(self):
         return reverse("game:game_progress", kwargs={"game_id": self.game_id})
-    
+
     @transition(field=state, source=CHARACTER_CREATION, target=REGULAR_TURN)
     def start_regular_turn(self):
         pass
@@ -493,8 +495,8 @@ class GameTurn(models.Model):
         moon_phase = self.get_moon_phase()
         form = player.MoonSignInterpretation
         if moon_data:
-            form.cleaned_data[moon_phase] = moon_data['interpretation']
-            form.cleaned_data[f"{moon_phase}_reason"] = moon_data['reason']
+            form.cleaned_data[moon_phase] = moon_data["interpretation"]
+            form.cleaned_data[f"{moon_phase}_reason"] = moon_data["reason"]
         print(form[moon_phase])
         player.MoonSignInterpretation = form
         player.save()

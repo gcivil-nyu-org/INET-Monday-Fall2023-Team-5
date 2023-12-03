@@ -176,18 +176,23 @@ class GameProgressView(View):
             elif game_session.current_game_turn.state == GameTurn.MOON_PHASE:
                 turn = game_session.current_game_turn
                 moon_phase = game_session.current_game_turn.get_moon_phase()
-                moon_sign_interpretation = MoonSignInterpretation.objects.filter(on_player=player).first() or MoonSignInterpretation()
-                
+                moon_sign_interpretation = (
+                    MoonSignInterpretation.objects.filter(on_player=player).first()
+                    or MoonSignInterpretation()
+                )
+
                 current_value = moon_sign_interpretation.get_moon_sign(moon_phase)
                 # choices = MoonSignInterpretationForm.MOON_SIGN_CHOICES
                 if moon_sign_interpretation:
                     moon_sign_form = MoonSignInterpretationForm.MOON_SIGN_CHOICES
-                context.update({
-                    "moon_phase": moon_phase,
-                    "moon_sign_new" : moon_sign_form,
-                    "moon_sign_interpretation": moon_sign_interpretation,
-                    "current_value": current_value,
-                })
+                context.update(
+                    {
+                        "moon_phase": moon_phase,
+                        "moon_sign_new": moon_sign_form,
+                        "moon_sign_interpretation": moon_sign_interpretation,
+                        "current_value": current_value,
+                    }
+                )
 
             return render(request, self.template_name, context)
 
@@ -323,7 +328,7 @@ class CharacterCreationView(View):
             elif player.character_creation_state == Player.MOON_MEANING_SELECTION:
                 form = MoonSignInterpretationForm(request.POST)
                 if form.is_valid():
-                    print('yes')
+                    print("yes")
                     # The form is valid, save the character for the player
                     # Here Xinyi will implement the logic for adding the information
                     # to the player's model field.
@@ -434,7 +439,7 @@ def get_character_details(request):
     except Character.DoesNotExist:
         return JsonResponse({"error": "Character not found"}, status=404)
 
-        
+
 """
 I am keeping Xinyi's MoonSignInterpretationView as it contains
 logic that might be useful for
