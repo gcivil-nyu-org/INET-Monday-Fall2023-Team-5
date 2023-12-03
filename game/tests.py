@@ -18,6 +18,7 @@ from .forms import (
     CharacterSelectionForm,
     MoonSignInterpretationForm,
     PublicProfileCreationForm,
+    AnswerFormMoon,
 )
 from django import forms
 from PIL import Image
@@ -483,28 +484,53 @@ class GameProgressViewTestCase(TestCase):
         # Assertions
         self.assertTrue(response2.context["choice_made"])
 
-    def test_game_turn_moon_phase(self):
-        # RETIRE this unit test when we rewrite the moon phase turn to not be hard coded
+    # def test_game_turn_moon_phase(self):
+    #     # RETIRE this unit test when we rewrite the moon phase turn to not be hard coded
 
+    #     self.game_session.current_game_turn.state = GameTurn.MOON_PHASE
+    #     self.game_session.current_game_turn.save()
+
+    #     response = self.client.get(
+    #         reverse("game_progress", kwargs={"game_id": self.game_session.game_id})
+    #     )
+
+    #     # Assertions
+    #     self.assertFalse(response.context["moon_phase"])
+    #     self.assertTemplateUsed(response, "game_progress.html")
+
+    #     # Set the game turn to #3 which is hard coded to be a moon phase turn
+    #     self.game_session.current_game_turn.turn_number = 3
+    #     self.game_session.current_game_turn.save()
+
+    #     response = self.client.get(
+    #         reverse("game_progress", kwargs={"game_id": self.game_session.game_id})
+    #     )
+    #     self.assertTrue(response.context["moon_phase"])
+
+    def test_game_turn_moon_phase(self):
+        # Set the game turn state to MOON_PHASE
         self.game_session.current_game_turn.state = GameTurn.MOON_PHASE
         self.game_session.current_game_turn.save()
 
+        # Add words to the player's word pool
+        word1 = Word.objects.create(word="Uno")
+        word2 = Word.objects.create(word="Dos")
+        word3 = Word.objects.create(word="Tres")
+        self.user.player.simple_word_pool.add(word1)
+        self.user.player.character_word_pool.add(word2)
+        self.user.player.simple_word_pool.add(word3)
+        self.user.player.save()
+
+        # Make the request
         response = self.client.get(
             reverse("game_progress", kwargs={"game_id": self.game_session.game_id})
         )
 
         # Assertions
-        self.assertFalse(response.context["moon_phase"])
+        # Corrected the name of the form to 'answer_moon_form'
+        self.assertIn("answer_moon_form", response.context)
+        self.assertIsInstance(response.context["answer_moon_form"], AnswerFormMoon)
         self.assertTemplateUsed(response, "game_progress.html")
-
-        # Set the game turn to #3 which is hard coded to be a moon phase turn
-        self.game_session.current_game_turn.turn_number = 3
-        self.game_session.current_game_turn.save()
-
-        response = self.client.get(
-            reverse("game_progress", kwargs={"game_id": self.game_session.game_id})
-        )
-        self.assertTrue(response.context["moon_phase"])
 
 
 class CharacterCreationViewTestCase(TestCase):
