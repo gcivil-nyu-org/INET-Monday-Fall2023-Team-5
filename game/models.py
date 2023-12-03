@@ -478,20 +478,36 @@ class GameTurn(models.Model):
     @transition(field=state, source=MOON_PHASE, target=SELECT_QUESTION)
     def write_message_about_moon_phase(self, message, player, moon_data):
         # Update the moon message for the player
-        if player == self.parent_game.playerA:
-            self.player_a_moon_phase_message_written = True
-        elif player == self.parent_game.playerB:
-            self.player_b_moon_phase_message_written = True
-        else:
-            raise ValueError("Invalid player.")
-        # self.save()
+        # if player == self.parent_game.playerA:
+        #     self.player_a_moon_phase_message_written = True
+        # elif player == self.parent_game.playerB:
+        #     self.player_b_moon_phase_message_written = True
+        # else:
+        #     raise ValueError("Invalid player.")
+        # # self.save()
         # Create a chat message and add it to the log
+        if player != self.active_player:
+            raise ValueError("It's not your turn.")
+
         chat_message = ChatMessage.objects.create(
             avatar_url=str(player.character.image.url),
             sender=str(player.character_name),
             text=str(message),
         )
+        print(message)
         self.parent_game.gameLog.chat_messages.add(chat_message)
+
+        # Process the answer and update word pools
+        for word in message.split():
+            if player.simple_word_pool.filter(word=word).exists():
+                word_obj = player.simple_word_pool.filter(word=word).first()
+                player.simple_word_pool.remove(word_obj)
+            elif player.character_word_pool.filter(word=word).exists():
+                word_obj = player.character_word_pool.filter(word=word).first()
+                player.character_word_pool.remove(word_obj)
+
+        player.save()
+
         moon_phase = self.get_moon_phase()
         form = player.MoonSignInterpretation
         if moon_data:
