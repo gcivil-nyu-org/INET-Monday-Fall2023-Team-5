@@ -182,7 +182,6 @@ class GameConsumer(AsyncWebsocketConsumer):
             # There were partial changes to the game state, so broadcast the new state
             await self.broadcast_game_state()
 
-
     async def end_game(self, game_id):
         try:
             end_game_url = f"/game/end_game_session/{game_id}/"
@@ -225,5 +224,3 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def game_state_update(self, event):
         # Send the refresh command and game state to the WebSocket
         await self.send_json(event["content"])
-
-

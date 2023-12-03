@@ -64,7 +64,7 @@ class MoonSignInterpretationForm(forms.Form):
     first_quarter = forms.ChoiceField(
         choices=MOON_SIGN_CHOICES,
         label="The First Quarter is a",
-        widget=forms.RadioSelect(attrs={'id': 'id_first_quarter'}),
+        widget=forms.RadioSelect(attrs={"id": "id_first_quarter"}),
     )
     first_quarter_reason = forms.CharField(
         max_length=150,
@@ -73,9 +73,9 @@ class MoonSignInterpretationForm(forms.Form):
     )
 
     full_moon = forms.ChoiceField(
-        choices=MOON_SIGN_CHOICES, 
-        label="The Full Moon is a", 
-        widget=forms.RadioSelect(attrs={'id': 'id_full_moon'})
+        choices=MOON_SIGN_CHOICES,
+        label="The Full Moon is a",
+        widget=forms.RadioSelect(attrs={"id": "id_full_moon"}),
     )
     full_moon_reason = forms.CharField(
         max_length=150,
@@ -86,7 +86,7 @@ class MoonSignInterpretationForm(forms.Form):
     last_quarter = forms.ChoiceField(
         choices=MOON_SIGN_CHOICES,
         label="The Last Quarter is a",
-        widget=forms.RadioSelect(attrs={'id': 'id_last_quarter'}),
+        widget=forms.RadioSelect(attrs={"id": "id_last_quarter"}),
     )
     last_quarter_reason = forms.CharField(
         max_length=150,
@@ -95,8 +95,9 @@ class MoonSignInterpretationForm(forms.Form):
     )
 
     new_moon = forms.ChoiceField(
-        choices=MOON_SIGN_CHOICES, label="The New Moon is a", 
-        widget=forms.RadioSelect(attrs={'id': 'id_new_moon'})
+        choices=MOON_SIGN_CHOICES,
+        label="The New Moon is a",
+        widget=forms.RadioSelect(attrs={"id": "id_new_moon"}),
     )
     new_moon_reason = forms.CharField(
         max_length=150,
