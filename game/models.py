@@ -659,6 +659,15 @@ class MoonSignInterpretation(models.Model):
     # def set_on_player(self, player):
     #     self.on_player = player
     #     self.save()
+    def get_moon_sign(self, moon_phase):
+        # Implement your logic to return the moon sign based on the phase
+        moon_sign_mapping = {
+            "new_moon": self.new_moon,
+            "first_quarter": self.first_quarter,
+            "full_moon": self.full_moon,
+            "last_quarter": self.last_quarter,
+        }
+        return moon_sign_mapping.get(moon_phase, "Unknown sign")
 
 
 class PublicProfile(models.Model):
