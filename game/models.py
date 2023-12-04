@@ -502,7 +502,11 @@ class GameTurn(models.Model):
         }
         return moon_phases.get(self.turn_number)
 
-    @transition(field=state, source=MOON_PHASE, target=SELECT_QUESTION)
+    @transition(
+        field=state,
+        source=MOON_PHASE,
+        target=SELECT_QUESTION,
+    )
     def write_message_about_moon_phase(self, message, player, moon_data):
         # Update the moon message for the player
         if player == self.parent_game.playerA:
@@ -532,6 +536,7 @@ class GameTurn(models.Model):
         player.save()
 
         moon_phase = self.get_moon_phase()
+        print("MOON PHASE I RECEIVED IS ", moon_phase)
         form = player.MoonSignInterpretation
         if moon_data:
             form.cleaned_data[moon_phase] = moon_data["interpretation"]

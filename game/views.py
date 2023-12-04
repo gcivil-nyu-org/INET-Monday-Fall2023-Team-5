@@ -1,5 +1,6 @@
 import json
-from django.core.serializers.json import DjangoJSONEncoder
+
+# from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib import messages
 from django.db import transaction
 from .forms import (
@@ -195,6 +196,9 @@ class GameProgressView(View):
                 )
 
                 current_value = moon_sign_interpretation.get_moon_sign(moon_phase)
+                print("CHECK Current Moon Value: ")
+                print(current_value)
+                # is_ambiguous = current_value in ["ambiguous1", "ambiguous2"]
                 # choices = MoonSignInterpretationForm.MOON_SIGN_CHOICES
                 if moon_sign_interpretation:
                     moon_sign_form = MoonSignInterpretationForm.MOON_SIGN_CHOICES
@@ -203,6 +207,7 @@ class GameProgressView(View):
                         "moon_phase": moon_phase,
                         "moon_sign_new": moon_sign_form,
                         "moon_sign_interpretation": moon_sign_interpretation,
+                        "current_value": current_value,
                         "current_value": current_value,
                     }
                 )
