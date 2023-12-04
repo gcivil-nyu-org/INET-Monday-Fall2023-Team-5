@@ -145,20 +145,22 @@ class Player(models.Model):
             words_of_this_kind = [
                 word for word in simple_words if word.kind_of_word == kind
             ]
+            print(f"Total simple words of kind '{kind}': {len(words_of_this_kind)}")
+            print(f"Words to add for kind '{kind}': {words_to_add_count}")
+            if words_to_add_count > 0 and len(words_of_this_kind) >= words_to_add_count:
+                filtered_words = [
+                    word
+                    for word in words_of_this_kind
+                    if word not in self.simple_word_pool.all()
+                ]
 
-            filtered_words = [
-                word
-                for word in words_of_this_kind
-                if word not in self.simple_word_pool.all()
-            ]
+                # Randomly select words to add
+                words_to_add = random.sample(
+                    filtered_words, k=min(len(words_of_this_kind), words_to_add_count)
+                )
 
-            # Randomly select words to add
-            words_to_add = random.sample(
-                filtered_words, k=min(len(words_of_this_kind), words_to_add_count)
-            )
-
-            for word in words_to_add:
-                self.simple_word_pool.add(word)
+                for word in words_to_add:
+                    self.simple_word_pool.add(word)
 
         self.save()
 
@@ -417,42 +419,72 @@ class GameTurn(models.Model):
         # Update the narrative choice for the player
         if player == self.parent_game.playerA:
             self.player_a_narrative_choice_made = True
-            # Update Player A's word pool here
+            self.process_narrative_choice(narrative_choice, player)
         elif player == self.parent_game.playerB:
             self.player_b_narrative_choice_made = True
-            # Update Player B's word pool here
+            self.process_narrative_choice(narrative_choice, player)
         else:
             raise ValueError("Invalid player.")
 
-        # process the narrative choice here:
-        # adding the associated words to the player's word pool
+        # Check if both players have made their choices
+        if self.player_a_narrative_choice_made and self.player_b_narrative_choice_made:
+            # Reset the flags for the next turn and transition the state
+            self.reset_flags_and_transition()
+
+    def process_narrative_choice(self, narrative_choice, player):
+        # Fetch the selected narrative choice and add associated words to the player's word pool # noqa
         selected_narrative_choice = NarrativeChoice.objects.get(id=narrative_choice)
         if selected_narrative_choice:
             for word in selected_narrative_choice.words.all():
                 player.character_word_pool.add(word)
                 player.save()
         player.replenish_simple_words()
+
+    def reset_flags_and_transition(self):
+        # Reset the narrative choice flags
+        self.player_a_narrative_choice_made = False
+        self.player_b_narrative_choice_made = False
+
+        # Increment turn number and check for game end
+        self.turn_number += 1
+        self.narrative_nights += 1
         MAX_NUMBER_OF_TURNS = 30
+        if self.turn_number >= MAX_NUMBER_OF_TURNS:
+            self.parent_game.set_game_inactive()
+            self.parent_game.state = self.parent_game.ENDED
 
-        # Check if both players have made their choices
-        if self.player_a_narrative_choice_made and self.player_b_narrative_choice_made:
-            # Reset the flags for the next turn
-            self.player_a_narrative_choice_made = False
-            self.player_b_narrative_choice_made = False
-            # Transition to the SELECT_QUESTION state and add 1 to the turn number
-            self.turn_number += 1
-            self.narrative_nights += 1
+        # Determine and set the next state
+        next_state = self.regular_or_special_moon_next()
+        self.switch_active_player()
+        self.state = next_state
+        self.save()
 
-            if self.turn_number >= MAX_NUMBER_OF_TURNS:
-                self.parent_game.set_game_inactive()
-                self.parent_game.state = self.parent_game.ENDED
+        # if selected_narrative_choice:
+        #     for word in selected_narrative_choice.words.all():
+        #         player.character_word_pool.add(word)
+        #         player.save()
+        # player.replenish_simple_words()
+        # MAX_NUMBER_OF_TURNS = 30
 
-            # Dynamically determine the next state
-            next_state = self.regular_or_special_moon_next()
-            # Set the state to the determined next state
-            self.switch_active_player()
-            self.state = next_state
-            self.save()
+        # # Check if both players have made their choices
+        # if self.player_a_narrative_choice_made and self.player_b_narrative_choice_made: # noqa
+        #     # Reset the flags for the next turn
+        #     self.player_a_narrative_choice_made = False
+        #     self.player_b_narrative_choice_made = False
+        #     # Transition to the SELECT_QUESTION state and add 1 to the turn number
+        #     self.turn_number += 1
+        #     self.narrative_nights += 1
+
+        #     if self.turn_number >= MAX_NUMBER_OF_TURNS:
+        #         self.parent_game.set_game_inactive()
+        #         self.parent_game.state = self.parent_game.ENDED
+
+        #     # Dynamically determine the next state
+        #     next_state = self.regular_or_special_moon_next()
+        #     # Set the state to the determined next state
+        #     self.switch_active_player()
+        #     self.state = next_state
+        #     self.save()
 
     def regular_or_special_moon_next(self):
         if self.get_moon_phase():
