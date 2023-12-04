@@ -426,17 +426,13 @@ class GameTurn(models.Model):
         else:
             raise ValueError("Invalid player.")
 
-        # process the narrative choice here:
-        # adding the associated words to the player's word pool
-        selected_narrative_choice = NarrativeChoice.objects.get(id=narrative_choice)
-
         # Check if both players have made their choices
         if self.player_a_narrative_choice_made and self.player_b_narrative_choice_made:
             # Reset the flags for the next turn and transition the state
             self.reset_flags_and_transition()
 
     def process_narrative_choice(self, narrative_choice, player):
-        # Fetch the selected narrative choice and add associated words to the player's word pool
+        # Fetch the selected narrative choice and add associated words to the player's word pool # noqa
         selected_narrative_choice = NarrativeChoice.objects.get(id=narrative_choice)
         if selected_narrative_choice:
             for word in selected_narrative_choice.words.all():
@@ -471,7 +467,7 @@ class GameTurn(models.Model):
         # MAX_NUMBER_OF_TURNS = 30
 
         # # Check if both players have made their choices
-        # if self.player_a_narrative_choice_made and self.player_b_narrative_choice_made:
+        # if self.player_a_narrative_choice_made and self.player_b_narrative_choice_made: # noqa
         #     # Reset the flags for the next turn
         #     self.player_a_narrative_choice_made = False
         #     self.player_b_narrative_choice_made = False
