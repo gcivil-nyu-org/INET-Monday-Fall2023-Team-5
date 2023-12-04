@@ -464,7 +464,6 @@ class GameTurn(models.Model):
         self.switch_active_player()
         self.state = next_state
         self.save()
-        
         # if selected_narrative_choice:
         #     for word in selected_narrative_choice.words.all():
         #         player.character_word_pool.add(word)
