@@ -4,3 +4,7 @@ exclude =
 	tests.py
 	test_settings.py
 	./venv/*
+        accounts/tests.py
+        game/tests.py
+        roleplaydate/test_settings.py
+        .env/*
