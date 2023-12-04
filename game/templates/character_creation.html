@@ -73,11 +73,8 @@
 
 
 {% block scripts %}
-<script type="text/javascript">
-    // Define the formChoices variable with the JSON data from your Django context
-    var formChoices = {{ form_choices_json|safe }};
-</script>
 <script src="{% static 'js/public_profile.js' %}"></script>
+<script src="{% static 'js/dateAndMoonPhase.js' %}"></script>
 {% endblock %}
 {% block styles %}
 <link href="{% static 'css/styles.css' %}" rel="stylesheet">

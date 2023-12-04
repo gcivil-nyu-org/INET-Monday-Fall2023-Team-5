@@ -137,6 +137,10 @@ class Player(models.Model):
             current_count = current_counts[kind]
             words_to_add_count = target_count - current_count
 
+            if words_to_add_count <= 0:
+                # Skip if we already have enough words of this kind
+                continue
+
             # Filter words of this kind
             words_of_this_kind = [
                 word for word in simple_words if word.kind_of_word == kind
@@ -159,10 +163,6 @@ class Player(models.Model):
                     self.simple_word_pool.add(word)
 
         self.save()
-        current_counts = Counter(
-            word.kind_of_word for word in self.simple_word_pool.all()
-        )
-        print(current_counts.get("verb"))
 
 
 # Auxiliary functions for game session
