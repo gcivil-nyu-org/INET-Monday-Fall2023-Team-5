@@ -502,11 +502,7 @@ class GameTurn(models.Model):
         }
         return moon_phases.get(self.turn_number)
 
-    @transition(
-        field=state,
-        source=MOON_PHASE,
-        target=SELECT_QUESTION,
-    )
+    @transition(field=state, source=MOON_PHASE, target=SELECT_QUESTION)
     def write_message_about_moon_phase(self, message, player, moon_data):
         # Update the moon message for the player
         if player == self.parent_game.playerA:
