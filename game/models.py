@@ -124,10 +124,10 @@ class Player(models.Model):
         )
         target_counts = {
             "verb": 5,
-            "pronoun": 2,
+            "pronoun": 3,
             "preposition": 5,
             "conjunction": 5,
-            "article": 4,
+            "article": 3,
             "determiner": 5,
             "modifier": 4,
         }  # Adjust numbers as needed
