@@ -65,8 +65,6 @@ class Player(models.Model):
     def select_moon_meaning(self, moon_meaning):
         self.MoonSignInterpretation = moon_meaning
         self.save()
-        pass
-
     @transition(
         field=character_creation_state,
         source=PUBLIC_PROFILE_CREATION,
@@ -128,10 +126,10 @@ class Player(models.Model):
         )
         target_counts = {
             "verb": 5,
-            "pronoun": 2,
+            "pronoun": 3,
             "preposition": 5,
             "conjunction": 5,
-            "article": 4,
+            "article": 3,
             "determiner": 5,
             "modifier": 4,
         }  # Adjust numbers as needed
@@ -140,6 +138,10 @@ class Player(models.Model):
         for kind, target_count in target_counts.items():
             current_count = current_counts[kind]
             words_to_add_count = target_count - current_count
+
+            if words_to_add_count <= 0:
+                # Skip if we already have enough words of this kind
+                continue
 
             # Filter words of this kind
             words_of_this_kind = [
@@ -163,10 +165,6 @@ class Player(models.Model):
                     self.simple_word_pool.add(word)
 
         self.save()
-        current_counts = Counter(
-            word.kind_of_word for word in self.simple_word_pool.all()
-        )
-        print(current_counts.get("verb"))
 
 
 # Auxiliary functions for game session
@@ -419,19 +417,23 @@ class GameTurn(models.Model):
         target=None,
     )
     def make_narrative_choice(self, narrative_choice, player):
-        print(narrative_choice)
         # Update the narrative choice for the player
         if player == self.parent_game.playerA:
             self.player_a_narrative_choice_made = True
-            # Update Player A's word pool here
+            self.process_narrative_choice(narrative_choice, player)
         elif player == self.parent_game.playerB:
             self.player_b_narrative_choice_made = True
-            # Update Player B's word pool here
+            self.process_narrative_choice(narrative_choice, player)
         else:
             raise ValueError("Invalid player.")
 
-        # process the narrative choice here:
-        # adding the associated words to the player's word pool
+        # Check if both players have made their choices
+        if self.player_a_narrative_choice_made and self.player_b_narrative_choice_made:
+            # Reset the flags for the next turn and transition the state
+            self.reset_flags_and_transition()
+
+    def process_narrative_choice(self, narrative_choice, player):
+        # Fetch the selected narrative choice and add associated words to the player's word pool # noqa
         selected_narrative_choice = NarrativeChoice.objects.get(id=narrative_choice)
         if selected_narrative_choice:
             for word in selected_narrative_choice.words.all():
@@ -439,26 +441,51 @@ class GameTurn(models.Model):
                 player.save()
         player.replenish_simple_words()
 
+    def reset_flags_and_transition(self):
+        # Reset the narrative choice flags
+        self.player_a_narrative_choice_made = False
+        self.player_b_narrative_choice_made = False
+
+        # Increment turn number and check for game end
+        self.turn_number += 1
+        self.narrative_nights += 1
         MAX_NUMBER_OF_TURNS = 30
-        # Check if both players have made their choices
-        if self.player_a_narrative_choice_made and self.player_b_narrative_choice_made:
-            # Reset the flags for the next turn
-            self.player_a_narrative_choice_made = False
-            self.player_b_narrative_choice_made = False
-            # Transition to the SELECT_QUESTION state and add 1 to the turn number
-            self.turn_number += 1
-            self.narrative_nights += 1
+        if self.turn_number >= MAX_NUMBER_OF_TURNS:
+            self.parent_game.set_game_inactive()
+            self.parent_game.state = self.parent_game.ENDED
 
-            if self.turn_number >= MAX_NUMBER_OF_TURNS:
-                self.parent_game.set_game_inactive()
-                self.parent_game.state = self.parent_game.ENDED
+        # Determine and set the next state
+        next_state = self.regular_or_special_moon_next()
+        self.switch_active_player()
+        self.state = next_state
+        self.save()
 
-            # Dynamically determine the next state
-            next_state = self.regular_or_special_moon_next()
-            # Set the state to the determined next state
-            self.switch_active_player()
-            self.state = next_state
-            self.save()
+        # if selected_narrative_choice:
+        #     for word in selected_narrative_choice.words.all():
+        #         player.character_word_pool.add(word)
+        #         player.save()
+        # player.replenish_simple_words()
+        # MAX_NUMBER_OF_TURNS = 30
+
+        # # Check if both players have made their choices
+        # if self.player_a_narrative_choice_made and self.player_b_narrative_choice_made: # noqa
+        #     # Reset the flags for the next turn
+        #     self.player_a_narrative_choice_made = False
+        #     self.player_b_narrative_choice_made = False
+        #     # Transition to the SELECT_QUESTION state and add 1 to the turn number
+        #     self.turn_number += 1
+        #     self.narrative_nights += 1
+
+        #     if self.turn_number >= MAX_NUMBER_OF_TURNS:
+        #         self.parent_game.set_game_inactive()
+        #         self.parent_game.state = self.parent_game.ENDED
+
+        #     # Dynamically determine the next state
+        #     next_state = self.regular_or_special_moon_next()
+        #     # Set the state to the determined next state
+        #     self.switch_active_player()
+        #     self.state = next_state
+        #     self.save()
 
     def regular_or_special_moon_next(self):
         if self.get_moon_phase():
@@ -482,23 +509,19 @@ class GameTurn(models.Model):
     )
     def write_message_about_moon_phase(self, message, player, moon_data):
         # Update the moon message for the player
-        # if player == self.parent_game.playerA:
-        #     self.player_a_moon_phase_message_written = True
-        # elif player == self.parent_game.playerB:
-        #     self.player_b_moon_phase_message_written = True
-        # else:
-        #     raise ValueError("Invalid player.")
-        # # self.save()
+        if player == self.parent_game.playerA:
+            self.player_a_moon_phase_message_written = True
+        elif player == self.parent_game.playerB:
+            self.player_b_moon_phase_message_written = True
+        else:
+            raise ValueError("Invalid player.")
+        self.save()
         # Create a chat message and add it to the log
-        if player != self.active_player:
-            raise ValueError("It's not your turn.")
-
         chat_message = ChatMessage.objects.create(
             avatar_url=str(player.character.image.url),
             sender=str(player.character_name),
             text=str(message),
         )
-        print(message)
         self.parent_game.gameLog.chat_messages.add(chat_message)
 
         # Process the answer and update word pools
@@ -513,7 +536,6 @@ class GameTurn(models.Model):
         player.save()
 
         moon_phase = self.get_moon_phase()
-        print("MOON PHASE I RECEIVED IS ", moon_phase)
         form = player.MoonSignInterpretation
         if moon_data:
             form.cleaned_data[moon_phase] = moon_data["interpretation"]
