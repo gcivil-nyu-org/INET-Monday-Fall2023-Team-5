@@ -14,7 +14,10 @@ def ingest_json_data(json_data):
     for quality_data in json_data["qualities"]:
         quality, created = Quality.objects.get_or_create(name=quality_data["name"])
         for word in quality_data["words"]:
-            word_obj, created = Word.objects.get_or_create(word=word)
+            # get or create the first word that matches the word
+            word_obj = Word.objects.filter(word=word).first()
+            if not word_obj:
+                word_obj = Word.objects.create(word=word)
             quality.words.add(word_obj)
 
     for activity_data in json_data["activities"]:
@@ -32,7 +35,11 @@ def ingest_json_data(json_data):
                 night_number=narrative_choice_data["night_number"],
             )
             for word in narrative_choice_data["words"]:
-                word_obj, created = Word.objects.get_or_create(word=word)
+                # get or create the first word that matches the word
+                word_obj = Word.objects.filter(word=word).first()
+
+                if not word_obj:
+                    word_obj = Word.objects.create(word=word)
                 narrative_choice.words.add(word_obj)
 
     character_data = json_data["character"]
