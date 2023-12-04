@@ -84,7 +84,7 @@
                                     </li>
                                 </ul>
                             </div>
-                            
+
                         <div id="interactive-container">
                             <div id="tag-container">
                               <!-- Tags will be generated here -->
@@ -102,10 +102,10 @@
                             </div>
                           </div>
                         </div>
-
+                        
                             <!-- <h4>Moon Phase: {{ moon_phase }}</h4> -->
-                            <!-- <h4>Your current interpretation: {{ current_value }}</h4>  -->
-                            {% if current_value == 'ambiguous1' or current_value == 'ambiguous2' %}
+                            <!-- <h4>Your current interpretation: {{ current_value }}</h4>  --> 
+                            {% if current_value == 'first_quarter' or current_value == 'last_quarter' %}
                                 <h3>Edit Moon Phase Interpretation</h3>
                                 <div class="form-group">
                                     <label>Interpretation</label>
