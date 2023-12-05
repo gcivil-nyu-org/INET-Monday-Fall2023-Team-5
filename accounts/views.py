@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import PasswordChangeForm
-from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.views import generic
@@ -14,9 +14,6 @@ from django.utils.http import urlsafe_base64_decode
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth import update_session_auth_hash
-
-# from django.views.decorators.csrf import csrf_exempt
-from django.core.management import call_command
 from django.db.models import Q
 
 
@@ -299,12 +296,3 @@ def like_profile(request, user_id):
     return JsonResponse(
         {"success": False, "error": "Invalid request method."}, status=405
     )
-
-
-# @csrf_exempt
-def reset_likes_view(request):
-    if request.method == "POST":
-        call_command("resetlikes")
-        return HttpResponse("Likes reset and cleared.", status=200)
-    else:
-        return HttpResponse("Invalid method", status=400)
