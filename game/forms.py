@@ -25,11 +25,16 @@ class EmojiReactForm(forms.Form):
         ("🌕", "🌕"),
         ("🌗", "🌗"),
     )
+
     emoji = forms.ChoiceField(
         choices=EMOJI_CHOICES,
-        widget=forms.RadioSelect(attrs={"class": "emoji-radio"}),
         label="React with an Emoji",
     )
+
+    def __init__(self, *args, **kwargs):
+        super(EmojiReactForm, self).__init__(*args, **kwargs)
+        self.fields["emoji"].widget = forms.RadioSelect(attrs={"class": "emoji-radio"})
+        self.fields["emoji"].widget.choices = self.EMOJI_CHOICES
 
 
 class NarrativeChoiceForm(forms.Form):

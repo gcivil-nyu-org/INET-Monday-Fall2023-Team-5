@@ -128,8 +128,15 @@
                         </div>
                     {% elif game_session.current_game_turn.state == 'react_emoji' %}
                         <h3>React with an Emoji:</h3>
-                        {{ emoji_form.emoji }}
-                        <button id="submit-emoji" data-action="react_emoji">Submit Reaction</button>
+                            <div id="emoji-react-form">
+                                {% for radio in emoji_form.emoji %}
+                                    <div class="emoji-radio">
+                                        {{ radio.tag }}  <!-- This is the actual radio button input -->
+                                        <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <button id="submit-emoji" data-action="react_emoji">Submit Reaction</button>
                     {% endif %}
                 {% endif %}
             {% else %}
