@@ -1206,6 +1206,29 @@ class LikeProfileViewTest(TestCase):
             "Error message does not match expected.",
         )
 
+    def test_like_profile_invalid_method(self):
+        # This test will check if the correct error is returned when using a GET request
+        self.client.login(username="user1", password="password1")
+        response = self.client.get(reverse("like_profile", args=[self.user2.pk]))
+
+        # Check if the response code is 405 Method Not Allowed
+        self.assertEqual(
+            response.status_code,
+            405,
+            "Expected status code 405 for invalid request method.",
+        )
+
+        # Check the error message
+        data = response.json()
+        self.assertFalse(
+            data["success"], "Expected success to be False for invalid request method."
+        )
+        self.assertEqual(
+            data["error"],
+            "Invalid request method.",
+            "Error message does not match expected for invalid request method.",
+        )
+
 
 class ResetLikesViewTest(TestCase):
     def setUp(self):
