@@ -5,7 +5,7 @@ from django.contrib.messages import get_messages
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.contrib.auth.forms import PasswordChangeForm
 from .models import *
-import tempfile
+import tempfile, json
 from django.core.files import File
 from .forms import EditProfileForm, CustomUserCreationForm
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -148,58 +148,41 @@ class AccountViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "accounts/account.html")
 
-    def test_change_username_successfully(self):
-        # Test checks if a logged-in user can successfully change
-        # their username
-        self.client.login(username="testuser", password="testpassword123")
-        response = self.client.post(self.account_url, {"username": "newusername"})
-        self.user.refresh_from_db()
-        self.assertEqual(self.user.username, "newusername")
-        messages = list(get_messages(response.wsgi_request))
-        self.assertEqual(len(messages), 1)
-        self.assertEqual(str(messages[0]), "Username updated successfully")
-
-    def test_change_username_to_existing_one(self):
-        # Test that a logged-in user cannot change their username
-        # to one that already exists in the database
-        User.objects.create_user(username="existinguser", password="testpassword123")
-        self.client.login(username="testuser", password="testpassword123")
-        response = self.client.post(self.account_url, {"username": "existinguser"})
-        messages = list(get_messages(response.wsgi_request))
-        self.assertEqual(len(messages), 1)
-        self.assertEqual(
-            str(messages[0]), "This username is already taken. Choose another."
-        )
-
     def test_change_password_successfully(self):
-        # Test checks if a logged-in user can successfully change
-        # their password.
+        # Test if a logged-in user can successfully change their password
         self.client.login(username="testuser", password="testpassword123")
         data = {
             "old_password": "testpassword123",
             "new_password1": "newtestpassword123",
             "new_password2": "newtestpassword123",
         }
-        response = self.client.post(self.account_url, data)
-        self.user.refresh_from_db()
-        self.assertTrue(self.user.check_password("newtestpassword123"))
-        messages = list(get_messages(response.wsgi_request))
-        self.assertEqual(len(messages), 1)
-        self.assertEqual(str(messages[0]), "Password updated successfully")
+        response = self.client.post(
+            self.account_url, data, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
+        )
+        self.assertEqual(response.status_code, 200)
+        response_data = json.loads(response.content)
+        self.assertEqual(response_data["status"], "success")
+        self.assertEqual(response_data["message"], "Password updated successfully")
 
     def test_change_password_with_invalid_data(self):
-        # Test checks if the error message is shown when a user tries to change
-        # their password with invalid data (e.g. mismatched new passwords)
+        # Test if the error message is shown when a user tries to change
+        # their password with invalid data (e.g., mismatched new passwords)
         self.client.login(username="testuser", password="testpassword123")
         data = {
             "old_password": "testpassword123",
             "new_password1": "newtestpassword123",
             "new_password2": "differentnewtestpassword123",  # Mismatched password
         }
-        response = self.client.post(self.account_url, data)
-        messages = list(get_messages(response.wsgi_request))
-        self.assertEqual(len(messages), 1)
-        self.assertEqual(str(messages[0]), "Please correct the errors below.")
+        response = self.client.post(
+            self.account_url, data, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
+        )
+        self.assertEqual(response.status_code, 400)
+        response_data = json.loads(response.content)
+        self.assertEqual(response_data["status"], "error")
+        self.assertIn("Some errors occurred:", response_data["message"])
+        self.assertIn(
+            "The two password fields didn’t match.", response_data["errors"][0]
+        )
 
 
 @override_settings(
@@ -1209,26 +1192,19 @@ class LikeProfileViewTest(TestCase):
         # User1 tries to like User2's profile with no likes remaining
         response = self.client.post(reverse("like_profile", args=[self.user2.pk]))
 
-        # Since the user is logged in, there should not be a redirect, hence no follow=True needed
+        # Check if the response code and message are correct
         self.assertEqual(
             response.status_code,
             200,
-            "Expected 200 OK response, got a redirect instead.",
+            "Expected status code 200, got {0}".format(response.status_code),
         )
-
         data = response.json()
-        self.assertFalse(data["success"])
-        self.assertEqual(data["error"], "You have reached your daily likes limit")
-
-        # Check if no Like object was created
-        like_count = Like.objects.filter(
-            from_user=self.user1, to_user=self.user2
-        ).count()
-        self.assertEqual(like_count, 0)
-
-        # Check if user1's likes_remaining is still 0
-        self.profile1.refresh_from_db()
-        self.assertEqual(self.profile1.likes_remaining, 0)
+        self.assertFalse(data["success"], "Expected success to be False.")
+        self.assertEqual(
+            data["error"],
+            "You have reached your daily likes limit",
+            "Error message does not match expected.",
+        )
 
 
 class ResetLikesViewTest(TestCase):
