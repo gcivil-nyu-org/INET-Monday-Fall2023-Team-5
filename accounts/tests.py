@@ -26,6 +26,7 @@ from django.utils import timezone
 from unittest.mock import patch
 from django.core.management.base import CommandError
 from game.models import GameSession, Player, GameTurn
+from django.conf import settings
 
 
 class ProfileModelTest(TestCase):
@@ -1305,3 +1306,35 @@ class LikeModelTest(TestCase):
     def test_is_not_mutual(self):
         non_mutual_like = Like.objects.get(from_user=self.user1, to_user=self.user3)
         self.assertFalse(non_mutual_like.is_mutual(), "The like should not be mutual")
+
+
+class RolePlayDateURLsTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        # Create a staff user for testing the views
+        cls.staff_user = User.objects.create_user(
+            username="staff", password="testpass", is_staff=True
+        )
+        cls.client = Client()
+
+    def test_notify_matches_view(self):
+        # Login as the staff user
+        self.client.login(username="staff", password="testpass")
+
+        # Call the notify_matches view
+        response = self.client.get(reverse("notify_matches_view"))
+
+        # Check the response
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Match notifications have been sent.")
+
+    def test_reset_likes_view(self):
+        # Login as the staff user
+        self.client.login(username="staff", password="testpass")
+
+        # Call the reset_likes view
+        response = self.client.get(reverse("reset_likes_view"))
+
+        # Check the response
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Likes have been reset.")
