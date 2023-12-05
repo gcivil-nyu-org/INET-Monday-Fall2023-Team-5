@@ -464,33 +464,6 @@ class GameTurn(models.Model):
         self.switch_active_player()
         self.state = next_state
         self.save()
-        # if selected_narrative_choice:
-        #     for word in selected_narrative_choice.words.all():
-        #         player.character_word_pool.add(word)
-        #         player.save()
-        # player.replenish_simple_words()
-        # MAX_NUMBER_OF_TURNS = 30
-
-        # # Check if both players have made their choices
-        # if self.player_a_narrative_choice_made and
-        # self.player_b_narrative_choice_made:
-        #     # Reset the flags for the next turn
-        #     self.player_a_narrative_choice_made = False
-        #     self.player_b_narrative_choice_made = False
-        #     # Transition to the SELECT_QUESTION state and add 1 to the turn number
-        #     self.turn_number += 1
-        #     self.narrative_nights += 1
-
-        #     if self.turn_number >= MAX_NUMBER_OF_TURNS:
-        #         self.parent_game.set_game_inactive()
-        #         self.parent_game.state = self.parent_game.ENDED
-
-        #     # Dynamically determine the next state
-        #     next_state = self.regular_or_special_moon_next()
-        #     # Set the state to the determined next state
-        #     self.switch_active_player()
-        #     self.state = next_state
-        #     self.save()
 
     def regular_or_special_moon_next(self):
         if self.get_moon_phase():
@@ -507,20 +480,29 @@ class GameTurn(models.Model):
         }
         return moon_phases.get(self.turn_number)
 
+    def get_moon_emoji(self, moon_phase):
+        moon_sign_mapping = {
+            "new_moon": "🌑",
+            "first_quarter": "🌓",
+            "full_moon": "🌕",
+            "last_quarter": "🌗",
+        }
+        return moon_sign_mapping.get(moon_phase, "Unknown sign")
+
     @transition(
         field=state,
         source=MOON_PHASE,
         target=SELECT_QUESTION,
     )
-    def write_message_about_moon_phase(self, message, player, moon_data):
+    def write_message_about_moon_phase(self, message, player):
         # Update the moon message for the player
-        # if player == self.parent_game.playerA:
-        #     self.player_a_moon_phase_message_written = True
-        # elif player == self.parent_game.playerB:
-        #     self.player_b_moon_phase_message_written = True
-        # else:
-        #     raise ValueError("Invalid player.")
-        # # self.save()
+        if player == self.parent_game.playerA:
+            self.player_a_moon_phase_message_written = True
+        elif player == self.parent_game.playerB:
+            self.player_b_moon_phase_message_written = True
+        else:
+            raise ValueError("Invalid player.")
+        self.save()
         # Create a chat message and add it to the log
         if player != self.active_player:
             raise ValueError("It's not your turn.")
@@ -530,7 +512,6 @@ class GameTurn(models.Model):
             sender=str(player.character_name),
             text=str(message),
         )
-        print(message)
         self.parent_game.gameLog.chat_messages.add(chat_message)
 
         # Process the answer and update word pools
@@ -542,16 +523,6 @@ class GameTurn(models.Model):
                 word_obj = player.character_word_pool.filter(word=word).first()
                 player.character_word_pool.remove(word_obj)
 
-        player.save()
-
-        moon_phase = self.get_moon_phase()
-        print("MOON PHASE I RECEIVED IS ", moon_phase)
-        form = player.MoonSignInterpretation
-        if moon_data:
-            form.change_moon_sign(
-                moon_phase, moon_data["interpretation"], moon_data["reason"]
-            )
-        player.MoonSignInterpretation = form
         player.save()
 
         self.switch_active_player()
@@ -702,16 +673,7 @@ class MoonSignInterpretation(models.Model):
     last_quarter_reason = models.TextField()
     new_moon = models.CharField(max_length=150)
     new_moon_reason = models.TextField()
-    # def get_moon_sign(self, moon_phase):
-    #     for i in [on_player, first_quarter, full_moon, last_quarter, new_moon]:
-    #         if i == moon_phase:
-    #             return i
-    # def get_on_player(self):
-    #     return self.on_player
 
-    # def set_on_player(self, player):
-    #     self.on_player = player
-    #     self.save()
     def get_moon_sign(self, moon_phase):
         # Implement your logic to return the moon sign based on the phase
         moon_sign_mapping = {
@@ -722,20 +684,31 @@ class MoonSignInterpretation(models.Model):
         }
         return moon_sign_mapping.get(moon_phase, "Unknown sign")
 
-    def change_moon_sign(self, moon_phase, new_sign, new_reason):
+    def get_moon_sign_reason(self, moon_phase):
         moon_sign_mapping = {
-            "new_moon": self.new_moon,
-            "new_moon_reason": self.new_moon_reason,
-            "first_quarter": self.first_quarter,
-            "first_quarter_reason": self.first_quarter_reason,
-            "full_moon": self.full_moon,
-            "full_moon_reason": self.full_moon_reason,
-            "last_quarter": self.last_quarter,
-            "last_quarter_reason": self.last_quarter_reason,
+            "new_moon": self.new_moon_reason,
+            "first_quarter": self.first_quarter_reason,
+            "full_moon": self.full_moon_reason,
+            "last_quarter": self.last_quarter_reason,
         }
-        moon_sign_mapping[moon_phase] = new_sign
-        moon_sign_mapping[f"{moon_phase}_reason"] = new_reason
-        print("successfully changed moon sign!")
+        return moon_sign_mapping.get(moon_phase, "Unknown sign")
+
+    def change_moon_sign(self, moon_phase, new_sign):
+        # Ensure the moon_phase key exists in the dictionary to avoid AttributeError
+        if moon_phase not in [
+            "new_moon",
+            "new_moon_reason",
+            "first_quarter",
+            "first_quarter_reason",
+            "full_moon",
+            "full_moon_reason",
+            "last_quarter",
+            "last_quarter_reason",
+        ]:
+            raise ValueError(f"Invalid moon phase: {moon_phase}")
+
+        # Use setattr to update the attribute
+        setattr(self, moon_phase, new_sign)
         self.save()
 
 

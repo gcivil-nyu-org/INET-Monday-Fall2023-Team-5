@@ -184,27 +184,26 @@ class GameProgressView(View):
                 context.update({"tags_answer": tags_answer})
                 context.update(
                     {
+                        # This to assist in submitting the new interpretation
                         "answer_moon_form": AnswerFormMoon(),
                     }
                 )
 
-                turn = game_session.current_game_turn
+                # This is to display the current moon phase and the current interpretation associated with it
+                # by that player
                 moon_phase = game_session.current_game_turn.get_moon_phase()
                 moon_sign_interpretation = player.MoonSignInterpretation
-
                 current_value = moon_sign_interpretation.get_moon_sign(moon_phase)
-                print("CHECK Current Moon Value: ")
-                print(current_value)
-                # is_ambiguous = current_value in ["ambiguous1", "ambiguous2"]
-                # choices = MoonSignInterpretationForm.MOON_SIGN_CHOICES
-                if moon_sign_interpretation:
-                    moon_sign_form = MoonSignInterpretationForm()
+                reason = moon_sign_interpretation.get_moon_sign_reason(moon_phase)
+
                 context.update(
                     {
-                        "moon_phase": moon_phase,
-                        "moon_sign_new": moon_sign_form,
+                        "moon_phase": game_session.current_game_turn.get_moon_emoji(
+                            moon_phase
+                        ),
                         "moon_sign_interpretation": moon_sign_interpretation,
-                        "current_value": current_value,
+                        "current_value": current_value.capitalize(),
+                        "reason": reason,
                     }
                 )
 

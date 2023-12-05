@@ -60,66 +60,43 @@
             {% elif active_player == request.user.player %}
                 {% if game_session.current_game_turn.state == 'moon_phase' %}
                     <div class = "moon-sign-class">
-                        <h3>Moon Sign Phase: {{ moon_phase }}</h3>
-                        <p>The Moon is currently in its {{ moon_phase }} phase. Share your personal meaning of the moon phase:</p>
-                        <!-- <textarea id="moon-meaning-text" rows="1" cols="140" placeholder="Share your personal meaning..."></textarea><br>
-<button id="share-moon-meaning" data-action="moon_phase">Share</button> -->
-
-                        <form id="moon-sign-form">
-                            {% csrf_token %}
-                            <div id="profileText">
-                                Your current moon meanings are:
-                                <ul>
-                                    <li>
-                                        The First Quarter is a <u>{{ moon_sign_interpretation.first_quarter }}</u> Sign because <u>{{ moon_sign_interpretation.first_quarter_reason }}</u>.
-                                    </li>
-                                    <li>
-                                        The Full Moon is a <u>{{ moon_sign_interpretation.full_moon }}</u> Sign because <u>{{ moon_sign_interpretation.full_moon_reason }}</u>.
-                                    </li>
-                                    <li>
-                                        The Last Quarter is a <u>{{ moon_sign_interpretation.last_quarter }}</u> Sign because <u>{{ moon_sign_interpretation.last_quarter_reason }}</u>.
-                                    </li>
-                                    <li>
-                                        The New Moon is a <u>{{ moon_sign_interpretation.new_moon }}</u> Sign because <u>{{ moon_sign_interpretation.new_moon_reason }}</u>.
-                                    </li>
-                                </ul>
-                            </div>
-                            
-                        <div id="interactive-container">
-                            <div id="tag-container">
-                              <!-- Tags will be generated here -->
-                              {% for tag in tags_answer %}
-                                <div class="draggable" draggable="true" id="tag-{{ forloop.counter }}">{{ tag }}</div>
-                              {% endfor %}
-                            </div>
-                            <div id="answer-section">
-                              <div id="current-sentence" class="droppable">
-                                <!-- Tags will be dragged here -->
-                              </div>
-                              <input type="hidden" name="answer" id="hidden-answer-field">
-                              <button id="clear-all" data-action="'clear_all">Clear All</button>
-                              <button id="share-moon-meaning" data-action = "moon_phase">Submit Answer</button>
-                            </div>
-                          </div>
-                        </div>
-                        
-                            <!-- <h4>Moon Phase: {{ moon_phase }}</h4> -->
-                            <!-- <h4>Your current interpretation: {{ current_value }}</h4>  --> 
-                            {% if current_value == 'first_quarter' or current_value == 'last_quarter' %}
-                                <h3>Edit Moon Phase Interpretation</h3>
-                                <div class="form-group">
-                                    <label>Interpretation</label>
-                                        {{ moon_sign_interpretation.moon_phase }}<br>
-                                        {{ moon_sign_interpretation.moon_phase.label_tag }} 
-                                    {{ moon_sign_new.moon_phase }}
-                                    <label>because</label>
-                                    <textarea id="reason_value" rows="1" cols="60" placeholder="Share your personal meaning..."></textarea><br>
+                        <h3>The Moon is currently in its {{ moon_phase }} phase:</h3>
+                        {% if current_value == 'Ambiguous' %}
+                            <div class="moon-meaning">
+                                <p>For you {{ moon_phase }} used to be a {{ current_value }} Sign because {{ reason }}.</p>
+                                <p>Now it's the time to decide, is this a positive or negative moon sign?</p>
+                                <div class="moon-meaning-choice">
+                                    <input type="radio" name="moon-meaning" id="positive" value="positive">
+                                    <label for="positive">Positive</label>
                                 </div>
-                            {% endif %}
-                        </form>
-                        <!-- <button id="share-moon-meaning" data-action="moon_phase">Share</button> -->
+                                <div class="moon-meaning-choice">
+                                    <input type="radio" name="moon-meaning" id="negative" value="negative">
+                                    <label for="negative">Negative</label>
+                                </div>
+                                <button id="submit-moon-meaning" data-action="moon_meaning">Submit Moon Meaning</button>
+                            </div>
+                        {% else %}
+                            <p>For you {{ moon_phase }} is a {{ current_value }} Sign because {{ reason }}.</p>
+                            <p>Share with your partner your most recently discovered meaning of this moon phase:</p>
+                            <div id="interactive-container">
+                                <div id="tag-container">
+                                  <!-- Tags will be generated here -->
+                                  {% for tag in tags_answer %}
+                                    <div class="draggable" draggable="true" id="tag-{{ forloop.counter }}">{{ tag }}</div>
+                                  {% endfor %}
+                                </div>
+                                <div id="answer-section">
+                                  <div id="current-sentence" class="droppable">
+                                    <!-- Tags will be dragged here -->
+                                  </div>
+                                  <input type="hidden" name="answer" id="hidden-answer-field">
+                                  <button id="clear-all" data-action="'clear_all">Clear All</button>
+                                  <button id="share-moon-meaning" data-action = "moon_phase">Submit Answer</button>
+                                </div>
+                              </div>
+                            </div>
+                        {% endif %}
                     </div>
-                    <!-- You can add any additional Moon Sign Phases related content or actions here. -->
                 {% else %}
                     {% if game_session.current_game_turn.state == 'select_question' %}
                         <h3>Select a Question</h3>
@@ -150,8 +127,7 @@
                           </div>
                         </div>
                     {% elif game_session.current_game_turn.state == 'react_emoji' %}
-                        <h3>React with an Emoji</h3>
-                        {{ emoji_form.emoji.label_tag }}
+                        <h3>React with an Emoji:</h3>
                         {{ emoji_form.emoji }}
                         <button id="submit-emoji" data-action="react_emoji">Submit Reaction</button>
                     {% endif %}
@@ -232,22 +208,29 @@
                             let moon_answer = Array.from(document.querySelectorAll('#current-sentence'))
                                                 .map(tag => tag.textContent.trim())
                                                 .join(' ');
-                            
-                            // const moonMeaningText = document.querySelector('#moon-meaning-text')==null ? '' : document.querySelector('#moon-meaning-text').value;
-                            const interpretation = document.querySelector('#interpretation_value')==null ? '' : document.querySelector('#interpretation_value').value;
-
                             if (moon_answer.length === 0) {
                                 alert("Please select at least one word.");
                             } else {
-                                // Combine the moon_answer with the additional moon phase data
-                            value = {
-                                message: moon_answer,
-                                moon_data: {
-                                    interpretation: interpretation,
-                                    reason: moon_answer,
-                                }
-                            };
+                            value = moon_answer;
 }
+                            break;
+                        case 'moon_meaning':
+                            // Get all radio buttons with the name "moon-meaning"
+                            const moonMeaningChoices = document.querySelectorAll('input[name="moon-meaning"]:checked');
+
+                            // Get the value of the selected radio button
+                            let moonMeaningChoiceValue = null;
+                            moonMeaningChoices.forEach((choice) => {
+                                if (choice.checked) {
+                                    moonMeaningChoiceValue = choice.value;
+                                }
+                            });
+
+                            if (moonMeaningChoiceValue) {
+                                value = moonMeaningChoiceValue;
+                            } else {
+                                alert("Please select a new moon meaning.");
+                            }
                             break;
 
                         case 'submit_question':
