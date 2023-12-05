@@ -189,8 +189,8 @@ class GameProgressView(View):
                     }
                 )
 
-                # This is to display the current moon phase and the current interpretation associated with it
-                # by that player
+                # This is to display the current moon phase and the current
+                # interpretation associated with it by that player
                 moon_phase = game_session.current_game_turn.get_moon_phase()
                 moon_sign_interpretation = player.MoonSignInterpretation
                 current_value = moon_sign_interpretation.get_moon_sign(moon_phase)
