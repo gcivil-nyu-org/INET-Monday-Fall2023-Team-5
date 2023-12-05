@@ -258,6 +258,12 @@ def like_profile(request, user_id):
             return JsonResponse(
                 {"success": False, "error": "You have already liked this user."}
             )
+        
+        if current_user_profile.likes_remaining <= 0:
+            # User has no likes remaining, send a specific error message
+            return JsonResponse(
+                {"success": False, "error": "You have reached your daily likes limit"}
+            )
 
         if current_user_profile.likes_remaining > 0:
             Like.objects.create(from_user=request.user, to_user=receiving_user)
