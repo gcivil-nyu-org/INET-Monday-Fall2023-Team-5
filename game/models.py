@@ -358,19 +358,13 @@ class GameTurn(models.Model):
             sender=str(player.character_name),
             text=str(answer),
         )
-        print(answer)
         for word in answer.split():
-            print(word)
             if player.simple_word_pool.filter(word=word):
-                print("in simple word pool")
                 word = player.simple_word_pool.filter(word=word).first()
-                print(word)
                 player.simple_word_pool.remove(word)
                 player.save()
             elif player.character_word_pool.filter(word=word):
-                print("in character word pool")
                 word = player.character_word_pool.filter(word=word).first()
-                print(word)
                 player.character_word_pool.remove(word)
                 player.save()
         self.parent_game.gameLog.chat_messages.add(chat_message)
