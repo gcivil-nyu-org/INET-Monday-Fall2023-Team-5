@@ -1262,3 +1262,25 @@ class MatchModelTest(TestCase):
         # Ensure still only one match in the database
         match_count = Match.objects.count()
         self.assertEqual(match_count, 1)
+
+
+class LikeModelTest(TestCase):
+    def setUp(self):
+        self.user1 = User.objects.create_user(username="user1", password="password1")
+        self.user2 = User.objects.create_user(username="user2", password="password2")
+        self.user3 = User.objects.create_user(username="user3", password="password3")
+
+        # Create mutual likes between user1 and user2
+        Like.objects.create(from_user=self.user1, to_user=self.user2)
+        Like.objects.create(from_user=self.user2, to_user=self.user1)
+
+        # Create a one-way like from user1 to user3
+        Like.objects.create(from_user=self.user1, to_user=self.user3)
+
+    def test_is_mutual(self):
+        mutual_like = Like.objects.get(from_user=self.user1, to_user=self.user2)
+        self.assertTrue(mutual_like.is_mutual(), "The like should be mutual")
+
+    def test_is_not_mutual(self):
+        non_mutual_like = Like.objects.get(from_user=self.user1, to_user=self.user3)
+        self.assertFalse(non_mutual_like.is_mutual(), "The like should not be mutual")
