@@ -190,10 +190,7 @@ class GameProgressView(View):
 
                 turn = game_session.current_game_turn
                 moon_phase = game_session.current_game_turn.get_moon_phase()
-                moon_sign_interpretation = (
-                    MoonSignInterpretation.objects.filter(on_player=player).first()
-                    or MoonSignInterpretation()
-                )
+                moon_sign_interpretation = player.MoonSignInterpretation
 
                 current_value = moon_sign_interpretation.get_moon_sign(moon_phase)
                 print("CHECK Current Moon Value: ")
@@ -201,13 +198,12 @@ class GameProgressView(View):
                 # is_ambiguous = current_value in ["ambiguous1", "ambiguous2"]
                 # choices = MoonSignInterpretationForm.MOON_SIGN_CHOICES
                 if moon_sign_interpretation:
-                    moon_sign_form = MoonSignInterpretationForm.MOON_SIGN_CHOICES
+                    moon_sign_form = MoonSignInterpretationForm()
                 context.update(
                     {
                         "moon_phase": moon_phase,
                         "moon_sign_new": moon_sign_form,
                         "moon_sign_interpretation": moon_sign_interpretation,
-                        "current_value": current_value,
                         "current_value": current_value,
                     }
                 )
