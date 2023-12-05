@@ -342,7 +342,6 @@ class CharacterCreationView(View):
             elif player.character_creation_state == Player.MOON_MEANING_SELECTION:
                 form = MoonSignInterpretationForm(request.POST)
                 if form.is_valid():
-                    print("yes")
                     # The form is valid, save the character for the player
                     # Here Xinyi will implement the logic for adding the information
                     # to the player's model field.
@@ -363,11 +362,8 @@ class CharacterCreationView(View):
                     player.select_moon_meaning(moon_meaning=moon_meaning)
                     player.save()
                 else:
-                    # Stand-in for eventual form invalid behavior
-                    print("err")
-                    messages.error(
-                        request, "The MoonSign Interpretation form is invalid."
-                    )
+                    for error in form.non_field_errors():
+                        messages.error(request, error)  # Add
                 return redirect("game:character_creation", game_id=game_id)
             elif player.character_creation_state == Player.PUBLIC_PROFILE_CREATION:
                 form = PublicProfileCreationForm(
