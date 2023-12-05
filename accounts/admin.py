@@ -42,8 +42,6 @@ class LikeAdmin(admin.ModelAdmin):
     is_mutual.short_description = "Mutual Like"
 
 
-
-
 @admin.register(Match)
 class MatchAdmin(admin.ModelAdmin):
     list_display = (
