@@ -63,7 +63,7 @@
                         <h3>Moon Sign Phase: {{ moon_phase }}</h3>
                         <p>The Moon is currently in its {{ moon_phase }} phase. Share your personal meaning of the moon phase:</p>
                         <!-- <textarea id="moon-meaning-text" rows="1" cols="140" placeholder="Share your personal meaning..."></textarea><br>
-                        <button id="share-moon-meaning" data-action="moon_phase">Share</button> -->
+<button id="share-moon-meaning" data-action="moon_phase">Share</button> -->
 
                         <form id="moon-sign-form">
                             {% csrf_token %}
@@ -84,7 +84,7 @@
                                     </li>
                                 </ul>
                             </div>
-
+                            
                         <div id="interactive-container">
                             <div id="tag-container">
                               <!-- Tags will be generated here -->
@@ -111,7 +111,7 @@
                                     <label>Interpretation</label>
                                         {{ moon_sign_interpretation.moon_phase }}<br>
                                         {{ moon_sign_interpretation.moon_phase.label_tag }} 
-                                    <textarea id="interpretation_value" rows="1" cols="60" placeholder="must be positive or negative..."></textarea><br>
+                                    {{ moon_sign_new.moon_phase }}
                                     <label>because</label>
                                     <textarea id="reason_value" rows="1" cols="60" placeholder="Share your personal meaning..."></textarea><br>
                                 </div>
@@ -235,20 +235,19 @@
                             
                             // const moonMeaningText = document.querySelector('#moon-meaning-text')==null ? '' : document.querySelector('#moon-meaning-text').value;
                             const interpretation = document.querySelector('#interpretation_value')==null ? '' : document.querySelector('#interpretation_value').value;
-                            const reason = document.querySelector('#reason_value')==null ? '' : document.querySelector('#reason_value').value;
 
                             if (moon_answer.length === 0) {
                                 alert("Please select at least one word.");
                             } else {
                                 // Combine the moon_answer with the additional moon phase data
-                                value = {
-                                    message: moon_answer,
-                                    moon_data: {
-                                        interpretation: interpretation,
-                                        reason: reason
-                                    }
-                                };
-                            }
+                            value = {
+                                message: moon_answer,
+                                moon_data: {
+                                    interpretation: interpretation,
+                                    reason: moon_answer,
+                                }
+                            };
+}
                             break;
 
                         case 'submit_question':

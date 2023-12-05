@@ -548,9 +548,7 @@ class GameTurn(models.Model):
         print("MOON PHASE I RECEIVED IS ", moon_phase)
         form = player.MoonSignInterpretation
         if moon_data:
-            form.cleaned_data[moon_phase] = moon_data["interpretation"]
-            form.cleaned_data[f"{moon_phase}_reason"] = moon_data["reason"]
-        print(form[moon_phase])
+            form.change_moon_sign(moon_phase, moon_data["interpretation"], moon_data["reason"])
         player.MoonSignInterpretation = form
         player.save()
 
@@ -721,6 +719,21 @@ class MoonSignInterpretation(models.Model):
             "last_quarter": self.last_quarter,
         }
         return moon_sign_mapping.get(moon_phase, "Unknown sign")
+    def change_moon_sign(self, moon_phase, new_sign, new_reason):
+        moon_sign_mapping = {
+            "new_moon": self.new_moon,
+            "new_moon_reason": self.new_moon_reason,
+            "first_quarter": self.first_quarter,
+            "first_quarter_reason": self.first_quarter_reason,
+            "full_moon": self.full_moon,
+            "full_moon_reason": self.full_moon_reason,
+            "last_quarter": self.last_quarter,
+            "last_quarter_reason": self.last_quarter_reason,
+        }
+        moon_sign_mapping[moon_phase] = new_sign
+        moon_sign_mapping[f"{moon_phase}_reason"] = new_reason
+        print("successfully changed moon sign!")
+        self.save()
 
 
 class PublicProfile(models.Model):
