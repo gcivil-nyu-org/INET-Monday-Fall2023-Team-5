@@ -26,7 +26,6 @@ from django.utils import timezone
 from unittest.mock import patch
 from django.core.management.base import CommandError
 from game.models import GameSession, Player, GameTurn
-from django.http import HttpResponseNotAllowed
 
 
 class ProfileModelTest(TestCase):
