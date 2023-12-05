@@ -30,8 +30,22 @@ class LikeAdmin(admin.ModelAdmin):
 
     def make_mutual(self, request, queryset):
         for like in queryset:
-            # Here you would implement the logic to check and create a mutual like
-            pass
+            # Check if the opposite like exists
+            if Like.objects.filter(
+                from_user=like.to_user, to_user=like.from_user
+            ).exists():
+                # If it does, mark both likes as mutual
+                like.is_mutual = True
+                like.save()
+
+                # Get the opposite like and mark as mutual
+                opposite_like = Like.objects.get(
+                    from_user=like.to_user, to_user=like.from_user
+                )
+                opposite_like.is_mutual = True
+                opposite_like.save()
+
+        self.message_user(request, "Selected likes have been marked as mutual")
 
     make_mutual.short_description = "Mark selected likes as mutual"
 
@@ -40,10 +54,6 @@ class LikeAdmin(admin.ModelAdmin):
 
     is_mutual.boolean = True
     is_mutual.short_description = "Mutual Like"
-
-
-# Register the Like model with the admin site
-# admin.site.register(Like, LikeAdmin)
 
 
 @admin.register(Match)
