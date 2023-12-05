@@ -855,6 +855,27 @@ class ResetLikesCommandTest(TestCase):
         self.assertEqual(Profile.objects.get(user=self.user1).likes_remaining, 3)
         self.assertEqual(Profile.objects.get(user=self.user2).likes_remaining, 3)
 
+    def test_reset_likes_with_dbname(self):
+        # Pass the --dbname argument to the command
+        dbname = "custom_db_name"
+        call_command("reset_likes", dbname=dbname)
+
+        # Now check if the likes are reset and the output message contains the dbname
+        self.assertEqual(Like.objects.count(), 0)
+        self.assertEqual(Profile.objects.get(user=self.user1).likes_remaining, 3)
+        self.assertEqual(Profile.objects.get(user=self.user2).likes_remaining, 3)
+
+        # You need to check the output of the command.
+        # For this, you'll need to capture the output. Here's one way to do it using StringIO:
+        from io import StringIO
+
+        out = StringIO()
+        call_command("reset_likes", dbname=dbname, stdout=out)
+        output = out.getvalue()
+
+        # Assert that the output contains the expected string
+        self.assertIn(f"Using database: {dbname}", output)
+
 
 class NotifyMatchesCommandTest(TestCase):
     @classmethod
