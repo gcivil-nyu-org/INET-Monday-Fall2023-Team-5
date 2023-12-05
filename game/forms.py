@@ -1,4 +1,6 @@
 from django import forms
+from django.core.exceptions import ValidationError
+
 from .models import (
     Character,
 )  # Ensure this import is correct based on your project structure
@@ -63,8 +65,7 @@ class MoonSignInterpretationForm(forms.Form):
     MOON_SIGN_CHOICES = [
         ("positive", "Positive"),
         ("negative", "Negative"),
-        ("ambiguous1", "Ambiguous 1"),
-        ("ambiguous2", "Ambiguous 2"),
+        ("ambiguous", "Ambiguous"),
     ]
 
     first_quarter = forms.ChoiceField(
@@ -110,6 +111,40 @@ class MoonSignInterpretationForm(forms.Form):
         label="because",
         widget=forms.TextInput(attrs={"placeholder": "Your reason..."}),
     )
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        # Extracting the moon sign values
+        first_quarter = cleaned_data.get("first_quarter")
+        full_moon = cleaned_data.get("full_moon")
+        last_quarter = cleaned_data.get("last_quarter")
+        new_moon = cleaned_data.get("new_moon")
+
+        # Counting the occurrences of each choice
+        choices_count = {
+            "positive": [first_quarter, full_moon, last_quarter, new_moon].count(
+                "positive"
+            ),
+            "negative": [first_quarter, full_moon, last_quarter, new_moon].count(
+                "negative"
+            ),
+            "ambiguous": [first_quarter, full_moon, last_quarter, new_moon].count(
+                "ambiguous"
+            ),
+        }
+
+        # Validating the conditions
+        if (
+            choices_count["positive"] != 1
+            or choices_count["negative"] != 1
+            or choices_count["ambiguous"] != 2
+        ):
+            raise ValidationError(
+                "There must be one positive, one negative, and two ambiguous responses."
+            )
+
+        return cleaned_data
 
 
 class PublicProfileCreationForm(forms.Form):
