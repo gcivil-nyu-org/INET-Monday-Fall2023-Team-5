@@ -1196,34 +1196,39 @@ class LikeProfileViewTest(TestCase):
         self.assertEqual(like_count, 1)
         match_count = Match.objects.filter(user1=self.user1, user2=self.user2).count()
         self.assertEqual(match_count, 0)
-    
+
     def test_like_profile_with_no_likes_remaining(self):
         # Set likes_remaining to 0 for user1
         self.profile1.likes_remaining = 0
         self.profile1.save()
 
         # Login as user1 with the correct password
-        login_successful = self.client.login(username='user1', password='password1')
+        login_successful = self.client.login(username="user1", password="password1")
         self.assertTrue(login_successful, "Login failed, check setup and credentials.")
 
         # User1 tries to like User2's profile with no likes remaining
-        response = self.client.post(reverse('like_profile', args=[self.user2.pk]))
+        response = self.client.post(reverse("like_profile", args=[self.user2.pk]))
 
         # Since the user is logged in, there should not be a redirect, hence no follow=True needed
-        self.assertEqual(response.status_code, 200, "Expected 200 OK response, got a redirect instead.")
+        self.assertEqual(
+            response.status_code,
+            200,
+            "Expected 200 OK response, got a redirect instead.",
+        )
 
         data = response.json()
-        self.assertFalse(data['success'])
-        self.assertEqual(data['error'], 'You have reached your daily likes limit')
+        self.assertFalse(data["success"])
+        self.assertEqual(data["error"], "You have reached your daily likes limit")
 
         # Check if no Like object was created
-        like_count = Like.objects.filter(from_user=self.user1, to_user=self.user2).count()
+        like_count = Like.objects.filter(
+            from_user=self.user1, to_user=self.user2
+        ).count()
         self.assertEqual(like_count, 0)
 
         # Check if user1's likes_remaining is still 0
         self.profile1.refresh_from_db()
         self.assertEqual(self.profile1.likes_remaining, 0)
-
 
 
 class ResetLikesViewTest(TestCase):

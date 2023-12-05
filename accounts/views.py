@@ -258,7 +258,7 @@ def like_profile(request, user_id):
             return JsonResponse(
                 {"success": False, "error": "You have already liked this user."}
             )
-        
+
         if current_user_profile.likes_remaining <= 0:
             # User has no likes remaining, send a specific error message
             return JsonResponse(
