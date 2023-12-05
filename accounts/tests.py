@@ -26,6 +26,7 @@ from django.utils import timezone
 from unittest.mock import patch
 from django.core.management.base import CommandError
 from game.models import GameSession, Player, GameTurn
+from .admin import LikeAdmin
 
 
 class ProfileModelTest(TestCase):
@@ -1284,3 +1285,28 @@ class LikeModelTest(TestCase):
     def test_is_not_mutual(self):
         non_mutual_like = Like.objects.get(from_user=self.user1, to_user=self.user3)
         self.assertFalse(non_mutual_like.is_mutual(), "The like should not be mutual")
+
+
+class LikeAdminTest(TestCase):
+    def setUp(self):
+        self.user1 = User.objects.create(username="user1", password="password1")
+        self.user2 = User.objects.create(username="user2", password="password2")
+        self.like1 = Like.objects.create(from_user=self.user1, to_user=self.user2)
+        self.like2 = Like.objects.create(from_user=self.user2, to_user=self.user1)
+
+        self.site = AdminSite()
+        self.like_admin = LikeAdmin(Like, self.site)
+
+    def test_make_mutual_action(self):
+        # Here, instead of calling the action directly, simulate it via the admin site
+        queryset = Like.objects.filter(id=self.like1.id)
+        request = None  # Mock the request object
+
+        # Call the make_mutual action
+        self.like_admin.make_mutual(request, queryset)
+
+        # Verify if the likes are now mutual
+        self.like1.refresh_from_db()
+        self.like2.refresh_from_db()
+        self.assertTrue(self.like1.is_mutual())
+        self.assertTrue(self.like2.is_mutual())
