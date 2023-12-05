@@ -26,6 +26,7 @@ from django.utils import timezone
 from unittest.mock import patch
 from django.core.management.base import CommandError
 from game.models import GameSession, Player, GameTurn
+from django.http import HttpResponseNotAllowed
 
 
 class ProfileModelTest(TestCase):
@@ -1278,19 +1279,22 @@ class ResetLikesViewTest(TestCase):
         self.assertEqual(self.profile1.likes_remaining, 3)
         self.assertEqual(self.profile2.likes_remaining, 3)
 
+        @override_settings(ALLOWED_HOSTS=["testserver"])
+        def test_invalid_method(self):
+            # Create a staff user and login
+            staff_user = User.objects.create_user(
+                username="staffuser", password="staffpassword", is_staff=True
+            )
+            self.client.login(username="staffuser", password="staffpassword")
 
-def test_invalid_method(self):
-    # Create a staff user and login
-    staff_user = User.objects.create_user(
-        username="staffuser", password="staffpassword", is_staff=True
-    )
-    self.client.login(username="staffuser", password="staffpassword")
-    # Make a GET request (or any method other than POST)
-    response = self.client.get(reverse("reset_likes_view"))
+            # Make a GET request to reset_likes_view
+            response = self.client.get(
+                reverse("reset_likes_view")
+            )  # Use self.client.get
 
-    # Check if the response indicates an invalid method
-    self.assertEqual(response.status_code, 400)
-    self.assertEqual(response.content.decode(), "Invalid method")
+            # Check if the response is an HttpResponseNotAllowed
+            self.assertIsInstance(response, HttpResponseNotAllowed)
+            self.assertEqual(response.status_code, 405)
 
 
 class MatchModelTest(TestCase):
