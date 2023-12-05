@@ -208,41 +208,34 @@ def confirmation_required(request):
 
 @login_required
 def account(request):
-    password_form = PasswordChangeForm(request.user, request.POST or None)
-
-    if "username" in request.POST:  # This indicates a username change attempt
-        new_username = request.POST.get("username")
-        if new_username:
-            if (
-                User.objects.filter(username=new_username)
-                .exclude(pk=request.user.pk)
-                .exists()
-            ):
-                messages.error(
-                    request, "This username is already taken. Choose another."
-                )
-            else:
-                request.user.username = new_username
-                request.user.save()
-                messages.success(request, "Username updated successfully")
-
-    elif "old_password" in request.POST:  # This indicates a password change attempt
+    if request.method == "POST":
+        password_form = PasswordChangeForm(request.user, request.POST)
         if password_form.is_valid():
             user = password_form.save()
             update_session_auth_hash(
                 request, user
-            )  # Important, to update the session and keep the user logged in
-            messages.success(request, "Password updated successfully")
+            )  # Important, to keep the user logged in after password change
+            return JsonResponse(
+                {"status": "success", "message": "Password updated successfully"},
+                status=200,
+            )
         else:
-            messages.error(request, "Please correct the errors below.")
+            # Here we create a list of error messages
+            errors = [
+                f"{field}: {error[0]}" for field, error in password_form.errors.items()
+            ]
+            return JsonResponse(
+                {
+                    "status": "error",
+                    "message": "Some errors occurred:",
+                    "errors": errors,
+                },
+                status=400,
+            )
+    else:
+        password_form = PasswordChangeForm(request.user)
 
-    return render(
-        request,
-        "accounts/account.html",
-        {
-            "password_form": password_form,
-        },
-    )
+    return render(request, "accounts/account.html", {"password_form": password_form})
 
 
 @login_required
@@ -254,49 +247,57 @@ def like_profile(request, user_id):
             from_user=request.user, to_user=receiving_user
         ).first()
 
+        # Check if the user has already liked this profile
         if existing_like:
             return JsonResponse(
-                {"success": False, "error": "You have already liked this user."}
+                {"success": False, "error": "You have already liked this user."},
+                status=200,
             )
 
+        # Check if the user has no likes remaining
         if current_user_profile.likes_remaining <= 0:
-            # User has no likes remaining, send a specific error message
             return JsonResponse(
-                {"success": False, "error": "You have reached your daily likes limit"}
+                {"success": False, "error": "You have reached your daily likes limit"},
+                status=200,
             )
 
-        if current_user_profile.likes_remaining > 0:
-            Like.objects.create(from_user=request.user, to_user=receiving_user)
-            current_user_profile.likes_remaining -= 1
-            current_user_profile.save()
+        # Proceed to create a new like
+        Like.objects.create(from_user=request.user, to_user=receiving_user)
+        current_user_profile.likes_remaining -= 1
+        current_user_profile.save()
 
-            # Check for mutual like
-            mutual_like = Like.objects.filter(
-                from_user=receiving_user, to_user=request.user
-            ).exists()
-            # Check if either user is already matched
-            user_already_matched = Match.objects.filter(
-                Q(user1=request.user)
-                | Q(user2=request.user)
-                | Q(user1=receiving_user)
-                | Q(user2=receiving_user)
-            ).exists()
+        # Check for mutual like
+        mutual_like = Like.objects.filter(
+            from_user=receiving_user, to_user=request.user
+        ).exists()
 
-            if mutual_like and not user_already_matched:
-                # Create a match
-                Match.objects.create(user1=request.user, user2=receiving_user)
-                # You can add any notification logic here if needed
+        # Check if either user is already matched
+        user_already_matched = Match.objects.filter(
+            Q(user1=request.user)
+            | Q(user2=request.user)
+            | Q(user1=receiving_user)
+            | Q(user2=receiving_user)
+        ).exists()
 
-            return JsonResponse(
-                {
-                    "success": True,
-                    "likes_remaining": current_user_profile.likes_remaining,
-                    "action": "liked",
-                    "match_created": mutual_like and not user_already_matched,
-                }
-            )
+        if mutual_like and not user_already_matched:
+            # Create a match
+            Match.objects.create(user1=request.user, user2=receiving_user)
+            # You can add any notification logic here if needed
 
-    return JsonResponse({"success": False, "error": "Invalid request method."})
+        return JsonResponse(
+            {
+                "success": True,
+                "likes_remaining": current_user_profile.likes_remaining,
+                "action": "liked",
+                "match_created": mutual_like and not user_already_matched,
+            },
+            status=200,
+        )
+
+    # If the request method is not POST, return an error
+    return JsonResponse(
+        {"success": False, "error": "Invalid request method."}, status=405
+    )
 
 
 @csrf_exempt
