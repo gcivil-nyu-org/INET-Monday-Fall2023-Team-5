@@ -1122,6 +1122,8 @@ class EditProfileFormTest(TestCase):
             list(form.fields["open_to_dating"].queryset),
             list(DatingPreference.objects.all()),
         )
+
+
 class LikeProfileViewTest(TestCase):
     def setUp(self):
         # Create two users

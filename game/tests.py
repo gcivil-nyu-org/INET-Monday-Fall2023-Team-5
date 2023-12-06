@@ -12,12 +12,14 @@ from .models import (
     Question,
     Word,
     NarrativeChoice,
+    MoonSignInterpretation,
 )
 from django.core.exceptions import ValidationError
 from .forms import (
     CharacterSelectionForm,
     MoonSignInterpretationForm,
     PublicProfileCreationForm,
+    AnswerFormMoon,
 )
 from django import forms
 from PIL import Image
@@ -483,28 +485,66 @@ class GameProgressViewTestCase(TestCase):
         # Assertions
         self.assertTrue(response2.context["choice_made"])
 
-    def test_game_turn_moon_phase(self):
-        # RETIRE this unit test when we rewrite the moon phase turn to not be hard coded
+    # def test_game_turn_moon_phase(self):
+    #     # RETIRE this unit test when we rewrite the moon phase turn to not be hard coded
 
+    #     self.game_session.current_game_turn.state = GameTurn.MOON_PHASE
+    #     self.game_session.current_game_turn.save()
+
+    #     response = self.client.get(
+    #         reverse("game_progress", kwargs={"game_id": self.game_session.game_id})
+    #     )
+
+    #     # Assertions
+    #     self.assertFalse(response.context["moon_phase"])
+    #     self.assertTemplateUsed(response, "game_progress.html")
+
+    #     # Set the game turn to #3 which is hard coded to be a moon phase turn
+    #     self.game_session.current_game_turn.turn_number = 3
+    #     self.game_session.current_game_turn.save()
+
+    #     response = self.client.get(
+    #         reverse("game_progress", kwargs={"game_id": self.game_session.game_id})
+    #     )
+    #     self.assertTrue(response.context["moon_phase"])
+
+    def test_game_turn_moon_phase(self):
+        # Set the game turn state to MOON_PHASE
         self.game_session.current_game_turn.state = GameTurn.MOON_PHASE
         self.game_session.current_game_turn.save()
 
+        # Add words to the player's word pool
+        word1 = Word.objects.create(word="Uno")
+        word2 = Word.objects.create(word="Dos")
+        word3 = Word.objects.create(word="Tres")
+        self.user.player.simple_word_pool.add(word1)
+        self.user.player.character_word_pool.add(word2)
+        self.user.player.simple_word_pool.add(word3)
+        self.user.player.save()
+
+        self.user.player.MoonSignInterpretation = MoonSignInterpretation.objects.create(
+            first_quarter="positive",
+            first_quarter_reason="Some reason",
+            full_moon="negative",
+            full_moon_reason="Another reason",
+            last_quarter="ambiguous1",
+            last_quarter_reason="Yet another reason",
+            new_moon="ambiguous2",
+            new_moon_reason="Different reason",
+            player=self.user.player,
+        )
+        self.user.player.save()
+
+        # Make the request
         response = self.client.get(
             reverse("game_progress", kwargs={"game_id": self.game_session.game_id})
         )
 
         # Assertions
-        self.assertFalse(response.context["moon_phase"])
+        # Corrected the name of the form to 'answer_moon_form'
+        self.assertIn("answer_moon_form", response.context)
+        self.assertIsInstance(response.context["answer_moon_form"], AnswerFormMoon)
         self.assertTemplateUsed(response, "game_progress.html")
-
-        # Set the game turn to #3 which is hard coded to be a moon phase turn
-        self.game_session.current_game_turn.turn_number = 3
-        self.game_session.current_game_turn.save()
-
-        response = self.client.get(
-            reverse("game_progress", kwargs={"game_id": self.game_session.game_id})
-        )
-        self.assertTrue(response.context["moon_phase"])
 
 
 class CharacterCreationViewTestCase(TestCase):
@@ -1086,9 +1126,9 @@ class CharacterCreationViewTest(TestCase):
             "first_quarter_reason": "Some reason",
             "full_moon": "negative",
             "full_moon_reason": "Another reason",
-            "last_quarter": "ambiguous1",
+            "last_quarter": "ambiguous",
             "last_quarter_reason": "Yet another reason",
-            "new_moon": "ambiguous2",
+            "new_moon": "ambiguous",
             "new_moon_reason": "Different reason",
         }
 
@@ -1111,9 +1151,9 @@ class CharacterCreationViewTest(TestCase):
             # Refresh the player instance to ensure it's up to date
             self.player.refresh_from_db()
 
-            # Check that the select_moon_meaning method was called
+            # Check that the select_moon_meaning method was called with the recently created MoonSignInterpretation
             mock_select_moon_meaning.assert_called_once_with(
-                moon_meaning="Here will be the data for the moon meaning"
+                moon_meaning=MoonSignInterpretation.objects.first()
             )
 
             self.assertEqual(response.status_code, 302)
@@ -1127,13 +1167,26 @@ class CharacterCreationViewTest(TestCase):
         player.character_creation_state = Player.MOON_MEANING_SELECTION
         player.save()
 
-        moon_meaning = "Test moon meaning"
+        # Create a MoonSignInterpretation() instance for the test, associate with the player
+        moon_sign_interpretation = MoonSignInterpretation.objects.create(
+            first_quarter="positive",
+            first_quarter_reason="Some reason",
+            full_moon="negative",
+            full_moon_reason="Another reason",
+            last_quarter="ambiguous1",
+            last_quarter_reason="Yet another reason",
+            new_moon="ambiguous2",
+            new_moon_reason="Different reason",
+            player=player,
+        )
 
         # Directly call the method
-        player.select_moon_meaning(moon_meaning=moon_meaning)
+        player.select_moon_meaning(moon_meaning=moon_sign_interpretation)
 
         # Add assertions as needed to check the result of the method call
         # For example, check the state of the player or other side effects
+        assert player.character_creation_state == Player.PUBLIC_PROFILE_CREATION
+        assert player.MoonSignInterpretation == moon_sign_interpretation
 
     def test_game_session_does_not_exist(self):
         # Simulate a non-existent game session by using a random UUID

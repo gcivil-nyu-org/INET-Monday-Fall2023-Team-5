@@ -906,3 +906,55 @@ background-color: #7b1fa2;
 .moon-sign-form li {
     padding: 0.5em 0; /* Adds spacing above and below each line */
 }
+#emoji-react-form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Styles for each radio button and label */
+.emoji-radio input[type="radio"] {
+    display: none; /* Hide the default radio button */
+}
+
+.emoji-radio label {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px; /* Adjust the width as needed */
+    height: 50px; /* Adjust the height as needed */
+    margin: 5px;
+    border: 2px solid #ddd;
+    border-radius: 50%; /* Circular borders for the emoji buttons */
+    background-color: #f8f8f8;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+/* Hover effect for labels */
+.emoji-radio label:hover {
+    background-color: #e9ecef;
+    transform: scale(1.1); /* Slightly scale up the button on hover */
+}
+
+/* Styles when the radio button is checked */
+.emoji-radio input[type="radio"]:checked + label {
+    background-color: #800080;
+    border-color: white; /* Adjust if needed */
+}
+
+/* Style for the submit button */
+#submit-reaction {
+    padding: 10px 20px;
+    background-color: #800080; /* Adjust the color to match your design */
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#submit-reaction:hover {
+    background-color: #a000a0; /* Darker shade for hover effect */
+}
