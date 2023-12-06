@@ -1349,3 +1349,127 @@ class GameSessionTestCase(TestCase):
         profiles = self.game_session.get_player_profiles()
         self.assertEqual(profiles["playerA_profile"], self.player1.public_profile)
         self.assertEqual(profiles["playerB_profile"], self.player2.public_profile)
+
+
+class MoonSignInterpretationTest(TestCase):
+    def setUp(self):
+        # Create a test user
+        self.user = User.objects.create_user(username="testuser", password="12345")
+
+        # Create a GameSession instance
+        self.game_session = GameSession.objects.create()
+
+        # Create a Player instance associated with the user and game session
+        self.player = Player(user=self.user, game_session=self.game_session)
+        self.player.save()
+
+        # Create a MoonSignInterpretation instance associated with the player
+        self.moon_sign_interpretation = MoonSignInterpretation.objects.create(
+            on_player=self.player,
+            first_quarter="Positive",
+            first_quarter_reason="Reason for First Quarter",
+            full_moon="Negative",
+            full_moon_reason="Reason for Full Moon",
+            last_quarter="Ambiguous",
+            last_quarter_reason="Reason for Last Quarter",
+            new_moon="Unbiased",
+            new_moon_reason="Reason for New Moon",
+        )
+
+    def test_change_moon_sign_valid(self):
+        # Test changing the moon sign to a valid phase
+        self.moon_sign_interpretation.change_moon_sign("new_moon", "Inspiring")
+        updated_moon_sign = MoonSignInterpretation.objects.get(
+            id=self.moon_sign_interpretation.id
+        )
+        self.assertEqual(updated_moon_sign.new_moon, "Inspiring")
+
+    def test_change_moon_sign_invalid_phase(self):
+        # Test changing the moon sign to an invalid phase
+        with self.assertRaises(ValueError):
+            self.moon_sign_interpretation.change_moon_sign("invalid_phase", "Inspiring")
+
+
+class WordModelTest(TestCase):
+    def setUp(self):
+        # Set up non-modified objects used by all test methods
+        Word.objects.create(word="TestWord", isSimple=True, kind_of_word="noun")
+        Word.objects.create(word="AnotherWord", isSimple=False, kind_of_word="verb")
+
+    def test_word_creation(self):
+        # Test the creation of a Word instance
+        test_word = Word.objects.get(word="TestWord")
+        another_word = Word.objects.get(word="AnotherWord")
+        self.assertEqual(test_word.isSimple, True)
+        self.assertEqual(another_word.isSimple, False)
+        self.assertEqual(test_word.kind_of_word, "noun")
+        self.assertEqual(another_word.kind_of_word, "verb")
+
+    def test_string_representation(self):
+        # Test the string representation of a Word instance
+        test_word = Word.objects.get(word="TestWord")
+        self.assertEqual(str(test_word), "TestWord")
+
+    def test_equality(self):
+        # Test the equality comparison of two Word instances
+        test_word = Word.objects.get(word="TestWord")
+        same_word = Word(word="TestWord", isSimple=True, kind_of_word="noun")
+        different_word = Word(word="DifferentWord", isSimple=True, kind_of_word="noun")
+        self.assertEqual(test_word, same_word)
+        self.assertNotEqual(test_word, different_word)
+
+    def test_hash_representation(self):
+        # Test the hash representation of a Word instance
+        test_word = Word.objects.get(word="TestWord")
+        same_word = Word(word="TestWord", isSimple=True, kind_of_word="noun")
+        self.assertEqual(hash(test_word), hash(same_word))
+
+    def test_repr_representation(self):
+        # Test the repr representation of a Word instance
+        test_word = Word.objects.get(word="TestWord")
+        self.assertEqual(repr(test_word), f"<Word: TestWord>")
+
+
+class QuestionModelTest(TestCase):
+    def setUp(self):
+        # Set up non-modified objects used by all test methods
+        Question.objects.create(text="What is your favorite color?")
+
+    def test_question_creation(self):
+        # Test the creation of a Question instance
+        question = Question.objects.get(text="What is your favorite color?")
+        self.assertEqual(question.text, "What is your favorite color?")
+
+    def test_string_representation(self):
+        # Test the string representation of a Question instance
+        question = Question.objects.get(text="What is your favorite color?")
+        self.assertEqual(str(question), "What is your favorite color?")
+
+
+class NarrativeChoiceModelTest(TestCase):
+    def setUp(self):
+        # Set up necessary objects for the tests
+        self.interest = Interest.objects.create(name="Adventure")
+        self.word = Word.objects.create(word="Explore")
+
+        NarrativeChoice.objects.create(
+            name="Mysterious Forest", interest=self.interest, night_number=1
+        )
+
+    def test_narrative_choice_creation(self):
+        # Test creating a NarrativeChoice instance
+        narrative_choice = NarrativeChoice.objects.get(name="Mysterious Forest")
+        self.assertEqual(narrative_choice.name, "Mysterious Forest")
+        self.assertEqual(narrative_choice.interest, self.interest)
+        self.assertEqual(narrative_choice.night_number, 1)
+
+    def test_string_representation(self):
+        # Test the string representation of a NarrativeChoice instance
+        narrative_choice = NarrativeChoice.objects.get(name="Mysterious Forest")
+        self.assertEqual(str(narrative_choice), "Mysterious Forest")
+
+    def test_adding_words(self):
+        # Test adding words to a NarrativeChoice instance
+        narrative_choice = NarrativeChoice.objects.get(name="Mysterious Forest")
+        narrative_choice.words.add(self.word)
+        self.assertIn(self.word, narrative_choice.words.all())
