@@ -1,25 +1,69 @@
 {% extends 'base.html' %}
 
-{% block title %} Account Page {% endblock %}
+{% block title %}Account Page{% endblock %}
 
 {% block content %}
-    <h2>Your Account</h2>
-    <p>Username: {{ request.user.username }}</p>
-    <p>Email: {{ request.user.email }}</p>
+  <h2>Your Account</h2>
+  <p>Username: {{ request.user.username }}</p>
+  <p>Email: {{ request.user.email }}</p>
 
-    <h3>Change Username</h3>
-    <form method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <input type="text" name="username" class="form-control" placeholder="New Username">
-        </div>
-        <button type="submit" class="btn btn-primary">Change Username</button>
-    </form>
+  <h3 class="mt-4">Change Password</h3>
+  <form id="change-password-form" method="post" action="{% url 'account' %}">
+      {% csrf_token %}
+      {{ password_form.as_p }}
+      <button type="submit" class="btn btn-primary">Change Password</button>
+  </form>
 
-    <h3 class="mt-4">Change Password</h3>
-    <form method="post">
-        {% csrf_token %}
-        {{ password_form.as_p }}
-        <button type="submit" class="btn btn-primary">Change Password</button>
-    </form>
+  <!-- Modal for messages -->
+  <div class="modal" tabindex="-1" role="dialog" id="messageModal">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title">Notification</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  <!-- Placeholder for the message content will be styled in scripts block -->
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+          </div>
+      </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+    $('#change-password-form').submit(function(event) {
+        event.preventDefault();
+        var formData = $(this).serialize();
+
+        $.ajax({
+            type: 'POST',
+            url: $(this).attr('action'),
+            data: formData,
+            dataType: 'json', // Make sure the dataType is set to 'json'
+            success: function(response) {
+                $('#messageModal .modal-body').html('<div class="text-success">' + response.message + '</div>');
+                $('#messageModal').modal('show');
+            },
+            error: function(xhr) {
+                var response = xhr.responseJSON;
+                var message = '<div class="text-danger">' + response.message + '</div>';
+                var errors = '<ul class="text-danger">';
+                $.each(response.errors, function(key, error) {
+                    errors += '<li>' + error + '</li>';
+                });
+                errors += '</ul>';
+                $('#messageModal .modal-body').html(message + errors);
+                $('#messageModal').modal('show');
+            }
+        });
+    });
+});
+</script>
 {% endblock %}
