@@ -507,6 +507,12 @@ class GameTurn(models.Model):
         )
         self.parent_game.gameLog.chat_messages.add(chat_message)
 
+        # Change the current moon sign reason to the message
+        moon_phase = self.get_moon_phase()
+        moon_sign_interpretation = player.MoonSignInterpretation
+        moon_sign_interpretation.change_moon_sign(moon_phase, message)
+        moon_sign_interpretation.save()
+
         # Process the answer and update word pools
         for word in message.split():
             if player.simple_word_pool.filter(word=word).exists():
