@@ -37,6 +37,7 @@ from .context_processors import game_session_processor
 from uuid import uuid4
 from unittest.mock import patch
 from django.contrib.auth import get_user_model
+from datetime import datetime
 
 
 class CharacterModelTest(TestCase):
@@ -1495,3 +1496,117 @@ class NarrativeChoiceModelTest(TestCase):
         narrative_choice = NarrativeChoice.objects.get(name="Mysterious Forest")
         narrative_choice.words.add(self.word)
         self.assertIn(self.word, narrative_choice.words.all())
+
+
+class InterestModelTest(TestCase):
+    def setUp(self):
+        # Create an Interest instance to use in tests
+        Interest.objects.create(name="Music")
+
+    def test_interest_creation(self):
+        # Test the creation of an Interest instance
+        music_interest = Interest.objects.get(name="Music")
+        self.assertEqual(music_interest.name, "Music")
+
+    def test_interest_str(self):
+        # Test the __str__ method of Interest
+        music_interest = Interest.objects.get(name="Music")
+        self.assertEqual(str(music_interest), "Music")
+
+
+class QualityModelTest(TestCase):
+
+    def setUp(self):
+        # Create a Quality instance
+        self.quality = Quality.objects.create(name="Bravery")
+        # Create Word instances and add them to the Quality instance
+        word1 = Word.objects.create(word="Courage")
+        word2 = Word.objects.create(word="Valiant")
+        self.quality.words.add(word1, word2)
+
+    def test_quality_creation(self):
+        # Test the creation of a Quality instance
+        self.assertEqual(self.quality.name, "Bravery")
+
+    def test_quality_str(self):
+        # Test the __str__ method
+        self.assertEqual(str(self.quality), "Bravery")
+
+    def test_quality_words(self):
+        # Test the many-to-many relationship with Word
+        self.assertEqual(self.quality.words.count(), 2)
+
+
+class ActivityModelTest(TestCase):
+
+    def setUp(self):
+        # Create an Activity instance
+        self.activity = Activity.objects.create(name="Hiking")
+        # Create Question instances and add them to the Activity instance
+        question1 = Question.objects.create(text="What do you enjoy most about hiking?")
+        question2 = Question.objects.create(text="What's your favorite hiking trail?")
+        self.activity.questions.add(question1, question2)
+
+    def test_activity_creation(self):
+        # Test the creation of an Activity instance
+        self.assertEqual(self.activity.name, "Hiking")
+
+    def test_activity_str(self):
+        # Test the __str__ method
+        self.assertEqual(str(self.activity), "Hiking")
+
+    def test_activity_questions(self):
+        # Test the many-to-many relationship with Question
+        self.assertEqual(self.activity.questions.count(), 2)
+
+
+class ChatMessageModelTest(TestCase):
+
+    def setUp(self):
+        # Create a ChatMessage instance
+        self.chat_message = ChatMessage.objects.create(
+            avatar_url="http://example.com/avatar.png",
+            sender="John Doe",
+            text="Hello, world!",
+            reaction="😊"
+        )
+
+    def test_chat_message_creation(self):
+        # Test the creation of a ChatMessage instance
+        self.assertEqual(self.chat_message.sender, "John Doe")
+        self.assertEqual(self.chat_message.text, "Hello, world!")
+        self.assertEqual(self.chat_message.reaction, "😊")
+        self.assertTrue(isinstance(self.chat_message.timestamp, datetime))  # Corrected line
+
+    def test_chat_message_str(self):
+        # Test the __str__ method
+        self.assertEqual(str(self.chat_message), "Hello, world!")
+
+
+class GameLogModelTest(TestCase):
+
+    def setUp(self):
+        # Create two ChatMessage instances
+        self.chat_message1 = ChatMessage.objects.create(
+            sender="Alice", 
+            text="Hello!"
+        )
+        self.chat_message2 = ChatMessage.objects.create(
+            sender="Bob", 
+            text="Hi there!"
+        )
+
+        # Create a GameLog instance and add the ChatMessages to it
+        self.game_log = GameLog.objects.create()
+        self.game_log.chat_messages.add(self.chat_message1, self.chat_message2)
+
+    def test_game_log_chat_messages(self):
+        # Test that the ChatMessages are correctly associated with the GameLog
+        self.assertIn(self.chat_message1, self.game_log.chat_messages.all())
+        self.assertIn(self.chat_message2, self.game_log.chat_messages.all())
+        self.assertEqual(self.game_log.chat_messages.count(), 2)
+
+    def test_game_log_int_method(self):
+        # Test the __int__ method
+        self.assertEqual(int(self.game_log), self.game_log.id)
+
