@@ -294,6 +294,28 @@ class GameProgressViewTestCase(TestCase):
         game_session.initialize_game()
         game_session.save()
 
+        # Create MoonSignInterpretation instances for players
+        self.moon_sign_A = MoonSignInterpretation.objects.create(
+            on_player=player_A,
+            new_moon="Unbiased",
+            first_quarter="Positive",
+            full_moon="Negative",
+            last_quarter="Ambiguous",
+        )
+        self.moon_sign_B = MoonSignInterpretation.objects.create(
+            on_player=player_B,
+            new_moon="Unbiased",
+            first_quarter="Positive",
+            full_moon="Negative",
+            last_quarter="Ambiguous",
+        )
+
+        # Assign MoonSignInterpretation to players
+        player_A.MoonSignInterpretation = self.moon_sign_A
+        player_B.MoonSignInterpretation = self.moon_sign_B
+        player_A.save()
+        player_B.save()
+
     def test_get_request_valid_game_id(self):
         # Make the request
         response = self.client.get(
