@@ -13,6 +13,8 @@ from .models import (
     Word,
     NarrativeChoice,
     MoonSignInterpretation,
+    GameLog,
+    PublicProfile,
 )
 from django.core.exceptions import ValidationError
 from .forms import (
@@ -34,6 +36,7 @@ from django.core.files.base import ContentFile
 from .context_processors import game_session_processor
 from uuid import uuid4
 from unittest.mock import patch
+from django.contrib.auth import get_user_model
 
 
 class CharacterModelTest(TestCase):
@@ -1266,3 +1269,83 @@ class CharacterDetailsTest(TestCase):
 
         self.assertEqual(response.status_code, 404)
         self.assertEqual(response.json(), {"error": "Character not found"})
+
+
+User = get_user_model()
+
+from django.test import TestCase
+from game.models import GameSession, Player, PublicProfile
+from django.contrib.auth.models import User
+from django.test import RequestFactory
+from django.shortcuts import get_object_or_404
+
+
+class GameSessionTestCase(TestCase):
+    def setUp(self):
+        # Create a request factory
+        self.factory = RequestFactory()
+
+        # Create users for the players
+        user1 = User.objects.create(username="player1")
+        user2 = User.objects.create(username="player2")
+
+        # Create an initial game session
+        self.game_session = GameSession.objects.create()
+
+        # Create players and associate them with the game session
+        self.player1 = Player.objects.create(user=user1, game_session=self.game_session)
+        self.player2 = Player.objects.create(user=user2, game_session=self.game_session)
+
+        # Create PublicProfile instances for player1 and player2
+        self.player1_public_profile = PublicProfile.objects.create(
+            quality_1="Quality1_Player1",
+            quality_2="Quality2_Player1",
+            quality_3="Quality3_Player1",
+            interest_1="Interest1_Player1",
+            interest_2="Interest2_Player1",
+            interest_3="Interest3_Player1",
+            activity_1="Activity1_Player1",
+            activity_2="Activity2_Player1",
+        )
+        self.player1.public_profile = self.player1_public_profile
+        self.player1.save()
+
+        self.player2_public_profile = PublicProfile.objects.create(
+            quality_1="Quality1_Player2",
+            quality_2="Quality2_Player2",
+            quality_3="Quality3_Player2",
+            interest_1="Interest1_Player2",
+            interest_2="Interest2_Player2",
+            interest_3="Interest3_Player2",
+            activity_1="Activity1_Player2",
+            activity_2="Activity2_Player2",
+        )
+        self.player2.public_profile = self.player2_public_profile
+        self.player2.save()
+
+        # Update the game session with players
+        self.game_session.playerA = self.player1
+        self.game_session.playerB = self.player2
+        self.game_session.save()
+
+    def test_game_session_initialization(self):
+        # Test the initialization of the game session
+        self.game_session.initialize_game()
+        self.assertEqual(self.game_session.state, GameSession.CHARACTER_CREATION)
+        self.assertIsNotNone(self.game_session.gameLog)
+        self.assertIsNotNone(self.game_session.current_game_turn)
+        self.assertEqual(
+            self.game_session.current_game_turn.active_player, self.player1
+        )
+
+    def test_game_session_set_inactive(self):
+        # Test setting the game session to inactive
+        self.game_session.set_game_inactive()
+        self.game_session.refresh_from_db()
+        self.assertFalse(self.game_session.is_active)
+
+    def test_get_player_profiles(self):
+        # Test getting player profiles
+        profiles = self.game_session.get_player_profiles()
+        self.assertEqual(profiles["playerA_profile"], self.player1.public_profile)
+        self.assertEqual(profiles["playerB_profile"], self.player2.public_profile)
