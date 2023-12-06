@@ -83,6 +83,82 @@
             color: whitesmoke;
             background-color: #612383;
         }
+        .modal {
+            display: none; /* Keep modals hidden by default */
+            position: fixed;
+            z-index: 1; /* Sit on top of everything */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Dim the background */
+            padding-top: 100px; /* Add padding to the top to push the modal down */
+        }
+
+        .modal-content {
+            background: #ffccf9; /* Light pink background */
+            color: #5e239d; /* Purple text color */
+            margin: 0 auto; /* Center the modal horizontally */
+            padding: 20px;
+            border: 5px solid #5e239d !important;
+            border-radius: 15px;
+            width: 70%; /* Adjust width to 70% of the viewport width */
+            max-width: 800px; /* Max width for large displays */
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2); /* Drop shadow for depth */
+            position: relative; /* Needed for proper z-index functioning */
+        }
+
+        .modal-content h2, .modal-content p {
+            background: #ffccf9; /* Light pink background */
+            border: none; /* Remove the border */
+            padding: 10px;
+            border-radius: 15px;
+        }
+        .game-container {
+        display: flex;
+        flex-direction: column;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            /* Your other styles for the header */
+        }
+        .profile-button-container {
+            display: flex;
+            justify-content: center; /* This will center the buttons horizontally */
+            align-items: center; /* This will center the buttons vertically if the container has a specified height */
+            padding: 10px 0; /* Add some padding at the top and bottom */
+        }
+
+        .profile-btn {
+            background-color: #5e239d; /* Purple background */
+            color: #fff; /* White text */
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-block; /* Allows the button to size according to its content */
+            margin: 0 10px; /* Space between buttons if there are multiple next to each other */
+        }
+
+        .profile-btn:hover {
+            background-color: #4e1d7c; /* A darker shade of purple for hover effect */
+        }
+
+        .character-image {
+            display: block;
+            max-width: 300px; /* or any size that fits well in your modal */
+            max-height: 300px; /* maintain aspect ratio */
+            width: auto; /* for maintaining aspect ratio */
+            height: auto; /* for maintaining aspect ratio */
+            margin: 0 auto 20px; /* center the image and add space below */
+            border-radius: 50%; /* if you want a rounded image */
+        }
+
+
     </style>
 </head>
 <body>
