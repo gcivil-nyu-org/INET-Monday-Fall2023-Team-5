@@ -662,7 +662,7 @@ class Word(models.Model):
 class MoonSignInterpretation(models.Model):
     # Assuming you have a Player model that is linked to the User model
     on_player = models.ForeignKey(
-        "Player", on_delete=models.SET_NULL, null=True, blank=True
+        "Player", on_delete=models.CASCADE, null=True, blank=True
     )
     first_quarter = models.CharField(max_length=150)
     first_quarter_reason = models.TextField()
