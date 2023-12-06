@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 import uuid
 from django.urls import reverse
 from django_fsm import FSMField, transition
+from django.shortcuts import render, get_object_or_404
 
 
 class Player(models.Model):
@@ -276,6 +277,24 @@ class GameSession(models.Model):
     @transition(field=state, source=CHARACTER_CREATION, target=REGULAR_TURN)
     def start_regular_turn(self):
         pass
+
+    def get_player_profiles(self):
+        profiles = {
+            "playerA_profile": self.playerA.public_profile,
+            "playerB_profile": self.playerB.public_profile,
+        }
+        return profiles
+
+    def game_view(self, request):
+        game_id = self.id  # Get the game_id from the current instance
+        game = get_object_or_404(GameSession, pk=game_id)
+        user_player = request.user.player
+        context = {
+            "game_session": game,
+            "user_player": user_player,
+            "partner_player": game.get_partner_player(user_player),
+        }
+        return render(request, "game_template.html", context)
 
 
 class GameTurn(models.Model):
