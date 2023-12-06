@@ -1515,7 +1515,6 @@ class InterestModelTest(TestCase):
 
 
 class QualityModelTest(TestCase):
-
     def setUp(self):
         # Create a Quality instance
         self.quality = Quality.objects.create(name="Bravery")
@@ -1538,7 +1537,6 @@ class QualityModelTest(TestCase):
 
 
 class ActivityModelTest(TestCase):
-
     def setUp(self):
         # Create an Activity instance
         self.activity = Activity.objects.create(name="Hiking")
@@ -1561,14 +1559,13 @@ class ActivityModelTest(TestCase):
 
 
 class ChatMessageModelTest(TestCase):
-
     def setUp(self):
         # Create a ChatMessage instance
         self.chat_message = ChatMessage.objects.create(
             avatar_url="http://example.com/avatar.png",
             sender="John Doe",
             text="Hello, world!",
-            reaction="😊"
+            reaction="😊",
         )
 
     def test_chat_message_creation(self):
@@ -1576,7 +1573,9 @@ class ChatMessageModelTest(TestCase):
         self.assertEqual(self.chat_message.sender, "John Doe")
         self.assertEqual(self.chat_message.text, "Hello, world!")
         self.assertEqual(self.chat_message.reaction, "😊")
-        self.assertTrue(isinstance(self.chat_message.timestamp, datetime))  # Corrected line
+        self.assertTrue(
+            isinstance(self.chat_message.timestamp, datetime)
+        )  # Corrected line
 
     def test_chat_message_str(self):
         # Test the __str__ method
@@ -1584,17 +1583,10 @@ class ChatMessageModelTest(TestCase):
 
 
 class GameLogModelTest(TestCase):
-
     def setUp(self):
         # Create two ChatMessage instances
-        self.chat_message1 = ChatMessage.objects.create(
-            sender="Alice", 
-            text="Hello!"
-        )
-        self.chat_message2 = ChatMessage.objects.create(
-            sender="Bob", 
-            text="Hi there!"
-        )
+        self.chat_message1 = ChatMessage.objects.create(sender="Alice", text="Hello!")
+        self.chat_message2 = ChatMessage.objects.create(sender="Bob", text="Hi there!")
 
         # Create a GameLog instance and add the ChatMessages to it
         self.game_log = GameLog.objects.create()
@@ -1609,4 +1601,3 @@ class GameLogModelTest(TestCase):
     def test_game_log_int_method(self):
         # Test the __int__ method
         self.assertEqual(int(self.game_log), self.game_log.id)
-
