@@ -45,7 +45,7 @@ urlpatterns = [
     path("", home, name="home"),
     path("api/reset-likes/", reset_likes, name="reset_likes_view"),
     path("tags/", include("tags.urls")),
-    path("api/notify-matches/", notify_matches),
+    path("api/notify-matches/", notify_matches, name="notify_matches_view"),
     path("game/", include(("game.urls", "game"), namespace="game")),
 ]
 

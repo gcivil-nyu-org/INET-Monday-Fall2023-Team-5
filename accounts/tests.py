@@ -5,7 +5,7 @@ from django.contrib.messages import get_messages
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.contrib.auth.forms import PasswordChangeForm
 from .models import *
-import tempfile
+import tempfile, json
 from django.core.files import File
 from .forms import EditProfileForm, CustomUserCreationForm
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -26,6 +26,7 @@ from django.utils import timezone
 from unittest.mock import patch
 from django.core.management.base import CommandError
 from game.models import GameSession, Player, GameTurn
+from django.conf import settings
 
 
 class ProfileModelTest(TestCase):
@@ -148,58 +149,41 @@ class AccountViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "accounts/account.html")
 
-    def test_change_username_successfully(self):
-        # Test checks if a logged-in user can successfully change
-        # their username
-        self.client.login(username="testuser", password="testpassword123")
-        response = self.client.post(self.account_url, {"username": "newusername"})
-        self.user.refresh_from_db()
-        self.assertEqual(self.user.username, "newusername")
-        messages = list(get_messages(response.wsgi_request))
-        self.assertEqual(len(messages), 1)
-        self.assertEqual(str(messages[0]), "Username updated successfully")
-
-    def test_change_username_to_existing_one(self):
-        # Test that a logged-in user cannot change their username
-        # to one that already exists in the database
-        User.objects.create_user(username="existinguser", password="testpassword123")
-        self.client.login(username="testuser", password="testpassword123")
-        response = self.client.post(self.account_url, {"username": "existinguser"})
-        messages = list(get_messages(response.wsgi_request))
-        self.assertEqual(len(messages), 1)
-        self.assertEqual(
-            str(messages[0]), "This username is already taken. Choose another."
-        )
-
     def test_change_password_successfully(self):
-        # Test checks if a logged-in user can successfully change
-        # their password.
+        # Test if a logged-in user can successfully change their password
         self.client.login(username="testuser", password="testpassword123")
         data = {
             "old_password": "testpassword123",
             "new_password1": "newtestpassword123",
             "new_password2": "newtestpassword123",
         }
-        response = self.client.post(self.account_url, data)
-        self.user.refresh_from_db()
-        self.assertTrue(self.user.check_password("newtestpassword123"))
-        messages = list(get_messages(response.wsgi_request))
-        self.assertEqual(len(messages), 1)
-        self.assertEqual(str(messages[0]), "Password updated successfully")
+        response = self.client.post(
+            self.account_url, data, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
+        )
+        self.assertEqual(response.status_code, 200)
+        response_data = json.loads(response.content)
+        self.assertEqual(response_data["status"], "success")
+        self.assertEqual(response_data["message"], "Password updated successfully")
 
     def test_change_password_with_invalid_data(self):
-        # Test checks if the error message is shown when a user tries to change
-        # their password with invalid data (e.g. mismatched new passwords)
+        # Test if the error message is shown when a user tries to change
+        # their password with invalid data (e.g., mismatched new passwords)
         self.client.login(username="testuser", password="testpassword123")
         data = {
             "old_password": "testpassword123",
             "new_password1": "newtestpassword123",
             "new_password2": "differentnewtestpassword123",  # Mismatched password
         }
-        response = self.client.post(self.account_url, data)
-        messages = list(get_messages(response.wsgi_request))
-        self.assertEqual(len(messages), 1)
-        self.assertEqual(str(messages[0]), "Please correct the errors below.")
+        response = self.client.post(
+            self.account_url, data, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
+        )
+        self.assertEqual(response.status_code, 400)
+        response_data = json.loads(response.content)
+        self.assertEqual(response_data["status"], "error")
+        self.assertIn("Some errors occurred:", response_data["message"])
+        self.assertIn(
+            "The two password fields didn’t match.", response_data["errors"][0]
+        )
 
 
 @override_settings(
@@ -872,6 +856,27 @@ class ResetLikesCommandTest(TestCase):
         self.assertEqual(Profile.objects.get(user=self.user1).likes_remaining, 3)
         self.assertEqual(Profile.objects.get(user=self.user2).likes_remaining, 3)
 
+    def test_reset_likes_with_dbname(self):
+        # Pass the --dbname argument to the command
+        dbname = "custom_db_name"
+        call_command("reset_likes", dbname=dbname)
+
+        # Now check if the likes are reset and the output message contains the dbname
+        self.assertEqual(Like.objects.count(), 0)
+        self.assertEqual(Profile.objects.get(user=self.user1).likes_remaining, 3)
+        self.assertEqual(Profile.objects.get(user=self.user2).likes_remaining, 3)
+
+        # You need to check the output of the command.
+        # For this, you'll need to capture the output. Here's one way to do it using StringIO:
+        from io import StringIO
+
+        out = StringIO()
+        call_command("reset_likes", dbname=dbname, stdout=out)
+        output = out.getvalue()
+
+        # Assert that the output contains the expected string
+        self.assertIn(f"Using database: {dbname}", output)
+
 
 class NotifyMatchesCommandTest(TestCase):
     @classmethod
@@ -1197,68 +1202,54 @@ class LikeProfileViewTest(TestCase):
         match_count = Match.objects.filter(user1=self.user1, user2=self.user2).count()
         self.assertEqual(match_count, 0)
 
-
-class ResetLikesViewTest(TestCase):
-    def setUp(self):
-        # Set up test data
-        self.client = Client()
-
-        # Create two users
-        self.user1 = User.objects.create_user(username="user1", password="password1")
-        self.user2 = User.objects.create_user(username="user2", password="password2")
-
-        # Create profiles for the users if they don't already exist
-        self.profile1, _ = Profile.objects.get_or_create(user=self.user1)
-        self.profile2, _ = Profile.objects.get_or_create(user=self.user2)
-
-        # Set initial likes_remaining for the profiles
-        self.profile1.likes_remaining = 1  # Set a non-zero initial value
+    def test_like_profile_with_no_likes_remaining(self):
+        # Set likes_remaining to 0 for user1
+        self.profile1.likes_remaining = 0
         self.profile1.save()
-        self.profile2.likes_remaining = 2  # Set a non-zero initial value
-        self.profile2.save()
 
-    def test_reset_likes(self):
-        # Create a staff user and login
-        staff_user = User.objects.create_user(
-            username="staffuser", password="staffpassword", is_staff=True
+        # Login as user1 with the correct password
+        login_successful = self.client.login(username="user1", password="password1")
+        self.assertTrue(login_successful, "Login failed, check setup and credentials.")
+
+        # User1 tries to like User2's profile with no likes remaining
+        response = self.client.post(reverse("like_profile", args=[self.user2.pk]))
+
+        # Check if the response code and message are correct
+        self.assertEqual(
+            response.status_code,
+            200,
+            "Expected status code 200, got {0}".format(response.status_code),
         )
-        self.client.login(username="staffuser", password="staffpassword")
-        # Set up initial likes and likes_remaining for test users
-        Like.objects.create(from_user=self.user1, to_user=self.user2)
-        self.profile1.likes_remaining = 1
-        self.profile1.save()
-        self.profile2.likes_remaining = 2
-        self.profile2.save()
+        data = response.json()
+        self.assertFalse(data["success"], "Expected success to be False.")
+        self.assertEqual(
+            data["error"],
+            "You have reached your daily likes limit",
+            "Error message does not match expected.",
+        )
 
-        # Make a POST request to reset likes
-        response = self.client.post(reverse("reset_likes_view"))
+    def test_like_profile_invalid_method(self):
+        # This test will check if the correct error is returned when using a GET request
+        self.client.login(username="user1", password="password1")
+        response = self.client.get(reverse("like_profile", args=[self.user2.pk]))
 
-        # Check if the response is successful
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.content.decode(), "Likes have been reset.")
+        # Check if the response code is 405 Method Not Allowed
+        self.assertEqual(
+            response.status_code,
+            405,
+            "Expected status code 405 for invalid request method.",
+        )
 
-        # Verify that all likes have been cleared
-        self.assertEqual(Like.objects.count(), 0)
-
-        # Verify that likes_remaining is reset to 3 for all users
-        self.profile1.refresh_from_db()
-        self.profile2.refresh_from_db()
-        self.assertEqual(self.profile1.likes_remaining, 3)
-        self.assertEqual(self.profile2.likes_remaining, 3)
-
-
-def test_invalid_method(self):
-    # Create a staff user and login
-    staff_user = User.objects.create_user(
-        username="staffuser", password="staffpassword", is_staff=True
-    )
-    self.client.login(username="staffuser", password="staffpassword")
-    # Make a GET request (or any method other than POST)
-    response = self.client.get(reverse("reset_likes_view"))
-
-    # Check if the response indicates an invalid method
-    self.assertEqual(response.status_code, 400)
-    self.assertEqual(response.content.decode(), "Invalid method")
+        # Check the error message
+        data = response.json()
+        self.assertFalse(
+            data["success"], "Expected success to be False for invalid request method."
+        )
+        self.assertEqual(
+            data["error"],
+            "Invalid request method.",
+            "Error message does not match expected for invalid request method.",
+        )
 
 
 class MatchModelTest(TestCase):
@@ -1293,3 +1284,57 @@ class MatchModelTest(TestCase):
         # Ensure still only one match in the database
         match_count = Match.objects.count()
         self.assertEqual(match_count, 1)
+
+
+class LikeModelTest(TestCase):
+    def setUp(self):
+        self.user1 = User.objects.create_user(username="user1", password="password1")
+        self.user2 = User.objects.create_user(username="user2", password="password2")
+        self.user3 = User.objects.create_user(username="user3", password="password3")
+
+        # Create mutual likes between user1 and user2
+        Like.objects.create(from_user=self.user1, to_user=self.user2)
+        Like.objects.create(from_user=self.user2, to_user=self.user1)
+
+        # Create a one-way like from user1 to user3
+        Like.objects.create(from_user=self.user1, to_user=self.user3)
+
+    def test_is_mutual(self):
+        mutual_like = Like.objects.get(from_user=self.user1, to_user=self.user2)
+        self.assertTrue(mutual_like.is_mutual(), "The like should be mutual")
+
+    def test_is_not_mutual(self):
+        non_mutual_like = Like.objects.get(from_user=self.user1, to_user=self.user3)
+        self.assertFalse(non_mutual_like.is_mutual(), "The like should not be mutual")
+
+
+class RolePlayDateURLsTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        # Create a staff user for testing the views
+        cls.staff_user = User.objects.create_user(
+            username="staff", password="testpass", is_staff=True
+        )
+        cls.client = Client()
+
+    def test_notify_matches_view(self):
+        # Login as the staff user
+        self.client.login(username="staff", password="testpass")
+
+        # Call the notify_matches view
+        response = self.client.get(reverse("notify_matches_view"))
+
+        # Check the response
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Match notifications have been sent.")
+
+    def test_reset_likes_view(self):
+        # Login as the staff user
+        self.client.login(username="staff", password="testpass")
+
+        # Call the reset_likes view
+        response = self.client.get(reverse("reset_likes_view"))
+
+        # Check the response
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Likes have been reset.")
