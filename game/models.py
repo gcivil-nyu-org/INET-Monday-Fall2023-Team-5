@@ -26,6 +26,9 @@ class Player(models.Model):
     character = models.ForeignKey(
         "Character", on_delete=models.SET_NULL, null=True, blank=True
     )
+    MoonSignInterpretation = models.ForeignKey(
+        "MoonSignInterpretation", on_delete=models.SET_NULL, null=True, blank=True
+    )
 
     # Constants for character creation states
     CHARACTER_AVATAR_SELECTION = "character_avatar_selection"
@@ -60,8 +63,8 @@ class Player(models.Model):
         target=PUBLIC_PROFILE_CREATION,
     )
     def select_moon_meaning(self, moon_meaning):
-        pass
-        # here whatever logic you need to do with the moon meaning
+        self.MoonSignInterpretation = moon_meaning
+        self.save()
 
     @transition(
         field=character_creation_state,
@@ -281,7 +284,6 @@ class GameTurn(models.Model):
     )
     turn_number = models.IntegerField(default=1)
     narrative_nights = models.IntegerField(default=1)
-
     player_a_completed_cycle = models.BooleanField(default=False)
     player_b_completed_cycle = models.BooleanField(default=False)
 
@@ -355,19 +357,13 @@ class GameTurn(models.Model):
             sender=str(player.character_name),
             text=str(answer),
         )
-        print(answer)
         for word in answer.split():
-            print(word)
             if player.simple_word_pool.filter(word=word):
-                print("in simple word pool")
                 word = player.simple_word_pool.filter(word=word).first()
-                print(word)
                 player.simple_word_pool.remove(word)
                 player.save()
             elif player.character_word_pool.filter(word=word):
-                print("in character word pool")
                 word = player.character_word_pool.filter(word=word).first()
-                print(word)
                 player.character_word_pool.remove(word)
                 player.save()
         self.parent_game.gameLog.chat_messages.add(chat_message)
@@ -426,13 +422,16 @@ class GameTurn(models.Model):
         else:
             raise ValueError("Invalid player.")
 
+        # process the narrative choice here:
+        # adding the associated words to the player's word pool
+        # selected_narrative_choice = NarrativeChoice.objects.get(id=narrative_choice)
         # Check if both players have made their choices
         if self.player_a_narrative_choice_made and self.player_b_narrative_choice_made:
             # Reset the flags for the next turn and transition the state
             self.reset_flags_and_transition()
 
     def process_narrative_choice(self, narrative_choice, player):
-        # Fetch the selected narrative choice and add associated words to the player's word pool # noqa
+        # Fetch the selected narrative choice and add to word pool
         selected_narrative_choice = NarrativeChoice.objects.get(id=narrative_choice)
         if selected_narrative_choice:
             for word in selected_narrative_choice.words.all():
@@ -459,33 +458,6 @@ class GameTurn(models.Model):
         self.state = next_state
         self.save()
 
-        # if selected_narrative_choice:
-        #     for word in selected_narrative_choice.words.all():
-        #         player.character_word_pool.add(word)
-        #         player.save()
-        # player.replenish_simple_words()
-        # MAX_NUMBER_OF_TURNS = 30
-
-        # # Check if both players have made their choices
-        # if self.player_a_narrative_choice_made and self.player_b_narrative_choice_made: # noqa
-        #     # Reset the flags for the next turn
-        #     self.player_a_narrative_choice_made = False
-        #     self.player_b_narrative_choice_made = False
-        #     # Transition to the SELECT_QUESTION state and add 1 to the turn number
-        #     self.turn_number += 1
-        #     self.narrative_nights += 1
-
-        #     if self.turn_number >= MAX_NUMBER_OF_TURNS:
-        #         self.parent_game.set_game_inactive()
-        #         self.parent_game.state = self.parent_game.ENDED
-
-        #     # Dynamically determine the next state
-        #     next_state = self.regular_or_special_moon_next()
-        #     # Set the state to the determined next state
-        #     self.switch_active_player()
-        #     self.state = next_state
-        #     self.save()
-
     def regular_or_special_moon_next(self):
         if self.get_moon_phase():
             return self.MOON_PHASE
@@ -494,14 +466,27 @@ class GameTurn(models.Model):
 
     def get_moon_phase(self):
         moon_phases = {
-            3: "new moon",
-            7: "first quarter",
-            11: "full",
-            15: "last quarter",
+            3: "new_moon",
+            7: "first_quarter",
+            11: "full_moon",
+            15: "last_quarter",
         }
         return moon_phases.get(self.turn_number)
 
-    @transition(field=state, source=MOON_PHASE, target=SELECT_QUESTION)
+    def get_moon_emoji(self, moon_phase):
+        moon_sign_mapping = {
+            "new_moon": "🌑",
+            "first_quarter": "🌓",
+            "full_moon": "🌕",
+            "last_quarter": "🌗",
+        }
+        return moon_sign_mapping.get(moon_phase, "Unknown sign")
+
+    @transition(
+        field=state,
+        source=MOON_PHASE,
+        target=SELECT_QUESTION,
+    )
     def write_message_about_moon_phase(self, message, player):
         # Update the moon message for the player
         if player == self.parent_game.playerA:
@@ -512,6 +497,9 @@ class GameTurn(models.Model):
             raise ValueError("Invalid player.")
         self.save()
         # Create a chat message and add it to the log
+        if player != self.active_player:
+            raise ValueError("It's not your turn.")
+
         chat_message = ChatMessage.objects.create(
             avatar_url=str(player.character.image.url),
             sender=str(player.character_name),
@@ -519,7 +507,25 @@ class GameTurn(models.Model):
         )
         self.parent_game.gameLog.chat_messages.add(chat_message)
 
+        # Change the current moon sign reason to the message
+        moon_phase = self.get_moon_phase()
+        moon_sign_interpretation = player.MoonSignInterpretation
+        moon_sign_interpretation.change_moon_sign(moon_phase, message)
+        moon_sign_interpretation.save()
+
+        # Process the answer and update word pools
+        for word in message.split():
+            if player.simple_word_pool.filter(word=word).exists():
+                word_obj = player.simple_word_pool.filter(word=word).first()
+                player.simple_word_pool.remove(word_obj)
+            elif player.character_word_pool.filter(word=word).exists():
+                word_obj = player.character_word_pool.filter(word=word).first()
+                player.character_word_pool.remove(word_obj)
+
+        player.save()
+
         self.switch_active_player()
+        self.save()
         # Check if both players have written their messages
         if (
             self.player_a_moon_phase_message_written
@@ -655,6 +661,9 @@ class Word(models.Model):
 
 class MoonSignInterpretation(models.Model):
     # Assuming you have a Player model that is linked to the User model
+    on_player = models.ForeignKey(
+        "Player", on_delete=models.CASCADE, null=True, blank=True
+    )
     first_quarter = models.CharField(max_length=150)
     first_quarter_reason = models.TextField()
     full_moon = models.CharField(max_length=150)
@@ -663,6 +672,43 @@ class MoonSignInterpretation(models.Model):
     last_quarter_reason = models.TextField()
     new_moon = models.CharField(max_length=150)
     new_moon_reason = models.TextField()
+
+    def get_moon_sign(self, moon_phase):
+        # Implement your logic to return the moon sign based on the phase
+        moon_sign_mapping = {
+            "new_moon": self.new_moon,
+            "first_quarter": self.first_quarter,
+            "full_moon": self.full_moon,
+            "last_quarter": self.last_quarter,
+        }
+        return moon_sign_mapping.get(moon_phase, "Unknown sign")
+
+    def get_moon_sign_reason(self, moon_phase):
+        moon_sign_mapping = {
+            "new_moon": self.new_moon_reason,
+            "first_quarter": self.first_quarter_reason,
+            "full_moon": self.full_moon_reason,
+            "last_quarter": self.last_quarter_reason,
+        }
+        return moon_sign_mapping.get(moon_phase, "Unknown sign")
+
+    def change_moon_sign(self, moon_phase, new_sign):
+        # Ensure the moon_phase key exists in the dictionary to avoid AttributeError
+        if moon_phase not in [
+            "new_moon",
+            "new_moon_reason",
+            "first_quarter",
+            "first_quarter_reason",
+            "full_moon",
+            "full_moon_reason",
+            "last_quarter",
+            "last_quarter_reason",
+        ]:
+            raise ValueError(f"Invalid moon phase: {moon_phase}")
+
+        # Use setattr to update the attribute
+        setattr(self, moon_phase, new_sign)
+        self.save()
 
 
 class PublicProfile(models.Model):

@@ -29,7 +29,8 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def get_game_session(self, game_id):
-        return GameSession.objects.get(id=game_id)
+        # return GameSession.objects.get(id=game_id)
+        return GameSession.objects.get(game_id=game_id)
 
     @database_sync_to_async
     def save_game_turn(self, game_turn):
@@ -42,6 +43,13 @@ class GameConsumer(AsyncWebsocketConsumer):
         action = data_json["action"]
         value = data_json["value"]
 
+        user = self.scope["user"]
+        if not user.is_authenticated:
+            await self.send_json(
+                {"error": "You must be logged in to perform this action."}
+            )
+            return
+
         # Map the action to a handler function
         if action == "select_narrative":
             await self.make_narrative_choice(value)
@@ -53,10 +61,13 @@ class GameConsumer(AsyncWebsocketConsumer):
             await self.react_emoji(value)
         elif action == "moon_phase":
             await self.moon_phase(value)
+        elif action == "moon_meaning":
+            await self.moon_meaning(value)
         elif action == "end_game":
             await self.end_game(value)
 
     def make_narrative_choice_sync(self, narrative, player):
+        print(narrative + " _" + player.character_name + "_")
         game_id = self.game_id
         game_session = GameSession.objects.get(game_id=game_id)
         game_turn = game_session.current_game_turn
@@ -159,7 +170,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         game_turn.write_message_about_moon_phase(message, player)
         game_turn.save()
 
-    async def moon_phase(self, moon_meaning):
+    async def moon_phase(self, value):
         user = self.scope["user"]
         if not user.is_authenticated:
             await self.send_json(
@@ -168,16 +179,43 @@ class GameConsumer(AsyncWebsocketConsumer):
             return
 
         player = await database_sync_to_async(Player.objects.get)(user=user)
-
+        message = value
         try:
             await database_sync_to_async(self.write_message_about_moon_phase_sync)(
-                moon_meaning, player
+                message, player
             )
             # Broadcast the new state
             await self.broadcast_game_state()
         except ValueError as e:
             await self.send_json({"error": str(e)})
-            # There were partial changes to the game state, so broadcast the new state
+            # If there were partial changes to the game state, broadcast the new state
+            await self.broadcast_game_state()
+
+    def moon_meaning_sync(self, meaning, player):
+        game_id = self.game_id
+        game_session = GameSession.objects.get(game_id=game_id)
+        game_turn = game_session.current_game_turn
+        phase = game_turn.get_moon_phase()
+        moon_interpretation_dict = player.MoonSignInterpretation
+        moon_interpretation_dict.change_moon_sign(phase, meaning)
+        moon_interpretation_dict.save()
+
+    async def moon_meaning(self, meaning):
+        user = self.scope["user"]
+        if not user.is_authenticated:
+            await self.send_json(
+                {"error": "You must be logged in to select a question."}
+            )
+            return
+
+        try:
+            player = await database_sync_to_async(Player.objects.get)(user=user)
+            await database_sync_to_async(self.moon_meaning_sync)(meaning, player)
+            # Broadcast the new state
+            await self.broadcast_game_state()
+        except ValueError as e:
+            await self.send_json({"error": str(e)})
+            # If there were partial changes to the game state, broadcast the new state
             await self.broadcast_game_state()
 
     async def end_game(self, game_id):
