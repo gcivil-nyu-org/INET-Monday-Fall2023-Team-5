@@ -1,5 +1,6 @@
 import json
 
+# from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib import messages
 from django.db import transaction
 from .forms import (
@@ -9,12 +10,14 @@ from .forms import (
     CharacterSelectionForm,
     MoonSignInterpretationForm,
     PublicProfileCreationForm,
+    AnswerFormMoon,
 )
 from .models import (
     Player,
     GameSession,
     GameTurn,
     Character,
+    MoonSignInterpretation,
 )
 
 
@@ -173,10 +176,34 @@ class GameProgressView(View):
                     }
                 )
             elif game_session.current_game_turn.state == GameTurn.MOON_PHASE:
-                turn = game_session.current_game_turn
+                words = (
+                    player.character_word_pool.all() | player.simple_word_pool.all()
+                )  # this adds the simple words to the pool
+                tags_answer = [word.word for word in words]
+                random.shuffle(tags_answer)
+                context.update({"tags_answer": tags_answer})
                 context.update(
                     {
-                        "moon_phase": turn.get_moon_phase(),
+                        # This to assist in submitting the new interpretation
+                        "answer_moon_form": AnswerFormMoon(),
+                    }
+                )
+
+                # This is to display the current moon phase and the current
+                # interpretation associated with it by that player
+                moon_phase = game_session.current_game_turn.get_moon_phase()
+                moon_sign_interpretation = player.MoonSignInterpretation
+                current_value = moon_sign_interpretation.get_moon_sign(moon_phase)
+                reason = moon_sign_interpretation.get_moon_sign_reason(moon_phase)
+
+                context.update(
+                    {
+                        "moon_phase": game_session.current_game_turn.get_moon_emoji(
+                            moon_phase
+                        ),
+                        "moon_sign_interpretation": moon_sign_interpretation,
+                        "current_value": current_value.capitalize(),
+                        "reason": reason,
                     }
                 )
 
@@ -284,7 +311,9 @@ class CharacterCreationView(View):
             messages.error(request, "Game session not found.")
             return redirect("home")
         except Exception as e:
+            # print(player.character_creation_state)
             messages.error(request, str(e))
+            print("error!")
             return redirect("character_creation", game_id=game_id)
 
     def post(self, request, *args, **kwargs):
@@ -315,19 +344,25 @@ class CharacterCreationView(View):
                     # The form is valid, save the character for the player
                     # Here Xinyi will implement the logic for adding the information
                     # to the player's model field.
-                    player, _ = Player.objects.get_or_create(
-                        user=request.user, defaults={"game_session": game_session}
-                    )
                     # select moon meaning and transition to next state
                     # Logic to be implemented in the model function
-                    moon_meaning = "Here will be the data for the moon meaning"
+                    # Process the form data here
+                    moon_meaning, _ = MoonSignInterpretation.objects.get_or_create(
+                        on_player=player,
+                        first_quarter=form.cleaned_data["first_quarter"],
+                        first_quarter_reason=form.cleaned_data["first_quarter_reason"],
+                        full_moon=form.cleaned_data["full_moon"],
+                        full_moon_reason=form.cleaned_data["full_moon_reason"],
+                        last_quarter=form.cleaned_data["last_quarter"],
+                        last_quarter_reason=form.cleaned_data["last_quarter_reason"],
+                        new_moon=form.cleaned_data["new_moon"],
+                        new_moon_reason=form.cleaned_data["new_moon_reason"],
+                    )
                     player.select_moon_meaning(moon_meaning=moon_meaning)
                     player.save()
                 else:
-                    # Stand-in for eventual form invalid behavior
-                    messages.error(
-                        request, "The MoonSign Interpretation form is invalid."
-                    )
+                    for error in form.non_field_errors():
+                        messages.error(request, error)  # Add
                 return redirect("game:character_creation", game_id=game_id)
             elif player.character_creation_state == Player.PUBLIC_PROFILE_CREATION:
                 form = PublicProfileCreationForm(
