@@ -65,7 +65,6 @@ class Player(models.Model):
     def select_moon_meaning(self, moon_meaning):
         self.MoonSignInterpretation = moon_meaning
         self.save()
-        pass
 
     @transition(
         field=character_creation_state,

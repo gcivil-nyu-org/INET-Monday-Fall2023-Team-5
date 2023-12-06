@@ -12,6 +12,7 @@ from .models import (
     Question,
     Word,
     NarrativeChoice,
+    MoonSignInterpretation,
 )
 from django.core.exceptions import ValidationError
 from .forms import (
@@ -519,6 +520,19 @@ class GameProgressViewTestCase(TestCase):
         self.user.player.simple_word_pool.add(word1)
         self.user.player.character_word_pool.add(word2)
         self.user.player.simple_word_pool.add(word3)
+        self.user.player.save()
+
+        self.user.player.MoonSignInterpretation = MoonSignInterpretation.objects.create(
+            first_quarter="positive",
+            first_quarter_reason="Some reason",
+            full_moon="negative",
+            full_moon_reason="Another reason",
+            last_quarter="ambiguous1",
+            last_quarter_reason="Yet another reason",
+            new_moon="ambiguous2",
+            new_moon_reason="Different reason",
+            player=self.user.player,
+        )
         self.user.player.save()
 
         # Make the request
@@ -1112,9 +1126,9 @@ class CharacterCreationViewTest(TestCase):
             "first_quarter_reason": "Some reason",
             "full_moon": "negative",
             "full_moon_reason": "Another reason",
-            "last_quarter": "ambiguous1",
+            "last_quarter": "ambiguous",
             "last_quarter_reason": "Yet another reason",
-            "new_moon": "ambiguous2",
+            "new_moon": "ambiguous",
             "new_moon_reason": "Different reason",
         }
 
@@ -1137,9 +1151,9 @@ class CharacterCreationViewTest(TestCase):
             # Refresh the player instance to ensure it's up to date
             self.player.refresh_from_db()
 
-            # Check that the select_moon_meaning method was called
+            # Check that the select_moon_meaning method was called with the recently created MoonSignInterpretation
             mock_select_moon_meaning.assert_called_once_with(
-                moon_meaning="Here will be the data for the moon meaning"
+                moon_meaning=MoonSignInterpretation.objects.first()
             )
 
             self.assertEqual(response.status_code, 302)
@@ -1153,13 +1167,26 @@ class CharacterCreationViewTest(TestCase):
         player.character_creation_state = Player.MOON_MEANING_SELECTION
         player.save()
 
-        moon_meaning = "Test moon meaning"
+        # Create a MoonSignInterpretation() instance for the test, associate with the player
+        moon_sign_interpretation = MoonSignInterpretation.objects.create(
+            first_quarter="positive",
+            first_quarter_reason="Some reason",
+            full_moon="negative",
+            full_moon_reason="Another reason",
+            last_quarter="ambiguous1",
+            last_quarter_reason="Yet another reason",
+            new_moon="ambiguous2",
+            new_moon_reason="Different reason",
+            player=player,
+        )
 
         # Directly call the method
-        player.select_moon_meaning(moon_meaning=moon_meaning)
+        player.select_moon_meaning(moon_meaning=moon_sign_interpretation)
 
         # Add assertions as needed to check the result of the method call
         # For example, check the state of the player or other side effects
+        assert player.character_creation_state == Player.PUBLIC_PROFILE_CREATION
+        assert player.MoonSignInterpretation == moon_sign_interpretation
 
     def test_game_session_does_not_exist(self):
         # Simulate a non-existent game session by using a random UUID
