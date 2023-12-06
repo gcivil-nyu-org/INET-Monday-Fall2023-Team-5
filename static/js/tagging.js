@@ -1,54 +1,72 @@
 $(document).ready(function () {
-    // Make words draggable
-    $('.draggable').draggable({
-        helper: 'clone', // Create a clone of the draggable element
-        revert: 'invalid', // The element will return to its position if not dropped in a valid droppable
-        start: function(event, ui) {
-            $(ui.helper).addClass('dragging'); // Add a class for styling if you want
+    // Function to hide a draggable word (instead of removing)
+    function hideDraggable(element) {
+        element.css('visibility', 'hidden'); // Hide the element
+    }
+
+    // Function to show a draggable word (instead of creating new)
+    function showDraggable(wordText) {
+        $('.draggable').filter(function() {
+            return $.trim($(this).text()) === wordText;
+        }).css('visibility', 'visible'); // Show the element
+    }
+
+    // Function to add word to the sentence
+    function addToSentence(element) {
+        let wordText = $.trim(element.text());
+        if ($('#current-sentence:contains("' + wordText + '")').length === 0) {
+            var newWord = $('<span>').addClass('selected-word draggable').text(wordText + ' ').click(function() {
+                removeFromSentence($(this));
+            });
+            $('#current-sentence').append(newWord);
+            hideDraggable(element);
         }
+    }
+
+    // Function to remove word from the sentence
+    function removeFromSentence(element) {
+        let wordText = $.trim(element.text());
+        showDraggable(wordText);
+        element.remove();
+    }
+
+    // Make words draggable and clickable
+    $('.draggable').each(function() {
+        $(this).draggable({
+            helper: 'clone',
+            revert: 'invalid'
+        }).click(function() {
+            addToSentence($(this));
+        });
     });
 
-    // Make the sentence container droppable
-    $('#current-sentence').droppable({
+    // Make the sentence container sortable and droppable
+    $('#current-sentence').sortable({
+        items: '.selected-word',
+        placeholder: 'sortable-placeholder'
+    }).droppable({
         accept: '.draggable',
         drop: function(event, ui) {
-            let wordText = $.trim($(ui.draggable).text());
-            if ($('#current-sentence:contains("' + wordText + '")').length === 0) {
-                var newWord = $('<span>').addClass('selected-word draggable').text(wordText + ' ').draggable({
-                    helper: 'clone',
-                    revert: 'invalid',
-                    start: function(event, ui) {
-                        $(ui.helper).addClass('dragging');
-                    }
-                });
-                $(this).append(newWord);
-    
-                // Remove the original element if it's a clone
-                if (ui.helper.is('.ui-draggable-helper')) {
-                    $(ui.draggable).remove();
-                }
-            }
+            addToSentence(ui.draggable);
         }
     });
 
     // Clear All button functionality
     $('#clear-all').click(function() {
-        // Clear the inner HTML of the sentence container
-        $('#current-sentence').html('');
-        
-        // Remove the 'dragged' class from all elements that have been dragged
-        $('.draggable.dragged').removeClass('dragged');
+        $('#current-sentence').empty();
+        $('.draggable').css('visibility', 'visible'); // Show all hidden elements
     });
 
     // Setup for allowing words to be dragged back to the tag-container
     $('#tag-container').droppable({
         accept: '.selected-word',
         drop: function(event, ui) {
-            // Remove the clone (the dragged element)
-            $(ui.draggable).remove();
+            removeFromSentence(ui.draggable);
         }
     });
-        $('#answer-form').submit(function(event) {
+
+    // Form submission logic
+    $('#answer-form').submit(function(event) {
         var selectedWords = [];
         $('#current-sentence .selected-word').each(function() {
             selectedWords.push($(this).text().trim());
@@ -58,4 +76,3 @@ $(document).ready(function () {
         $('#hidden-answer-field').val(answer);
     });
 });
-
