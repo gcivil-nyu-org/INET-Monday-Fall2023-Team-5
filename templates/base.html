@@ -180,10 +180,12 @@
         <div class="navbar-nav" style="font-size: 20px; color:dimgray">
 
           {% if user.is_authenticated %}
-          
-              Hello {{ request.user }}! <span class="mr-4"></span>    
+              <div id="dateAndMoonPhase"></div>&nbsp;
+              <div id="moon-phase-element"></div>&nbsp;
+              Hello {{ request.user }}! <span class="mr-4"></span>
               <a href="{% url 'logout' %}" style="font-size:20px; font-weight:bolder; color: #7030a0;font-family:Luminari; ">Logout</a>
-              
+
+
           {% else %}
               <a class="nav-item nav-link" href="{% url 'login' %}" style="font-size:20px; font-weight:bolder; color: #7030a0;font-family:Luminari; ">Login</a>
               <a class="nav-item nav-link" href="{% url 'signup' %}" style="font-size:20px; font-weight:bolder; color: #7030a0;font-family:Luminari; ">Signup</a>
@@ -232,6 +234,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
     {% block scripts %}
     <script src="{% static 'js/tagging.js' %}"></script>
+    <script src="{% static 'js/dateAndMoonPhase.js' %}"></script>
     {% endblock scripts %}
 </body>
 </html>
