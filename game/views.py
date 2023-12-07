@@ -29,6 +29,8 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from accounts.models import Match
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.core.serializers.json import DjangoJSONEncoder
 
 
 def initiate_game_session(request):
@@ -149,11 +151,27 @@ class GameProgressView(View):
                 )
 
             elif turn.state == GameTurn.REACT_EMOJI:
+                player_interpretation = get_object_or_404(
+                    MoonSignInterpretation, on_player=player
+                )
+                moon_signs = {
+                    "new_moon": player_interpretation.get_moon_sign("new_moon"),
+                    "first_quarter": player_interpretation.get_moon_sign(
+                        "first_quarter"
+                    ),
+                    "full_moon": player_interpretation.get_moon_sign("full_moon"),
+                    "last_quarter": player_interpretation.get_moon_sign("last_quarter"),
+                }
+                # Convert to JSON
+                moon_signs_json = json.dumps(moon_signs, cls=DjangoJSONEncoder)
+                # print(moon_signs_json)
                 context.update(
                     {
                         "emoji_form": EmojiReactForm(),
+                        "moon_signs_json": moon_signs_json,
                     }
                 )
+
             elif turn.state == GameTurn.NARRATIVE_CHOICES:
                 choice_made = False
                 if (

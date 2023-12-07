@@ -14,6 +14,7 @@
         {% endif %}
     </div>
 
+
     <!-- Modal for Player A's profile -->
     <div id="playerAProfileModal" class="modal">
         <div class="modal-content">
@@ -433,7 +434,65 @@
             }
         };
     });
+    
 
-    // ... Your existing WebSocket JavaScript ...
 </script>
+<!-- Add your moonSigns variable script here -->
+<script type="text/javascript">
+    // Parse the moonSigns JSON
+    var moonSigns = JSON.parse('{{ moon_signs_json|safe }}');
+    // console.log(moonSigns);
+
+    // Define the mapping from emoji to moon phases
+    const emojiToMoonPhaseMap = {
+        '🌑': 'new_moon',
+        '🌓': 'first_quarter',
+        '🌕': 'full_moon',
+        '🌗': 'last_quarter',
+    };
+
+    // Function to determine the moon phase from the emoji value
+    function determineMoonPhaseFromEmoji(emojiValue) {
+        // Return the moon phase key based on the emoji value
+        return emojiToMoonPhaseMap[emojiValue] || null;
+    }
+
+    // Function to update the class of the emoji based on the moon sign
+    function updateEmojiClass(emojiLabel, moonSign) {
+        // Clear all classes
+        emojiLabel.classList.remove('positive', 'negative', 'ambiguous');
+
+        // Add the new class if it exists
+        if (moonSign) {
+            emojiLabel.classList.add(moonSign);
+        }
+
+        // console.log(`Updated class for ${emojiLabel.textContent}: `, emojiLabel.classList);
+    }
+
+    // Event listeners for emoji changes
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.emoji-radio input').forEach(function(emojiInput) {
+            emojiInput.addEventListener('change', function() {
+                // Get the label that visually represents the emoji
+                var emojiLabel = document.querySelector(`label[for="${emojiInput.id}"]`);
+
+                // Convert the emoji value to the corresponding moon phase key
+                var moonPhase = determineMoonPhaseFromEmoji(emojiInput.value);
+
+                // Get the moon sign interpretation for the corresponding moon phase
+                var moonSign = moonSigns[moonPhase];
+
+                // Log for debugging
+                // console.log(`Emoji value: ${emojiInput.value}, Moon phase: ${moonPhase}, Moon sign: ${moonSign}`);
+
+                // Update the emoji class based on the moon sign
+                updateEmojiClass(emojiLabel, moonSign);
+            });
+        });
+    });
+</script>
+
+<!-- Reference to your external emoji_reaction.js file -->
+<script src="{% static 'js/emoji_reaction.js' %}"></script>
 {% endblock %}
