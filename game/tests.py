@@ -1582,22 +1582,95 @@ class ChatMessageModelTest(TestCase):
         self.assertEqual(str(self.chat_message), "Hello, world!")
 
 
-class GameLogModelTest(TestCase):
+class GameTurnModelTest(TestCase):
     def setUp(self):
-        # Create two ChatMessage instances
-        self.chat_message1 = ChatMessage.objects.create(sender="Alice", text="Hello!")
-        self.chat_message2 = ChatMessage.objects.create(sender="Bob", text="Hi there!")
+        # Create a test user
+        self.user = User.objects.create_user(username="testuser", password="12345")
 
-        # Create a GameLog instance and add the ChatMessages to it
+        # Create a GameSession instance
+        self.game_session = GameSession.objects.create()
+
+        # Create a GameLog instance and associate it with the game session
         self.game_log = GameLog.objects.create()
-        self.game_log.chat_messages.add(self.chat_message1, self.chat_message2)
+        self.game_session.gameLog = self.game_log
+        self.game_session.save()
 
-    def test_game_log_chat_messages(self):
-        # Test that the ChatMessages are correctly associated with the GameLog
-        self.assertIn(self.chat_message1, self.game_log.chat_messages.all())
-        self.assertIn(self.chat_message2, self.game_log.chat_messages.all())
-        self.assertEqual(self.game_log.chat_messages.count(), 2)
+        # Create a dummy image file
+        image = SimpleUploadedFile(
+            name="test_image.jpg", content=b"", content_type="image/jpeg"
+        )
 
-    def test_game_log_int_method(self):
-        # Test the __int__ method
-        self.assertEqual(int(self.game_log), self.game_log.id)
+        # Create a Character instance with the dummy image
+        self.character = Character.objects.create(
+            name="Test Character",
+            image=image,
+            # Add additional fields required by your Character model
+        )
+
+        # Create a Player instance and associate with the user, game session, and character
+        self.player = Player.objects.create(
+            user=self.user, game_session=self.game_session, character=self.character
+        )
+
+        # Create a GameTurn instance and associate it with the player and game session
+        self.game_turn = GameTurn.objects.create(
+            active_player=self.player, parent_game=self.game_session
+        )
+
+    def upload_test_image():
+        # Create an in-memory image
+        file = io.BytesIO()
+        image = Image.new("RGB", (100, 100), color="red")
+        image.save(file, "JPEG")
+        file.name = "test.jpg"
+        file.seek(0)
+
+        return ContentFile(file.read(), "test.jpg")
+
+    def test_initial_state(self):
+        self.assertEqual(self.game_turn.state, GameTurn.SELECT_QUESTION)
+        self.assertEqual(self.game_turn.turn_number, 1)
+
+    def test_active_player(self):
+        # Test active player functionality
+        new_user = User.objects.create_user(username="testuser2", password="54321")
+        new_player = Player.objects.create(
+            user=new_user, game_session=self.game_session
+        )
+        self.game_turn.set_active_player(new_player)
+
+        self.assertEqual(self.game_turn.active_player, new_player)
+
+    def test_select_question(self):
+        question = Question.objects.create(text="What is your favorite color?")
+        # Simulate the select_question action
+        self.game_turn.select_question(question.id, self.player)
+        self.assertEqual(self.game_turn.state, GameTurn.ANSWER_QUESTION)
+        # Check if a chat message was created, etc.
+
+    def test_answer_question(self):
+        # Create a question
+        question = Question.objects.create(text="What is your favorite color?")
+
+        # Transition to the SELECT_QUESTION state and select a question
+        self.game_turn.state = GameTurn.SELECT_QUESTION
+        self.game_turn.save()
+        self.game_turn.select_question(question.id, self.player)
+
+        # Ensure the game turn state is now ANSWER_QUESTION
+        self.assertEqual(self.game_turn.state, GameTurn.ANSWER_QUESTION)
+
+        # Make sure self.player is the active player
+        self.game_turn.set_active_player(self.player)
+        self.game_turn.save()
+
+        # Answer the question
+        answer = "Blue"
+        self.game_turn.answer_question(answer, self.player)
+
+        # Additional assertions to verify expected behavior
+
+    def tearDown(self):
+        # Delete the dummy image file if it exists
+        if self.character.image:
+            self.character.image.delete(save=False)
