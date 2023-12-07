@@ -1668,8 +1668,6 @@ class GameTurnModelTest(TestCase):
         answer = "Blue"
         self.game_turn.answer_question(answer, self.player)
 
-        # Additional assertions to verify expected behavior
-
     def tearDown(self):
         # Delete the dummy image file if it exists
         if self.character.image:

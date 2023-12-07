@@ -441,7 +441,7 @@
 <script type="text/javascript">
     // Parse the moonSigns JSON
     var moonSigns = JSON.parse('{{ moon_signs_json|safe }}');
-    console.log(moonSigns);
+    // console.log(moonSigns);
 
     // Define the mapping from emoji to moon phases
     const emojiToMoonPhaseMap = {
@@ -467,7 +467,7 @@
             emojiLabel.classList.add(moonSign);
         }
 
-        console.log(`Updated class for ${emojiLabel.textContent}: `, emojiLabel.classList);
+        // console.log(`Updated class for ${emojiLabel.textContent}: `, emojiLabel.classList);
     }
 
     // Event listeners for emoji changes
@@ -484,7 +484,7 @@
                 var moonSign = moonSigns[moonPhase];
 
                 // Log for debugging
-                console.log(`Emoji value: ${emojiInput.value}, Moon phase: ${moonPhase}, Moon sign: ${moonSign}`);
+                // console.log(`Emoji value: ${emojiInput.value}, Moon phase: ${moonPhase}, Moon sign: ${moonSign}`);
 
                 // Update the emoji class based on the moon sign
                 updateEmojiClass(emojiLabel, moonSign);
