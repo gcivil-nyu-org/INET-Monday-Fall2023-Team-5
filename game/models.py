@@ -1,8 +1,6 @@
 import random
 from collections import Counter
-from datetime import timedelta
 
-import requests
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import User
