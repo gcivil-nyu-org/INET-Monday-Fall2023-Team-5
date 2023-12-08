@@ -141,6 +141,48 @@ class AccountViewTest(TestCase):
             response, "/accounts/login/?next=/accounts/account/"
         )  # adjust the expected URL if your login URL is different
 
+    def test_browse_profiles_with_swipe_feature(self):
+        logged_in_user = User.objects.get(username="testuser")  # Adjust as needed
+        self.client.force_login(logged_in_user)
+
+        response = self.client.get(reverse("browse_profiles"))
+
+        # Verify Tinder cards layout
+        self.assertContains(response, "tinder--cards")
+
+        # Check if profiles are displayed with the correct elements
+        profiles = Profile.objects.exclude(
+            user=logged_in_user
+        )  # Adjust query as needed
+        for profile in profiles:
+            self.assertContains(response, f'div class="tinder--card"')
+            self.assertContains(response, profile.user.username)
+
+        # Simulate swipe actions and like button click
+        # Note: This part might require a more complex setup or a different testing approach
+        # as it involves JavaScript interaction which is not directly testable with Django's test client.
+
+        # Check Profile Filtering
+        desired_gender_codes = [
+            dp.gender for dp in logged_in_user.profile.open_to_dating.all()
+        ]
+        for profile in profiles:
+            self.assertIn(profile.gender, desired_gender_codes)
+
+        # Test Pagination
+        self.assertContains(response, 'class="pagination"')
+        # Additional checks for pagination functionality can be added here
+
+        # Countdown Timer Verification
+        self.assertContains(response, 'class="countdown"')
+
+        # Test 'View Profile' Links
+        for profile in profiles:
+            profile_link = reverse(
+                "view_single_profile", kwargs={"user_id": profile.user.id}
+            )
+            self.assertContains(response, f'href="{profile_link}"')
+
     def test_logged_in_uses_correct_template(self):
         # Test that if a user is logged in and accesses the account
         # view, the correct template (account.html) is used
