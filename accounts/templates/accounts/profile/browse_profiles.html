@@ -247,6 +247,7 @@
   }
   document.querySelector('#love').addEventListener('click', registerLike);
   // Countdown to Midnight Script
+
   function updateCountdown() {
     const now = new Date();
     const midnight = new Date(now);
@@ -257,8 +258,12 @@
     const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
     // changes to innerHTML so we can add elements that have the id's that are used for updating each piece individually
     // console.log(document.getElementsByClassName('countdown')[0]);
+  // Format hours, minutes, and seconds to have two digits
+    const formattedHours = String(hours).padStart(2, '0');
+    const formattedMinutes = String(minutes).padStart(2, '0');
+    const formattedSeconds = String(seconds).padStart(2, '0');
     document.getElementsByClassName('countdown')[0].innerHTML = `
-    <span id="hours">${hours}</span>:<span id="minutes">${minutes}</span>:<span id="seconds">${seconds}</span>`
+    <span id="hours">${formattedHours}</span>:<span id="minutes">${formattedMinutes}</span>:<span id="seconds">${formattedSeconds}</span>`
       ;
   }
   // Update the countdown every second
@@ -322,7 +327,6 @@
   }
 
   initCards();
-
   allCards.forEach(function (el) {
     var hammertime = new Hammer(el);
 
