@@ -97,6 +97,23 @@ class Player(models.Model):
     def populate_character_with_creation_choices(
         self, qualities, interests, activities
     ):
+        # Adding 60 random general questions to the question pool
+        general_questions = list(Question.objects.filter(is_general=True))
+        random_general_questions = random.sample(
+            general_questions, min(len(general_questions), 60)
+        )
+        for question in random_general_questions:
+            self.question_pool.add(question)
+
+            # Populating questions from activities
+        for activity_id in activities:
+            if activity_id is not None:
+                activity = Activity.objects.get(id=activity_id)
+                questions = list(activity.questions.all())
+                random_questions = random.sample(questions, min(len(questions), 6))
+                for question in random_questions:
+                    self.question_pool.add(question)
+
         for quality_id in qualities:
             if quality_id is not None:
                 quality = Quality.objects.get(id=quality_id)
@@ -104,14 +121,6 @@ class Player(models.Model):
                 random_words = random.sample(words, min(len(words), 15))
                 for word in random_words:
                     self.character_word_pool.add(word)
-
-        for activity_id in activities:
-            if activity_id is not None:
-                activity = Activity.objects.get(id=activity_id)
-                questions = list(activity.questions.all())
-                random_questions = random.sample(questions, min(len(questions), 3))
-                for question in random_questions:
-                    self.question_pool.add(question)
 
         for interest_id in interests:
             if interest_id is not None:
@@ -653,6 +662,7 @@ class NarrativeChoice(models.Model):
 
 class Question(models.Model):
     text = models.CharField(max_length=1024)
+    is_general = models.BooleanField(default=True)
 
     def __str__(self):
         return self.text
