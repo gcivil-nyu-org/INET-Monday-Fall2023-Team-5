@@ -4,7 +4,7 @@ import json
 
 from channels.layers import get_channel_layer
 
-from game.models import GameSession, Player
+from game.models import GameSession, Player, Question
 
 
 class GameConsumer(AsyncWebsocketConsumer):
@@ -93,14 +93,17 @@ class GameConsumer(AsyncWebsocketConsumer):
         except ValueError as e:
             await self.send_json({"error": str(e)})
 
-    def select_question_sync(self, question, player):
-        game_id = self.game_id
-        game_session = GameSession.objects.get(game_id=game_id)
-        game_turn = game_session.current_game_turn
-        game_turn.select_question(question, player)
-        game_turn.save()
+    @database_sync_to_async
+    def remove_question_from_pool(self, question_id, player):
+        try:
+            question = Question.objects.get(id=question_id)
+            player.question_pool.remove(question)
+            player.save()
+            return True
+        except Question.DoesNotExist:
+            return False
 
-    async def select_question(self, question):
+    async def select_question(self, question_id):
         user = self.scope["user"]
         if not user.is_authenticated:
             await self.send_json(
@@ -111,10 +114,28 @@ class GameConsumer(AsyncWebsocketConsumer):
         player = await database_sync_to_async(Player.objects.get)(user=user)
 
         try:
-            await database_sync_to_async(self.select_question_sync)(question, player)
+            question_removed = await self.remove_question_from_pool(question_id, player)
+            if not question_removed:
+                await self.send_json(
+                    {"error": "Question not found or already removed."}
+                )
+                return
+
+            await database_sync_to_async(self.select_question_sync)(question_id, player)
             await self.broadcast_game_state()
         except ValueError as e:
             await self.send_json({"error": str(e)})
+
+    def select_question_sync(self, question_id, player):
+        game_id = self.game_id
+        game_session = GameSession.objects.get(game_id=game_id)
+        game_turn = game_session.current_game_turn
+
+        try:
+            game_turn.select_question(question_id, player)
+            game_turn.save()
+        except Question.DoesNotExist:
+            pass  # Handle the error as needed
 
     def answer_question_sync(self, answer, player):
         game_id = self.game_id
