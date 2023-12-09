@@ -15,13 +15,16 @@ $(document).ready(function () {
     function addToSentence(element) {
         let wordText = $.trim(element.text());
 
-        // Create a new word element and append it to the sentence
         var newWord = $('<span>').addClass('selected-word draggable').text(wordText + ' ').click(function() {
             removeFromSentence($(this));
         });
 
         $('#current-sentence').append(newWord);
-        hideDraggable(element);
+
+        // Check if element is a clone before hiding
+        if (!element.hasClass('ui-draggable-helper')) {
+            hideDraggable(element);
+        }
     }
 
 
