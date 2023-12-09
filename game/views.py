@@ -128,9 +128,7 @@ class GameProgressView(View):
             turn = game_session.current_game_turn
 
             if turn.state == GameTurn.SELECT_QUESTION:
-                # Fetch unasked questions
                 questions = player.question_pool.all()
-                # Randomly select 3 questions
                 random_questions = random.sample(
                     list(questions), min(len(questions), 3)
                 )
