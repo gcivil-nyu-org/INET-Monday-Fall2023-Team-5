@@ -13,6 +13,8 @@ from .models import (
     Word,
     NarrativeChoice,
     MoonSignInterpretation,
+    GameLog,
+    PublicProfile,
 )
 from django.core.exceptions import ValidationError
 from .forms import (
@@ -34,6 +36,8 @@ from django.core.files.base import ContentFile
 from .context_processors import game_session_processor
 from uuid import uuid4
 from unittest.mock import patch
+from django.contrib.auth import get_user_model
+from datetime import datetime
 
 
 class CharacterModelTest(TestCase):
@@ -290,6 +294,28 @@ class GameProgressViewTestCase(TestCase):
         # Initialize the game and redirect to the GameProgressView
         game_session.initialize_game()
         game_session.save()
+
+        # Create MoonSignInterpretation instances for players
+        self.moon_sign_A = MoonSignInterpretation.objects.create(
+            on_player=player_A,
+            new_moon="Unbiased",
+            first_quarter="Positive",
+            full_moon="Negative",
+            last_quarter="Ambiguous",
+        )
+        self.moon_sign_B = MoonSignInterpretation.objects.create(
+            on_player=player_B,
+            new_moon="Unbiased",
+            first_quarter="Positive",
+            full_moon="Negative",
+            last_quarter="Ambiguous",
+        )
+
+        # Assign MoonSignInterpretation to players
+        player_A.MoonSignInterpretation = self.moon_sign_A
+        player_B.MoonSignInterpretation = self.moon_sign_B
+        player_A.save()
+        player_B.save()
 
     def test_get_request_valid_game_id(self):
         # Make the request
@@ -1266,3 +1292,383 @@ class CharacterDetailsTest(TestCase):
 
         self.assertEqual(response.status_code, 404)
         self.assertEqual(response.json(), {"error": "Character not found"})
+
+
+User = get_user_model()
+
+from django.test import TestCase
+from game.models import GameSession, Player, PublicProfile
+from django.contrib.auth.models import User
+from django.test import RequestFactory
+from django.shortcuts import get_object_or_404
+
+
+class GameSessionTestCase(TestCase):
+    def setUp(self):
+        # Create a request factory
+        self.factory = RequestFactory()
+
+        # Create users for the players
+        user1 = User.objects.create(username="player1")
+        user2 = User.objects.create(username="player2")
+
+        # Create an initial game session
+        self.game_session = GameSession.objects.create()
+
+        # Create players and associate them with the game session
+        self.player1 = Player.objects.create(user=user1, game_session=self.game_session)
+        self.player2 = Player.objects.create(user=user2, game_session=self.game_session)
+
+        # Create PublicProfile instances for player1 and player2
+        self.player1_public_profile = PublicProfile.objects.create(
+            quality_1="Quality1_Player1",
+            quality_2="Quality2_Player1",
+            quality_3="Quality3_Player1",
+            interest_1="Interest1_Player1",
+            interest_2="Interest2_Player1",
+            interest_3="Interest3_Player1",
+            activity_1="Activity1_Player1",
+            activity_2="Activity2_Player1",
+        )
+        self.player1.public_profile = self.player1_public_profile
+        self.player1.save()
+
+        self.player2_public_profile = PublicProfile.objects.create(
+            quality_1="Quality1_Player2",
+            quality_2="Quality2_Player2",
+            quality_3="Quality3_Player2",
+            interest_1="Interest1_Player2",
+            interest_2="Interest2_Player2",
+            interest_3="Interest3_Player2",
+            activity_1="Activity1_Player2",
+            activity_2="Activity2_Player2",
+        )
+        self.player2.public_profile = self.player2_public_profile
+        self.player2.save()
+
+        # Update the game session with players
+        self.game_session.playerA = self.player1
+        self.game_session.playerB = self.player2
+        self.game_session.save()
+
+    def test_game_session_initialization(self):
+        # Test the initialization of the game session
+        self.game_session.initialize_game()
+        self.assertEqual(self.game_session.state, GameSession.CHARACTER_CREATION)
+        self.assertIsNotNone(self.game_session.gameLog)
+        self.assertIsNotNone(self.game_session.current_game_turn)
+        self.assertEqual(
+            self.game_session.current_game_turn.active_player, self.player1
+        )
+
+    def test_game_session_set_inactive(self):
+        # Test setting the game session to inactive
+        self.game_session.set_game_inactive()
+        self.game_session.refresh_from_db()
+        self.assertFalse(self.game_session.is_active)
+
+    def test_get_player_profiles(self):
+        # Test getting player profiles
+        profiles = self.game_session.get_player_profiles()
+        self.assertEqual(profiles["playerA_profile"], self.player1.public_profile)
+        self.assertEqual(profiles["playerB_profile"], self.player2.public_profile)
+
+
+class MoonSignInterpretationTest(TestCase):
+    def setUp(self):
+        # Create a test user
+        self.user = User.objects.create_user(username="testuser", password="12345")
+
+        # Create a GameSession instance
+        self.game_session = GameSession.objects.create()
+
+        # Create a Player instance associated with the user and game session
+        self.player = Player(user=self.user, game_session=self.game_session)
+        self.player.save()
+
+        # Create a MoonSignInterpretation instance associated with the player
+        self.moon_sign_interpretation = MoonSignInterpretation.objects.create(
+            on_player=self.player,
+            first_quarter="Positive",
+            first_quarter_reason="Reason for First Quarter",
+            full_moon="Negative",
+            full_moon_reason="Reason for Full Moon",
+            last_quarter="Ambiguous",
+            last_quarter_reason="Reason for Last Quarter",
+            new_moon="Unbiased",
+            new_moon_reason="Reason for New Moon",
+        )
+
+    def test_change_moon_sign_valid(self):
+        # Test changing the moon sign to a valid phase
+        self.moon_sign_interpretation.change_moon_sign("new_moon", "Inspiring")
+        updated_moon_sign = MoonSignInterpretation.objects.get(
+            id=self.moon_sign_interpretation.id
+        )
+        self.assertEqual(updated_moon_sign.new_moon, "Inspiring")
+
+    def test_change_moon_sign_invalid_phase(self):
+        # Test changing the moon sign to an invalid phase
+        with self.assertRaises(ValueError):
+            self.moon_sign_interpretation.change_moon_sign("invalid_phase", "Inspiring")
+
+
+class WordModelTest(TestCase):
+    def setUp(self):
+        # Set up non-modified objects used by all test methods
+        Word.objects.create(word="TestWord", isSimple=True, kind_of_word="noun")
+        Word.objects.create(word="AnotherWord", isSimple=False, kind_of_word="verb")
+
+    def test_word_creation(self):
+        # Test the creation of a Word instance
+        test_word = Word.objects.get(word="TestWord")
+        another_word = Word.objects.get(word="AnotherWord")
+        self.assertEqual(test_word.isSimple, True)
+        self.assertEqual(another_word.isSimple, False)
+        self.assertEqual(test_word.kind_of_word, "noun")
+        self.assertEqual(another_word.kind_of_word, "verb")
+
+    def test_string_representation(self):
+        # Test the string representation of a Word instance
+        test_word = Word.objects.get(word="TestWord")
+        self.assertEqual(str(test_word), "TestWord")
+
+    def test_equality(self):
+        # Test the equality comparison of two Word instances
+        test_word = Word.objects.get(word="TestWord")
+        same_word = Word(word="TestWord", isSimple=True, kind_of_word="noun")
+        different_word = Word(word="DifferentWord", isSimple=True, kind_of_word="noun")
+        self.assertEqual(test_word, same_word)
+        self.assertNotEqual(test_word, different_word)
+
+    def test_hash_representation(self):
+        # Test the hash representation of a Word instance
+        test_word = Word.objects.get(word="TestWord")
+        same_word = Word(word="TestWord", isSimple=True, kind_of_word="noun")
+        self.assertEqual(hash(test_word), hash(same_word))
+
+    def test_repr_representation(self):
+        # Test the repr representation of a Word instance
+        test_word = Word.objects.get(word="TestWord")
+        self.assertEqual(repr(test_word), f"<Word: TestWord>")
+
+
+class QuestionModelTest(TestCase):
+    def setUp(self):
+        # Set up non-modified objects used by all test methods
+        Question.objects.create(text="What is your favorite color?")
+
+    def test_question_creation(self):
+        # Test the creation of a Question instance
+        question = Question.objects.get(text="What is your favorite color?")
+        self.assertEqual(question.text, "What is your favorite color?")
+
+    def test_string_representation(self):
+        # Test the string representation of a Question instance
+        question = Question.objects.get(text="What is your favorite color?")
+        self.assertEqual(str(question), "What is your favorite color?")
+
+
+class NarrativeChoiceModelTest(TestCase):
+    def setUp(self):
+        # Set up necessary objects for the tests
+        self.interest = Interest.objects.create(name="Adventure")
+        self.word = Word.objects.create(word="Explore")
+
+        NarrativeChoice.objects.create(
+            name="Mysterious Forest", interest=self.interest, night_number=1
+        )
+
+    def test_narrative_choice_creation(self):
+        # Test creating a NarrativeChoice instance
+        narrative_choice = NarrativeChoice.objects.get(name="Mysterious Forest")
+        self.assertEqual(narrative_choice.name, "Mysterious Forest")
+        self.assertEqual(narrative_choice.interest, self.interest)
+        self.assertEqual(narrative_choice.night_number, 1)
+
+    def test_string_representation(self):
+        # Test the string representation of a NarrativeChoice instance
+        narrative_choice = NarrativeChoice.objects.get(name="Mysterious Forest")
+        self.assertEqual(str(narrative_choice), "Mysterious Forest")
+
+    def test_adding_words(self):
+        # Test adding words to a NarrativeChoice instance
+        narrative_choice = NarrativeChoice.objects.get(name="Mysterious Forest")
+        narrative_choice.words.add(self.word)
+        self.assertIn(self.word, narrative_choice.words.all())
+
+
+class InterestModelTest(TestCase):
+    def setUp(self):
+        # Create an Interest instance to use in tests
+        Interest.objects.create(name="Music")
+
+    def test_interest_creation(self):
+        # Test the creation of an Interest instance
+        music_interest = Interest.objects.get(name="Music")
+        self.assertEqual(music_interest.name, "Music")
+
+    def test_interest_str(self):
+        # Test the __str__ method of Interest
+        music_interest = Interest.objects.get(name="Music")
+        self.assertEqual(str(music_interest), "Music")
+
+
+class QualityModelTest(TestCase):
+    def setUp(self):
+        # Create a Quality instance
+        self.quality = Quality.objects.create(name="Bravery")
+        # Create Word instances and add them to the Quality instance
+        word1 = Word.objects.create(word="Courage")
+        word2 = Word.objects.create(word="Valiant")
+        self.quality.words.add(word1, word2)
+
+    def test_quality_creation(self):
+        # Test the creation of a Quality instance
+        self.assertEqual(self.quality.name, "Bravery")
+
+    def test_quality_str(self):
+        # Test the __str__ method
+        self.assertEqual(str(self.quality), "Bravery")
+
+    def test_quality_words(self):
+        # Test the many-to-many relationship with Word
+        self.assertEqual(self.quality.words.count(), 2)
+
+
+class ActivityModelTest(TestCase):
+    def setUp(self):
+        # Create an Activity instance
+        self.activity = Activity.objects.create(name="Hiking")
+        # Create Question instances and add them to the Activity instance
+        question1 = Question.objects.create(text="What do you enjoy most about hiking?")
+        question2 = Question.objects.create(text="What's your favorite hiking trail?")
+        self.activity.questions.add(question1, question2)
+
+    def test_activity_creation(self):
+        # Test the creation of an Activity instance
+        self.assertEqual(self.activity.name, "Hiking")
+
+    def test_activity_str(self):
+        # Test the __str__ method
+        self.assertEqual(str(self.activity), "Hiking")
+
+    def test_activity_questions(self):
+        # Test the many-to-many relationship with Question
+        self.assertEqual(self.activity.questions.count(), 2)
+
+
+class ChatMessageModelTest(TestCase):
+    def setUp(self):
+        # Create a ChatMessage instance
+        self.chat_message = ChatMessage.objects.create(
+            avatar_url="http://example.com/avatar.png",
+            sender="John Doe",
+            text="Hello, world!",
+            reaction="😊",
+        )
+
+    def test_chat_message_creation(self):
+        # Test the creation of a ChatMessage instance
+        self.assertEqual(self.chat_message.sender, "John Doe")
+        self.assertEqual(self.chat_message.text, "Hello, world!")
+        self.assertEqual(self.chat_message.reaction, "😊")
+        self.assertTrue(
+            isinstance(self.chat_message.timestamp, datetime)
+        )  # Corrected line
+
+    def test_chat_message_str(self):
+        # Test the __str__ method
+        self.assertEqual(str(self.chat_message), "Hello, world!")
+
+
+class GameTurnModelTest(TestCase):
+    def setUp(self):
+        # Create a test user
+        self.user = User.objects.create_user(username="testuser", password="12345")
+
+        # Create a GameSession instance
+        self.game_session = GameSession.objects.create()
+
+        # Create a GameLog instance and associate it with the game session
+        self.game_log = GameLog.objects.create()
+        self.game_session.gameLog = self.game_log
+        self.game_session.save()
+
+        # Create a dummy image file
+        image = SimpleUploadedFile(
+            name="test_image.jpg", content=b"", content_type="image/jpeg"
+        )
+
+        # Create a Character instance with the dummy image
+        self.character = Character.objects.create(
+            name="Test Character",
+            image=image,
+            # Add additional fields required by your Character model
+        )
+
+        # Create a Player instance and associate with the user, game session, and character
+        self.player = Player.objects.create(
+            user=self.user, game_session=self.game_session, character=self.character
+        )
+
+        # Create a GameTurn instance and associate it with the player and game session
+        self.game_turn = GameTurn.objects.create(
+            active_player=self.player, parent_game=self.game_session
+        )
+
+    def upload_test_image():
+        # Create an in-memory image
+        file = io.BytesIO()
+        image = Image.new("RGB", (100, 100), color="red")
+        image.save(file, "JPEG")
+        file.name = "test.jpg"
+        file.seek(0)
+
+        return ContentFile(file.read(), "test.jpg")
+
+    def test_initial_state(self):
+        self.assertEqual(self.game_turn.state, GameTurn.SELECT_QUESTION)
+        self.assertEqual(self.game_turn.turn_number, 1)
+
+    def test_active_player(self):
+        # Test active player functionality
+        new_user = User.objects.create_user(username="testuser2", password="54321")
+        new_player = Player.objects.create(
+            user=new_user, game_session=self.game_session
+        )
+        self.game_turn.set_active_player(new_player)
+
+        self.assertEqual(self.game_turn.active_player, new_player)
+
+    def test_select_question(self):
+        question = Question.objects.create(text="What is your favorite color?")
+        # Simulate the select_question action
+        self.game_turn.select_question(question.id, self.player)
+        self.assertEqual(self.game_turn.state, GameTurn.ANSWER_QUESTION)
+        # Check if a chat message was created, etc.
+
+    def test_answer_question(self):
+        # Create a question
+        question = Question.objects.create(text="What is your favorite color?")
+
+        # Transition to the SELECT_QUESTION state and select a question
+        self.game_turn.state = GameTurn.SELECT_QUESTION
+        self.game_turn.save()
+        self.game_turn.select_question(question.id, self.player)
+
+        # Ensure the game turn state is now ANSWER_QUESTION
+        self.assertEqual(self.game_turn.state, GameTurn.ANSWER_QUESTION)
+
+        # Make sure self.player is the active player
+        self.game_turn.set_active_player(self.player)
+        self.game_turn.save()
+
+        # Answer the question
+        answer = "Blue"
+        self.game_turn.answer_question(answer, self.player)
+
+    def tearDown(self):
+        # Delete the dummy image file if it exists
+        if self.character.image:
+            self.character.image.delete(save=False)

@@ -2,7 +2,107 @@
 {% load static %}
 
 {% block content %}
-    <div class="container">
+<div class="container">
+    <!-- Profile buttons that trigger modals -->
+    <div class="profile-buttons-container text-center">
+        {% if game_session.playerA.user == request.user %}
+            <button id="playerAProfileBtn" class="profile-btn">My Character</button>
+            <button id="playerBProfileBtn" class="profile-btn">My Partner's Character</button>
+        {% else %}
+            <button id="playerAProfileBtn" class="profile-btn">My Partner's Character</button>
+            <button id="playerBProfileBtn" class="profile-btn">My Character</button>
+        {% endif %}
+    </div>
+
+
+    <!-- Modal for Player A's profile -->
+    <div id="playerAProfileModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>{{ game_session.playerA.character.name }}'s Profile</h2>
+            {% if game_session.playerA.character.image %}
+                <img src="{{ game_session.playerA.character.image.url }}" alt="{{ game_session.playerA.character.name }}" class="character-image">
+            {% endif %}
+            <p>I am {{ game_session.playerA.character.name }} - a {{ game_session.playerA.character.description }}. My qualities are 
+                {% with qualities=game_session.playerA.character.quality_1_choices.all %}
+                    {% for quality in qualities %}
+                        {% if forloop.last and qualities|length > 1 %}
+                            and {{ quality.name }}
+                        {% else %}
+                            {{ quality.name }}{% if not forloop.last %}, {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% endwith %}.
+                My interests include
+                {% with interests=game_session.playerA.character.interest_1_choices.all %}
+                    {% for interest in interests %}
+                        {% if forloop.last and interests|length > 1 %}
+                            and {{ interest.name }}
+                        {% else %}
+                            {{ interest.name }}{% if not forloop.last %}, {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% endwith %}.
+                Looking for someone to 
+                {% with activities=game_session.playerA.character.activity_1_choices.all %}
+                    {% for activity in activities %}
+                        {% if forloop.last and activities|length > 1 %}
+                            and {{ activity.name }}
+                        {% else %}
+                            {{ activity.name }}{% if not forloop.last %}, {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% endwith %}.
+                Also, I love the moon. It's really important to me. Don't message me if you hate the moon!</p>
+            
+        </div>
+    </div>
+    
+
+        <!-- Modal for Player B's profile -->
+        <div id="playerBProfileModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>{{ game_session.playerB.character.name }}'s Profile</h2>
+                {% if game_session.playerB.character.image %}
+                    <img src="{{ game_session.playerB.character.image.url }}" alt="{{ game_session.playerB.character.name }}" class="character-image">
+                {% endif %}
+                <p>I am {{ game_session.playerB.character.name }} - a {{ game_session.playerB.character.description }}. My qualities are 
+                    {% with qualities=game_session.playerB.character.quality_1_choices.all %}
+                        {% for quality in qualities %}
+                            {% if forloop.last and qualities|length > 1 %}
+                                and {{ quality.name }}
+                            {% else %}
+                                {{ quality.name }}{% if not forloop.last %}, {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endwith %}.
+                    My interests include
+                    {% with interests=game_session.playerB.character.interest_1_choices.all %}
+                        {% for interest in interests %}
+                            {% if forloop.last and interests|length > 1 %}
+                                and {{ interest.name }}
+                            {% else %}
+                                {{ interest.name }}{% if not forloop.last %}, {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endwith %}.
+                    Looking for someone to 
+                    {% with activities=game_session.playerB.character.activity_1_choices.all %}
+                        {% for activity in activities %}
+                            {% if forloop.last and activities|length > 1 %}
+                                and {{ activity.name }}
+                            {% else %}
+                                {{ activity.name }}{% if not forloop.last %}, {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endwith %}.
+                    Also, I love the moon. It's really important to me. Don't message me if you hate the moon!</p>                
+            </div>
+        </div>
+        
+
+
         <div class="game-info">
             <h2 class="game-id">Game Progress for Game ID: <span>{{ game_session.game_id }}</span></h2>
             <div class="current-turn-box">Current Turn: <span>{{ game_session.current_game_turn.turn_number }}</span></div>
@@ -292,11 +392,107 @@
 {% endblock content %}
 
 {% block styles %}
+{{ block.super }}
 <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+<style>
+</style>
 {% endblock %}
 
+
 {% block scripts %}
+{{ block.super }}
 <script src="{% static 'js/tagging.js' %}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script type="text/javascript">
+    // JavaScript for modals
+    document.addEventListener('DOMContentLoaded', function() {
+        var playerAModal = document.getElementById("playerAProfileModal");
+        var playerBModal = document.getElementById("playerBProfileModal");
+
+        var playerABtn = document.getElementById("playerAProfileBtn");
+        var playerBBtn = document.getElementById("playerBProfileBtn");
+
+        var spans = document.getElementsByClassName("close");
+
+        playerABtn.onclick = function() {
+            playerAModal.style.display = "block";
+        };
+        playerBBtn.onclick = function() {
+            playerBModal.style.display = "block";
+        };
+
+        for (let span of spans) {
+            span.onclick = function() {
+                span.closest('.modal').style.display = "none";
+            };
+        }
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = "none";
+            }
+        };
+    });
+    
+
+</script>
+<!-- Add your moonSigns variable script here -->
+<script type="text/javascript">
+    // Parse the moonSigns JSON
+    var moonSigns = JSON.parse('{{ moon_signs_json|safe }}');
+    // console.log(moonSigns);
+
+    // Define the mapping from emoji to moon phases
+    const emojiToMoonPhaseMap = {
+        '🌑': 'new_moon',
+        '🌓': 'first_quarter',
+        '🌕': 'full_moon',
+        '🌗': 'last_quarter',
+    };
+
+    // Function to determine the moon phase from the emoji value
+    function determineMoonPhaseFromEmoji(emojiValue) {
+        // Return the moon phase key based on the emoji value
+        return emojiToMoonPhaseMap[emojiValue] || null;
+    }
+
+    // Function to update the class of the emoji based on the moon sign
+    function updateEmojiClass(emojiLabel, moonSign) {
+        // Clear all classes
+        emojiLabel.classList.remove('positive', 'negative', 'ambiguous');
+
+        // Add the new class if it exists
+        if (moonSign) {
+            emojiLabel.classList.add(moonSign);
+        }
+
+        // console.log(`Updated class for ${emojiLabel.textContent}: `, emojiLabel.classList);
+    }
+
+    // Event listeners for emoji changes
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.emoji-radio input').forEach(function(emojiInput) {
+            emojiInput.addEventListener('change', function() {
+                // Get the label that visually represents the emoji
+                var emojiLabel = document.querySelector(`label[for="${emojiInput.id}"]`);
+
+                // Convert the emoji value to the corresponding moon phase key
+                var moonPhase = determineMoonPhaseFromEmoji(emojiInput.value);
+
+                // Get the moon sign interpretation for the corresponding moon phase
+                var moonSign = moonSigns[moonPhase];
+
+                // Log for debugging
+                // console.log(`Emoji value: ${emojiInput.value}, Moon phase: ${moonPhase}, Moon sign: ${moonSign}`);
+
+                // Update the emoji class based on the moon sign
+                updateEmojiClass(emojiLabel, moonSign);
+            });
+        });
+    });
+</script>
+
+<!-- Reference to your external emoji_reaction.js file -->
+<script src="{% static 'js/emoji_reaction.js' %}"></script>
 {% endblock %}
