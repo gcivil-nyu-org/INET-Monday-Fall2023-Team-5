@@ -59,7 +59,7 @@ $(document).ready(function () {
     }).droppable({
         accept: '.draggable',
         drop: function(event, ui) {
-            addToSentence(ui.draggable);
+            addToSentence(ui.helper);
         }
     });
 
