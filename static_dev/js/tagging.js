@@ -24,6 +24,7 @@ $(document).ready(function () {
         hideDraggable(element);
     }
 
+
     // Function to remove word from the sentence
     function removeFromSentence(element) {
         let wordText = $.trim(element.text());
