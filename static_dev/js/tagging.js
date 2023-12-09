@@ -42,6 +42,10 @@ $(document).ready(function () {
         });
     });
 
+    $('.draggable').off('click').on('click', function() {
+        addToSentence($(this));
+    });
+
     // Make the sentence container sortable and droppable
     $('#current-sentence').sortable({
         items: '.selected-word',
