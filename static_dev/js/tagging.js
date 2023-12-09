@@ -33,13 +33,23 @@ $(document).ready(function () {
     }
 
     // Make words draggable and clickable
-    $('.draggable').each(function() {
-        $(this).draggable({
-            helper: 'clone',
-            revert: 'invalid'
-        }).click(function() {
-            addToSentence($(this));
-        });
+    // $('.draggable').each(function() {
+    //     $(this).draggable({
+    //         helper: 'clone',
+    //         revert: 'invalid'
+    //     }).click(function() {
+    //         addToSentence($(this));
+    //     });
+    // });
+
+    $('.draggable').draggable({
+        helper: 'clone',
+        revert: 'invalid'
+    });
+
+    // Attach click event to draggable elements
+    $('.draggable').off('click').on('click', function() {
+        addToSentence($(this));
     });
 
     // Make the sentence container sortable and droppable
