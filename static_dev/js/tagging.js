@@ -1,75 +1,47 @@
 $(document).ready(function () {
     // Function to hide a draggable word (instead of removing)
     function hideDraggable(element) {
-        console.log("something happend here");
         element.css('visibility', 'hidden'); // Hide the element
     }
 
     // Function to show a draggable word (instead of creating new)
-    function showDraggable(tagId) {
-    $('#' + tagId).css('visibility', 'visible');
+    function showDraggable(wordText) {
+        $('.draggable').filter(function() {
+            return $.trim($(this).text()) === wordText;
+        }).css('visibility', 'visible'); // Show the element
     }
-    // function showDraggable(wordText) {
-    //     $('.draggable').filter(function() {
-    //         return $.trim($(this).text()) === wordText;
-    //     }).css('visibility', 'visible'); // Show the element
-    // }
 
     // Function to add word to the sentence
-    // function addToSentence(element) {
-    //     let wordText = $.trim(element.text());
-    //
-    //     // Create a new word element and append it to the sentence
-    //     var newWord = $('<span>').addClass('selected-word draggable').text(wordText + ' ').click(function() {
-    //         removeFromSentence($(this));
-    //     });
-    //
-    //     $('#current-sentence').append(newWord);
-    //     hideDraggable(element);
-    // }
-
     function addToSentence(element) {
-        let tagId = element.attr('id'); // Get the ID of the element
+        let wordText = $.trim(element.text());
+        let sentenceText = $('#current-sentence').text();
+        let words = sentenceText.split(/\s+/); // Split the sentence into words based on spaces
 
-        // Create a new word element and append it to the sentence
-        var newWord = $('<span>').addClass('selected-word draggable').attr('id', tagId + '-in-sentence').text(element.text() + ' ').click(function() {
-            removeFromSentence($(this));
-        });
+        // Check if the word is already in the sentence
+        if (!words.includes(wordText)) {
+            var newWord = $('<span>').addClass('selected-word draggable').text(wordText + ' ').click(function() {
+                removeFromSentence($(this));
+            });
 
-        $('#current-sentence').append(newWord);
-        hideDraggable(element);
+            $('#current-sentence').append(newWord);
+            hideDraggable(element);
+        }
     }
 
     // Function to remove word from the sentence
-    // function removeFromSentence(element) {
-    //     let wordText = $.trim(element.text());
-    //     showDraggable(wordText);
-    //     element.remove();
-    // }
-
     function removeFromSentence(element) {
-        let tagId = element.attr('id').replace('-in-sentence', ''); // Remove the suffix to get the original ID
-        showDraggable(tagId);
+        let wordText = $.trim(element.text());
+        showDraggable(wordText);
         element.remove();
     }
 
     // Make words draggable and clickable
-    // $('.draggable').each(function() {
-    //     $(this).draggable({
-    //         helper: 'clone',
-    //         revert: 'invalid'
-    //     }).click(function() {
-    //         addToSentence($(this));
-    //     });
-    // });
     $('.draggable').each(function() {
-        var elementId = $(this).attr('id'); // Get the ID of the element
-
         $(this).draggable({
             helper: 'clone',
             revert: 'invalid'
         }).click(function() {
-            addToSentence($('#' + elementId));
+            addToSentence($(this));
         });
     });
 
