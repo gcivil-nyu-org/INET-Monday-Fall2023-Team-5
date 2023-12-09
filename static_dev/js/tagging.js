@@ -15,15 +15,17 @@ $(document).ready(function () {
     function addToSentence(element) {
         let wordText = $.trim(element.text());
 
-        // Create a new word element and append it to the sentence
         var newWord = $('<span>').addClass('selected-word draggable').text(wordText + ' ').click(function() {
             removeFromSentence($(this));
         });
 
         $('#current-sentence').append(newWord);
-        hideDraggable(element);
-    }
 
+        // Check if element is a clone before hiding
+        if (!element.hasClass('ui-draggable-helper')) {
+            hideDraggable(element);
+        }
+    }
 
     // Function to remove word from the sentence
     function removeFromSentence(element) {
@@ -42,10 +44,6 @@ $(document).ready(function () {
         });
     });
 
-    $('.draggable').off('click').on('click', function() {
-        addToSentence($(this));
-    });
-
     // Make the sentence container sortable and droppable
     $('#current-sentence').sortable({
         items: '.selected-word',
@@ -53,7 +51,7 @@ $(document).ready(function () {
     }).droppable({
         accept: '.draggable',
         drop: function(event, ui) {
-            addToSentence(ui.draggable);
+            addToSentence(ui.helper);
         }
     });
 
