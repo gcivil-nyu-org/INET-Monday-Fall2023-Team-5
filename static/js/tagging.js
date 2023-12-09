@@ -1,55 +1,42 @@
 $(document).ready(function () {
     // Function to hide a draggable word (instead of removing)
     function hideDraggable(element) {
-        console.log("something happend here");
         element.css('visibility', 'hidden'); // Hide the element
     }
 
     // Function to show a draggable word (instead of creating new)
-    function showDraggable(tagId) {
-    $('#' + tagId).css('visibility', 'visible');
+    function showDraggable(wordText) {
+        $('.draggable').filter(function() {
+            return $.trim($(this).text()) === wordText;
+        }).css('visibility', 'visible'); // Show the element
     }
-    // function showDraggable(wordText) {
-    //     $('.draggable').filter(function() {
-    //         return $.trim($(this).text()) === wordText;
-    //     }).css('visibility', 'visible'); // Show the element
-    // }
 
     // Function to add word to the sentence
-    // function addToSentence(element) {
-    //     let wordText = $.trim(element.text());
-    //
-    //     // Create a new word element and append it to the sentence
-    //     var newWord = $('<span>').addClass('selected-word draggable').text(wordText + ' ').click(function() {
-    //         removeFromSentence($(this));
-    //     });
-    //
-    //     $('#current-sentence').append(newWord);
-    //     hideDraggable(element);
-    // }
+    function addToSentence(droppedElement) {
+        let wordText = $.trim(droppedElement.text());
 
-    function addToSentence(element) {
-        let tagId = element.attr('id'); // Get the ID of the element
+        // Check if the element is a clone (helper) or the original
+        if (droppedElement.hasClass('ui-draggable-helper')) {
+            // It's a clone, hide the original element
+            let originalElementId = droppedElement.attr('id').replace('-clone', '');
+            hideDraggable($('#' + originalElementId));
+        } else {
+            // It's the original, hide it
+            hideDraggable(droppedElement);
+        }
 
-        // Create a new word element and append it to the sentence
-        var newWord = $('<span>').addClass('selected-word draggable').attr('id', tagId + '-in-sentence').text(element.text() + ' ').click(function() {
+        var newWord = $('<span>').addClass('selected-word draggable').text(wordText + ' ').click(function() {
             removeFromSentence($(this));
         });
 
         $('#current-sentence').append(newWord);
-        hideDraggable(element);
     }
 
-    // Function to remove word from the sentence
-    // function removeFromSentence(element) {
-    //     let wordText = $.trim(element.text());
-    //     showDraggable(wordText);
-    //     element.remove();
-    // }
 
+    // Function to remove word from the sentence
     function removeFromSentence(element) {
-        let tagId = element.attr('id').replace('-in-sentence', ''); // Remove the suffix to get the original ID
-        showDraggable(tagId);
+        let wordText = $.trim(element.text());
+        showDraggable(wordText);
         element.remove();
     }
 
@@ -62,15 +49,15 @@ $(document).ready(function () {
     //         addToSentence($(this));
     //     });
     // });
-    $('.draggable').each(function() {
-        var elementId = $(this).attr('id'); // Get the ID of the element
 
-        $(this).draggable({
-            helper: 'clone',
-            revert: 'invalid'
-        }).click(function() {
-            addToSentence($('#' + elementId));
-        });
+    $('.draggable').draggable({
+        helper: 'clone',
+        revert: 'invalid'
+    });
+
+    // Attach click event to draggable elements
+    $('.draggable').off('click').on('click', function() {
+        addToSentence($(this));
     });
 
     // Make the sentence container sortable and droppable
@@ -80,7 +67,11 @@ $(document).ready(function () {
     }).droppable({
         accept: '.draggable',
         drop: function(event, ui) {
-            addToSentence(ui.draggable);
+            // Check if the helper is not already a child of #current-sentence
+            if (!ui.helper.closest('#current-sentence').length) {
+                addToSentence(ui.helper);
+
+            }
         }
     });
 
