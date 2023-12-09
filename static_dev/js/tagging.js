@@ -14,18 +14,14 @@ $(document).ready(function () {
     // Function to add word to the sentence
     function addToSentence(element) {
         let wordText = $.trim(element.text());
-        let sentenceText = $('#current-sentence').text();
-        let words = sentenceText.split(/\s+/); // Split the sentence into words based on spaces
 
-        // Check if the word is already in the sentence
-        if (!words.includes(wordText)) {
-            var newWord = $('<span>').addClass('selected-word draggable').text(wordText + ' ').click(function() {
-                removeFromSentence($(this));
-            });
+        // Create a new word element and append it to the sentence
+        var newWord = $('<span>').addClass('selected-word draggable').text(wordText + ' ').click(function() {
+            removeFromSentence($(this));
+        });
 
-            $('#current-sentence').append(newWord);
-            hideDraggable(element);
-        }
+        $('#current-sentence').append(newWord);
+        hideDraggable(element);
     }
 
     // Function to remove word from the sentence
