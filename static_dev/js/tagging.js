@@ -15,16 +15,13 @@ $(document).ready(function () {
     function addToSentence(element) {
         let wordText = $.trim(element.text());
 
+        // Create a new word element and append it to the sentence
         var newWord = $('<span>').addClass('selected-word draggable').text(wordText + ' ').click(function() {
             removeFromSentence($(this));
         });
 
         $('#current-sentence').append(newWord);
-
-        // Check if element is a clone before hiding
-        if (!element.hasClass('ui-draggable-helper')) {
-            hideDraggable(element);
-        }
+        hideDraggable(element);
     }
 
 
@@ -62,7 +59,10 @@ $(document).ready(function () {
     }).droppable({
         accept: '.draggable',
         drop: function(event, ui) {
-            addToSentence(ui.helper);
+            // Check if the helper is not already a child of #current-sentence
+            if (!ui.helper.closest('#current-sentence').length) {
+                addToSentence(ui.helper);
+            }
         }
     });
 
