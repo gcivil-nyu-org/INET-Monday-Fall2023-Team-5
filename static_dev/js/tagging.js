@@ -12,16 +12,24 @@ $(document).ready(function () {
     }
 
     // Function to add word to the sentence
-    function addToSentence(element) {
-        let wordText = $.trim(element.text());
+    function addToSentence(droppedElement) {
+        let wordText = $.trim(droppedElement.text());
 
-        // Create a new word element and append it to the sentence
+        // Check if the element is a clone (helper) or the original
+        if (droppedElement.hasClass('ui-draggable-helper')) {
+            // It's a clone, hide the original element
+            let originalElementId = droppedElement.attr('id').replace('-clone', '');
+            hideDraggable($('#' + originalElementId));
+        } else {
+            // It's the original, hide it
+            hideDraggable(droppedElement);
+        }
+
         var newWord = $('<span>').addClass('selected-word draggable').text(wordText + ' ').click(function() {
             removeFromSentence($(this));
         });
 
         $('#current-sentence').append(newWord);
-        hideDraggable(element);
     }
 
 
@@ -62,6 +70,7 @@ $(document).ready(function () {
             // Check if the helper is not already a child of #current-sentence
             if (!ui.helper.closest('#current-sentence').length) {
                 addToSentence(ui.helper);
+
             }
         }
     });
