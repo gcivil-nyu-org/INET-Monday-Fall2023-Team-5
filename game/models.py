@@ -6,6 +6,7 @@ from django.db import models
 from django.contrib.auth.models import User
 import uuid
 from django.urls import reverse
+from django.utils.datetime_safe import datetime
 from django_fsm import FSMField, transition
 from django.shortcuts import render, get_object_or_404
 
@@ -260,6 +261,9 @@ class GameSession(models.Model):
         self.save()
         self.current_game_turn = GameTurn.objects.create()
         self.current_game_turn.active_player = self.playerA
+        self.current_game_turn.moon_phase_turn_sequence = moon_phase_turn_sequence()
+        self.current_game_turn.moon_phase_turn_sequence.populate_turn_numbers()
+        self.current_game_turn.moon_phase_turn_sequence.save()
         self.current_game_turn.save()
         return True, "Game initialized successfully."
 
@@ -320,6 +324,10 @@ class GameTurn(models.Model):
 
     player_a_moon_phase_message_written = models.BooleanField(default=False)
     player_b_moon_phase_message_written = models.BooleanField(default=False)
+
+    moon_phase_turn_sequence = models.OneToOneField(
+        "moon_phase_turn_sequence", on_delete=models.CASCADE, null=True, blank=True
+    )
 
     SELECT_QUESTION = "select_question"
     ANSWER_QUESTION = "answer_question"
@@ -493,13 +501,27 @@ class GameTurn(models.Model):
             return self.SELECT_QUESTION
 
     def get_moon_phase(self):
-        moon_phases = {
-            3: "new_moon",
-            7: "first_quarter",
-            11: "full_moon",
-            15: "last_quarter",
-        }
-        return moon_phases.get(self.turn_number)
+        # Ensure that moon_phase_turn_sequence is not None
+        if self.moon_phase_turn_sequence:
+            if self.turn_number == self.moon_phase_turn_sequence.new_moon_turn_number:
+                return "new_moon"
+            elif (
+                self.turn_number
+                == self.moon_phase_turn_sequence.first_quarter_turn_number
+            ):
+                return "first_quarter"
+            elif (
+                self.turn_number == self.moon_phase_turn_sequence.full_moon_turn_number
+            ):
+                return "full_moon"
+            elif (
+                self.turn_number
+                == self.moon_phase_turn_sequence.last_quarter_turn_number
+            ):
+                return "last_quarter"
+
+        # Return None or a default value if no matching phase is found
+        return None
 
     def get_moon_emoji(self, moon_phase):
         moon_sign_mapping = {
@@ -538,7 +560,7 @@ class GameTurn(models.Model):
         # Change the current moon sign reason to the message
         moon_phase = self.get_moon_phase()
         moon_sign_interpretation = player.MoonSignInterpretation
-        moon_sign_interpretation.change_moon_sign(moon_phase, message)
+        moon_sign_interpretation.change_moon_sign_reason(moon_phase, message)
         moon_sign_interpretation.save()
 
         # Process the answer and update word pools
@@ -739,6 +761,20 @@ class MoonSignInterpretation(models.Model):
         setattr(self, moon_phase, new_sign)
         self.save()
 
+    def change_moon_sign_reason(self, moon_phase, reason):
+        # map moon_phase to moon phase reason
+        moon_phase_reason_mapping = {
+            "new_moon": "new_moon_reason",
+            "first_quarter": "first_quarter_reason",
+            "full_moon": "full_moon_reason",
+            "last_quarter": "last_quarter_reason",
+        }
+        moon_phase_reason = moon_phase_reason_mapping.get(moon_phase, "Unknown sign")
+
+        # Use setattr to update the attribute
+        setattr(self, moon_phase_reason, reason)
+        self.save()
+
 
 class PublicProfile(models.Model):
     quality_1 = models.CharField(max_length=100)
@@ -749,3 +785,44 @@ class PublicProfile(models.Model):
     interest_3 = models.CharField(max_length=100)
     activity_1 = models.CharField(max_length=100)
     activity_2 = models.CharField(max_length=100)
+
+
+class moon_phase_dates(models.Model):
+    CHOICES = (
+        ("new_moon", "New Moon"),
+        ("first_quarter", "First Quarter"),
+        ("full_moon", "Full Moon"),
+        ("last_quarter", "Last Quarter"),
+    )
+    moon_phase = models.CharField(max_length=20, choices=CHOICES)
+    date = models.DateField()
+
+
+def get_next_turn_number(current_date, moon_phase):
+    next_phase_date = (
+        moon_phase_dates.objects.filter(date__gte=current_date, moon_phase=moon_phase)
+        .order_by("date")
+        .first()
+    )
+
+    if next_phase_date:
+        return (next_phase_date.date - current_date).days + 1
+    return None
+
+
+class moon_phase_turn_sequence(models.Model):
+    new_moon_turn_number = models.IntegerField(null=True, blank=True)
+    first_quarter_turn_number = models.IntegerField(null=True, blank=True)
+    full_moon_turn_number = models.IntegerField(null=True, blank=True)
+    last_quarter_turn_number = models.IntegerField(null=True, blank=True)
+
+    def populate_turn_numbers(self):
+        current_date = datetime.now().date()
+        self.new_moon_turn_number = get_next_turn_number(current_date, "new_moon")
+        self.first_quarter_turn_number = get_next_turn_number(
+            current_date, "first_quarter"
+        )
+        self.full_moon_turn_number = get_next_turn_number(current_date, "full_moon")
+        self.last_quarter_turn_number = get_next_turn_number(
+            current_date, "last_quarter"
+        )
