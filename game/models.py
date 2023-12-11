@@ -732,7 +732,7 @@ class MoonSignInterpretation(models.Model):
             "full_moon": self.full_moon,
             "last_quarter": self.last_quarter,
         }
-        return moon_sign_mapping.get(moon_phase, "Unkown sign")
+        return moon_sign_mapping.get(moon_phase, "Unknown sign")
 
     def get_moon_sign_reason(self, moon_phase):
         moon_sign_mapping = {
