@@ -987,3 +987,34 @@ background-color: #7b1fa2;
     background-color: #881e8e; 
 }
 
+.spoiler-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  overflow: hidden; /* Ensure the content doesn't spill out */
+}
+
+.spoiler-text {
+  color: black;
+  white-space: nowrap; /* Ensure text stays in one line */
+}
+
+.spoiler-cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+    border: wave rgb(128, 128, 128);
+    background-color: black;
+  transition: opacity 0.5s ease;
+}
+
+.spoiler-container.revealed .spoiler-cover {
+  opacity: 0;
+  pointer-events: none; /* So that text can be selected if needed */
+}
+
+.spoiler-container.revealed .spoiler-text {
+  color: black; /* So it's visible on the black background */
+}
