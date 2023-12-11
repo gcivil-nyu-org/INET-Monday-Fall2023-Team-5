@@ -96,7 +96,9 @@ class GameProgressView(View):
             return redirect("end_game_session", game_id=game_id)
 
         if game_session.state == GameSession.ENDED:
-            messages_by_sender, attitude_summary = retrieve_messages_from_log(game_session, request.user)
+            messages_by_sender, attitude_summary = retrieve_messages_from_log(
+                game_session, request.user
+            )
             return render(
                 request,
                 "end_game_session.html",
