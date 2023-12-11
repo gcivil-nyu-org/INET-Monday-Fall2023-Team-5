@@ -1,8 +1,5 @@
-function showEmail() {
-            var email = document.getElementById('email');
-            if(email.style.display === 'none') {
-                email.style.display = 'block';
-            } else {
-                email.style.display = 'none';
-            }
-        }
+function revealSpoiler(element) {
+    var cover = element.querySelector('.spoiler-cover');
+    cover.style.opacity = '0';
+    cover.style.pointerEvents = 'none';
+}
