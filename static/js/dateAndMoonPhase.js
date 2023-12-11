@@ -14,13 +14,6 @@ function calculateMoonPhase() {
     // Define a tighter threshold for the main moon phases
     const mainPhaseThreshold = 0.25;
 
-
-    console.log(moonPhaseIndex);
-    console.log(nextMoonPhaseIndex);
-    console.log(moonPhases[moonPhaseIndex]);
-    console.log(moonPhases[nextMoonPhaseIndex]);
-    console.log(currentPhase);
-
     // Check if the current phase is one of the main phases, assign on threshold basis
     if (moonPhaseIndex % 2 === 0) {
         if (currentPhase - moonPhaseIndex < mainPhaseThreshold) {

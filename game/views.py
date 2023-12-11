@@ -96,16 +96,18 @@ class GameProgressView(View):
             return redirect("end_game_session", game_id=game_id)
 
         if game_session.state == GameSession.ENDED:
-            messages_by_sender = retrieve_messages_from_log(game_session.gameLog)
-            if game_session.state == GameSession.ENDED:
-                return render(
-                    request,
-                    "end_game_session.html",
-                    {
-                        "game_id": game_id,
-                        "messages_by_sender": dict(messages_by_sender),
-                    },
-                )
+            messages_by_sender, attitude_summary = retrieve_messages_from_log(
+                game_session, request.user
+            )
+            return render(
+                request,
+                "end_game_session.html",
+                {
+                    "game_id": game_id,
+                    "messages_by_sender": dict(messages_by_sender),
+                    "attitude_summary": dict(attitude_summary),
+                },
+            )
         else:
             player = request.user.player
             # Check if the user is a participant of the game session
@@ -235,9 +237,9 @@ def end_game_session(request, game_id):
         ):
             messages.error(request, "You are not a participant of this game session.")
             return redirect("home")
-
-        messages_by_sender = retrieve_messages_from_log(game_session.gameLog)
-
+        messages_by_sender, attitude_summary = retrieve_messages_from_log(
+            game_session.gameLog, request.user.player
+        )
         with transaction.atomic():  # Start a database transaction
             # Lock the game session row
             game_session = GameSession.objects.select_for_update().get(game_id=game_id)
@@ -260,7 +262,11 @@ def end_game_session(request, game_id):
         return render(
             request,
             "end_game_session.html",
-            {"game_id": game_id, "messages_by_sender": dict(messages_by_sender)},
+            {
+                "game_id": game_id,
+                "messages_by_sender": dict(messages_by_sender),
+                "attitude_summary": dict(attitude_summary),
+            },
         )
 
     except GameSession.DoesNotExist:
@@ -268,11 +274,37 @@ def end_game_session(request, game_id):
         return redirect("home")
 
 
-def retrieve_messages_from_log(game_log):
-    messages_by_sender = defaultdict(list)
+def get_moon_phase_from_emoji(emoji, moon_meaning):
+    moon_sign_mapping = {
+        "🌑": "new_moon",
+        "🌓": "first_quarter",
+        "🌕": "full_moon",
+        "🌗": "last_quarter",
+    }
+    moon_phase = moon_sign_mapping.get(emoji)
+    # print(moon_meaning.get_moon_sign(moon_phase))
+    return moon_meaning.get_moon_sign(moon_phase)
+
+
+def retrieve_messages_from_log(game_log, player=None):
+    # game_log = game_session.gameLog
+    sender_details = defaultdict(lambda: {"reactions": []})
+    attitude_summary = defaultdict(int)
     for message in game_log.chat_messages.all():
-        messages_by_sender[message.sender].append(message)
-    return messages_by_sender
+        emoji = message.reaction
+        sender = message.sender
+        if player and sender == player.character_name:
+            moon_meaning = player.MoonSignInterpretation
+            attitude = get_moon_phase_from_emoji(emoji, moon_meaning)
+            # Add the emoji to the sender's reactions list
+            sender_details[sender]["reactions"].append((emoji, message.timestamp))
+            # Increment the count for the attitude type (positive/negative)
+            if attitude:
+                attitude_summary[attitude] += 1
+    # Sort the reactions by timestamp for each sender
+    for sender, details in sender_details.items():
+        details["reactions"].sort(key=lambda x: x[1])  # Sort by timestamp
+    return sender_details, attitude_summary
 
 
 class CharacterCreationView(View):

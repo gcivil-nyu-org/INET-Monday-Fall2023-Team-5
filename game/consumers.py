@@ -217,9 +217,9 @@ class GameConsumer(AsyncWebsocketConsumer):
         game_session = GameSession.objects.get(game_id=game_id)
         game_turn = game_session.current_game_turn
         phase = game_turn.get_moon_phase()
-        moon_interpretation_dict = player.MoonSignInterpretation
-        moon_interpretation_dict.change_moon_sign(phase, meaning)
-        moon_interpretation_dict.save()
+        moon_interpretation = player.MoonSignInterpretation
+        moon_interpretation.change_moon_sign(phase, meaning)
+        moon_interpretation.save()
 
     async def moon_meaning(self, meaning):
         user = self.scope["user"]

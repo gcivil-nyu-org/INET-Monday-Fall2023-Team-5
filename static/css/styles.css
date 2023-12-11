@@ -906,7 +906,6 @@ background-color: #7b1fa2;
 .moon-sign-form li {
     padding: 0.5em 0; /* Adds spacing above and below each line */
 }
-
 #emoji-react-form {
     display: flex;
     flex-direction: row;
@@ -959,3 +958,32 @@ background-color: #7b1fa2;
 #submit-reaction:hover {
     background-color: #a000a0; /* Darker shade for hover effect */
 }
+
+/* General styles for emoji labels */
+.emoji-radio label {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+    border: 2px solid #ddd;
+    border-radius: 50%;
+    background-color: #f8f8f8;
+    cursor: pointer;
+    font-size: 24px;
+    transition: background-color 0.3s, transform 0.3s, color 0.3s;
+}
+
+
+/* Make sure these rules come after the :checked rule */
+.emoji-radio input[type="radio"]:checked + label.positive {
+    background-color: #3ba658; 
+}
+.emoji-radio input[type="radio"]:checked + label.negative {
+    background-color: #FF0000; 
+}
+.emoji-radio input[type="radio"]:checked + label.ambiguous {
+    background-color: #881e8e; 
+}
+

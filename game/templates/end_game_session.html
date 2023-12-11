@@ -1,23 +1,139 @@
 {% extends "base.html" %}
+<!-- {% load static %} -->
+
+{% block css %}
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(to right, #ff758c 0%, #ff7eb3 100%);
+        color: #fff;
+    }
+
+    .container {
+        max-width: 600px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(5px);
+        margin: 2em auto;
+        padding: 2em;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    h2 {
+        font-size: 2em;
+        color: #fff;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .sender-block {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 15px;
+        margin-bottom: 1em;
+        border-radius: 10px;
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        animation: fadeInUp 1s both;
+    }
+
+    .emoji-sequence .emoji {
+        display: inline-block;
+        margin: 0 5px;
+        font-size: 1.5em;
+        animation: bounce 1s infinite alternate;
+    }
+
+    .attitude-summary .attitude-info {
+        background: rgba(255, 255, 255, 0.3);
+        display: inline-block;
+        margin-right: 10px;
+        padding: 5px 10px;
+        border-radius: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .attitude-summary .attitude {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #fff;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .attitude-summary .count {
+        font-size: 1.2em;
+        color: #fff;
+    }
+
+    .btn {
+        display: inline-block;
+        background-color: #ff61a6;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        text-decoration: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s, background-color 0.2s;
+    }
+
+    .btn:hover {
+        background-color: #f54f8e;
+        transform: translateY(-3px);
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translate3d(0, 100%, 0);
+        }
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    @keyframes bounce {
+        from {
+            transform: scale(1);
+        }
+        to {
+            transform: scale(1.2);
+        }
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="container">
 <!-- Display game chat -->
     <p>End of game: {{ game_id }}</p>
+    <h2>End of Game Summary</h2>
     <div class="chat-box">
-        {% for name, messages in messages_by_sender.items %}
-            <div class="sender-section">
-                <h4>{{ name }}</h4>
-                {% for message in messages %}
-                    <div class="message">
-                        {% if message.reaction %}
-                            <span class="emoji">{{ message.reaction }}</span>
-                            <small class="timestamp">{{ message.timestamp|date:"F j, Y, g:i a" }}</small>
+    {% for sender, details in messages_by_sender.items %}
+        <div class="sender-block">
+            <h3>{{ sender }}:</h3>
+            <p>Throughout the game, your reactions were as follows:</p>
+            <div class="emoji-sequence">
+                {% for emoji, _ in details.reactions %}
+                    {% if emoji %}
+                        <span class="emoji">{{ emoji }}</span>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <p>Here's a summary of your attitudes during the game:</p>
+            <div class="attitude-summary">
+                {% for attitude, count in attitude_summary.items %}
+                    <div class="attitude-info">
+                        {% if count %}
+                            <span class="attitude">{{ attitude }}:</span>
+                            <span class="count">{{ count }}</span>
+                            <!-- <span class="attitude-count">{{ details.attitude_summary }}</span> -->
                         {% endif %}
                     </div>
                 {% endfor %}
             </div>
-        {% endfor %}
+            <p>Reflect on how these attitudes have shaped your game experience and interactions.</p>
+        </div>
+    {% endfor %}
     </div>
 </div>
 
