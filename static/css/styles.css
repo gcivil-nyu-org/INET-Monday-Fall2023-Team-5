@@ -987,3 +987,34 @@ background-color: #7b1fa2;
     background-color: #881e8e; 
 }
 
+.spoiler-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.spoiler-text {
+  visibility: hidden;
+  color: black;
+  transition: visibility 0s, color 0.5s linear;
+}
+
+.spoiler-container:hover .spoiler-text {
+  visibility: visible;
+  color: transparent;
+}
+
+.spoiler-cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: black;
+  transition: background-color 0.5s linear;
+}
+
+.spoiler-container:hover .spoiler-cover {
+  background-color: transparent;
+}
+

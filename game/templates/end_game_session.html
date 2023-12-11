@@ -80,31 +80,6 @@
         transform: translateY(-3px);
     }
 
-    .spoiler-container {
-      position: relative;
-      display: inline-block;
-    }
-
-    .spoiler-text {
-      visibility: visible;
-      color: black;
-    }
-
-    .spoiler-cover {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: black;
-      cursor: pointer;
-      transition: opacity 0.4s;
-    }
-
-    .spoiler-container:hover .spoiler-cover {
-      opacity: 0;
-      pointer-events: none;
-    }
     @keyframes fadeInUp {
         from {
             opacity: 0;
@@ -159,11 +134,9 @@
             <p>Reflect on how these attitudes have shaped your game experience and interactions.</p>
 
             <p>Now, it is time for you to meet your mystery partner...</p>
-                <div class="spoiler-container" onclick="revealSpoiler(this)">
-                  <div class="spoiler-text">
-                    user@example.com
-                  </div>
+                <div class="spoiler-container" onclick="this.classList.toggle('revealed')">
                   <div class="spoiler-cover"></div>
+                  <span class="spoiler-text">{{ other_player_email }}</span>
                 </div>
         </div>
     {% endfor %}
