@@ -3,31 +3,101 @@
 
 {% block css %}
 <style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(to right, #ff758c 0%, #ff7eb3 100%);
+        color: #fff;
+    }
+
     .container {
-        max-width: 800px;
-        margin: auto;
+        max-width: 600px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(5px);
+        margin: 2em auto;
+        padding: 2em;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     }
+
+    h2 {
+        font-size: 2em;
+        color: #fff;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
     .sender-block {
-        background-color: #f8f8f8;
+        background: rgba(255, 255, 255, 0.2);
         padding: 15px;
-        margin-bottom: 20px;
-        border-radius: 8px;
-        animation: fadeIn 2s;
+        margin-bottom: 1em;
+        border-radius: 10px;
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        animation: fadeInUp 1s both;
     }
-    .emoji-sequence, .attitude-summary {
-        margin-bottom: 10px;
-    }
-    .emoji {
+
+    .emoji-sequence .emoji {
         display: inline-block;
-        margin-right: 5px;
+        margin: 0 5px;
+        font-size: 1.5em;
+        animation: bounce 1s infinite alternate;
+    }
+
+    .attitude-summary .attitude-info {
+        background: rgba(255, 255, 255, 0.3);
+        display: inline-block;
+        margin-right: 10px;
+        padding: 5px 10px;
+        border-radius: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .attitude-summary .attitude {
         font-size: 1.2em;
-    }
-    .attitude {
         font-weight: bold;
+        color: #fff;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
     }
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
+
+    .attitude-summary .count {
+        font-size: 1.2em;
+        color: #fff;
+    }
+
+    .btn {
+        display: inline-block;
+        background-color: #ff61a6;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        text-decoration: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s, background-color 0.2s;
+    }
+
+    .btn:hover {
+        background-color: #f54f8e;
+        transform: translateY(-3px);
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translate3d(0, 100%, 0);
+        }
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    @keyframes bounce {
+        from {
+            transform: scale(1);
+        }
+        to {
+            transform: scale(1.2);
+        }
     }
 </style>
 {% endblock %}
