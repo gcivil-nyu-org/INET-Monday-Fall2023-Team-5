@@ -7,7 +7,8 @@ from django.shortcuts import render
 from django.contrib import messages
 from .forms import EditProfileForm
 from .models import User, Like, Profile, Match
-from django.core.paginator import Paginator
+
+# from django.core.paginator import Paginator
 from django.contrib.auth.tokens import default_token_generator
 from .forms import CustomUserCreationForm
 from django.utils.http import urlsafe_base64_decode
@@ -128,8 +129,9 @@ def view_profile(request):
         },
     )
 
+
 @login_required
-def browse_profiles(request): 
+def browse_profiles(request):
     recommended_profiles = get_recommended_profiles(request.user).order_by("user_id")
 
     # Pagination: Show 10 profiles per page
@@ -138,8 +140,11 @@ def browse_profiles(request):
     # profiles = paginator.get_page(page)
 
     return render(
-        request, "accounts/profile/browse_profiles.html", {"profiles": recommended_profiles}
+        request,
+        "accounts/profile/browse_profiles.html",
+        {"profiles": recommended_profiles},
     )
+
 
 @login_required
 def view_single_profile(request, profile_id):
