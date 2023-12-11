@@ -246,6 +246,7 @@ def end_game_session(request, game_id):
             if game_session.playerA != request.user.player
             else game_session.playerB
         )
+        other_player_user = other_player.user
         other_player_email = other_player.user.email
 
         with transaction.atomic():  # Start a database transaction
@@ -274,6 +275,7 @@ def end_game_session(request, game_id):
                 "game_id": game_id,
                 "messages_by_sender": dict(messages_by_sender),
                 "attitude_summary": dict(attitude_summary),
+                "other_player_user": other_player_user,
                 "other_player_email": other_player_email,
             },
         )

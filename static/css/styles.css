@@ -986,22 +986,17 @@ background-color: #7b1fa2;
 .emoji-radio input[type="radio"]:checked + label.ambiguous {
     background-color: #881e8e; 
 }
-
 .spoiler-container {
   position: relative;
   display: inline-block;
   cursor: pointer;
+  max-width: 250px; /* Set a max-width for the container */
+  overflow: hidden; /* Ensure the content doesn't spill out */
 }
 
 .spoiler-text {
-  visibility: hidden;
   color: black;
-  transition: visibility 0s, color 0.5s linear;
-}
-
-.spoiler-container:hover .spoiler-text {
-  visibility: visible;
-  color: transparent;
+  white-space: nowrap; /* Ensure text stays in one line */
 }
 
 .spoiler-cover {
@@ -1010,11 +1005,16 @@ background-color: #7b1fa2;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: black;
-  transition: background-color 0.5s linear;
+    border: wave rgb(128, 128, 128);
+    background-color: black;
+  transition: opacity 0.5s ease;
 }
 
-.spoiler-container:hover .spoiler-cover {
-  background-color: transparent;
+.spoiler-container.revealed .spoiler-cover {
+  opacity: 0;
+  pointer-events: none; /* So that text can be selected if needed */
 }
 
+.spoiler-container.revealed .spoiler-text {
+  color: black; /* So it's visible on the black background */
+}

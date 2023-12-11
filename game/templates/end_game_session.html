@@ -134,9 +134,9 @@
             <p>Reflect on how these attitudes have shaped your game experience and interactions.</p>
 
             <p>Now, it is time for you to meet your mystery partner...</p>
-                <div class="spoiler-container" onclick="this.classList.toggle('revealed')">
+                <div class="spoiler-container" onclick="toggleSpoilerVisibility(this)">
                   <div class="spoiler-cover"></div>
-                  <span class="spoiler-text">{{ other_player_email }}</span>
+                  <span class="spoiler-text">They are {{ other_player_email }} and they can be reached at {{ other_player_email }}...</span>
                 </div>
         </div>
     {% endfor %}
