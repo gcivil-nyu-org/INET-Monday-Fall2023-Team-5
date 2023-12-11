@@ -132,11 +132,14 @@
                 {% endfor %}
             </div>
             <p>Reflect on how these attitudes have shaped your game experience and interactions.</p>
+
+            <button onclick="showEmail()">Click to Show Email</button>
+            <div id="email" style="display: none;">
+                user@example.com
+            </div>
         </div>
     {% endfor %}
     </div>
 </div>
-
-<a href="{% url 'initiate_game_session' %}" class="btn btn-primary">Start New Game</a>
 
 {% endblock content %}
