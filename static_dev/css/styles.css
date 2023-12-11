@@ -991,7 +991,6 @@ background-color: #7b1fa2;
   position: relative;
   display: inline-block;
   cursor: pointer;
-  max-width: 250px; /* Set a max-width for the container */
   overflow: hidden; /* Ensure the content doesn't spill out */
 }
 

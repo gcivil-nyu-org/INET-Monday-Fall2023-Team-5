@@ -155,8 +155,6 @@ class Player(models.Model):
             words_of_this_kind = [
                 word for word in simple_words if word.kind_of_word == kind
             ]
-            print(f"Total simple words of kind '{kind}': {len(words_of_this_kind)}")
-            print(f"Words to add for kind '{kind}': {words_to_add_count}")
             if words_to_add_count > 0 and len(words_of_this_kind) >= words_to_add_count:
                 filtered_words = [
                     word
