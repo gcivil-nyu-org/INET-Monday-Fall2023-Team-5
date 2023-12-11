@@ -240,6 +240,15 @@ def end_game_session(request, game_id):
         messages_by_sender, attitude_summary = retrieve_messages_from_log(
             game_session.gameLog, request.user.player
         )
+
+        other_player = (
+            game_session.playerA
+            if game_session.playerA != request.user.player
+            else game_session.playerB
+        )
+        other_player_user = other_player.user
+        other_player_email = other_player.user.email
+
         with transaction.atomic():  # Start a database transaction
             # Lock the game session row
             game_session = GameSession.objects.select_for_update().get(game_id=game_id)
@@ -266,6 +275,8 @@ def end_game_session(request, game_id):
                 "game_id": game_id,
                 "messages_by_sender": dict(messages_by_sender),
                 "attitude_summary": dict(attitude_summary),
+                "other_player_user": other_player_user,
+                "other_player_email": other_player_email,
             },
         )
 
