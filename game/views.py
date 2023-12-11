@@ -310,7 +310,7 @@ def retrieve_messages_from_log(game_log, player=None):
             # Add the emoji to the sender's reactions list
             sender_details[sender]["reactions"].append((emoji, message.timestamp))
             # Increment the count for the attitude type (positive/negative)
-            if attitude:
+            if attitude in {"positive", "negative", "ambiguous"}:
                 attitude_summary[attitude] += 1
     # Sort the reactions by timestamp for each sender
     for sender, details in sender_details.items():
