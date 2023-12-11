@@ -128,20 +128,18 @@ def view_profile(request):
         },
     )
 
-
 @login_required
-def browse_profiles(request):
+def browse_profiles(request): 
     recommended_profiles = get_recommended_profiles(request.user).order_by("user_id")
 
     # Pagination: Show 10 profiles per page
-    paginator = Paginator(recommended_profiles, 10)
-    page = request.GET.get("page")
-    profiles = paginator.get_page(page)
+    # paginator = Paginator(recommended_profiles, 10)
+    # page = request.GET.get("page")
+    # profiles = paginator.get_page(page)
 
     return render(
-        request, "accounts/profile/browse_profiles.html", {"profiles": profiles}
+        request, "accounts/profile/browse_profiles.html", {"profiles": recommended_profiles}
     )
-
 
 @login_required
 def view_single_profile(request, profile_id):
